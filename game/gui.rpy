@@ -64,17 +64,45 @@ define gui.text_outlines = [(gui.scale(2), "#000000b0", gui.scale(0), gui.scale(
 
 ## Fonts and Font Sizes ########################################################
 ##
-## mini-wakuwaku-maru covers kana + kanji, so Japanese and English share one
-## typeface. Swap the three strings below to change the whole game's font.
+## The game's typeface is two fonts combined into one group:
+##
+##   * mini-wakuwaku-maru draws the romaji, hiragana and katakana, and gives the
+##     dialogue its handwritten look.
+##   * Its kanji glyphs are empty outlines, though, so every kanji used to show
+##     up as a silent gap in the middle of a line. Kiwi Maru is the closest match
+##     for its rounded style and it does have real kanji, so the ideograph blocks
+##     are drawn from it instead.
+##
+## To change the look later, swap the two paths below. To change which characters
+## come from which font, edit the ranges in the init block.
+
+init -3 python:
+    # The two halves of the typeface.
+    kana_font = "fonts/mini-wakuwaku-maru.otf"
+    kanji_font = "fonts/KiwiMaru-Medium.ttf"
+
+    game_font = FontGroup()
+
+    # Kanji, taken from Kiwi Maru. These are added first, so they take priority
+    # over the default font below. 々 (U+3005) is included by hand because words
+    # like 人々 and 日々 need it.
+    game_font.add(kanji_font, u"\u3005", u"\u3005")   # 々
+    game_font.add(kanji_font, u"\u3400", u"\u4dbf")   # CJK Extension A
+    game_font.add(kanji_font, u"\u4e00", u"\u9fff")   # CJK Unified Ideographs
+    game_font.add(kanji_font, u"\uf900", u"\ufaff")   # CJK Compatibility Ideographs
+
+    # Everything else - romaji, hiragana, katakana, punctuation - keeps the
+    # game's own handwriting font.
+    game_font.add(kana_font, None, None)
 
 ## The font used for in-game text.
-define gui.text_font = "fonts/mini-wakuwaku-maru.otf"
+define gui.text_font = game_font
 
 ## The font used for character names.
-define gui.name_text_font = "fonts/mini-wakuwaku-maru.otf"
+define gui.name_text_font = game_font
 
 ## The font used for out-of-game text.
-define gui.interface_text_font = "fonts/mini-wakuwaku-maru.otf"
+define gui.interface_text_font = game_font
 
 ## The size of normal dialogue text.
 define gui.text_size = gui.scale(24)

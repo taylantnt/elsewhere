@@ -69,7 +69,7 @@ define config.has_voice = True
 ## while the player is at the main menu. This file will continue playing
 ## into the game, until it is stopped or another file is played.
 
-define config.main_menu_music = "audio/Music/the_glass_walkway.mp3"
+define config.main_menu_music = "audio/Music/mainmenu.mp3"
 define config.main_menu_music_fadein = 2.0
 
 

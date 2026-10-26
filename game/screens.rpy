@@ -97,6 +97,16 @@ style frame:
 
 screen say(who, what):
 
+    ## The portrait of whoever is speaking, drawn BEFORE the dialogue plate so it
+    ## sits *behind* the textbox. Its feet are anchored to the bottom of the screen,
+    ## so the character stands on the floor and the plate covers their lower half,
+    ## instead of the picture hovering in mid-air and looking like it is missing a
+    ## body. A character appears here by being declared with image="name" and given
+    ## an "image side name" picture; anyone without one (the narrator, the MC) shows
+    ## nothing. No room for it on the phone variant.
+    if not renpy.variant("small"):
+        add SideImage() xpos gui.scale(6) ypos config.screen_height yanchor 1.0
+
     window:
         id "window"
 
@@ -113,15 +123,6 @@ screen say(who, what):
                 text who id "who"
 
         text what id "what"
-
-
-    ## The portrait of whoever is speaking, parked in the gutter to the left of the
-    ## dialogue column. Its bottom edge sits just above the textbox so it can never
-    ## cross the text. A character draws one of these by being declared with
-    ## image="name" and given an "image side name" picture; anyone without one (the
-    ## narrator, the MC) shows nothing here. No room for it on the phone variant.
-    if not renpy.variant("small"):
-        add SideImage() xpos gui.scale(6) yanchor 1.0 ypos (config.screen_height - gui.textbox_height - gui.scale(12))
 
 
 ## Make the namebox available for styling through the Character object.
@@ -264,6 +265,7 @@ screen quick_menu():
                 textbutton _("Save") action ShowMenu('save')
                 textbutton _("Q.Save") action QuickSave()
                 textbutton _("Q.Load") action QuickLoad()
+                textbutton _("Bag") action ShowMenu('inventory')
                 textbutton _("Prefs") action ShowMenu('preferences')
 
 
@@ -669,25 +671,60 @@ screen inventory():
 
     tag menu
 
+    ## Which pocket the player is currently looking in. The left column switches
+    ## it, the right panel describes whatever is inside.
+    default browsing = 0
+
     use game_menu(_("Bag"), scroll="viewport"):
 
         style_prefix "inventory"
 
         vbox:
-            spacing gui.scale(8)
+            spacing gui.scale(10)
 
-            label _("On hand")
+            label _("Money")
 
             text _("¥ [money]")
 
             null height gui.scale(14)
 
-            label _("Pockets")
+            label _("Bag")
 
             if inventory:
 
-                for item in inventory:
-                    text "· [item]"
+                hbox:
+                    spacing gui.scale(26)
+
+                    ## One button per pocket, so the player can step through the
+                    ## bag one item at a time.
+                    vbox:
+                        spacing gui.scale(2)
+
+                        for i, item in enumerate(inventory):
+
+                            textbutton item_name(item):
+                                action SetScreenVariable("browsing", i)
+                                selected (i == browsing)
+
+                    ## And the pocket that is currently open.
+                    vbox:
+                        spacing gui.scale(10)
+                        xsize gui.scale(420)
+
+                        for i, item in enumerate(inventory):
+
+                            if i == browsing:
+
+                                add item_icon(item, gui.scale(150))
+
+                                text item_name(item) style "inventory_item_name"
+
+                                if item_usable(item):
+                                    text _("Can be used") style "inventory_usable"
+                                else:
+                                    text _("Cannot be used") style "inventory_unusable"
+
+                                text item_desc(item) style "inventory_item_desc"
 
             else:
 
@@ -702,6 +739,25 @@ style inventory_label_text:
 
 style inventory_text:
     size gui.text_size
+
+## The pocket buttons on the left, and the item panel on the right.
+style inventory_button_text is gui_text:
+    size gui.scale(24)
+
+style inventory_item_name is inventory_text:
+    size gui.scale(30)
+
+style inventory_item_desc is inventory_text:
+    size gui.scale(21)
+    color "#b9b3a7"
+
+style inventory_usable is inventory_text:
+    size gui.scale(20)
+    color "#8fd694"
+
+style inventory_unusable is inventory_text:
+    size gui.scale(20)
+    color "#d68989"
 
 
 ## Load and Save screens #######################################################
@@ -1661,6 +1717,7 @@ screen quick_menu():
             textbutton _("Back") action Rollback()
             textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Auto") action Preference("auto-forward", "toggle")
+            textbutton _("Bag") action ShowMenu('inventory')
             textbutton _("Menu") action ShowMenu()
 
 
