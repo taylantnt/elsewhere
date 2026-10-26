@@ -1,0 +1,14 @@
+# Ren'Py generated and runtime files. These are rebuilt every time the game
+# runs, so they do not belong in version control.
+*.rpyc
+*.rpyb
+game/cache/
+game/saves/
+
+# Crash and run logs, written to the project root by the Ren'Py launcher.
+log.txt
+errors.txt
+traceback.txt
+
+# macOS
+.DS_Store
