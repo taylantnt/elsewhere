@@ -98,14 +98,15 @@ style frame:
 screen say(who, what):
 
     ## The portrait of whoever is speaking, drawn BEFORE the dialogue plate so it
-    ## sits *behind* the textbox. Its feet are anchored to the bottom of the screen,
-    ## so the character stands on the floor and the plate covers their lower half,
-    ## instead of the picture hovering in mid-air and looking like it is missing a
-    ## body. A character appears here by being declared with image="name" and given
-    ## an "image side name" picture; anyone without one (the narrator, the MC) shows
+    ## sits *behind* the textbox. For the main ADV layout we place it in the middle
+    ## and scale it up, so the speaker reads more like a Phoenix Wright witness
+    ## stand-up than a small side mugshot. It stays anchored to the floor, which
+    ## keeps the body grounded behind the textbox instead of hovering awkwardly.
+    ## A character appears here by being declared with image="name" and given an
+    ## "image side name" picture; anyone without one (the narrator, the MC) shows
     ## nothing. No room for it on the phone variant.
     if not renpy.variant("small"):
-        add SideImage() xpos gui.scale(6) ypos config.screen_height yanchor 1.0
+        add SideImage() xalign 0.5 ypos config.screen_height yanchor 1.0 zoom 1.8
 
     window:
         id "window"
@@ -319,11 +320,11 @@ screen wallet():
             style "wallet_frame"
 
             hbox:
-                spacing gui.scale(6)
+                spacing gui.scale(10)
 
-                text "¥" style "wallet_symbol"
+                text _("Cash") style "wallet_label"
 
-                text "[money]" style "wallet_text"
+                text "¥ [money]" style "wallet_text"
 
 
 init python:
@@ -331,6 +332,7 @@ init python:
 
 
 style wallet_frame is empty
+style wallet_label is gui_text
 style wallet_symbol is gui_text
 style wallet_text is gui_text
 
@@ -339,7 +341,12 @@ style wallet_frame:
     yalign 0.01
 
     background Solid("#0e0d0ccc")
-    padding (gui.scale(20), gui.scale(4), gui.scale(20), gui.scale(4))
+    padding (gui.scale(18), gui.scale(8), gui.scale(18), gui.scale(8))
+
+style wallet_label:
+    size gui.scale(16)
+    color "#b9b3a7"
+    yalign 0.5
 
 style wallet_symbol:
     size gui.scale(22)
@@ -348,7 +355,112 @@ style wallet_symbol:
 
 style wallet_text:
     size gui.scale(22)
+    color "#f4efe6"
     yalign 0.5
+
+
+## Main menu sakura drift #####################################################
+##
+## Blossoms that keep falling across the title screen for as long as it is open.
+## Each one gets its own set of numbers from sakura_petals() below, so no two
+## take the same route and the whole thing never visibly comes round again.
+
+init python:
+
+    def sakura_petals(count=30):
+        """A fresh bag of blossom routes, one per petal.
+
+        The screen calls this once, through `default`, so the arrangement is
+        only decided when the menu opens and then holds still. Opening the menu
+        again deals a new one.
+        """
+        width = config.screen_width
+        petals = []
+
+        for _i in range(count):
+
+            fall = renpy.random.uniform(9.0, 17.0)
+
+            petals.append({
+                # Where it comes in, and how long the whole descent takes. The
+                # spread of fall times is what stops the petals ever marching
+                # in step: the fast ones lap the slow ones within a pass or two.
+                "x": renpy.random.randint(-40, width + 40),
+                "fall": fall,
+
+                # A short head start, so they do not all leave the tree on the
+                # same beat when the menu first opens.
+                "phase": renpy.random.uniform(0.2, 5.0),
+
+                # How far it wanders sideways, its size, how solid it is, and
+                # how far it turns. The turn is a whole number of rotations so
+                # that the loop joins up without a visible snap.
+                "sway": renpy.random.randint(50, 150) * renpy.random.choice((-1, 1)),
+                "size": renpy.random.uniform(0.5, 1.05),
+                "fade": renpy.random.uniform(0.4, 0.8),
+                "spin": renpy.random.choice((-720.0, -360.0, 360.0, 720.0)),
+            })
+
+        return petals
+
+
+## One blossom. Each block below repeats on its own, forever, and each one sets
+## its own starting value first, which is what lets the loop join up cleanly.
+transform petal_fall(p):
+
+    subpixel True
+    xanchor 0.5
+    yanchor 0.5
+    zoom p["size"]
+
+    parallel:
+        # Wait its turn, drift all the way down, then start again from the top.
+        pause p["phase"]
+        ypos -90
+        linear p["fall"] ypos config.screen_height + 80
+        repeat
+
+    parallel:
+        # Fades up just after it leaves the top edge, and out again near the
+        # floor, so neither end of the journey shows a hard edge.
+        pause p["phase"]
+        alpha 0.0
+        linear 0.9 alpha p["fade"]
+        pause p["fall"] - 2.0
+        linear 1.1 alpha 0.0
+        repeat
+
+    parallel:
+        # The breeze: over to the right, back past where it started, home.
+        pause p["phase"]
+        xpos p["x"]
+        ease p["fall"] * 0.3 xpos p["x"] + p["sway"]
+        ease p["fall"] * 0.4 xpos p["x"] - p["sway"]
+        ease p["fall"] * 0.3 xpos p["x"]
+        repeat
+
+    parallel:
+        # And a lazy turn as it goes.
+        pause p["phase"]
+        rotate 0
+        linear p["fall"] * 0.55 rotate p["spin"] * 0.55
+        linear p["fall"] * 0.45 rotate p["spin"]
+        repeat
+
+## The blossom itself. Drawn as art rather than a wingding character: neither of
+## the game's fonts carries the ❀/✿ dingbats, so text petals rendered as blank
+## space and nothing ever appeared on screen.
+image petal = "images/ui/petal.png"
+
+screen sakura_blossoms():
+
+    ## Decided once, when the menu opens, and then left alone. Building the list
+    ## inside the loop instead would re-roll every petal on each screen refresh,
+    ## which would make them jump around mid-air.
+    default petals = sakura_petals()
+
+    for p in petals:
+        add "petal" at petal_fall(p)
 
 
 ################################################################################
@@ -430,6 +542,7 @@ screen main_menu():
     tag menu
 
     add gui.main_menu_background
+    use sakura_blossoms
 
     ## This empty frame darkens the main menu.
     frame:
@@ -448,10 +561,8 @@ screen main_menu():
         vbox:
             style "main_menu_vbox"
 
-            text "[config.name!t]":
-                style "main_menu_title"
-
-            ## A hairline rule that ties the title to the version below it.
+            ## Only the version sits here now. The title block used to sit above it,
+            ## but the wordmark on the background art carries the name already.
             add Solid(gui.accent_color) xsize gui.scale(240) ysize gui.scale(2) xalign 1.0
 
             text "[config.version]":
@@ -671,68 +782,98 @@ screen inventory():
 
     tag menu
 
-    ## Which pocket the player is currently looking in. The left column switches
-    ## it, the right panel describes whatever is inside.
+    ## Which slot the player is currently looking at.
     default browsing = 0
 
-    use game_menu(_("Bag"), scroll="viewport"):
+    use game_menu(_("Bag")):
 
         style_prefix "inventory"
 
+        if inventory:
+            $ current_index = browsing if browsing < len(inventory) else 0
+            $ current_item = inventory[current_index]
+
         vbox:
-            spacing gui.scale(10)
+            spacing gui.scale(18)
 
-            label _("Money")
+            frame:
+                style "inventory_money_frame"
 
-            text _("¥ [money]")
+                hbox:
+                    spacing gui.scale(14)
 
-            null height gui.scale(14)
-
-            label _("Bag")
+                    text _("Cash") style "inventory_money_label"
+                    text "¥ [money]" style "inventory_money_value"
 
             if inventory:
 
-                hbox:
-                    spacing gui.scale(26)
+                frame:
+                    style "inventory_grid_frame"
 
-                    ## One button per pocket, so the player can step through the
-                    ## bag one item at a time.
-                    vbox:
-                        spacing gui.scale(2)
+                    vpgrid:
+                        cols 4
+                        mousewheel True
+                        draggable True
+                        spacing gui.scale(14)
+                        ymaximum gui.scale(265)
 
                         for i, item in enumerate(inventory):
 
-                            textbutton item_name(item):
+                            button:
+                                style "inventory_slot_button"
                                 action SetScreenVariable("browsing", i)
-                                selected (i == browsing)
+                                selected (i == current_index)
 
-                    ## And the pocket that is currently open.
-                    vbox:
-                        spacing gui.scale(10)
-                        xsize gui.scale(420)
+                                vbox:
+                                    xalign 0.5
+                                    yalign 0.5
+                                    spacing gui.scale(8)
 
-                        for i, item in enumerate(inventory):
+                                    add item_icon(item, gui.scale(94)) xalign 0.5
+                                    text item_name(item) style "inventory_slot_name" xalign 0.5
 
-                            if i == browsing:
+                frame:
+                    style "inventory_detail_frame"
 
-                                add item_icon(item, gui.scale(150))
+                    hbox:
+                        spacing gui.scale(24)
 
-                                text item_name(item) style "inventory_item_name"
+                        add item_icon(current_item, gui.scale(150)) yalign 0.5
 
-                                if item_usable(item):
-                                    text _("Can be used") style "inventory_usable"
-                                else:
-                                    text _("Cannot be used") style "inventory_unusable"
+                        vbox:
+                            spacing gui.scale(10)
+                            xsize gui.scale(560)
 
-                                text item_desc(item) style "inventory_item_desc"
+                            text item_name(current_item) style "inventory_item_name"
+
+                            if item_usable(current_item):
+                                text _("Can be used") style "inventory_usable"
+                            else:
+                                text _("Cannot be used") style "inventory_unusable"
+
+                            null height gui.scale(2)
+
+                            text item_desc(current_item) style "inventory_item_desc"
 
             else:
 
-                text _("Nothing yet. Everything he owns still fits in his suitcase.")
+                frame:
+                    style "inventory_detail_frame"
+
+                    text _("Nothing yet. Everything he owns still fits in his suitcase.") style "inventory_empty_text"
 
 
 style inventory_label is label_text
 style inventory_text is gui_text
+style inventory_money_frame is empty
+style inventory_money_label is inventory_text
+style inventory_money_value is inventory_text
+style inventory_grid_frame is empty
+style inventory_detail_frame is empty
+style inventory_slot_button is button
+style inventory_slot_button_text is gui_text
+style inventory_slot_name is inventory_text
+style inventory_empty_text is inventory_text
 
 style inventory_label_text:
     size gui.label_text_size
@@ -740,9 +881,45 @@ style inventory_label_text:
 style inventory_text:
     size gui.text_size
 
+style inventory_money_frame:
+    background Solid("#11100ecc")
+    padding (gui.scale(20), gui.scale(14), gui.scale(20), gui.scale(14))
+
+style inventory_money_label:
+    size gui.scale(18)
+    color "#b9b3a7"
+    yalign 0.5
+
+style inventory_money_value:
+    size gui.scale(28)
+    color "#f4efe6"
+    yalign 0.5
+
+style inventory_grid_frame:
+    background Solid("#0f0e0ccc")
+    padding (gui.scale(16), gui.scale(16), gui.scale(16), gui.scale(16))
+
+style inventory_detail_frame:
+    background Solid("#151310dd")
+    padding (gui.scale(22), gui.scale(22), gui.scale(22), gui.scale(22))
+
+style inventory_slot_button:
+    xminimum gui.scale(178)
+    yminimum gui.scale(156)
+    padding (gui.scale(14), gui.scale(14), gui.scale(14), gui.scale(14))
+    background Solid("#ffffff08")
+    hover_background Solid("#ffffff12")
+    selected_idle_background Solid("#c79b5928")
+    selected_hover_background Solid("#c79b5938")
+
 ## The pocket buttons on the left, and the item panel on the right.
 style inventory_button_text is gui_text:
     size gui.scale(24)
+
+style inventory_slot_name:
+    size gui.scale(18)
+    textalign 0.5
+    color "#f0ece3"
 
 style inventory_item_name is inventory_text:
     size gui.scale(30)
@@ -758,6 +935,10 @@ style inventory_usable is inventory_text:
 style inventory_unusable is inventory_text:
     size gui.scale(20)
     color "#d68989"
+
+style inventory_empty_text:
+    size gui.scale(22)
+    color "#c6c0b4"
 
 
 ## Load and Save screens #######################################################

@@ -131,7 +131,7 @@ define gui.version_text_color = gui.idle_small_color
 ## Main and Game Menus #########################################################
 
 ## The images used for the main and game menus.
-define gui.main_menu_background = "gui/main_menu.png"
+define gui.main_menu_background = "images/backgrounds/elsewhere.png"
 define gui.game_menu_background = "gui/game_menu.png"
 
 

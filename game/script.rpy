@@ -104,17 +104,27 @@ define gate_shake = Move((22, 0), (-22, 0), .18, bounce=True, repeat=True, delay
 # airport.png is only 626x417, so it is scaled up and centre-cropped to fill the
 # 1280x720 screen rather than stretched out of shape. It has real art, so it gets
 # no placeholder label.
-image bg_airport = Transform("images/backgrounds/airport.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_airport = Transform("images/backgrounds/bg_airport.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_station = Transform("images/backgrounds/bg_station.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_platform = Transform("images/backgrounds/bg_platform.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_home = Transform("images/backgrounds/bg_home_inside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_room = Transform("images/backgrounds/bg_room.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_train_interior = Transform("images/backgrounds/bg_train_interior.jpg", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_home_exterior = Transform("images/backgrounds/bg_home_exterior.jpg", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_home_exterior_morning = Transform("images/backgrounds/bg_home_exterior_morning.jpg", xysize=(config.screen_width, config.screen_height), fit="cover")
+
+# The kitchen on the first morning, which is where Act Five happens. Real art, so
+# it gets no placeholder label.
+image bg_kitchen = Transform("images/backgrounds/bg_kitchen_morning.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 
 # Every scene below is still waiting for its background.
 image bg_taxi_stand = placeholder_bg("#101014", "TAXI STAND BACKGROUND")
 image bg_taxi_interior = placeholder_bg("#0c0c11", "INSIDE TAXI")
-image bg_station = placeholder_bg("#14161a", "TRAIN STATION")
-image bg_platform = placeholder_bg("#171b20", "NEXT PLATFORM")
-image bg_train_interior = placeholder_bg("#1a1815", "INSIDE TRAIN")
-image bg_home_exterior = placeholder_bg("#0d0c10", "OUTSIDE THE HOUSE")
-image bg_home = placeholder_bg("#1C1B18", "INSIDE THE HOUSE")
-image bg_room = placeholder_bg("#151310", "MY ROOM")
+
+# The school gate on the first morning. There is a bg_campus.png sitting in
+# images/backgrounds that may or may not be the right shot for this; until that is
+# decided the placeholder keeps the scene readable and obvious.
+image bg_school_gate = Transform("images/backgrounds/bg_school_gate.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 
 image bg_train = Solid("#1C1B18")
 image hospital_flash = Solid("#d9e6ee")
@@ -219,14 +229,14 @@ init python:
         },
 
         "ticket_320": {
-            "name": "¥320 Ticket",
+            "name": "320 Yen Ticket",
             "icon": "images/ui/ticket.png",
             "desc": "I purchased the wrong ticket, so this cannot be used.",
             "usable": False,
         },
 
         "ticket_800": {
-            "name": "¥800 Ticket",
+            "name": "800 Yen Ticket",
             "icon": "images/ui/ticket.png",
             "desc": "I purchased the wrong ticket, so this cannot be used.",
             "usable": False,
@@ -290,7 +300,7 @@ init python:
 # --- CHARACTERS ---
 # Added character_callback for typewriter sound
 define mc = Character("Me", callback=type_sound)
-define hikari = Character("Hikari", color="#ffb6c1", callback=type_sound) 
+define hikari = Character("Hikari", color="#ffb6c1", callback=type_sound, image="sister")
 define orson = Character("Orson", color="#a9a9a9", callback=type_sound)
 define chef = Character("Chef", color="#deb887", callback=type_sound)
 define sim = Character("Sim", color="#add8e6", callback=type_sound)
@@ -355,6 +365,11 @@ image side security = At(Transform("images/characters/security.png", xysize=(256
 image side mother = At(Transform("images/characters/mother.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side father = At(Transform("images/characters/father.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
+# Hikari. She is asleep on the night he arrives and awake on the morning after,
+# which makes the kitchen her first appearance on screen, so this is the first
+# time her picture is needed.
+image side sister = At(Transform("images/characters/sister.png", xysize=(256, 384), fit="contain"), portrait_idle)
+
 define config.speaking_attribute = "talking"
 
 # --- HOW TO GIVE SOMEONE A MOUTH ---
@@ -385,6 +400,11 @@ define config.speaking_attribute = "talking"
 
 # Dream characters
 define robed_figure = Character("Robed Figure", color="#000000", callback=type_sound)
+
+# "doctor" is kept for the day the room finally speaks to him as a person. Until
+# then, the voices that bleed into the dream are deliberately written as plain
+# narration: no name, no portrait, so they arrive as sentences he overhears
+# rather than as somebody talking to him.
 define doctor = Character("Doctor", color="#ff4444", callback=type_sound)
 
 # Narration (a bare "quoted line") goes through the built-in narrator, so it needs
@@ -454,7 +474,7 @@ label prologue:
         linear 0.1 alpha 0.3
         linear 0.1 alpha 0.0
     
-    doctor "Subject assimilation test initiating..."
+    "Test initiating..."
     
     "I should focus on what’s ahead."
     "A new home. A host family. A whole country waiting to be explored."
@@ -519,11 +539,11 @@ label talk_timid_man:
     jump airport_exploration
 
 label talk_cheerful_woman:
-    stranger "こんにちは！初めてお会いしますね！"
-    stranger "日本へようこそ！楽しい滞在になりますように！"
-    stranger "もし道に迷ったら、遠慮なく聞いてくださいね！"
+    stranger "こんにちは！日本へようこそ！"
+    stranger "それでは、失礼いします！幸せになりますように！"
     mc "(Uhh… she said something about… sushi?)"
-    mc "(Or maybe she thinks I look like someone she knows?)"
+    mc "(Wait. Did she just recommend a sushi restaurant?)"
+    mc "(Or was that a blessing for my sushi-related future?)"
     mc "(Well, she's smiling, so I'll just smile back and nod.)"
     $ talked_to_npc2 = True
     jump airport_exploration
@@ -642,7 +662,7 @@ label travel_choice:
     mc "(The veteran said there were two ways. Cheap and confusing, or simple and expensive.)"
 
     menu:
-        "Take a taxi (about ¥18,000)":
+        "Take a taxi (about 18,000 Yen)":
             jump taxi_warning
         "Take the train (much cheaper)":
             $ travel_method = "train"
@@ -818,9 +838,9 @@ label train_gate_slam:
     "I put my head down and step forward like I've done it a thousand times."
     # The buzz of the gate refusing him, and a shake that lasts long enough to
     # actually feel like a wall hitting his legs.
+    mc "WHOAH!"
     $ play_sfx("audio/SFX/gate.wav")
     "The flaps snap shut hard, right across my shins, and a buzzer goes off above my head loud enough to turn three heads." with gate_shake
-    mc "WHOAH!"
     mc "(That thing almost closed on my legs!)"
     mc "(Okay. Okay. So that's why everybody has a ticket.)"
     mc "(Oh. Right. I need to buy a ticket first.)"
@@ -846,7 +866,7 @@ label train_ticket:
 
 label ticket_machine:
     menu:
-        "Press the ¥320 button":
+        "Press the 320 Yen Ticket button":
             if has_item("ticket_320"):
                 mc "(I already purchased this ticket. It's the wrong one.)"
                 jump ticket_machine
@@ -857,7 +877,7 @@ label ticket_machine:
             mc "(Put it down. Try again.)"
             jump ticket_machine
 
-        "Press the ¥800 button":
+        "Press the 800 Yen Ticket button":
             if has_item("ticket_800"):
                 mc "(I already purchased this ticket. It's the wrong one.)"
                 jump ticket_machine
@@ -866,7 +886,7 @@ label ticket_machine:
             mc "(800. That's the number from the pamphlet.)"
             mc "(That has to be it. Please let that be it.)"
             "I hold it up against the fare map above the machines. The arrow pointing at 中野 lands on a different row entirely."
-            mc "(...Not it. Not it either.)"
+            mc "(Not it..)"
             jump ticket_machine
 
         "Give up and ask a station attendant":
@@ -1108,4 +1128,494 @@ label home_arrival:
     scene black with Dissolve(2.5)
     stop music fadeout 1.0
     pause 1.0
+    jump dream_sequence
+
+
+################################################################################
+## ACT THREE, FIRST BEAT: THE FIRST DREAM
+################################################################################
+##
+## He falls asleep at the end of the first night and the day he just had comes
+## back to him in the wrong order, with things in it that were never there.
+## Underneath the dream there are two voices in a room he has never been in,
+## discussing him in the third person. They are the same white light and the same
+## clinical register that cut into him on the plane, so the player has already
+## been taught how to read them: this is what is actually happening to him.
+##
+## The mini-game asks him to sort the real memories of today from the planted
+## ones. It is not possible to fail it. It is very possible to be told things he
+## should not know.
+
+# The whole picture stutters sideways and then recovers. Slow enough to read as
+# damage rather than as movement, and it never settles into a rhythm.
+transform glitch_jitter:
+    subpixel True
+    block:
+        xoffset 0 yoffset 0
+        pause 1.2
+        xoffset -16 yoffset 4
+        pause 0.05
+        xoffset 11 yoffset -5
+        pause 0.04
+        xoffset -6 yoffset 1
+        pause 0.07
+        xoffset 0 yoffset 0
+        pause 0.6
+        repeat
+
+
+init python:
+
+    def dream_static_bars(count=4):
+        """A few bright scan lines, in new places every time they are asked for.
+
+        The static screen calls this on a fast timer, so the interference never
+        holds still long enough to read as a pattern.
+        """
+        width = config.screen_width
+        height = config.screen_height
+        bars = []
+
+        for _i in range(count):
+            bars.append(
+                Transform(
+                    Solid("#ffffff"),
+                    xysize=(width, renpy.random.randint(1, 4)),
+                    ypos=renpy.random.randint(0, height - 4),
+                    alpha=renpy.random.uniform(0.05, 0.16),
+                )
+            )
+
+        return bars
+
+    def build_dream_cards(travel_method, boarded_shinkansen):
+        """Today, as four memories that happened and two that did not.
+
+        The true cards are written from the route the player actually took, so the
+        dream is *his* day rather than a generic one. The false ones are the room's
+        own furniture: a face with no name, and a corridor that keeps repeating.
+        """
+        if travel_method == "taxi":
+            real = [
+                "The plane doors opening, and the air on the other side of them",
+                "A driver who bowed before he opened the door for me",
+                "A meter climbing in hundreds, and never once in ones",
+                "A bell that rang louder than the whole street",
+            ]
+        elif boarded_shinkansen:
+            real = [
+                "The plane doors opening, and the air on the other side of them",
+                "A board on the platform that changed while I was reading it",
+                "The express, and the country going past sideways",
+                "A bell that rang louder than the whole street",
+            ]
+        else:
+            real = [
+                "The plane doors opening, and the air on the other side of them",
+                "A board on the platform that changed while I was reading it",
+                "A local train that stopped at every single station",
+                "A bell that rang louder than the whole street",
+            ]
+
+        fake = [
+            "A woman in white, calling a name that is almost mine",
+            "A corridor of doors, and behind every one of them my room",
+        ]
+
+        cards = []
+        for i, text in enumerate(real):
+            cards.append({"id": "real%d" % i, "text": text, "real": True})
+        for i, text in enumerate(fake):
+            cards.append({"id": "fake%d" % i, "text": text, "real": False})
+
+        # Shuffled once per showing, so the same words do not land in the same
+        # squares twice in a row and the player cannot learn the board.
+        renpy.random.shuffle(cards)
+        return cards
+
+
+# The interference itself. Drawn on the overlay layer so it crosses the dialogue
+# as well as the picture: the voice he is hearing is not coming from the room he
+# thinks he is standing in.
+screen dream_static():
+    layer "overlay"
+
+    default bars = dream_static_bars()
+    timer 0.06 repeat True action SetScreenVariable("bars", dream_static_bars())
+
+    for b in bars:
+        add b
+
+
+# The sorting game. The screen only draws what the label tells it is true, so the
+# label can interrupt the dream with a voice from the other room between picks,
+# which is the whole reason this is not a single self-contained screen.
+screen dream_reconstruct(cards, found, missed):
+
+    modal True
+    zorder 100
+
+    add Solid("#04050a")
+
+    vbox:
+        xalign 0.5
+        ypos 48
+        spacing 8
+
+        text "PUT THE DAY BACK":
+            xalign 0.5
+            size 34
+            color "#8fd8ff"
+            outlines []
+
+        text "Four of these happened today. Touch the four that are yours.":
+            xalign 0.5
+            size 19
+            color "#6b7a8c"
+            outlines []
+
+    vbox:
+        xalign 0.5
+        yalign 0.58
+        spacing 18
+
+        for row in range(0, len(cards), 3):
+
+            hbox:
+                spacing 18
+
+                for c in cards[row:row + 3]:
+
+                    $ is_found = c["id"] in found
+                    $ is_missed = c["id"] in missed
+
+                    button:
+                        xysize (300, 150)
+                        background Solid("#14301f" if is_found else ("#301016" if is_missed else "#11151c"))
+                        hover_background Solid("#1d2531")
+                        sensitive (not is_found and not is_missed)
+                        action Return(c)
+
+                        text c["text"]:
+                            xalign 0.5
+                            yalign 0.5
+                            xmaximum 250
+                            text_align 0.5
+                            size 19
+                            line_spacing 2
+                            color ("#86e3ac" if is_found else ("#ff9aa2" if is_missed else "#e8e2d6"))
+
+
+label dream_sequence:
+
+    # He is asleep. The house is quiet and the dark behind his eyes is not.
+    stop music fadeout 2.0
+    pause 1.5
+
+    # The dream gets its own bed of sound. It is a loop, so nothing has to be
+    # restarted while the sequence plays out.
+    play music "audio/Music/dream sequence 1 (short loop).wav" fadein 3.0
+
+    # The first thing that is wrong is that the dark is not quiet. Something thin
+    # and bright keeps crossing it, like a scan line on a tired television.
+    show screen dream_static
+    pause 1.4
+    hide screen dream_static
+
+    "I'm standing in the airport again."
+
+    scene bg_airport at glitch_jitter with Dissolve(0.35)
+    "The same hall. The same sign. The gate I sat at for four hours with a bag between my feet."
+    "Only the announcements are arriving before anyone speaks them, and the hall is empty."
+    "I walk it end to end. Both times I come out at the same gate."
+
+    # The first slip. Same white light, same clinical voice that cut into him on
+    # the plane, so this is the room he is actually lying in.
+    show hospital_flash onlayer overlay at truecenter:
+        alpha 0.0
+        linear 0.1 alpha 0.45
+        linear 0.1 alpha 0.0
+    "Keep the room at eighteen. He dreams less when it's cold."
+
+    show screen dream_static
+    pause 0.6
+    hide screen dream_static
+
+    if travel_method == "taxi":
+
+        scene bg_taxi_interior at glitch_jitter with Dissolve(0.3)
+        "Then the taxi. Same seat, same smell of cleaner, same driver's shoulders exactly where I left them."
+        "The meter is climbing the way it climbed, in hundreds, never in ones."
+        "But the road in the windscreen in front of him has no end to it."
+        mc "Excuse me. How much further?"
+        "He doesn't answer. He doesn't turn around. The meter goes up."
+
+    else:
+
+        scene bg_train_interior at glitch_jitter with Dissolve(0.3)
+        "Then the train. Same carriage, same windows, the same handrail I held for an hour."
+        "The stations go past in the right order, and then they go past in the right order again."
+        mc "Did we already stop here?"
+        "Nobody looks up. They are all reading, and none of the pages turn."
+
+    scene bg_home_exterior at glitch_jitter with Dissolve(0.35)
+    "Then the street. Narrow. Bicycles against the wall. One light on behind the curtains."
+    "The bell is still ringing. It has been ringing underneath everything else this whole time."
+    hide screen dream_static
+
+    # A second slip, harder than the first, and this time the room answers a
+    # question he has not asked yet.
+    show hospital_flash onlayer overlay at truecenter:
+        alpha 0.0
+        linear 0.08 alpha 0.6
+        linear 0.08 alpha 0.0
+    "Six hours. He has been under six hours."
+    "Let him finish the day. The consolidation needs the whole day."
+
+    scene black with Dissolve(0.6)
+    "And then the pieces of today come loose and scatter."
+    mc "No. Wait."
+    mc "I know what today was. I was there for all of it."
+    "Everything I did today is lying on the floor of my head, mixed up with things I have never seen."
+    "I don't know why it matters that I put it back in the right order."
+    "It matters."
+
+    window hide
+
+    # The game. Four of the cards are the day he actually had; the rest are what
+    # the room would prefer he remembered. Nothing here can be lost, only looked
+    # at, so the sequence stays gentle and the unease stays in the writing.
+    $ dream_cards = build_dream_cards(travel_method, boarded_shinkansen)
+    $ dream_found = []
+    $ dream_missed = []
+    $ dream_target = len([c for c in dream_cards if c["real"]])
+
+    while len(dream_found) < dream_target:
+
+        call screen dream_reconstruct(dream_cards, dream_found, dream_missed)
+        $ dream_pick = _return
+
+        if dream_pick["real"]:
+
+            $ dream_found.append(dream_pick["id"])
+            $ play_sfx("audio/Music/mega man too_ (pickup).wav")
+
+            if len(dream_found) == 1:
+                "That one is mine. That one happened."
+            elif len(dream_found) == 2:
+                "That one too. I can still smell it."
+            elif len(dream_found) == 3:
+                "Three. That one happened, I'm certain of it."
+            else:
+                "And that one. That is all four."
+
+        else:
+
+            $ dream_missed.append(dream_pick["id"])
+            show screen dream_static
+            $ play_sfx("audio/SFX/gate.wav")
+
+            if len(dream_missed) == 1:
+                "He is reaching for something that was never in the scene."
+                "Log the deviation and leave it. Do not correct him."
+            else:
+                "Should we bring him up?"
+                "No. Let him keep looking. It is more useful when he finds it himself."
+
+            hide screen dream_static
+
+    window hide
+    "Four of them. All four are mine, and they are back where they go."
+    "The airport, the ride, the street, the bell. That was today."
+    "That is all of it. That is everything that happened."
+
+    # And the last thing the dream does is answer him, which a dream should not be
+    # able to do.
+    show hospital_flash onlayer overlay at truecenter:
+        alpha 0.0
+        linear 0.12 alpha 0.7
+        linear 0.12 alpha 0.0
+    "Consolidation complete. Bring him up slowly."
+
+    stop music fadeout 3.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+
+    jump morning_call
+
+
+################################################################################
+## ACT THREE, SECOND BEAT: THE FIRST MORNING
+################################################################################
+
+label morning_call:
+
+    # Waking up. The dream lets go of him slowly, the way a hand does once it has
+    # decided you can stand on your own.
+    #
+    # tea_under_the_canopy is a warm, unhurried track and it is the closest thing
+    # in the library to a kitchen in the morning. Easy to swap for something else
+    # once the rest of the house has a soundtrack.
+    scene bg_room with Dissolve(2.0)
+    play music "audio/Music/(Hanami? Nature setting?) tea_under_the_canopy.mp3" fadein 2.0
+
+    "Light in a room I still don't recognise. It takes me three seconds to remember where I am."
+    "Japan. The house. The room with the boxes in it."
+    mc "My first morning."
+    "The dream is already going soft at the edges, the way dreams do."
+    "Something about the airport. A road with no end on it. Two voices talking over me like I wasn't in the room."
+    mc "What was that about?"
+    "I try to hold onto it and it comes apart like wet paper."
+
+    # And then the house starts moving. This is the first Japanese household he
+    # has ever heard wake up.
+    "Then the whole house wakes up around me at once."
+    "Pans, somewhere below. A radio turned down low. Wood moving."
+    "Feet on the stairs, two steps at a time, and then three quick knocks on my door."
+    "It slides open before I can answer it."
+    hikari "Morning! You're awake. Good, I was about to give up on you."
+    "A girl about my age. School uniform jacket over track trousers, one earring in, hair still damp."
+    hikari "I'm Hikari. I sent you the emails."
+    mc "(That voice. I have been reading that voice since spring.)"
+    mc "Hikari. Right. Sorry, I thought you'd be older."
+    hikari "Everyone says that. I write like an old man, apparently. Mom's theory, not mine."
+    hikari "Come down when you're decent. There's breakfast, and there are a lot of opinions about it."
+    "She is gone before I work out which question to ask first."
+
+    scene bg_kitchen with walk_fade
+
+    "The kitchen smells like toast, green tea, and under both of those something older, like a cupboard that has always been a cupboard."
+    "Miharu is at the counter with her sleeves pushed up. Tetsuo is already at the table, and he has not started eating."
+    mother "There he is. Sit, sit. It's only rice and soup, but you'll want something warm in you before you go out."
+    mc "Thank you. Good morning. Ohayou gozaimasu."
+    father "Ohayou."
+    mother "Oh, listen to that. Tetsuo, he's been practising."
+    father "Hm."
+    "There is a folded newspaper beside his bowl. He has not opened it. He looks at me the way you look at a delivery you didn't order."
+
+    if travel_method == "taxi":
+        father "Miharu tells me you came from the airport by taxi."
+        father "That is the expensive way."
+        mc "(He says it like a fact about me, not about the taxi.)"
+        father "It is also the correct way, when you land that late and you are carrying things. Know what things cost here and you will be fine."
+    elif boarded_shinkansen:
+        father "Miharu tells me you came from the airport by train. And that you found the express."
+        father "Most people who arrive here do not find the express on their first day."
+        mc "(I think that was a compliment. It was delivered like a customs form.)"
+        father "Good. Then you can read a timetable. That will be useful to you here."
+    else:
+        father "Miharu tells me you came from the airport by train."
+        father "Which is the long way, at that hour."
+        mc "(He says it like a fact about me, not about the train.)"
+        father "It is also the cheaper way. Knowing the difference between the long way and the wrong way is most of living here."
+
+    mother "Tetsuo. He only landed yesterday."
+    father "I am being helpful."
+    mother "You are being a schedule."
+    "Hikari puts a bowl down in front of me without being asked and sits opposite, elbows on the table, which Tetsuo visibly decides not to mention."
+    hikari "Ignore him. He does this to everybody. He did it to me, and I have lived here my whole life."
+    hikari "Okay. School. You're in Class 2-B, which is my class, which was completely not arranged."
+    mc "Was it arranged?"
+    hikari "It was arranged."
+    hikari "Everyone has been asking about you since April, by the way. There is a pool."
+    mc "A pool."
+    hikari "On whether you'd actually turn up. I'm not telling you what I bet."
+
+    # Tetsuo's one piece of advice for the year, and it is also the thesis of his
+    # character: keep to the routine and nothing bad can happen.
+    father "The school will have rules. They will all be written down, and they will all be simple."
+    father "Follow them and nothing will happen to you. That is all a school is."
+    mc "(He says it like a fact about schools. It lands like a fact about me.)"
+
+    mother "Don't listen to him, dear. The teachers are kind. The other students will be curious for a week and then they will be ordinary."
+    mother "If anything at all happens, you call me. You still have the number I wrote out for you?"
+    mc "I have it."
+    mother "You have it. Good."
+    mc "(She asks the way people ask when they already know the answer.)"
+
+    hikari "Right. Go and get changed. Your uniform is on the bed, and before you say anything, it's the right size, don't ask how."
+    mc "How?"
+    hikari "Don't ask."
+
+    father "I will be at the office until eight."
+    father "Hikari. Take him the proper way."
+    hikari "I always take the proper way."
+    father "You take the short way."
+    hikari "Today I'll take the proper way."
+    "He nods, once, and picks up his bag."
+    father "Your Japanese will improve faster if you use it badly than if you don't use it at all."
+    hikari "That was his version of a compliment. Take it, they're rare."
+    father "Hikari."
+    hikari "I said nothing. Go to work."
+
+    mother "Go on, both of you. Take an umbrella, it's meant to rain this afternoon."
+    mother "And eat something before you leave. You as well, Hikari. That was not breakfast."
+    hikari "It was toast."
+    mother "It was one toast."
+
+    "And then the kitchen is loud and ordinary, and I am standing in the middle of it with a bowl in my hands and no idea what to do with either."
+    hikari "Hey. You okay?"
+    mc "Yeah. Just a lot of firsts in one morning."
+    hikari "First morning's the worst one. It gets easier by Wednesday. I promise."
+
+
+################################################################################
+## ACT THREE, THIRD BEAT: WALKING TO SCHOOL
+################################################################################
+##
+## Out of the house, and the first daylight he has seen in Japan that is not an
+## airport or a train window. Hikari talks the whole way, and the reason she
+## talks the whole way is the character note.
+
+label school_morning:
+
+    scene bg_home_exterior_morning with walk_fade
+    play music "audio/Music/(shibuya morning) scramble_hour.mp3" fadein 2.0
+
+    "The street looks different in daylight, which is a stupid thing to notice and I notice it anyway."
+    "The bicycles are the same. The gutter is the same. Everything is exactly the same and none of it is familiar."
+    hikari "You're walking too fast."
+    mc "I'm keeping up."
+    hikari "You're keeping up at a speed nobody walks at. It's fine. Everyone does it in their first week."
+    "She talks the entire way. Which station is ours. Which exit not to take. Which bakery to ignore and which one not to."
+    "She does not ask me a single question about myself, and halfway there I understand that this is deliberate."
+    mc "(She's filling the silence so I don't have to fill it.)"
+
+    scene bg_school_gate with walk_fade
+
+    "And then there it is."
+    "A wall, a gate, a building behind the gate, and a few hundred people my age going through it like water through a grate."
+    hikari "So. This is it. That's the school."
+    mc "It's big."
+    hikari "It's a school. They're all big."
+
+    # The pamphlet he picked up at the airport had a photograph of a school on the
+    # back page. Only fires if he actually took one, which is why it is worth
+    # having taken it.
+    if has_pamphlet:
+        "Something at the back of my head moves, very slightly, and does not say why."
+        mc "(That photo. The one on the pamphlet from the airport.)"
+        mc "(Same gate. Same wall. Same two students standing off to the left, in the same place.)"
+        mc "(I'm remembering it wrong. That's all. I only looked at it once.)"
+        "I am almost certain I only looked at it once."
+
+    hikari "Rules. Stick to the left when you walk, shoes off at the door, and your locker already has your name on it."
+    "She says that last part too easily as well."
+    hikari "I'll meet you at the classroom. Second floor, east side. If you get lost, don't ask a teacher, ask someone in a uniform, they're nicer."
+    mc "You're leaving me?"
+    hikari "For ten minutes. I have to hand something in. You'll survive ten minutes."
+    hikari "Hey."
+    "She stops, and for a second she is not performing being cheerful. She is just cheerful, the way she is in her emails."
+    hikari "It's going to be fine. First day's always the worst one."
+    "And she goes."
+
+    "The gate keeps swallowing people. Somewhere inside, a bell starts up."
+    "I'm standing on the wrong side of it with a bag on my shoulder and a whole year in front of me."
+    mc "Okay."
+    mc "Let's do this."
+    "I step through."
+
+    window hide
+    scene black with Dissolve(2.5)
+    stop music fadeout 2.0
     return
