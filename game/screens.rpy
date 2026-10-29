@@ -328,7 +328,10 @@ screen wallet():
 
 
 init python:
-    config.overlay_screens.append("wallet")
+    ## The cash chip is switched off. The screen above is still fully defined, so
+    ## putting the indicator back on screen is this one line and nothing else.
+    # config.overlay_screens.append("wallet")
+    pass
 
 
 style wallet_frame is empty
@@ -785,6 +788,10 @@ screen inventory():
     ## Which slot the player is currently looking at.
     default browsing = 0
 
+    ## Which item is open, if any. Selecting a usable item sets this and the item
+    ## is drawn large over the menu; closing it clears the variable again.
+    default viewing = None
+
     use game_menu(_("Bag")):
 
         style_prefix "inventory"
@@ -846,8 +853,13 @@ screen inventory():
 
                             text item_name(current_item) style "inventory_item_name"
 
+                            ## A thing he can actually do something with gets a
+                            ## button that says what the thing does, not just a
+                            ## label saying it is possible. Everything else still
+                            ## says so, in red, so the difference is readable at a
+                            ## glance.
                             if item_usable(current_item):
-                                text _("Can be used") style "inventory_usable"
+                                textbutton item_use_label(current_item) action SetScreenVariable("viewing", current_item) style "inventory_action_button"
                             else:
                                 text _("Cannot be used") style "inventory_unusable"
 
@@ -861,6 +873,37 @@ screen inventory():
                     style "inventory_detail_frame"
 
                     text _("Nothing yet. Everything he owns still fits in his suitcase.") style "inventory_empty_text"
+
+    ## Opening an item. The Bag stays a menu, so the item is drawn large over it
+    ## rather than replacing it: the room dims, the thing itself takes the middle
+    ## of the screen, and it closes the same way it opened. Anywhere outside the
+    ## card closes it too, which is what a person tries first.
+    if viewing:
+
+        button:
+            style "inventory_dimmer"
+            action SetScreenVariable("viewing", None)
+            xfill True
+            yfill True
+
+            add Solid("#0b0a09e6")
+
+        frame:
+            background Solid("#1c1b18f2")
+            padding (gui.scale(34), gui.scale(28))
+            xalign 0.5
+            yalign 0.5
+
+            vbox:
+                spacing gui.scale(20)
+                xalign 0.5
+
+                text item_name(viewing) style "notice_label" xalign 0.5
+                add Solid("#3a352e") xysize (gui.scale(420), 1) xalign 0.5
+
+                add item_icon(viewing, gui.scale(520)) xalign 0.5
+
+                textbutton _("Close") action SetScreenVariable("viewing", None) style "notice_button" xalign 0.5
 
 
 style inventory_label is label_text
@@ -935,6 +978,27 @@ style inventory_usable is inventory_text:
 style inventory_unusable is inventory_text:
     size gui.scale(20)
     color "#d68989"
+
+## The dimmer behind an opened item. It is a button so clicking anywhere outside
+## the card closes the item, which is what a person tries first, but it carries
+## no plate of its own: only the dark.
+style inventory_dimmer is button:
+    background None
+    hover_background None
+    padding (0, 0, 0, 0)
+
+## The action button on a usable item, the one that opens it. It reads as a small
+## warm plate so it looks like something to press, not another line of caption.
+style inventory_action_button is button:
+    background Solid("#c79b5926")
+    hover_background Solid("#c79b5940")
+    padding (gui.scale(20), gui.scale(9), gui.scale(20), gui.scale(9))
+
+style inventory_action_button_text is button_text:
+    size gui.scale(20)
+    kerning gui.scale(2)
+    idle_color "#e8cfa4"
+    hover_color "#f4efe6"
 
 style inventory_empty_text:
     size gui.scale(22)
