@@ -3,13 +3,12 @@
 ## Act 1: The Arrival (The Monologue)
 - **Scene 1: The Airplane**: Introduction to the protagonist's internal monologue. Audio: `dream sequence 1`.
 - **Scene 2: Narita Airport**: The first hurdle. No phone, language barrier.
-- **Scene 3: The Journey Home**: Multiple solutions (Taxi, Bus, Train). 
+- **Scene 3: The Journey Home**: Multiple solutions (Taxi, Train). 
     - *Taxi*: High cost, low effort.
-    - *Bus*: Medium cost, high time.
     - *Train*: Low cost, high difficulty (navigation puzzle).
 
 ## Act 2: Settling In (Daily Life)
-- **Home Base**: Interacting with the Host Sister. First signs of the "glitch."
+- **Home Base**: Interacting with the Host Sister. First signs of the "glitch." in the dream sequences.
 - **Locations**:
     - **Ramen Shop**: First meeting with the Ramen Guy.
     - **Bar**: Meeting the Wolf Master.
