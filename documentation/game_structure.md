@@ -2,7 +2,7 @@
 
 ## Act 1: The Arrival (The Monologue)
 - **Scene 1: The Airplane**: Introduction to the protagonist's internal monologue. Audio: `dream sequence 1`.
-- **Scene 2: Narita/Haneda Airport**: The first hurdle. No phone, language barrier.
+- **Scene 2: Narita Airport**: The first hurdle. No phone, language barrier.
 - **Scene 3: The Journey Home**: Multiple solutions (Taxi, Bus, Train). 
     - *Taxi*: High cost, low effort.
     - *Bus*: Medium cost, high time.
