@@ -281,12 +281,14 @@ define gui.choice_button_borders = Borders(gui.scale(100), gui.scale(5), gui.sca
 define gui.choice_button_text_font = gui.text_font
 define gui.choice_button_text_size = gui.text_size
 define gui.choice_button_text_xalign = 0.5
-## A choice at rest sits on a near-black plate, so its text is light. The hovered
-## choice fills with the accent amber, so its text flips to near-black to stay
-## readable against it.
+## A choice at rest sits on a near-black plate, so its text is light. Hovering
+## does not repaint the plate in amber, because dark text over a mid-tone amber
+## is what made the old hover hard to read. The plate only lifts a little and
+## the text moves to the accent, which is the same "this is the one you are on"
+## language the navigation buttons already use.
 define gui.choice_button_text_idle_color = "#d6cbbb"
-define gui.choice_button_text_hover_color = "#1c1b18"
-define gui.choice_button_text_insensitive_color = "#5a5348"
+define gui.choice_button_text_hover_color = gui.accent_color
+define gui.choice_button_text_insensitive_color = "#6b6357"
 
 
 ## File Slot Buttons ###########################################################

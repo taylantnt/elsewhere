@@ -217,6 +217,20 @@ style input:
 screen choice(items):
     style_prefix "choice"
 
+    # Keep the most recent spoken line on screen while the answers are visible,
+    # so a choice reads like a reply to the conversation rather than a detached
+    # list floating in the middle of the scene.
+    $ last_line = renpy.last_say()
+
+    if last_line and last_line.what:
+
+        window:
+            style "choice_prompt_window"
+
+            add Solid(gui.accent_color) xpos gui.dialogue_xpos ypos gui.scale(5) xsize gui.dialogue_width ysize gui.scale(2)
+
+            text last_line.what style "choice_prompt_text"
+
     vbox:
         for i in items:
             textbutton i.caption action i.action
@@ -225,6 +239,8 @@ screen choice(items):
 style choice_vbox is vbox
 style choice_button is button
 style choice_button_text is button_text
+style choice_prompt_window is window
+style choice_prompt_text is say_dialogue
 
 style choice_vbox:
     xalign 0.5
@@ -236,8 +252,36 @@ style choice_vbox:
 style choice_button is default:
     properties gui.button_properties("choice_button")
 
+    ## The hovered choice keeps the dark plate of the idle one and simply lifts
+    ## it a shade, while the text switches to the accent. The amber plate it
+    ## used to swap in put near-black text on a mid-tone fill, which is what
+    ## made the hover hard to read.
+    ##
+    ## There is no insensitive art in gui/button, so a locked answer used to fall
+    ## back to the idle plate with dim text and read as selectable. It gets its
+    ## own recessed chip instead, so a closed door looks closed.
+    hover_background Solid("#3d362bf0")
+    insensitive_background Solid("#100f0dcc")
+
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
+
+style choice_prompt_window:
+    xalign 0.5
+    xfill True
+    yalign gui.textbox_yalign
+    ysize gui.textbox_height
+
+    background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+
+style choice_prompt_text:
+    properties gui.text_properties("dialogue")
+
+    xpos gui.dialogue_xpos
+    xsize gui.dialogue_width
+    ypos gui.dialogue_ypos
+
+    adjust_spacing False
 
 
 ## Quick Menu screen ###########################################################
@@ -267,13 +311,22 @@ screen quick_menu():
                 textbutton _("Q.Save") action QuickSave()
                 textbutton _("Q.Load") action QuickLoad()
                 textbutton _("Bag") action ShowMenu('inventory')
-                textbutton _("Prefs") action ShowMenu('preferences')
+                textbutton _("Attributes") action ShowMenu('attributes')
+                textbutton _("Options") action ShowMenu('preferences')
 
 
 ## This code ensures that the quick_menu screen is displayed in-game, whenever
 ## the player has not explicitly hidden the interface.
+##
+## attribute_hud rides along with it. It is the three orbs in the corner that fill
+## as he grows, and it is registered here rather than in script.rpy so that every
+## always-on overlay the game has is declared in one place. Like the quick menu it
+## is hidden by Ren'Py itself while a game menu is open, and the screen carries its
+## own switch (`show_attribute_hud`) so it can stay off through the disclaimer
+## cards at the start of the game.
 init python:
     config.overlay_screens.append("quick_menu")
+    config.overlay_screens.append("attribute_hud")
 
 default quick_menu = True
 
@@ -497,6 +550,8 @@ screen navigation():
 
             textbutton _("Bag") action ShowMenu("inventory")
 
+            textbutton _("Attributes") action ShowMenu("attributes")
+
         textbutton _("Load") action ShowMenu("load")
 
         textbutton _("Preferences") action ShowMenu("preferences")
@@ -544,7 +599,18 @@ screen main_menu():
     ## This ensures that any other menu screen is replaced.
     tag menu
 
-    add gui.main_menu_background
+    ## The title art, in two layers of the same file.
+    ##
+    ## The back layer is the picture zoomed to cover the whole screen and
+    ## blurred, so the space the centred picture does not reach reads as frosted
+    ## glass rather than a black bar. It is a little larger than the screen on
+    ## purpose: blurring fades the picture out at its own border, and this keeps
+    ## that soft edge off the visible area.
+    ##
+    ## The front layer is the whole picture, scaled to fit and centred, so
+    ## nothing is cropped off the sides.
+    add Transform(gui.main_menu_background, xysize=(int(config.screen_width * 1.15), int(config.screen_height * 1.15)), fit="cover", blur=32.0, xalign=0.5, yalign=0.5)
+    add Transform(gui.main_menu_background, xysize=(config.screen_width, config.screen_height), fit="contain", xalign=0.5, yalign=0.5)
     use sakura_blossoms
 
     ## This empty frame darkens the main menu.
@@ -614,8 +680,11 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     style_prefix "game_menu"
 
+    ## The main menu's background is built the same way here, so opening the
+    ## Preferences or Load pages from the title screen does not suddenly crop it.
     if main_menu:
-        add gui.main_menu_background
+        add Transform(gui.main_menu_background, xysize=(int(config.screen_width * 1.15), int(config.screen_height * 1.15)), fit="cover", blur=32.0, xalign=0.5, yalign=0.5)
+        add Transform(gui.main_menu_background, xysize=(config.screen_width, config.screen_height), fit="contain", xalign=0.5, yalign=0.5)
     else:
         add gui.game_menu_background
 
@@ -1003,6 +1072,128 @@ style inventory_action_button_text is button_text:
 style inventory_empty_text:
     size gui.scale(22)
     color "#c6c0b4"
+
+
+## Attributes ##################################################################
+##
+## The three pillars, read from the same definitions the gain card and the corner
+## cluster use, so the three of them can never disagree about which orb is which
+## or what a rank is called.
+##
+## Two different measures of progress appear on each row, and the difference is
+## deliberate:
+##
+##   the orb  — how solid this pillar has become across the whole ladder. It only
+##              ever fills, so reaching a new rank never looks like a reset.
+##   the bar  — how far through the *current* rank he is, so the ladder reads as
+##              rungs, and each rung can be watched filling on its own.
+
+screen attributes():
+
+    tag menu
+
+    use game_menu(_("Attributes")):
+
+        style_prefix "attributes"
+
+        vbox:
+            spacing gui.scale(16)
+
+            text _("He grows by understanding the world, by connecting with the people in it, and by acting when acting is difficult.") style "attributes_intro"
+
+            for attribute_id in attribute_order:
+
+                $ orb_color = attribute_color(attribute_id)
+                $ orb_soft = attribute_color_alpha(attribute_id, attribute_orb_alpha(attribute_id))
+                $ orb_rank = attribute_rank(attribute_id)
+                $ orb_rank_name = attribute_rank_name(attribute_id)
+                $ orb_total = attribute_total_text(attribute_id)
+                $ orb_progress = attribute_progress(attribute_id)
+                $ orb_next = attribute_rank_next_text(attribute_id)
+
+                frame:
+                    style "attributes_row"
+
+                    hbox:
+                        spacing gui.scale(24)
+
+                        ## The same circle the gain card draws full size, at rest
+                        ## here: filled first, then its outline on top, so the ring
+                        ## never gets swallowed by a nearly-solid orb.
+                        fixed:
+                            xysize (gui.scale(92), gui.scale(92))
+
+                            text "●":
+                                xalign 0.5
+                                yalign 0.5
+                                size gui.scale(74)
+                                color orb_soft
+
+                            text "○":
+                                xalign 0.5
+                                yalign 0.5
+                                size gui.scale(92)
+                                color "#ffffff26"
+
+                        vbox:
+                            spacing gui.scale(9)
+                            xsize gui.scale(560)
+
+                            hbox:
+                                spacing gui.scale(16)
+
+                                text attribute_name(attribute_id) style "attributes_name" color orb_color
+                                text "Rank [orb_rank]  [orb_rank_name]" style "attributes_rank"
+
+                            text attribute_blurb(attribute_id) style "attributes_blurb"
+
+                            bar:
+                                value orb_progress
+                                range 1.0
+                                xsize gui.scale(520)
+                                ysize gui.scale(10)
+                                left_bar Solid(orb_color)
+                                right_bar Solid("#ffffff14")
+
+                            hbox:
+                                spacing gui.scale(12)
+
+                                text orb_next style "attributes_next"
+                                text "· [orb_total] total" style "attributes_total"
+
+
+style attributes_intro is gui_text:
+    size gui.scale(19)
+    color "#b9b3a7"
+    xmaximum gui.scale(720)
+
+style attributes_row is frame:
+    background Solid("#151310dd")
+    padding (gui.scale(20), gui.scale(16), gui.scale(20), gui.scale(16))
+
+style attributes_bar is bar:
+    left_bar Solid("#ffffff")
+    right_bar Solid("#ffffff14")
+
+style attributes_name is gui_text:
+    size gui.scale(36)
+
+style attributes_rank is gui_text:
+    size gui.scale(19)
+    color "#c6c0b4"
+    yalign 0.5
+
+style attributes_blurb is gui_text:
+    size gui.scale(19)
+    color "#8f887c"
+
+style attributes_next is gui_text:
+    size gui.scale(17)
+    color "#c6c0b4"
+
+style attributes_total is gui_text:
+    size gui.scale(17)
+    color "#7d766a"
 
 
 ## Load and Save screens #######################################################

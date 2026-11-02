@@ -14,7 +14,7 @@
 | Name | Location | Role | Key Theme |
 | :--- | :--- | :--- | :--- |
 | **Orson** | Lupin's Den (Bar) | Wolf Bar Master | Identity & Masks |
-| **Sim** | Photo Studio | Photo Circle Host | Connection & Vision |
+| **Sim** | Photography Club (Circle) | Founder & Visiting Guide | Connection & Vision |
 | **Ramen Chef** | Ramen Shop | Gruff Mentor | Tradition & Acceptance |
 | **Aya** | Maid Cafe | Hidden Dreamer | Courage & Safety |
 | **Hana** | Reading Club | The Quiet Observer | Wisdom & Escapism |
@@ -32,7 +32,7 @@
 - [Father - Tetsuo Nagai](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/Father - Tetsuo Nagai (永井 哲夫)/Character details.md)
 - [Mother - Miharu Nagai](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/Mother - Miharu Nagai (永井 美晴)/character details.md)
 - [Orson (Wolf Bar Master)](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/Bar Master - Orson/character details.md)
-- [Sim (Photo Circle Host)](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/Sim/character details.md)
+- [Sim (Founder of Circle)](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/Sim/character details.md)
 - [Ramen Shop Chef](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/Ramen Shop Chef/character details.md)
 - [Maid Aya](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/Maid Aya/character details.md)
 - [Fortune Teller](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/Fortune Teller/character details.md)

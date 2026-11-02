@@ -1,11 +1,11 @@
-# Character Profile: Sim (Photo Circle Host)
+# Character Profile: Sim (Founder of Circle)
 
 ## Snapshot
 
 | Field | Detail |
 | :--- | :--- |
-| **Role** | Founder and host of "Circle," a free photography meetup group |
-| **Location** | A modest studio / café back room where the group meets |
+| **Role** | Founder and host of the university's **Photography Club — Circle** — an outsider who comes in to guide it |
+| **Location** | The university's club room, second floor, the door with the tape on it. **He is not a student there** |
 | **Archetype** | The Creative Community Builder / The Lonely Mentor |
 | **Affection Variable** | `sim_affection` |
 | **Language** | Switches fluidly between Japanese and English to include everyone |
@@ -35,9 +35,12 @@ Before founding Circle, Sim had no friends and no network: only submissions that
 | 7 | **Farewell at the exhibition.** He announces he's leaving for the job and gives the protagonist a camera strap identical to his own. |
 
 ## How His Arc Ends (The Departure Theme)
-Sim's growth is real: he gets the recognition he spent years chasing. The cost is that the thing he built — the club, the studio, the weekly ritual — dissolves the moment he succeeds, and the protagonist is left holding a camera strap instead of a friend.
+Sim's growth is real: he gets the recognition he spent years chasing. The cost is that the thing he built — the club, the room, the weekly ritual — dissolves the moment he succeeds, and the protagonist is left holding a camera strap instead of a friend.
 
-**In-game consequence**: after Interaction 7 the Photo Studio / Circle meetups are gone. The location either closes or is populated only by unfamiliar faces, and the **Photo Mode** mentoring sessions end. `sim_affection` is locked.
+**In-game consequence**: after Interaction 7 he stops coming in. The room is still
+there, the circle still meets, but the person who made it glad to be somewhere is
+gone and the **Photo Mode** mentoring sessions end with him. `sim_affection` is
+locked.
 
 ## What He Symbolises in the Simulation
 Sim is the "escape fantasy" mirror. He proves he can leave — for a better city, a better life — while the protagonist cannot leave the world they are in. When Hikari later starts guiding the protagonist toward reality, Sim's departure is the emotional rehearsal for it.
