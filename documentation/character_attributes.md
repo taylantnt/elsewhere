@@ -284,16 +284,23 @@ Important story developments should remain accessible through reasonable play, w
 
 ### 5.4 Dialogue answers
 
-Selected dialogue forks offer three natural answers, one of which earns **0.5 points** in one attribute. The other answers earn nothing and are not failures. There is no requirement that every fork contain a reward, or that every reward be gated.
+Selected dialogue answers earn modest, behavior-specific adjustments, often
+between **0.1 and 0.5 points**. Other answers earn nothing and are not failures.
+Intentional trade-offs can reduce one attribute while raising another, and a
+negative value never lowers a total below zero.
 
-Dialogue rewards are scattered through the playable prologue and first day. Thoughtful treatment of someone, a concrete observation, or speaking despite embarrassment can earn a small gain without changing the story's destination. Larger events still earn 1.0 or 2.0.
+Thoughtful treatment of someone, a concrete observation, or speaking despite
+embarrassment can earn a small gain without changing the story's destination.
+Larger events remain distinct and can grant 1.0 point.
 
-Do not attach attribute prefixes to ordinary paying answers. The player chooses the reply, then receives feedback. Colored attribute tags are reserved for rank requirements.
+Do not attach attribute prefixes to ordinary rewarded answers. The player
+chooses the reply, then receives signed feedback. Colored attribute tags are
+reserved for gated options.
 
 **Rules for authoring an answer:**
 
 1. **Points are selective and deliberate.** Name the behavior being rewarded. Routine agreement, greetings, and every factual question do not automatically pay.
-2. **One attribute per answer, at most one size.** Two attributes in a single line of dialogue is a set-piece, not a conversation.
+2. **Usually one attribute per answer.** A clear trade-off may intentionally raise one attribute and lower another; show both signed changes and keep both values modest.
 3. **A fork pays once, ever.** Anything reachable twice goes through `reward_attributes_once` with a unique flag (identifier form `answer_<scene>_<choice>`), and a conversation the player can walk back up to replays the stored answer rather than reopening the menu. See *Answering a person twice*, below.
 4. **Each option must be a plausible response to the prompt.** Distinguish the replies without forcing three artificial personality types into every scene.
 5. **Order the options so the brave one is not last by default.** The player reads the first line as the natural answer.
@@ -304,32 +311,12 @@ A deferred assistant request is an explicit exception: leaving the desk does not
 
 ### 5.5 Implemented answer map
 
-Every point in the first act, as of the balance pass. Every one of these is a `reward_attributes_once` flag, so none of them can be earned twice. Use this table when rebalancing: the left column is what the player gets, and the right column is what it cost him.
-
-| Flag | Where | Attribute | Size |
-|---|---|---|---|
-| `answer_timid_listen` | Recognize `isogashii` rather than assuming hostility | Insight | small |
-| `answer_assistant_patient` | Ease the assistant's anxiety using the map | Grace | small |
-| `travel_route_attribute` | Train / taxi, mutually exclusive | Insight / Nerve | large |
-| `answer_taxi_fare` | Ask the driver to confirm the fare | Nerve | small |
-| `answer_ticket_ask` | Resolve the ticket obstacle with the attendant | Grace | large |
-| `answer_boxes_reassure` | Acknowledge Miharu's work and help | Grace | small |
-| `dream_day_order` | Reconstruct the timeline on the first reading | Insight | medium |
-| `answer_breakfast_emails` | Explain how Hikari's emails helped | Grace | small |
-| `answer_courtyard_buildings` | Notice construction from different periods | Insight | small |
-| `answer_wall_cat` | Examine the old cat notice, Insight rank 2 | Insight | small |
-| `answer_circles_back` | Acknowledge the clerk's help, Grace rank 2 | Grace | small |
-| `answer_clock_ask` | Request review of the registration delay, Nerve rank 2 | Nerve | small |
-| `answer_hikari_warning` | Ask Hikari not to leave without warning | Nerve | small |
-| `answer_ramen_recommendation` | Try asking the chef in unfamiliar Japanese | Nerve | small |
-| `chef_first_umai` | Respond to the chef in Japanese | Grace | small |
-| `answer_river_quiet` | Give Hikari space to enjoy the silence | Grace | small |
-| `run_first_river` | Complete the first run | Nerve | medium |
-| `answer_circle_join` | Ask to participate among unfamiliar people | Nerve | small |
-| `sim_circle_first` | Notice overexposure and reframe the photograph | Insight | small |
-| `answer_circle_help` | Help make space for the volunteer model | Grace | small |
-
-Existing reward flag ids remain unchanged even where their dialogue has been rewritten. Saves keep previously earned points and cannot collect an old reward again under a renamed flag. The three afternoon routes remain mutually exclusive.
+The [attribute rewards checklist](./attribute_rewards_checklist.md) is the
+complete, current inventory of first-act dialogue and event rewards, including
+signed changes, once-only flags, and point-gate requirements. Keep it in sync
+when editing this system rather than maintaining a second reward table here.
+Rewards use `reward_attributes_once`, so a choice cannot be farmed by revisiting
+its scene. The three afternoon routes remain mutually exclusive.
 
 ---
 
@@ -357,34 +344,42 @@ Progression is a five-rank ladder:
 
 These are **cumulative totals, not points-per-rank**: rank 2 begins when the attribute has 2.0 points in it, in total, since the beginning of the game. Each step costs more than the last, so the early game moves quickly and the later game means something.
 
-The thresholds, names, and reward sizes are configured in one place (`init python` in `game/script.rpy`, `attribute_rank_thresholds` and `attribute_rank_names`) and are never written into a scene.
+The thresholds and names are configured in one place (`init python` in
+`game/script.rpy`, `attribute_rank_thresholds` and `attribute_rank_names`).
 
 ### 6.3 Fractional accumulation
 
-**Points are measured in halves.** Dialogue gains accumulate; significant events award larger amounts. Rank thresholds are unchanged. New awards stop at 15.0 and show only the amount actually earned; a maximum-rank attribute does not show a false gain.
+**Points may use tenths or halves.** Small dialogue adjustments can be as low as
+0.1, and negative adjustments are intentional where a response reflects a
+trade-off. Totals stop at 0.0 and 15.0; feedback shows the signed amount actually
+applied. Rank thresholds are unchanged.
 
-Rewards are named rather than numbered, so the entire economy can be retuned from one dictionary without touching a line of dialogue:
+Standard reward sizes are named; custom amounts are written on the specific
+choice that uses them:
 
 | Size | Points | Used for |
 |---|---|---|
 | `small` | 0.5 | Selected dialogue answers |
 | `medium` | 1.0 | First-reading memory puzzle success; completing the first run |
-| `large` | 2.0 | Travel route; resolving the ticket obstacle |
+| `large` | 2.0 | Reserved for future set-piece rewards |
 
-`add_attribute_points(attribute_id, amount, show)` accepts either a name or a raw number. **Names are always preferred in scene code.**
+`add_attribute_points(attribute_id, amount, show)` accepts either a name or a
+raw signed number. Use named sizes for standard amounts and explicit numbers
+when a choice needs a custom reward.
 
 ### 6.4 Displaying progress
 
-Every gain is shown, including the smallest ones. Which of the two presentations is used is decided centrally by `add_attribute_points` so no scene ever has to think about it:
+Every applied adjustment is shown, including losses. Which presentation is used
+is decided centrally by `add_attribute_points`:
 
 | Trigger | Presentation |
 |---|---|
-| A token gain inside a conversation (`show="auto"`) | **Tick chip.** A small `+0.5` note beneath the matching labeled HUD circle that rides over the next couple of lines and hides itself. Costs the player no click and no pause. |
-| A rank up, whatever the size | **Gain card**, always. |
+| A small adjustment inside a conversation (`show="auto"`) | **Tick chip.** A signed amount beneath the matching labeled HUD circle that rides over the next couple of lines and hides itself. Costs the player no click and no pause. |
+| A rank change, whatever the size | **Gain card**, always; the card identifies a rank increase or decrease. |
 | A turning point (`show="card"`) | **Gain card.** |
 | Bookkeeping that is not a reward (`show=False`) | Nothing. |
 
-**The tick chip** sits directly beneath the matching labeled attribute in the **top-right HUD**, where it is out of the reading path and never covers the dialogue plate it is talking about. It uses the attribute's accent colour and awarded amount; the name stays on the circle above it. Gains to different attributes can appear together beneath their respective circles. The old top-centre slot is occupied by the character-memory notice (§7.8), so the two never collide: stats speak from the right, memory speaks from the centre.
+**The tick chip** sits directly beneath the matching labeled attribute in the **top-right HUD**, where it is out of the reading path and never covers the dialogue plate it is talking about. It uses the attribute's accent colour and signed amount; the name stays on the circle above it. Adjustments to different attributes can appear together beneath their respective circles. The old top-centre slot is occupied by the character-memory notice (§7.8), so the two never collide: stats speak from the right, memory speaks from the centre.
 
 **The gain card** uses three reserved circle cells in a wide triangle. Circles grow from 176 to 240 virtual pixels. The active attribute emits outward-fading ripples; inactive circles are subdued. Rank numerals and aligned labels render after the artwork, so circles cannot cover them. Names, `RANK 02 / 05`, factual descriptions, and points remaining use a fixed baseline. Qualitative ribbons such as "Emerging" and "Exceptional" are removed. The headline and gain readout occupy separate top corners. Continue appears after the sound and opening beats.
 
@@ -412,7 +407,7 @@ Everything below lives in `game/script.rpy`, in `init python`, so there is one s
 | Reward sizes | `attribute_reward_sizes` |
 | Awarding | `add_attribute_points`, `reward_attributes_once` |
 | Reading | `attribute_total`, `attribute_rank`, `attribute_rank_name`, `attribute_progress`, `attribute_rank_progress`, `attribute_rank_next_text` |
-| Gating | `has_attribute(attribute_id, minimum_rank)` |
+| Gating | `has_attribute(attribute_id, minimum_rank)` and `has_attribute_points(attribute_id, minimum_points)` |
 | One-time flags | `attribute_reward_flags` (list of string flags) |
 | Answer replay | `remembered_choice`, `remember_choice`, and the `remembered_choices` dict (`default`) |
 | Character memory | `remember`, and the `character_memories` dict (`default`) |
@@ -449,21 +444,29 @@ A locked option **stays on the page and goes grey** rather than disappearing. A 
 The option carries a small coloured prefix naming the attribute it wants, written as `[tag_insight]`, `[tag_grace]` or `[tag_nerve]` at the front of the caption, which the substitution pass expands into a coloured `[Insight]`-style tag. The three tag strings are generated from `attribute_defs` so they can never drift out of step with the attribute colours.
 
 ```renpy
-"[tag_grace] You've made this much easier." if has_attribute("grace", 2):
+"[tag_grace] You've made this much easier." if has_attribute_points("grace", 1.0):
     ...
 ```
 
-### 7.3 Gates are by rank, never by points
+### 7.3 Use the minimum that keeps a choice attainable
 
-`has_attribute(attribute_id, minimum_rank)` compares the **rank**, not the raw total. A locked line therefore means *"he has not become that person yet"* rather than *"you are half a point short"*. That is the difference between a door and a toll booth, and it is the reason a half point earned twelve scenes ago can quietly open something now.
+Attribute gates may use either rank or raw points. Use
+`has_attribute_points(attribute_id, minimum_points)` for early branches where a
+full rank would be an unnecessarily high barrier; keep rank-based checks for
+choices that explicitly need developed capability.
 
-**Ranks are 1-based and start at 1, so `minimum_rank=2` is the first number that can actually close anything.** A gate of `1` is true from the first line of the game and is always a bug. Rank 2 is 2.0 points in that attribute.
+The first university dialogue gates use 0.8 Insight, 1.0 Grace, and 0.5 Nerve.
+These are reachable through deliberate choices before the relevant scenes,
+including on either travel route, without changing the rank ladder.
 
 ### 7.4 No gates at the beginning
 
 **The prologue and the first morning before the university contain no locked answers.** Ordinary dialogue gains do not need an existing attribute rank.
 
-Gates begin inside the university sequence at rank 2. Travel gives an early rank in Insight or Nerve, and the ticket obstacle gives Grace. Smaller observations and responses accumulate independently, so route choice is not the only source of development. Gated replies provide an additional approach, not information required to continue.
+Gates begin inside the university sequence. Smaller observations and responses
+accumulate alongside travel and route rewards, so route choice is not the only
+source of development. Gated replies provide an additional approach, not
+information required to continue.
 
 The first three gates are one per attribute, and each one is a different kind of door:
 

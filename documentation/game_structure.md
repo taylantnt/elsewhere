@@ -108,8 +108,8 @@ the three endings (Escape / Blue Pill / Failure), designed in `game_concept.md`.
 
 ### 2.3 The travel decision (`label end_airport`, `label travel_choice`)
 - Leaving the terminal is the first major attribute decision: the train awards
-  **2.0 Insight**, the taxi **2.0 Nerve**. Selected airport replies can already
-  award small gains, but this remains the larger route-defining event.
+  **0.5 Insight**, the taxi **1.0 Nerve**. Selected airport replies can also
+  award small, once-only gains.
 - Taxi and train are deliberately not equal: they are two different afternoons,
   and both settle into the same house at different hours.
 
@@ -133,16 +133,14 @@ plays, which dream he has, and how much money he has left.
 - The train is slow, cheap, and hard. It is the route that makes him *use the
   city* instead of being carried through it.
 - The gate slams (`gate.wav` + `gate_shake`) because he walks through it the
-  wrong way. Walking through and buying a ticket both move him on and **neither
-  pays** — the turnstile does not remember anything, so the fork decides how he
-  meets the station rather than who he is becoming.
+  wrong way. Walking through earns **0.4 Nerve**; buying a ticket is neutral.
 - The ticket machine is a reading puzzle — he matches the fare map against the
   pamphlet and gets it wrong anyway.
 - Asking the station attendant resolves the ticket obstacle and awards
-  **2.0 Grace**. Small empathetic dialogue gains are separate from this event.
+  **0.2 Grace**.
 - The platform is the express-versus-local fork. The local is **not** a mistake;
-  it is the slower, more deliberate answer, and neither sign pays — the choice
-  only decides which `home_arrival` opening he gets.
+  it is the slower, more deliberate answer. The express earns **0.2 Insight**;
+  the choice also decides which `home_arrival` opening he gets.
 - The express sets `boarded_shinkansen = True`. The local sets `arrived_late = True`.
 - Fares come out of the wallet through `spend_money()`, which is where the
   money hint fires for the first time.
@@ -197,10 +195,11 @@ story rather than being carried through it.
 ### 4.5 The university (`label department_tour`, `label student_relations`,
 `label first_class`)
 - `department_tour` is the poster wall, and it holds the **first door in the game
-  that can actually be shut** — gated on Insight rank 2, behind "the lost cat,
-  whose tape has gone yellow".
+  that can actually be shut** — gated on 0.8 Insight points, behind "the lost
+  cat, whose tape has gone yellow".
 - `student_relations` establishes the rules of the place and holds the **Grace
-  gate**. The clerk covers:
+  gate**, which requires 1.0 Grace point. The professor's dialogue offers a
+  Nerve-gated option at 0.5 points. The clerk covers:
 
   | Rule | Detail |
   |------|--------|
@@ -302,11 +301,13 @@ is the index.
 - **Points are selective.** Small gains occur on concrete, thoughtful, observant,
   or courageous dialogue actions. Routine replies do not automatically pay.
   Larger events remain distinct from conversation rewards.
-- Points are **fractional** (halves). Named sizes: `small` = 0.5, `medium` = 1.0
-  (first-reading puzzle success and first run), `large` = 2.0. A `large` is exactly rank 2, so the route
-  decision is the one answer in the act that moves a rank on its own.
+- Points use tenths or halves. Common named sizes: `small` = 0.5, `medium` =
+  1.0 (first-reading puzzle success and first run), `large` = 2.0 (reserved for
+  future set pieces). Many dialogue rewards use smaller explicit amounts.
+  Signed changes are clamped between 0 and 15 points.
 - Presentation: a quiet **tick chip** in the top-right corner for an ordinary
-  gain (`show="auto"`) and the full **gain card** for a rank-up or a turning point.
+  adjustment (`show="auto"`) and the full **gain card** for a rank change or a
+  turning point.
 - The full-screen card uses fixed circle cells, outward ripples, and separately
   layered text. Qualitative ribbons are replaced by `RANK 02 / 05`.
   The phone page uses circular progress, concise descriptions, and totals.

@@ -313,7 +313,7 @@ screen quick_menu():
                 textbutton _("Q.Load") action QuickLoad()
                 textbutton _("Bag") action ShowMenu('inventory')
                 textbutton _("Attributes") action ShowMenu('attributes')
-                textbutton _("Options") action ShowMenu('preferences')
+                textbutton _("Settings") action ShowMenu('preferences')
 
 
 ## This code ensures that the quick_menu screen is displayed in-game, whenever
@@ -491,7 +491,7 @@ init python:
         trans.ypos = int(-90 + progress * (config.screen_height + 180))
         trans.rotate = (elapsed + p["phase"]) * p["spin"] % 360
         trans.alpha = p["fade"] * min(1.0, progress / 0.10, (1.0 - progress) / 0.12)
-        return 1.0 / 30.0
+        return 0.0
 
 
 transform petal_fall(p, field):
@@ -537,10 +537,10 @@ screen navigation():
             text "ELSEWHERE":
                 style "menu_nav_brand"
 
-            text _("TITLE MENU"):
+            text _("TITLE SCREEN"):
                 style "menu_nav_section"
 
-            textbutton _("New Story") action [Function(cinematic_departure), Start()]
+            textbutton _("New Story") action Start()
             textbutton _("Continue") action Continue()
 
         else:
@@ -559,7 +559,7 @@ screen navigation():
 
             textbutton _("Attributes") action ShowMenu("attributes")
 
-        textbutton _("Load") action ShowMenu("load")
+        textbutton _("Load Game") action ShowMenu("load")
 
         textbutton _("Settings") action ShowMenu("preferences")
 
@@ -569,7 +569,7 @@ screen navigation():
 
         elif not main_menu:
 
-            textbutton _("Main Menu") action MainMenu()
+            textbutton _("Title Screen") action MainMenu()
 
         textbutton _("About") action ShowMenu("about")
 
@@ -1081,7 +1081,7 @@ screen load():
 
     tag menu
 
-    use file_slots(_("Load"))
+    use file_slots(_("Load Game"))
 
 
 screen file_slots(title):
@@ -1265,7 +1265,7 @@ screen history():
     ## Avoid predicting this screen, as it can be very large.
     predict False
 
-    use game_menu(_("History"), scroll=("vpgrid" if gui.history_height else "viewport"), yinitial=1.0, spacing=gui.history_spacing):
+    use game_menu(_("Log"), scroll=("vpgrid" if gui.history_height else "viewport"), yinitial=1.0, spacing=gui.history_spacing):
 
         style_prefix "history"
 

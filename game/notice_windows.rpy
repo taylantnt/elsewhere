@@ -208,6 +208,8 @@ style opening_title is guide_title:
 style opening_body is guide_body:
     color "#bdbdbd"
     line_spacing gui.scale(8)
+    text_align 0.5
+    xalign 0.5
 
 style opening_meta is guide_meta:
     color "#777777"
@@ -226,6 +228,8 @@ style opening_button_text is guide_button_text:
 style opening_input is guide_input:
     size gui.scale(32)
     color "#eeeeee"
+    text_align 0.5
+    xalign 0.5
 
 # Opening pages use typography and negative space, not the in-game card shell.
 screen opening_layout(title, motion, category="BEFORE YOU BEGIN"):
@@ -236,11 +240,12 @@ screen opening_layout(title, motion, category="BEFORE YOU BEGIN"):
         yalign 0.5
         xysize (gui.scale(680), gui.scale(420))
         at motion
-        text category style "opening_category"
-        text title style "opening_title" ypos gui.scale(42)
+        text category style "opening_category" xalign 0.5 xsize gui.scale(680) text_align 0.5
+        text title style "opening_title" ypos gui.scale(42) xalign 0.5 xsize gui.scale(680) text_align 0.5
         add Solid("#777777"):
             ypos gui.scale(111)
             xysize (gui.scale(48), gui.scale(1))
+            xalign 0.5
         fixed:
             ypos gui.scale(145)
             xysize (gui.scale(680), gui.scale(275))
@@ -248,14 +253,14 @@ screen opening_layout(title, motion, category="BEFORE YOU BEGIN"):
 
 screen opening_footer(meta, caption=None, action=None, enabled=True):
     fixed:
-        ypos gui.scale(215)
-        xysize (gui.scale(680), gui.scale(60))
-        text meta style "opening_meta" yalign 0.5 xmaximum gui.scale(430)
+        ypos gui.scale(208)
+        xysize (gui.scale(680), gui.scale(76))
+        text meta style "opening_meta" xalign 0.5 xsize gui.scale(680) text_align 0.5
         if caption is not None:
             textbutton caption:
                 style "opening_button"
-                xalign 1.0
-                yalign 0.5
+                xalign 0.5
+                ypos gui.scale(28)
                 action action
                 sensitive enabled
 
@@ -264,7 +269,7 @@ screen notice_page(eyebrow, body, page):
     zorder notice_window_zorder
     add Solid("#000000")
     use opening_layout(eyebrow, notice_page_motion):
-        text body style "opening_body" xsize gui.scale(680)
+        text body style "opening_body" xalign 0.5 xsize gui.scale(680)
         use opening_footer("%s  /  Continues automatically" % page)
     timer notice_page_duration action Return()
 
@@ -274,7 +279,7 @@ screen notice_confirm(question):
     default hiding = False
     add Solid("#000000")
     use opening_layout("Before You Begin", opening_out if hiding else opening_in, "CONFIRMATION"):
-        text question style "opening_body" xsize gui.scale(680)
+        text question style "opening_body" xalign 0.5 xsize gui.scale(680)
         use opening_footer("Confirm to continue.", "I Understand", SetScreenVariable("hiding", True), not hiding)
     if hiding:
         timer 3.4 action Return(True)
@@ -284,20 +289,22 @@ screen notice_name():
     zorder notice_window_zorder
     add Solid("#000000")
     use opening_layout("Your Name", opening_in):
-        text "Enter the name other characters will use for you." style "opening_body"
+        text "Enter the name other characters will use for you." style "opening_body" xalign 0.5 xsize gui.scale(680)
         fixed:
             ypos gui.scale(65)
             xysize (gui.scale(680), gui.scale(72))
             input:
                 id "input"
+                xalign 0.5
                 value VariableInputValue("player_name", returnable=False)
                 length 12
                 exclude "{}[]"
                 style "opening_input"
-                pixel_width gui.scale(660)
+                pixel_width gui.scale(300)
             add Solid("#454545"):
                 ypos gui.scale(65)
-                xysize (gui.scale(680), gui.scale(1))
+                xysize (gui.scale(300), gui.scale(1))
+                xalign 0.5
         use opening_footer(
             "Up to 12 characters. A name is required.",
             "Begin",

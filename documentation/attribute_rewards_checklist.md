@@ -13,7 +13,7 @@ Edit the **Reward (editable)** cell beside an answer:
 
 - `No rewards`: no attribute points.
 - `Nerve`, `Insight`, or `Grace`: a small reward of **+0.5**.
-- `Nerve +1.0`, `Insight +2.0`, etc.: an explicit point amount.
+- `Nerve +1.0`, `Insight +2.0`, `Grace -0.5`, etc.: an explicit signed point amount.
 - Write a note beside the entry if you also want the dialogue changed.
 
 Keep the IDs, answer text, source labels and existing flag names where possible.
@@ -30,8 +30,9 @@ The reward fields below describe the current implementation, not suggestions.
 items, character memories, arrival time or the story.
 
 Small = +0.5; medium = +1.0; large = +2.0. Rewards pay once per flag, with new
-points capped at 15.0 per attribute. Existing rank requirements are listed in
-Notes separately from rewards. Changing a reward does not change its requirement.
+positive totals capped at 15.0 and losses stopping at 0.0 per attribute. Dialogue
+gates list their minimum point totals in Notes separately from rewards. Changing
+a reward does not change its requirement.
 
 ## Airport
 
@@ -61,8 +62,8 @@ Repeat visits replay the chosen answer.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M02.01 | Apologise. | No rewards | `answer_security_bow`; says "Sumimasen. Sumimasen." |
-| M02.02 | Point at the address again. | No rewards | `answer_security_press`; tries showing the address again. |
+| M02.01 | Apologise. | Grace +0.1 | `answer_security_bow`; says "Sumimasen. Sumimasen." |
+| M02.02 | Point at the address again. | Nerve +0.1 | `answer_security_press`; tries showing the address again. |
 | M02.03 | Watch where everyone else goes. | No rewards | `answer_security_watch`; looks for the exit. |
 
 ### M03. Responding To The Timid Man
@@ -75,7 +76,7 @@ Repeat visits replay the chosen answer.
 |---|---|---|---|
 | M03.01 | Ask where the information desk is. | No rewards | `answer_timid_again`. |
 | M03.02 | Leave him to it. | No rewards | `answer_timid_aside`. |
-| M03.03 | Listen for a word I recognise. | Insight +0.5 | Recognises "isogashii" as "busy"; flag `answer_timid_listen`. |
+| M03.03 | Listen for a word I recognise. | Insight +0.2 | Recognises "isogashii" as "busy"; flag `answer_timid_listen`. |
 
 ### M04. Responding To The Cheerful Woman
 
@@ -85,8 +86,8 @@ Repeat visits replay the chosen answer.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M04.01 | Smile and bow. | No rewards | `answer_woman_smile`. |
-| M04.02 | Thank her in Japanese. | No rewards | `answer_woman_echo`; says "Arigatou gozaimasu." |
+| M04.01 | Smile and bow. | Grace +0.2 | `answer_woman_smile`. |
+| M04.02 | Thank her in Japanese. | Grace +0.2 | `answer_woman_echo`; says "Arigatou gozaimasu." |
 
 ### M05. Asking The Information Desk For Help
 
@@ -98,7 +99,7 @@ the player from returning for the pamphlet.
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M05.01 | Show her the address. | No rewards | `answer_assistant_ask`; receives the pamphlet. |
-| M05.02 | We can use the map. No rush. | Grace +0.5 | `answer_assistant_patient`; flag `answer_assistant_patient`; then receives the same pamphlet. |
+| M05.02 | We can use the map. No rush. | Insight +0.2 | Flag `answer_assistant_patient`; then receives the same pamphlet. |
 | M05.03 | I'll try another desk. | No rewards | `answer_assistant_nevermind`; leaves without the pamphlet. |
 
 ### M06. The Veteran Assistant's Travel Advice
@@ -112,7 +113,7 @@ Asking for advice is not the actual travel decision.
 |---|---|---|---|
 | M06.01 | Tell me about the train. | No rewards | Leads to M07. |
 | M06.02 | Tell me about the taxi. | No rewards | Receives taxi advice, then leaves the terminal. |
-| M06.03 | I have what I need. Thank you. | No rewards | Leaves the terminal. |
+| M06.03 | I have what I need. Thank you. | Insight +0.2 | Leaves the terminal; flag `veteran_advice_decline`. |
 
 ### M07. Additional Taxi Advice
 
@@ -134,7 +135,7 @@ Context: choose between the expensive taxi and the cheaper train.
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M08.01 | Take the taxi. | No rewards | Opens the cost warning in M09. The taxi reward is only awarded if the player confirms there. |
-| M08.02 | Take the train. | Insight +2.0 | Sets the train route; flag `travel_route_attribute`. |
+| M08.02 | Take the train. | Insight +0.5 | Sets the train route; flag `travel_route_attribute`. |
 
 ### M09. Confirming The Taxi After The Cost Warning
 
@@ -143,8 +144,8 @@ Context: spending about eighteen thousand yen would use more than half the start
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M09.01 | Take the taxi anyway. | Nerve +2.0 | Sets the taxi route; flag `travel_route_attribute`. |
-| M09.02 | Take the train instead. | Insight +2.0 | Sets the train route; flag `travel_route_attribute`. |
+| M09.01 | Take the taxi anyway. | Nerve +1.0 | Sets the taxi route; flag `travel_route_attribute`. |
+| M09.02 | Take the train instead. | Insight +0.5 | Sets the train route; flag `travel_route_attribute`. |
 
 M08.02, M09.01 and M09.02 share one flag. They are alternative ways of making
 the same route decision, not three rewards the player can collect.
@@ -167,7 +168,7 @@ Context: people appear to walk through the gate without anyone checking.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M11.01 | Walk straight through. | No rewards | Gate closes; then proceeds to the ticket machine. |
+| M11.01 | Walk straight through. | Nerve +0.4 | Gate closes; then proceeds to the ticket machine; flag `answer_train_gate`. |
 | M11.02 | Buy a ticket first. | No rewards | Proceeds directly to the ticket machine. |
 
 ### M12. Using The Ticket Machine
@@ -179,7 +180,7 @@ Context: the protagonist cannot identify the correct fare from the pamphlet.
 |---|---|---|---|
 | M12.01 | Press the 320 Yen ticket. | No rewards | Wrong ticket; costs 320 yen the first time; menu repeats. |
 | M12.02 | Press the 800 Yen ticket. | No rewards | Wrong ticket; costs 800 yen the first time; menu repeats. |
-| M12.03 | Ask the station attendant. | Grace +2.0 | Attendant selects the correct 1,300-yen ticket; flag `answer_ticket_ask`. |
+| M12.03 | Ask the station attendant. | Grace +0.2 | Attendant selects the correct 1,300-yen ticket; flag `answer_ticket_ask`. |
 
 ### M13. Choosing A Platform
 
@@ -188,7 +189,7 @@ Context: one sign lists eight stations; the other lists twenty-three.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M13.01 | The sign with eight stations. | No rewards | Faster train; sets `boarded_shinkansen = True`. |
+| M13.01 | The sign with eight stations. | Insight +0.2 | Faster train; sets `boarded_shinkansen = True`; flag `answer_train_express`. |
 | M13.02 | The sign with twenty-three stations. | No rewards | Slower train; sets `boarded_shinkansen = False`. |
 
 ## Host Family And Morning
@@ -200,9 +201,9 @@ Prompt: "Sorry about the stairs. And the boxes. I should have brought them up ea
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M14.01 | You've already done a lot for me. | Grace +0.5 | Acknowledges her effort; flag `answer_boxes_reassure`. |
+| M14.01 | You've already done a lot for me. | Grace +0.3 | Acknowledges her effort; flag `answer_boxes_reassure`. |
 | M14.02 | Which ones go upstairs? | No rewards | Asks whether to carry all the boxes or just the clothes. |
-| M14.03 | Can we leave the books until morning? | No rewards | Asks to postpone the heavier unpacking because of fatigue. |
+| M14.03 | Can we leave the books until morning? | Grace -0.5 | Asks to postpone the heavier unpacking because of fatigue; flag `answer_boxes_postpone`. |
 
 ### M15. Breakfast With Hikari
 
@@ -211,7 +212,7 @@ Context: people in the department have been asking when the protagonist will arr
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M15.01 | What have you told them about me? | No rewards | Hikari remembers the question. |
+| M15.01 | What have you told them about me? | Nerve -0.3 | Hikari remembers the question; flag `answer_breakfast_questions`. |
 | M15.02 | Should I introduce myself today? | No rewards | Hikari remembers the question. |
 | M15.03 | Thank you for the emails. | Grace +0.5 | Explains that her emails made the move less frightening; flag `answer_breakfast_emails`; Hikari remembers. |
 
@@ -246,7 +247,7 @@ Context: the campus is much larger and more varied than it looked from outside.
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M18.01 | Which building is ours? | No rewards | Asks which building belongs to their department; Hikari remembers. |
-| M18.02 | These buildings are different ages. | Insight +0.5 | Notices construction from different periods; flag `answer_courtyard_buildings`; Hikari remembers. |
+| M18.02 | These buildings are different ages. | Insight +0.2 | Notices construction from different periods; flag `answer_courtyard_buildings`; Hikari remembers. |
 | M18.03 | Let's keep moving. | No rewards | Chooses not to make them late. |
 
 ### M19. The Department Noticeboard
@@ -258,7 +259,7 @@ Prompt: "Anything on the board catch your eye?"
 |---|---|---|---|
 | M19.01 | The film screening. | No rewards | Asks whether anyone can attend; Hikari remembers. |
 | M19.02 | The three rooms for rent. | No rewards | Notices the identical photographs; Hikari remembers. |
-| M19.03 | [Insight] The lost cat. | Insight +0.5 | Requires Insight rank 2; flag `answer_wall_cat`; examines the old tape and date; Hikari remembers. |
+| M19.03 | [Insight] The lost cat. | Insight +0.2 | Requires 0.8 Insight points; flag `answer_wall_cat`; examines the old tape and date; Hikari remembers. |
 
 ### M20. Student Relations And Circles
 
@@ -269,7 +270,7 @@ Context: the clerk has explained student cards, attendance, electives and circle
 |---|---|---|---|
 | M20.01 | Which one would you pick? | No rewards | Asks which circle the clerk would choose; she remembers. |
 | M20.02 | When does the photography club meet? | No rewards | Asks whether visitors can attend; the clerk remembers. |
-| M20.03 | [Grace] You've made this much easier. | Grace +0.5 | Requires Grace rank 2; flag `answer_circles_back`; the clerk remembers. |
+| M20.03 | [Grace] You've made this much easier. | Grace +0.2 | Requires 1.0 Grace point; flag `answer_circles_back`; the clerk remembers. |
 
 ### M21. Discussing The Late Mark With The Professor
 
@@ -280,7 +281,7 @@ Context: Student Relations registration made the protagonist late for his first 
 |---|---|---|---|
 | M21.01 | I'll write that down. | No rewards | Records the attendance rule; the professor remembers. |
 | M21.02 | It won't happen again. | No rewards | Apologises and promises to arrive early; the professor remembers. |
-| M21.03 | [Nerve] Can we discuss today's late mark? | Nerve +0.5 | Requires Nerve rank 2; flag `answer_clock_ask`; requests review of the registration conflict; the professor remembers. |
+| M21.03 | [Nerve] Can we discuss today's late mark? | Nerve +0.3 | Requires 0.5 Nerve points; flag `answer_clock_ask`; requests review of the registration conflict; the professor remembers. |
 
 ### M22. Responding To Hikari After Class
 
@@ -289,7 +290,7 @@ Prompt: "I should have told you where to go before I ran off. I'm sorry."
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M22.01 | Next time, warn me before you go. | Nerve +0.5 | Sets a boundary about being left without directions; flag `answer_hikari_warning`; Hikari remembers. |
+| M22.01 | Next time, warn me before you go. | Nerve +0.5, Grace -0.5 | Sets a boundary about being left without directions; flag `answer_hikari_warning`; Hikari remembers. |
 | M22.02 | Thanks for saving me a seat. | No rewards | Hikari remembers the thanks. |
 | M22.03 | Let's get something to eat. | No rewards | Moves on from the lecture; Hikari remembers. |
 
@@ -328,7 +329,7 @@ Context: the broth is darker and heavier than expected.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M25.01 | Ask what kind of broth it is. | No rewards | Asks "Shoyu? Miso?" |
+| M25.01 | Ask what kind of broth it is. | Insight +0.3 | Asks "Shoyu? Miso?"; flag `answer_ramen_broth`. |
 | M25.02 | Try it before asking. | No rewards | Starts eating instead. |
 
 ### M26. Responding To The Chef About The Taste
@@ -354,8 +355,8 @@ Context: the two are walking home through the neighbourhood.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M27.01 | Thanks for coming back with me. | No rewards | Acknowledges that she might have had other plans. |
-| M27.02 | How long have you lived here? | No rewards | Asks whether she has always lived on this street. |
+| M27.01 | Thanks for coming back with me. | Grace +0.3 | Acknowledges that she might have had other plans; flag `answer_run_thanks`. |
+| M27.02 | How long have you lived here? | Insight +0.3 | Asks whether she has always lived on this street; flag `answer_run_history`. |
 | M27.03 | Which turning is ours? | No rewards | Checks the route home. |
 
 ### M28. Before Going For A Run
@@ -367,10 +368,10 @@ Context: Hikari walks past the house and says she is going out again.
 |---|---|---|---|
 | M28.01 | Out where? | No rewards | Asks where she is going. |
 | M28.02 | Is this your usual running route? | No rewards | Asks whether she normally leaves from here. |
-| M28.03 | Can I come? | No rewards | Asks to join her. |
+| M28.03 | Can I come? | Nerve +0.2 | Asks to join her; flag `answer_run_join`. |
 
-All three answers lead to the run. Its completion reward is E02, not a separate
-reward on each of these answers.
+All three answers lead to the run. M28.03's small Nerve reward is separate from
+the completion reward in E02.
 
 ### M29. Resting Beside The River
 
@@ -484,15 +485,15 @@ These are not additional dialogue forks or attribute rewards:
 
 Use the row IDs to describe any special instructions, for example:
 
-- `M02.02: Nerve +0.5. Keep the answer text.`
-- `M27.01: Grace.`
-- `M32.02: Insight +0.5.`
-- `M19.03: No rewards. Keep the Insight rank 2 requirement.`
+- `M14.03: Grace -0.5. Keep the answer text.`
+- `M22.01: Keep both the Nerve gain and Grace loss.`
+- `M19.03: No rewards. Keep the 0.8 Insight point requirement.`
 
 Unless you say otherwise, bare attribute names mean +0.5, dialogue wording and
-rank requirements stay unchanged, and new awards use the existing notification
-system. Existing rewards remain once-only. Newly rewarded answers in repeatable
-conversations need their own stable flag while keeping the answer-replay logic.
+point requirements stay unchanged, and new awards use the existing notification
+system. Point losses cannot reduce an attribute below zero. Existing rewards
+remain once-only. Newly rewarded answers in repeatable conversations need their
+own stable flag while keeping the answer-replay logic.
 
 For route selectors and shared event flags, I will distinguish a new immediate
 reward from the reward already awarded later in the route. This prevents an

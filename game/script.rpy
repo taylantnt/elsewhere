@@ -377,11 +377,9 @@ default hikari_visits = 0
 # definitions and thresholds live in one place below so scene code only has to
 # ask for a named reward.
 #
-# These are deliberately floats. A single answer in a conversation nudges an
-# attribute by half a point, and it is the accumulation of those small answers
-# that eventually moves a rank. Whole numbers would force every small answer to
-# be either worthless or a full step, which is the thing this system exists to
-# avoid.
+# These are deliberately floats. Small choices can nudge an attribute by a
+# tenth or a few tenths, and signed trade-offs can lower one while raising
+# another. Whole numbers would erase those distinctions.
 default character_attributes = {
     "insight": 0.0,
     "grace": 0.0,
@@ -543,9 +541,8 @@ init python:
     # so the early game moves quickly and the later game means something. These
     # are cumulative totals, not points-per-rank: rank 2 begins at 2.0 total.
     #
-    # Everything is measured in halves. A single line of dialogue is worth half
-    # a point at most, so it is the *accumulation* of answers that moves the
-    # ladder rather than any one clever reply.
+    # Rank thresholds are cumulative. Dialogue rewards may be fractional and
+    # smaller than a half point, so they accumulate toward this ladder.
     attribute_rank_thresholds = [0.0, 2.0, 5.0, 9.5, 15.0]
     attribute_rank_names = [
         "Rank 01",
@@ -555,9 +552,8 @@ init python:
         "Rank 05",
     ]
 
-    # Every reward in the game is one of these three sizes. Scene code names the
-    # size rather than a number, so the whole economy can be retuned here
-    # without touching a single line of dialogue.
+    # Standard reward sizes live here; dialogue can also use custom signed
+    # amounts when a choice needs a smaller adjustment.
     #
     #   small  — an aside, or one answer in a passing conversation
     #   medium — a real choice in a conversation that has a subject
@@ -638,6 +634,11 @@ init python:
         if abs(value - round(value)) < 0.001:
             return str(int(round(value)))
         return "%.1f" % value
+
+    def format_signed_points(value):
+        value = float(value)
+        sign = "+" if value > 0 else "-" if value < 0 else ""
+        return sign + format_points(abs(value))
 
     def attribute_total(attribute_id):
         return max(0.0, float(store.character_attributes.get(attribute_id, 0.0)))
@@ -725,15 +726,16 @@ init python:
     def has_attribute(attribute_id, minimum_rank):
         """Whether a gated choice is open to him yet.
 
-        Gates are always by *rank*, never by raw points, so a locked line means
-        "he has not become that person yet" rather than "you are half a point
-        short". That is the difference between a door and a toll booth.
-
-        Ranks are 1-based and start at 1, so 2 is the first number that can
-        actually close anything: a gate of 1 is true from the first line of the
-        game and is always a bug. Rank 2 is 2.0 points in that attribute.
+        This helper is for choices that explicitly need a rank, rather than a
+        particular point total.
         """
         return attribute_rank(attribute_id) >= minimum_rank
+
+    def has_attribute_points(attribute_id, minimum_points):
+        """Whether a dialogue choice's minimum point total has been reached."""
+        if attribute_id not in attribute_defs:
+            raise Exception("Unknown attribute id: %r" % (attribute_id,))
+        return attribute_total(attribute_id) >= float(minimum_points)
 
     def attribute_reward_value(amount):
         """A named size, or a raw number of points. Names are preferred."""
@@ -742,45 +744,46 @@ init python:
         return float(amount)
 
     def add_attribute_points(attribute_id, amount="small", show="auto"):
-        """Raise an attribute, and make sure the player sees that it happened.
+        """Adjust an attribute and make sure the player sees what happened.
 
-        Every gain shows something, including the small ones. Which of the two
+        Every adjustment shows something, including the small ones. Which of the two
         things it shows is decided here so no scene ever has to think about it:
 
-          show="auto"  — the quiet ticker, or the full card on a rank up
+          show="auto"  — the quiet ticker, or the full card on a rank change
           show="card"  — the full card, for a set-piece decision
           show=False   — nothing at all, for bookkeeping that is not a reward
 
-        A rank up always takes the full card whatever the size, because that is
-        the moment the ladder actually moved and it should feel like it.
+        A rank change always takes the full card whatever the size.
         """
         if attribute_id not in attribute_defs:
             raise Exception("Unknown attribute id: %r" % (attribute_id,))
 
         points = attribute_reward_value(amount)
-        if points <= 0:
-            return attribute_total(attribute_id)
-
         before_rank = attribute_rank(attribute_id)
         before_total = attribute_total(attribute_id)
-        points = min(points, max(0.0, attribute_rank_thresholds[-1] - before_total))
-        if points <= 0:
+        after_total = round(max(0.0, min(
+            attribute_rank_thresholds[-1],
+            before_total + points,
+        )), 2)
+        points = round(after_total - before_total, 2)
+        if points == 0:
             return before_total
-        store.character_attributes[attribute_id] = before_total + points
+        store.character_attributes[attribute_id] = after_total
         after_rank = attribute_rank(attribute_id)
         rank_up = after_rank > before_rank
+        rank_down = after_rank < before_rank
 
         if show is False:
             return attribute_total(attribute_id)
 
-        if rank_up or show == "card":
+        if rank_up or rank_down or show == "card":
             # Let the choice breathe for a moment before the card takes over, so
             # the reward reads as a follow-through rather than a cut.
             renpy.pause(0.45, hard=True)
             # Screen timers synchronize the landing and settle with the reveal.
             play_sfx("audio/SFX/attribute_swell.wav")
             renpy.call_screen("attribute_gain_card", attribute_id=attribute_id,
-                              amount=points, rank_up=rank_up)
+                              amount=points, rank_up=rank_up, rank_down=rank_down)
             # The card has already returned, so the screen is clear again.
             show_attribute_gain_intro()
         else:
@@ -1257,7 +1260,7 @@ define hint_text_bag = "Open Bag from the bottom menu to see the items you carry
 # come from, and deliberately says nothing about where they lead: the locked
 # answer and the person who remembers are better met as surprises than explained
 # here. Everything past this sentence is left for the player to find.
-define hint_text_attribute = "Insight: observation and reasoning. Grace: thoughtful communication. Nerve: acting despite uncertainty.\n\nSome replies earn small gains; major events earn more. Gains appear below their circle. Rank-ups open a separate screen. Open Attributes to check progress. Not every reply earns points."
+define hint_text_attribute = "Insight: observation and reasoning. Grace: thoughtful communication. Nerve: acting despite uncertainty.\n\nSome replies raise an attribute; some trade-offs lower one. Signed changes appear below their circle. Rank-ups open a separate screen. Open Attributes to check progress. Not every reply changes your attributes."
 
 # The first afternoon he is allowed to spend. It names the thing he has just been
 # handed and says what it is for, without listing where he can go: the places are
@@ -1397,14 +1400,14 @@ style attribute_gain_continue_text is default:
     kerning gui.scale(1)
     outlines []
 
-screen attribute_gain_card(attribute_id, amount, rank_up=False):
+screen attribute_gain_card(attribute_id, amount, rank_up=False, rank_down=False):
     modal True
     zorder 110
 
     default hiding = False
     default ready = False
 
-    $ amount_text = format_points(amount)
+    $ amount_text = format_signed_points(amount)
     $ current_name = attribute_name(attribute_id)
     $ active_color = attribute_defs[attribute_id]["color"]
     $ active_rank = attribute_rank(attribute_id)
@@ -1489,6 +1492,10 @@ screen attribute_gain_card(attribute_id, amount, rank_up=False):
             text "SOCIAL ATTRIBUTES" style "attribute_gain_kicker"
             if rank_up:
                 text "RANK UP" style "attribute_gain_title" color active_color
+            elif rank_down:
+                text "RANK DOWN" style "attribute_gain_title" color active_color
+            elif amount < 0:
+                text "ATTRIBUTE LOSS" style "attribute_gain_title" color active_color
             else:
                 text "ATTRIBUTE GAIN" style "attribute_gain_title" color active_color
 
@@ -1498,7 +1505,7 @@ screen attribute_gain_card(attribute_id, amount, rank_up=False):
             ypos gui.scale(66)
             xsize gui.scale(306)
             spacing gui.scale(10)
-            text "[current_name.upper()]  +[amount_text]" style "attribute_gain_name" color active_color xalign 1.0
+            text "[current_name.upper()]  [amount_text]" style "attribute_gain_name" color active_color xalign 1.0
             if rank_up:
                 text "RANK [active_rank:02d] / 05" style "attribute_gain_rank" xalign 1.0
             else:
@@ -1519,7 +1526,7 @@ screen attribute_gain_card(attribute_id, amount, rank_up=False):
 #
 # Two pieces of feedback that run during play rather than stopping it.
 #
-# The chip is what half a point looks like. It appears over the top of the
+# The chip shows a small signed adjustment. It appears over the top of the
 # scene beneath its matching labeled circle and takes itself away again.
 #
 # The cluster is the three orbs in the corner of the screen: the same three
@@ -1541,7 +1548,7 @@ screen attribute_tick():
     for index, attribute_id in enumerate(attribute_order):
         if attribute_id in attribute_tick_events:
             $ tick_color = attribute_color(attribute_id)
-            $ tick_points = "+" + format_points(attribute_tick_events[attribute_id])
+            $ tick_points = format_signed_points(attribute_tick_events[attribute_id])
 
             frame:
                 at attribute_tick_appear
@@ -1635,7 +1642,7 @@ screen attribute_hud():
 
 # --- START LABEL ---
 label start:
-    scene black
+    scene black with Fade(1.4, 0.0, 0.0)
 
     # Before the story, the two notices. Neither can be clicked past: each page
     # fades itself in and out and then returns on its own timer, so a new player
@@ -1790,7 +1797,7 @@ label talk_security:
         mc "(Her expression doesn't change.)"
         security2 "ここは立入制限区域です。この先は関係者以外通れません。"
         mc "(Restricted area. I'm not trying to go anywhere. I just want the exit.)"
-        mc "Excuse me. Which way is—"
+        mc "Excuse me. Which way is...."
         security2 "総合案内所はあちらです。"
         mc "(She points behind me without turning around.)"
         security2 "私は持ち場を離れられません。他の人に聞いてください。"
@@ -1801,11 +1808,9 @@ label talk_security:
     $ security_index += 1
     $ talked_to_security = True
 
-    # The guard cannot be won over, so the only thing this fork decides is what
-    # kind of person he is about being dismissed. None of the three gets him
-    # anywhere and none of them pays: the airport is not a turning point, it is a
-    # man walking up to strangers and being brushed off, so the fork is character
-    # rather than progress. He is not being graded on results yet.
+    # The guard cannot be won over, so this fork is about how the protagonist
+    # responds to being dismissed. Apologising nudges Grace, while pressing on
+    # nudges Nerve; watching the crowd remains neutral.
     #
     # What he does choose is what he says, and he only gets to say it once. The
     # hub lets him walk back here, and on the second visit the answer he already
@@ -1833,12 +1838,14 @@ label talk_security:
 label answer_security_bow:
     mc "Sumimasen. Sumimasen."
     mc "(I bowed. I have no idea why I bowed. My body just did it.)"
+    $ reward_attributes_once("answer_security_bow", [("grace", 0.1)], show="auto")
     mc "(Maybe the information desk can help.)"
     jump airport_exploration
 
 label answer_security_press:
     mc "Excuse me. 中野3丁目. Please."
     mc "(They glanced at the phone, then at me, and turned away.)"
+    $ reward_attributes_once("answer_security_press", [("nerve", 0.1)], show="auto")
     mc "(I don't know if they understood. Either way, I need to try someone else.)"
     mc "(Maybe the information desk can help.)"
     jump airport_exploration
@@ -1891,7 +1898,7 @@ label answer_timid_listen:
     mc "(...いそがしい.)"
     mc "(Isogashii. Busy. I practised that one on the plane.)"
     mc "(He isn't angry. He's busy.)"
-    $ reward_attributes_once("answer_timid_listen", [("insight", "small")], show="auto")
+    $ reward_attributes_once("answer_timid_listen", [("insight", 0.2)], show="auto")
     mc "(I'll leave him alone.)"
     jump airport_exploration
 
@@ -1902,8 +1909,8 @@ label talk_cheerful_woman:
 
     $ talked_to_npc2 = True
 
-    # She is the one warm face in the terminal, and the fork is only about how
-    # much he is willing to give back. No points, and the same answer twice.
+    # She is the one warm face in the terminal, and the fork is about how much
+    # he is willing to give back. The same answer repeats on later visits.
     $ prior_answer = remembered_choice("cheerful_woman")
 
     if prior_answer == "smile":
@@ -1922,12 +1929,14 @@ label talk_cheerful_woman:
 label answer_woman_smile:
     mc "(She's the first person here who's smiled at me.)"
     cheerful_woman "あら！ がんばってね！"
+    $ reward_attributes_once("answer_woman_smile", [("grace", 0.2)], show="auto")
     jump airport_exploration
 
 label answer_woman_echo:
     mc "Arigatou gozaimasu."
     cheerful_woman "どういたしまして！"
     mc "(She smiles and waves before disappearing into the crowd.)"
+    $ reward_attributes_once("answer_woman_echo", [("grace", 0.2)], show="auto")
     jump airport_exploration
 
 label talk_assistant:
@@ -1969,7 +1978,7 @@ label answer_assistant_patient:
     mc "It's okay. We can use the map. I'm not in a hurry."
     assistant "Map... yes. ちず。"
     "She lets out a breath and reaches for a pamphlet."
-    $ reward_attributes_once("answer_assistant_patient", [("grace", "small")], show="auto")
+    $ reward_attributes_once("answer_assistant_patient", [("insight", 0.2)], show="auto")
     jump answer_assistant_ask
 
 label answer_assistant_ask:
@@ -2019,6 +2028,7 @@ label talk_veteran_assistant:
             veteran "Budget around ¥18,000. More if there's traffic."
             jump end_airport
         "I have what I need. Thank you.":
+            $ reward_attributes_once("veteran_advice_decline", [("insight", 0.2)], show="auto")
             jump end_airport
 
 label taxi_choice:
@@ -2088,8 +2098,7 @@ label travel_choice:
             jump taxi_warning
         "Take the train.":
             $ travel_method = "train"
-            # Major route rewards remain larger than conversational gains.
-            $ reward_attributes_once("travel_route_attribute", [("insight", "large")])
+            $ reward_attributes_once("travel_route_attribute", [("insight", 0.5)])
             jump train_station
 
 
@@ -2104,11 +2113,11 @@ label taxi_warning:
     menu:
         "Take the taxi anyway.":
             $ travel_method = "taxi"
-            $ reward_attributes_once("travel_route_attribute", [("nerve", "large")])
+            $ reward_attributes_once("travel_route_attribute", [("nerve", 1.0)])
             jump taxi_stand
         "Take the train instead.":
             $ travel_method = "train"
-            $ reward_attributes_once("travel_route_attribute", [("insight", "large")])
+            $ reward_attributes_once("travel_route_attribute", [("insight", 0.5)])
             jump train_station
 
 
@@ -2262,13 +2271,11 @@ label train_station:
     mc "(Is anyone even checking? There's nobody standing there. There's no one at the gate at all.)"
     mc "(...I could just walk through. Ten seconds and I'm on the other side.)"
 
-    # Neither answer pays. Walking through is him acting on his own reading of the
-    # room and buying a ticket is him doing what he was told on a landing strip
-    # ninety minutes ago, but both are the same ten seconds of turnstile and the
-    # turnstile does not remember anything. The fork decides how he meets the
-    # station, not who he is becoming.
+    # Acting on his own reading of the room earns a small Nerve reward; following
+    # the advice and buying a ticket remains a neutral choice.
     menu:
         "Walk straight through.":
+            $ reward_attributes_once("answer_train_gate", [("nerve", 0.4)], show="auto")
             jump train_gate_slam
         "Buy a ticket first.":
             jump train_ticket
@@ -2336,8 +2343,7 @@ label ticket_machine:
             mc "(That took her four seconds. It took me four minutes.)"
             mc "Arigatou gozaimasu."
             "She nods, already walking away."
-            # Resolving the ticket obstacle is a set-piece reward, not an aside.
-            $ reward_attributes_once("answer_ticket_ask", [("grace", "large")])
+            $ reward_attributes_once("answer_ticket_ask", [("grace", 0.2)], show="auto")
             jump train_platform
 
 
@@ -2366,6 +2372,7 @@ label train_platform:
     menu:
         "The sign with eight stations.":
             $ boarded_shinkansen = True
+            $ reward_attributes_once("answer_train_express", [("insight", 0.2)], show="auto")
             jump train_board
         "The sign with twenty-three stations.":
             $ boarded_shinkansen = False
@@ -2533,13 +2540,14 @@ label home_arrival:
             mc "You've already done a lot for me. Let me do this bit."
             mother "Well. If you're sure. I've been fussing over that room all week."
             # Acknowledging her effort rather than dismissing her worry.
-            $ reward_attributes_once("answer_boxes_reassure", [("grace", "small")], show="auto")
+            $ reward_attributes_once("answer_boxes_reassure", [("grace", 0.3)], show="auto")
         "Which ones go upstairs?":
             mc "All of these, or just the clothes?"
             mother "All three. The books are in the bottom one. Careful with that."
         "Can we leave the books until morning?":
             mc "Could we bring up the clothes now and leave the books until morning? I'm barely awake."
             mother "Of course. The books won't mind waiting."
+            $ reward_attributes_once("answer_boxes_postpone", [("grace", -0.5)], show="auto")
 
     "*We carry what I need upstairs. She steadies the box while I find the light switch.*"
     if arrived_late:
@@ -3187,6 +3195,7 @@ label morning_call:
             mc "What have you told them about me?"
             hikari "That you're in our department and you ask a lot of questions."
             mc "Accurate, unfortunately."
+            $ reward_attributes_once("answer_breakfast_questions", [("nerve", -0.3)], show="auto")
             $ remember("hikari", "asked what the department knew about him")
         "Should I introduce myself today?":
             mc "Should I introduce myself, or wait until I'm less jet-lagged?"
@@ -3456,7 +3465,7 @@ label campus_grounds:
         "These buildings are different ages.":
             mc "Stone, glass, concrete. Was this built in stages?"
             hikari "Yes. The gym was here first. They kept adding things around it."
-            $ reward_attributes_once("answer_courtyard_buildings", [("insight", "small")], show="auto")
+            $ reward_attributes_once("answer_courtyard_buildings", [("insight", 0.2)], show="auto")
             $ remember("hikari", "noticed the campus had been built in stages")
         "Let's keep moving.":
             mc "I'll look around later. I don't want to make us late."
@@ -3497,9 +3506,8 @@ label department_tour:
     "A lost cat that is almost certainly not still lost."
     hikari "Anything on the board catch your eye?"
 
-    # The first door in the game that can be shut, and it is shut by rank rather
-    # than by points, so it reads as "he has not become that person yet" instead of
-    # "you are half a point short". The other two are open on day one on purpose:
+    # The first door in the game that can be shut, gated on a modest Insight total
+    # rather than a full rank-up this early. The other two are open on day one:
     # they are opinions, and he is entitled to have those before he has earned
     # anything. The locked one is the only one that asks him to have *noticed*
     # something nobody pointed out to him.
@@ -3512,12 +3520,12 @@ label department_tour:
             mc "There are three of those. Three different flats, three different people who all took the same photograph."
             hikari "Same agent, probably. People pass the adverts around when they move out."
             $ remember("hikari", "picked the three rooms for rent")
-        "[tag_insight] The lost cat." if has_attribute("insight", 2):
+        "[tag_insight] The lost cat." if has_attribute_points("insight", 0.8):
             mc "The cat one. The tape has gone yellow and both bottom corners have curled."
             hikari "...Huh."
             mc "There's a date at the bottom. Last semester. Has anyone checked whether they found it?"
             hikari "I don't know. The number's still there. We could ask later."
-            $ reward_attributes_once("answer_wall_cat", [("insight", "small")], show="auto")
+            $ reward_attributes_once("answer_wall_cat", [("insight", 0.2)], show="auto")
             $ remember("hikari", "picked the lost cat nobody had taken down")
 
     "She stops at the far end, in front of a set of double doors, and reads a timetable taped to the glass."
@@ -3587,11 +3595,8 @@ label student_relations:
     mc "(I believe her.)"
     clerk "And a number of other things under the gym, which you will find on your own and which I am not responsible for."
 
-    # The second door that can be shut, and the first one gated on Grace. What is
-    # behind it is not information - she has already given him all of that - it is
-    # the kind of sentence you can only say to a stranger once you have decided to
-    # be a person in front of them, which is exactly what Grace has been measuring
-    # since the airport.
+    # This response asks for a modest investment in Grace; it should be reachable
+    # before the first lecture, not require a full rank-up.
     menu:
         "Which one would you pick?":
             mc "If it was you. Out of all of them. Which one would you pick?"
@@ -3602,10 +3607,10 @@ label student_relations:
             mc "When does the photography club meet? Can I visit before joining?"
             clerk "This afternoon. Second floor. They welcome visitors."
             $ remember("clerk", "asked when he could visit the photography club")
-        "[tag_grace] You've made this much easier." if has_attribute("grace", 2):
+        "[tag_grace] You've made this much easier." if has_attribute_points("grace", 1.0):
             mc "You've made this much easier. I was worried I'd miss something important."
             clerk "You're welcome. Keep the booklet. There's a lot to remember on your first day."
-            $ reward_attributes_once("answer_circles_back", [("grace", "small")], show="auto")
+            $ reward_attributes_once("answer_circles_back", [("grace", 0.2)], show="auto")
             $ remember("clerk", "told her the orientation had helped")
 
     mc "Thank you. Really."
@@ -3702,12 +3707,12 @@ label first_class:
             mc "I'm sorry. I'll be here early from now on. I mean it."
             professor "Yes. You will."
             $ remember("professor", "apologised and promised to come early")
-        "[tag_nerve] Can we discuss today's late mark?" if has_attribute("nerve", 2):
+        "[tag_nerve] Can we discuss today's late mark?" if has_attribute_points("nerve", 0.5):
             mc "Could we discuss today's late mark? Student Relations asked me to register before coming here."
             professor "..."
             professor "Bring me the registration slip. If the appointment overlapped my class, I will review it."
             mc "Thank you. I'll bring it tomorrow."
-            $ reward_attributes_once("answer_clock_ask", [("nerve", "small")], show="auto")
+            $ reward_attributes_once("answer_clock_ask", [("nerve", 0.3)], show="auto")
             $ remember("professor", "asked him to review the registration delay")
 
     professor "Coming on time is late."
@@ -3750,7 +3755,7 @@ label first_class:
         "Next time, warn me before you go.":
             mc "Next time, warn me before you go. I can't follow a route I don't know."
             hikari "Fair. I will."
-            $ reward_attributes_once("answer_hikari_warning", [("nerve", "small")], show="auto")
+            $ reward_attributes_once("answer_hikari_warning", [("nerve", 0.5), ("grace", -0.5)], show="auto")
             $ remember("hikari", "asked her not to leave without warning")
         "Thanks for saving me a seat.":
             mc "Thanks for saving me a seat, at least."
@@ -3915,6 +3920,7 @@ label after_school_walk_alone:
             "He points to the dark bottle beside the stove."
             mc "(Soy sauce. That answers that.)"
             "I stop talking. He pushes the bowl half a centimetre towards me with one finger."
+            $ reward_attributes_once("answer_ramen_broth", [("insight", 0.3)], show="auto")
             scene bg_ramen_shop with walk_fade
             chef "どうぞ。"
             mc "(That one I know. It means here you go. It also means eat it.)"
@@ -4056,9 +4062,11 @@ label after_school_run:
         "Thanks for coming back with me.":
             mc "Thanks for coming back with me. You must have had other things to do."
             hikari "You're welcome. Don't make it a thing."
+            $ reward_attributes_once("answer_run_thanks", [("grace", 0.3)], show="auto")
         "How long have you lived here?":
             mc "Have you lived on this street your whole life?"
             hikari "Since primary school. Mom still calls the bakery by its old name."
+            $ reward_attributes_once("answer_run_history", [("insight", 0.3)], show="auto")
         "Which turning is ours?":
             mc "Which turning is ours? The one after the bakery?"
             hikari "Yes. Then straight until you see the blue gate."
@@ -4079,6 +4087,7 @@ label after_school_run:
         "Can I come?":
             mc "Can I come?"
             hikari "..."
+            $ reward_attributes_once("answer_run_join", [("nerve", 0.2)], show="auto")
 
     hikari "You can come. Go and change into something you can move in."
     mc "You're serious."

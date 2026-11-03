@@ -75,7 +75,7 @@ screen phone_backdrop():
         use sakura_blossoms
     else:
         add Solid("#11100f70")
-    add Solid("#15130f65")
+        add Solid("#15130f65")
 
 transform phone_raise(started_at):
     subpixel True
@@ -204,15 +204,15 @@ screen phone_links():
         xfill True
         spacing gui.scale(2)
         if main_menu:
-            use phone_row(_("New Game"), [Function(cinematic_departure), Start()])
+            use phone_row(_("New Game"), Start())
             use phone_row(_("Continue"), Continue())
         else:
             use phone_row(_("Resume"), Return())
-            use phone_row(_("History"), ShowMenu("history"))
+            use phone_row(_("Log"), ShowMenu("history"))
             use phone_row(_("Save"), ShowMenu("save"))
             use phone_row(_("Bag"), ShowMenu("inventory"))
             use phone_row(_("Attributes"), ShowMenu("attributes"))
-        use phone_row(_("Load"), ShowMenu("load"))
+        use phone_row(_("Load Game"), ShowMenu("load"))
         use phone_row(_("Settings"), ShowMenu("preferences"))
         use phone_row(_("About"), ShowMenu("about"))
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
@@ -220,7 +220,7 @@ screen phone_links():
         if _in_replay:
             use phone_row(_("End Replay"), EndReplay(confirm=True))
         elif not main_menu:
-            use phone_row(_("Main Menu"), MainMenu())
+            use phone_row(_("Title Screen"), MainMenu())
         if renpy.variant("pc"):
             use phone_row(_("Quit"), Quit(confirm=True))
 
@@ -228,10 +228,13 @@ screen phone_title():
     default raise_phone = not menu_phone_open
     use phone_backdrop
     if not menu_phone_open:
-        textbutton _("START GAME"):
+        text "ELSEWHERE" style "title_logo":
+            xalign 0.5
+            yalign 0.39
+        textbutton _("Start Game"):
             style "phone_start"
             xalign 0.5
-            yalign 0.5
+            yalign 0.72
             action Function(menu_phone_begin)
             default_focus True
         key "K_RETURN" action Function(menu_phone_begin)
@@ -246,7 +249,7 @@ screen phone_title():
                 vbox:
                     spacing gui.scale(12)
                     text "elsewhere" style "phone_brand"
-                    text _("MENU") style "phone_detail"
+                    text _("TITLE SCREEN") style "phone_detail"
                     viewport:
                         style_prefix "phone"
                         mousewheel True
@@ -282,7 +285,7 @@ screen phone_game_menu(title, scroll=None, yinitial=0.0, spacing=0, back_action=
                 style "phone_small_button"
                 yalign 0.5
                 action (SetLocalVariable("drawer", False) if drawer else (back_action if back_action is not None else (ShowMenu("main_menu") if main_menu else Return())))
-            text ( _("Menu") if drawer else title ):
+            text ( _("Home") if drawer else title ):
                 style "phone_heading"
                 xalign 0.5
                 yalign 0.5
@@ -770,12 +773,21 @@ style phone_start is button:
     padding (gui.scale(24), gui.scale(20))
 
 style phone_start_text is gui_text:
-    font "DejaVuSans.ttf"
-    size gui.scale(26)
+    font game_font
+    size gui.scale(24)
+    bold True
     color "#f4eee4"
     hover_color "#e7c08d"
-    kerning gui.scale(3)
+    kerning gui.scale(2)
     outlines [(gui.scale(2), "#00000080", 0, gui.scale(2))]
+
+style title_logo is gui_text:
+    font game_font
+    size gui.scale(58)
+    color "#f3eee4"
+    kerning gui.scale(8)
+    text_align 0.5
+    outlines [(gui.scale(2), "#17130fbb", 0, gui.scale(2))]
 
 # The remaining text pages use the shared shell, but need narrow text geometry.
 style about_text:
