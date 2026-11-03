@@ -58,6 +58,10 @@ init python:
     # on `typing` and would be cut off by - and would cut off - anything else.
     renpy.music.register_channel("sfx", mixer="sfx", loop=False)
 
+    # Rank-up cues are timed around the animation and should not cut off the
+    # opening swell or be cut short by an unrelated one-shot sound.
+    renpy.music.register_channel("attribute_ui", mixer="sfx", loop=False)
+
     def play_sfx(path):
         renpy.sound.play(path, channel="sfx")
 
@@ -390,6 +394,27 @@ default attribute_reward_flags = []
 # explains them again.
 default attribute_hint_shown = False
 
+# Transient feedback shown beneath the matching circle in the HUD.
+default attribute_tick_events = {}
+default attribute_tick_started = {}
+
+# TEMPORARY: test-only shortcut target. Keeping this in script flow lets the
+# rank-up animation start its own interactions safely.
+label attribute_test_rank_up(attribute_id):
+
+    $ ceiling = attribute_rank_ceiling(attribute_id)
+
+    if ceiling is None:
+        $ renpy.notify("%s is already at maximum rank." % attribute_name(attribute_id))
+    else:
+        $ add_attribute_points(
+            attribute_id,
+            amount=ceiling - attribute_total(attribute_id),
+            show="card",
+        )
+
+    return
+
 # What he has actually said to people. A conversation that can be walked up to
 # twice is a conversation a player can farm twice, so once he has answered
 # somebody, that answer is what comes back the next time he talks to them. The
@@ -433,7 +458,7 @@ init python:
         # money comes from. Once only, and never on a payment that did not happen.
         if not store.money_hint_shown:
             store.money_hint_shown = True
-            renpy.call_screen("hint_card", eyebrow="A NOTE ON MONEY", body=store.hint_text_money)
+            renpy.call_screen("hint_card", eyebrow="Money", body=store.hint_text_money)
         return True
 
     def add_item(item):
@@ -443,7 +468,7 @@ init python:
             # the "picked up" toast so the toast is not talking over the card.
             if item == "pamphlet" and not store.pamphlet_hint_shown:
                 store.pamphlet_hint_shown = True
-                renpy.call_screen("hint_card", eyebrow="A NOTE ON YOUR BAG", body=store.hint_text_bag)
+                renpy.call_screen("hint_card", eyebrow="Your Bag", body=store.hint_text_bag)
             renpy.notify(_("Picked up: %s") % item_name(item))
 
     def remove_item(item):
@@ -469,19 +494,19 @@ init python:
     attribute_defs = {
         "insight": {
             "name": "Insight",
-            "blurb": "The power to understand.",
+            "blurb": "Observation and reasoning.",
             "color": "#5fb8ff",
             "color_soft": "#5fb8ff55",
         },
         "grace": {
             "name": "Grace",
-            "blurb": "The power to connect.",
+            "blurb": "Empathy and communication.",
             "color": "#77d98b",
             "color_soft": "#77d98b55",
         },
         "nerve": {
             "name": "Nerve",
-            "blurb": "The power to act.",
+            "blurb": "Resolve under pressure.",
             "color": "#ff6b6b",
             "color_soft": "#ff6b6b55",
         },
@@ -523,11 +548,11 @@ init python:
     # ladder rather than any one clever reply.
     attribute_rank_thresholds = [0.0, 2.0, 5.0, 9.5, 15.0]
     attribute_rank_names = [
-        "Developing",
-        "Emerging",
-        "Capable",
-        "Accomplished",
-        "Exceptional",
+        "Rank 01",
+        "Rank 02",
+        "Rank 03",
+        "Rank 04",
+        "Rank 05",
     ]
 
     # Every reward in the game is one of these three sizes. Scene code names the
@@ -563,6 +588,49 @@ init python:
         base = attribute_color(attribute_id).lstrip("#")[:6]
         alpha = max(0.0, min(1.0, float(alpha)))
         return "#%s%02x" % (base, int(round(alpha * 255)))
+
+    def attribute_ring_displayable(attribute_id, progress, size):
+        segments = 24
+        filled = int(max(0.0, min(1.0, progress)) * segments + 0.00001)
+        large = size > 100
+        dot_size = gui.scale(max(2, size * (0.022 if large else 0.075)))
+        radius = gui.scale(size * (0.47 if large else 0.38))
+        center = gui.scale(size * 0.5)
+        empty_color = attribute_color_alpha(attribute_id, 0.16)
+        dots = []
+
+        for i in range(segments):
+            angle = (2.0 * math.pi * i / segments) - (math.pi / 2.0)
+            x = int(center + math.cos(angle) * radius - (dot_size * 0.5))
+            y = int(center + math.sin(angle) * radius - (dot_size * 0.5))
+            color = attribute_color(attribute_id) if i < filled else empty_color
+            dots.append(Solid(color, xysize=(dot_size, dot_size), xpos=x, ypos=y))
+
+        return Fixed(*dots, xysize=(gui.scale(size), gui.scale(size)))
+
+    def attribute_orb_image(attribute_id):
+        return "images/ui/attributes/%s_orb.png" % attribute_id
+
+    def attribute_wave_image(attribute_id):
+        return "images/ui/attributes/%s_wave.png" % attribute_id
+
+    def attribute_orb_size(rank):
+        """Reserved cells accommodate every rank without overlapping labels."""
+        return 176 + (max(1, min(5, rank)) - 1) * 16
+
+    def attribute_orb_position(attribute_id):
+        return {
+            "grace": (640, 300),
+            "insight": (320, 372),
+            "nerve": (960, 372),
+        }[attribute_id]
+
+    def attribute_orb_delay(attribute_id):
+        return {
+            "grace": 0.16,
+            "insight": 0.0,
+            "nerve": 0.32,
+        }[attribute_id]
 
     def format_points(value):
         """Points as the player should read them: 1, not 1.0. 0.5 stays 0.5."""
@@ -622,10 +690,8 @@ init python:
     def attribute_rank_progress(attribute_id):
         """How far through the current rank he is, 0.0 to 1.0.
 
-        Separate from attribute_progress(): this one is the bar on the
-        Attributes page, which should empty itself at every rank so each step of
-        the ladder can be watched filling. The orbs use the other one, because
-        they are meant to only ever get more solid.
+        Circular meters reset at each rank; the HUD orb opacity uses lifetime
+        progress separately so its surface only grows more solid.
         """
         ceiling = attribute_rank_ceiling(attribute_id)
         floor_value = attribute_rank_floor(attribute_id)
@@ -648,19 +714,13 @@ init python:
         return attribute_total(attribute_id) - attribute_rank_floor(attribute_id)
 
     def attribute_rank_next_text(attribute_id):
-        """The line under the bar on the Attributes page."""
+        """Points remaining beneath the attribute's rank readout."""
         ceiling = attribute_rank_ceiling(attribute_id)
 
         if ceiling is None:
-            return "Everything this pillar has to give."
+            return "Maximum rank"
 
-        next_rank = attribute_rank(attribute_id) + 1
-
-        return "%s of %s to %s" % (
-            format_points(attribute_rank_earned(attribute_id)),
-            format_points(attribute_rank_span(attribute_id)),
-            attribute_rank_names[next_rank - 1],
-        )
+        return "%s to next rank" % format_points(ceiling - attribute_total(attribute_id))
 
     def has_attribute(attribute_id, minimum_rank):
         """Whether a gated choice is open to him yet.
@@ -702,7 +762,11 @@ init python:
             return attribute_total(attribute_id)
 
         before_rank = attribute_rank(attribute_id)
-        store.character_attributes[attribute_id] = attribute_total(attribute_id) + points
+        before_total = attribute_total(attribute_id)
+        points = min(points, max(0.0, attribute_rank_thresholds[-1] - before_total))
+        if points <= 0:
+            return before_total
+        store.character_attributes[attribute_id] = before_total + points
         after_rank = attribute_rank(attribute_id)
         rank_up = after_rank > before_rank
 
@@ -713,11 +777,8 @@ init python:
             # Let the choice breathe for a moment before the card takes over, so
             # the reward reads as a follow-through rather than a cut.
             renpy.pause(0.45, hard=True)
-            # The riser opens the animation and runs for 1.70s, which is exactly
-            # as long as the stat takes to travel out of the middle. The landing
-            # sound is fired by the screen itself, on a timer, so the two stay in
-            # step no matter how the motion is retimed.
-            play_sfx("audio/SFX/attribute_rise.wav")
+            # Screen timers synchronize the landing and settle with the reveal.
+            play_sfx("audio/SFX/attribute_swell.wav")
             renpy.call_screen("attribute_gain_card", attribute_id=attribute_id,
                               amount=points, rank_up=rank_up)
             # The card has already returned, so the screen is clear again.
@@ -752,22 +813,36 @@ init python:
             return
 
         store.attribute_hint_shown = True
-        renpy.call_screen("hint_card", eyebrow="A NOTE ON WHO YOU ARE BECOMING",
+        renpy.call_screen("hint_card", eyebrow="Social Attributes",
                           body=store.hint_text_attribute)
 
     def show_attribute_tick(attribute_id, points):
-        """Flash the small "Grace +0.5" chip and step out of the way.
+        """Flash a small "+0.5" chip beneath the matching labeled HUD circle.
 
         This is what a half point in the middle of a conversation looks like. It
         must not cost the player a click or a beat, so it is a screen that shows
         itself, waits, and hides itself again.
 
-        The hide-then-show is the same trick renpy.notify uses: a second gain
-        replaces the chip on screen instead of stacking a second one on top of
-        it, and re-showing is also what replays the entrance animation.
+        Each attribute has its own expiry. A fresh gain refreshes that chip's
+        duration without removing another attribute's feedback.
         """
-        renpy.hide_screen("attribute_tick")
-        renpy.show_screen("attribute_tick", attribute_id=attribute_id, points=points)
+        store.attribute_tick_events[attribute_id] = points
+        store.attribute_tick_started[attribute_id] = renpy.get_game_runtime()
+        play_sfx("audio/SFX/attribute_tick.wav")
+        renpy.show_screen("attribute_tick")
+
+    def clear_attribute_tick(attribute_id):
+        store.attribute_tick_events.pop(attribute_id, None)
+        store.attribute_tick_started.pop(attribute_id, None)
+
+    def expire_attribute_ticks():
+        now = renpy.get_game_runtime()
+        for attribute_id in list(store.attribute_tick_events):
+            started = store.attribute_tick_started.get(attribute_id, now - 2.10)
+            if now - started >= 2.10:
+                clear_attribute_tick(attribute_id)
+        if not store.attribute_tick_events:
+            renpy.hide_screen("attribute_tick")
 
     def reward_attributes_once(flag, rewards, show="card"):
         """Apply a one-time reward definition so a major choice cannot double-pay.
@@ -1166,482 +1241,286 @@ screen photo_mode(bg_image):
 ## out, and only then does the screen hand control back. The two that follow are
 ## the parts the player does have to answer.
 
-define notice_text_fiction = "Everything in this game is a work of fiction.\n\nAny resemblance to real people, living or dead, is coincidental. No character here is meant to represent anyone in real life."
+define notice_text_fiction = "This game is a work of fiction.\n\nAny resemblance to real people, living or dead, is coincidental. The characters do not represent real individuals."
 
-define notice_text_choice = "Be mindful of your choices.\n\nEvery choice you make changes what happens next. Some of them cannot be taken back, and some of them will be remembered."
+define notice_text_choice = "Your choices can affect conversations, relationships and later events.\n\nSome decisions have lasting consequences. Other characters may remember what you say and do."
 
-define notice_text_accept = "By continuing, you accept that this is a story.\n\nAnd that the story is listening."
-
-# Each card fades itself up, holds long enough to be read, and fades itself back
-# down. The timing lives in the transform, so the screen only has to wait out the
-# total, which is 4.8 seconds. Change one and change the other to match.
-transform notice_card:
-    alpha 0.0
-    linear 1.0 alpha 1.0
-    pause 2.8
-    linear 1.0 alpha 0.0
-
-style notice_label is default:
-    size gui.scale(13)
-    color "#7d766a"
-    kerning gui.scale(7)
-    text_align 0.5
-
-style notice_body is default:
-    size gui.scale(22)
-    color "#e6e1d8"
-    text_align 0.5
-    line_spacing gui.scale(11)
-    kerning gui.scale(0.5)
-
-style notice_meta is default:
-    size gui.scale(12)
-    color "#5a544b"
-    kerning gui.scale(3)
-    text_align 0.5
-
-# Text only, no plate behind it: on black, colour is what tells the player where
-# the cursor is, the same way it does on the menus. The label's own styling lives
-# in the matching _text style, which is what a button's text looks for.
-style notice_button is button:
-    background None
-    hover_background None
-    padding (gui.scale(18), gui.scale(10))
-
-style notice_button_text is button_text:
-    size gui.scale(15)
-    kerning gui.scale(5)
-    idle_color "#8a8377"
-    hover_color "#f4efe6"
-
-screen notice_page(eyebrow, body, page):
-    modal True
-
-    # There is no button on this card, so there is nothing to click. When the
-    # fade-out in notice_card finishes, the timer fires and the screen returns on
-    # its own. The two numbers must stay in step with each other.
-    timer 4.800 action Return()
-
-    add Solid("#000000")
-
-    vbox:
-        at notice_card
-        xalign 0.5
-        yalign 0.5
-        spacing gui.scale(26)
-
-        text eyebrow style "notice_label" xalign 0.5
-        add Solid("#3a352e") xysize (gui.scale(420), 1) xalign 0.5
-        text body style "notice_body" xalign 0.5 xmaximum gui.scale(660)
-        text page style "notice_meta" xalign 0.5
-
-screen notice_confirm(question):
-    modal True
-    add Solid("#000000")
-
-    vbox:
-        xalign 0.5
-        yalign 0.5
-        spacing gui.scale(30)
-
-        text "BEFORE YOU BEGIN" style "notice_label" xalign 0.5
-        add Solid("#3a352e") xysize (gui.scale(420), 1) xalign 0.5
-        text question style "notice_body" xalign 0.5 xmaximum gui.scale(660)
-        textbutton "I accept" action Return(True) style "notice_button" xalign 0.5
-
-screen notice_name():
-    modal True
-    add Solid("#000000")
-
-    vbox:
-        xalign 0.5
-        yalign 0.5
-        spacing gui.scale(28)
-
-        text "ONE LAST THING" style "notice_label" xalign 0.5
-        add Solid("#3a352e") xysize (gui.scale(420), 1) xalign 0.5
-        text "What should they call you?" style "notice_body" xalign 0.5
-
-        input:
-            value VariableInputValue("player_name", returnable=True)
-            length 12
-            exclude "{}[]"
-            size gui.scale(30)
-            pixel_width gui.scale(360)
-            xalign 0.5
-
-        # Both branches draw the same two rows, so the layout never shifts as the
-        # player types. Only the hint wording changes, and whether Begin responds.
-        if player_name.strip():
-            text "up to twelve characters" style "notice_meta" xalign 0.5
-            textbutton "Begin" action Return(True) style "notice_button" xalign 0.5
-        else:
-            text "type a name to begin" style "notice_meta" xalign 0.5
-            textbutton "Begin" action Return(True) style "notice_button" xalign 0.5 sensitive False
+define notice_text_accept = "Some choices affect more than the current conversation.\n\nContinue when you are ready to make those decisions."
 
 # The one-time hints. They are all drawn by the same card, so the only thing each
 # caller supplies is the wording, and none of them ever runs twice.
-define hint_text_money = "Make sure to check your cash in your bag, so you know you have enough for the things you need."
+define hint_text_money = "Open Bag from the bottom menu to check your cash.\n\nTravel, meals and purchases cost money. Check your balance before you spend."
 
-define hint_text_bag = "Make sure to check the items in your bag. It might be useful."
+define hint_text_bag = "Open Bag from the bottom menu to see the items you carry.\n\nSelect an item to read its description. If it can be used, its action appears below the description."
 
 # The first point he ever earns. It names the three pillars and says where they
 # come from, and deliberately says nothing about where they lead: the locked
 # answer and the person who remembers are better met as surprises than explained
 # here. Everything past this sentence is left for the player to find.
-define hint_text_attribute = "Something you chose just left a mark on you. You are becoming three things at once: Insight, Grace and Nerve.\n\nThey only move when a decision actually costs you something, not every time.\n\nYou cannot see where they are taking you yet. Some doors open only for the person you have grown into, and some people will remember how you answered."
+define hint_text_attribute = "Insight: observation and reasoning. Grace: thoughtful communication. Nerve: acting despite uncertainty.\n\nSome replies earn small gains; major events earn more. Gains appear below their circle. Rank-ups open a separate screen. Open Attributes to check progress. Not every reply earns points."
 
 # The first afternoon he is allowed to spend. It names the thing he has just been
 # handed and says what it is for, without listing where he can go: the places are
 # meant to be found, and the ones that matter will announce themselves with a
 # mark of their own. Called from the after-school fork, once, after the game has
 # already taken him somewhere.
-define hint_text_after_school = "The lectures are done, and the rest of the day is yours. This is what an afternoon in Japan looks like for you now.\n\nYou get one of them a day. You spend it on a person, a place, or a way home, and the day ends either way.\n\nNobody will tell you which one to pick. The ones with something waiting for you will let you know. Where you go is how you get to know this city, and the people in it get to know you back."
+define hint_text_after_school = "Choose one activity each free afternoon: spend time with someone, visit a place, or head home. That choice leads into the rest of the day.\n\nSome activities develop attributes or relationships. Other activities wait for another opportunity; you do not need to visit everyone in one afternoon."
 
-
-# A note that stops the game for a beat: the scene dims, a short card fades up
-# over it, and both fade away again once Okay is pressed. Not called from the
-# script itself: spend_money() and add_item() call it, each guarded so it only
-# ever fires once.
-#
-# Swapping the "at" transform on a screen displayable makes Ren'Py rebuild it,
-# which restarts the ATL from the first frame, so the out-fade always plays from
-# the solid state. The timer at the bottom must outlast the longest out-fade.
-transform hint_dim_in:
-    alpha 0.0
-    linear 0.5 alpha 0.55
-
-transform hint_dim_out:
-    alpha 0.55
-    linear 0.4 alpha 0.0
-
-transform hint_card_in:
-    alpha 0.0
-    yoffset gui.scale(14)
-    linear 0.5 alpha 1.0 yoffset 0
-
-transform hint_card_out:
-    alpha 1.0
-    yoffset 0
-    linear 0.4 alpha 0.0 yoffset gui.scale(-8)
-
-screen hint_card(eyebrow, body):
-    modal True
-
-    default hiding = False
-
-    # A translucent black, not an opaque one: the room is still back there,
-    # just quieter for a moment.
-    if hiding:
-        add Solid("#000000") at hint_dim_out
-    else:
-        add Solid("#000000") at hint_dim_in
-
-    frame:
-        at (hint_card_out if hiding else hint_card_in)
-        background Solid("#1c1b18e6")
-        padding (gui.scale(46), gui.scale(38))
-        xalign 0.5
-        yalign 0.5
-
-        vbox:
-            spacing gui.scale(24)
-            xalign 0.5
-
-            text eyebrow style "notice_label" xalign 0.5
-            add Solid("#3a352e") xysize (gui.scale(360), 1) xalign 0.5
-            text body style "notice_body" xalign 0.5 xmaximum gui.scale(520)
-            textbutton "Okay" action SetScreenVariable("hiding", True) style "notice_button" xalign 0.5 sensitive (not hiding)
-
-    if hiding:
-        timer 0.420 action Return()
-
-# The attribute gain screen slows the motion down and gives the earned stat a
-# cleaner route: it appears in the middle, then glides into its own orb and
-# stays there, breathing in the correct place.
+# The circles scale with rank. Two thin, colored wave rings travel outward from
+# each orb and fade, keeping the surface alive without pulsing the text.
 transform attribute_gain_cluster_in:
     alpha 0.0
-    yoffset gui.scale(12)
-    linear 0.28 alpha 1.0
-    ease 0.52 yoffset 0
+    yoffset gui.scale(10)
+    parallel:
+        easeout 0.34 alpha 1.0
+    parallel:
+        easeout 0.46 yoffset 0
 
 transform attribute_gain_cluster_out:
     alpha 1.0
     yoffset 0
-    ease 0.44 alpha 0.0 yoffset gui.scale(-10)
+    easein 0.26 alpha 0.0 yoffset gui.scale(-8)
 
 transform attribute_gain_title_in:
     alpha 0.0
-    xoffset gui.scale(-48)
-    pause 1.12
-    ease 0.52 alpha 1.0 xoffset 0
+    xoffset gui.scale(-30)
+    pause 0.48
+    easeout 0.38 alpha 1.0 xoffset 0
 
 transform attribute_gain_bar_in:
     alpha 0.0
-    yoffset gui.scale(12)
-    pause 1.38
-    ease 0.44 alpha 1.0 yoffset 0
-
-transform attribute_gain_orb_idle:
-    alpha 0.70
-    zoom 1.0
-    block:
-        linear 1.85 alpha 0.84 zoom 1.015
-        linear 1.85 alpha 0.68 zoom 0.992
-        repeat
-
-transform attribute_gain_target_glow:
-    alpha 0.10
-    zoom 0.96
+    yoffset gui.scale(8)
     pause 1.08
-    block:
-        linear 1.25 alpha 0.34 zoom 1.05
-        linear 1.25 alpha 0.12 zoom 0.98
-        repeat
+    easeout 0.32 alpha 1.0 yoffset 0
 
-transform attribute_gain_focus_to_grace:
+transform attribute_gain_button_in:
+    on show:
+        alpha 0.0
+        yoffset gui.scale(6)
+        easeout 0.22 alpha 1.0 yoffset 0
+
+transform attribute_gain_node_in(delay=0.0, start_zoom=0.82):
+    xanchor 0.5
+    yanchor 0.5
     alpha 0.0
-    zoom 0.68
-    linear 0.26 alpha 1.0 zoom 1.06
-    ease 0.22 zoom 1.0
-    pause 0.48
-    ease 0.82 xoffset gui.scale(-34) yoffset gui.scale(-104) zoom 0.82
-    block:
-        linear 1.75 zoom 0.85
-        linear 1.75 zoom 0.81
-        repeat
+    zoom start_zoom
+    pause delay
+    easeout 0.48 alpha 1.0 zoom 1.0
 
-transform attribute_gain_focus_to_insight:
+transform attribute_gain_wave_a(delay=0.0):
+    xanchor 0.5
+    yanchor 0.5
     alpha 0.0
-    zoom 0.68
-    linear 0.26 alpha 1.0 zoom 1.06
-    ease 0.22 zoom 1.0
-    pause 0.48
-    ease 0.82 xoffset gui.scale(-236) yoffset gui.scale(78) zoom 0.80
+    zoom 1.0
+    pause delay
     block:
-        linear 1.75 zoom 0.83
-        linear 1.75 zoom 0.79
+        alpha 0.30
+        zoom 1.0
+        easeout 1.50 alpha 0.0 zoom 1.56
         repeat
 
-transform attribute_gain_focus_to_nerve:
+transform attribute_gain_wave_b(delay=0.0):
+    xanchor 0.5
+    yanchor 0.5
     alpha 0.0
-    zoom 0.68
-    linear 0.26 alpha 1.0 zoom 1.06
-    ease 0.22 zoom 1.0
-    pause 0.48
-    ease 0.82 xoffset gui.scale(182) yoffset gui.scale(78) zoom 0.80
+    zoom 1.0
+    pause delay
     block:
-        linear 1.75 zoom 0.83
-        linear 1.75 zoom 0.79
+        alpha 0.28
+        zoom 1.0
+        easeout 1.50 alpha 0.0 zoom 1.56
         repeat
 
-transform attribute_gain_focus_flash:
-    alpha 0.78
-    block:
-        linear 0.82 alpha 1.0
-        linear 0.82 alpha 0.76
-        repeat
+style attribute_gain_kicker is default:
+    font "DejaVuSans.ttf"
+    size gui.scale(13)
+    color "#dce6ef"
+    bold True
+    kerning gui.scale(3)
+    outlines []
 
 style attribute_gain_title is default:
-    size gui.scale(50)
-    color "#eef8ff"
+    font "DejaVuSans.ttf"
+    size gui.scale(44)
+    color "#f5f7fa"
+    bold True
     italic True
-    kerning gui.scale(1)
-
-style attribute_gain_title_pop is default:
-    size gui.scale(70)
-    color "#ffffff"
-    italic True
-    kerning gui.scale(1)
+    kerning gui.scale(-2)
+    outlines []
 
 style attribute_gain_name is default:
-    size gui.scale(34)
-    color "#f4efe6"
-    italic True
-    kerning gui.scale(1)
-    text_align 0.5
-
-style attribute_gain_amount is default:
-    size gui.scale(104)
+    font "DejaVuSans.ttf"
+    size gui.scale(24)
     color "#ffffff"
-    italic True
-    text_align 0.5
-
-style attribute_gain_plus is default:
-    size gui.scale(23)
-    color "#f4efe6"
-    kerning gui.scale(2)
-    text_align 0.5
-
-style attribute_gain_rank is default:
-    size gui.scale(18)
-    color "#ebe5da"
+    bold True
     kerning gui.scale(3)
     text_align 0.5
+    outlines []
 
-style attribute_gain_mini is default:
-    size gui.scale(23)
-    color "#dcd6cb"
+style attribute_gain_rank is default:
+    font "DejaVuSans.ttf"
+    size gui.scale(12)
+    color "#ffffff"
+    bold True
+    kerning gui.scale(2)
+    text_align 0.5
+    outlines []
+
+style attribute_gain_orb_number is default:
+    font "DejaVuSans.ttf"
+    color "#ffffff"
+    bold True
     italic True
     text_align 0.5
+    kerning gui.scale(-5)
+    outlines []
+
+style attribute_gain_ribbon is default:
+    font "DejaVuSans.ttf"
+    size gui.scale(12)
+    color "#b9b7b1"
+    kerning gui.scale(0)
+    text_align 0.5
+    outlines []
+
+style attribute_gain_continue is button:
+    background None
+    hover_background Solid("#ffffff0d")
+    padding (gui.scale(18), gui.scale(10))
+
+style attribute_gain_continue_text is default:
+    font "DejaVuSans.ttf"
+    size gui.scale(15)
+    bold True
+    color "#d7d4cc"
+    hover_color "#ffffff"
+    kerning gui.scale(1)
+    outlines []
 
 screen attribute_gain_card(attribute_id, amount, rank_up=False):
     modal True
+    zorder 110
 
     default hiding = False
+    default ready = False
 
-    # `rank_up` is True when this gain pushed the attribute over a threshold, and
-    # all it changes is the headline and the weight of the moment. Passing it in
-    # rather than working it out here keeps the card a view of a decision that has
-    # already been made, which is what section 9.7 of the spec asks for.
-    $ current_total = attribute_total_text(attribute_id)
     $ amount_text = format_points(amount)
-    $ current_rank = attribute_rank(attribute_id)
-    $ current_rank_name = attribute_rank_name(attribute_id)
     $ current_name = attribute_name(attribute_id)
-    $ current_blurb = attribute_blurb(attribute_id)
     $ active_color = attribute_defs[attribute_id]["color"]
-    $ active_soft = attribute_defs[attribute_id]["color_soft"]
-    $ headline = "RANK" if rank_up else "ATTRIBUTE"
+    $ active_rank = attribute_rank(attribute_id)
+    $ active_orb_size = attribute_orb_size(active_rank)
+    $ active_orb_x, active_orb_y = attribute_orb_position(attribute_id)
+    $ active_orb_delay = attribute_orb_delay(attribute_id)
 
-    if hiding:
-        add Solid("#000000") at hint_dim_out
-    else:
-        add Solid("#000000") at hint_dim_in
+    add Solid("#171613eb") at (attribute_gain_cluster_out if hiding else attribute_gain_cluster_in)
 
     fixed:
         at (attribute_gain_cluster_out if hiding else attribute_gain_cluster_in)
-        xalign 0.5
-        yalign 0.5
-        xmaximum gui.scale(1040)
-        ymaximum gui.scale(600)
+        xsize config.screen_width
+        ysize config.screen_height
 
-        # Rings and the core triangle.
-        text "○" xpos gui.scale(290) ypos gui.scale(4) size gui.scale(386) color "#ffffff10"
-        text "○" xpos gui.scale(108) ypos gui.scale(190) size gui.scale(336) color "#ffffff0c"
-        text "○" xpos gui.scale(520) ypos gui.scale(190) size gui.scale(336) color "#ffffff0c"
+        # Waves live on the full-screen canvas, not inside the orb's clipped
+        # bounds, so they can grow past the circle while staying centered on it.
+        add attribute_wave_image(attribute_id):
+            xysize (gui.scale(active_orb_size), gui.scale(active_orb_size))
+            xpos gui.scale(active_orb_x)
+            ypos gui.scale(active_orb_y)
+            at attribute_gain_wave_a(active_orb_delay + 0.12)
 
-        text "●" xpos gui.scale(332) ypos gui.scale(42) size gui.scale(308) color attribute_defs["grace"]["color_soft"] at attribute_gain_orb_idle
-        text "●" xpos gui.scale(138) ypos gui.scale(232) size gui.scale(292) color attribute_defs["insight"]["color_soft"] at attribute_gain_orb_idle
-        text "●" xpos gui.scale(550) ypos gui.scale(232) size gui.scale(292) color attribute_defs["nerve"]["color_soft"] at attribute_gain_orb_idle
-        text "△" xpos gui.scale(426) ypos gui.scale(212) size gui.scale(136) color "#f7fbffcc"
+        add attribute_wave_image(attribute_id):
+            xysize (gui.scale(active_orb_size), gui.scale(active_orb_size))
+            xpos gui.scale(active_orb_x)
+            ypos gui.scale(active_orb_y)
+            at attribute_gain_wave_b(active_orb_delay + 0.87)
 
-        if attribute_id == "grace":
-            text "●" xpos gui.scale(332) ypos gui.scale(42) size gui.scale(308) color active_soft at attribute_gain_target_glow
-        elif attribute_id == "insight":
-            text "●" xpos gui.scale(138) ypos gui.scale(232) size gui.scale(292) color active_soft at attribute_gain_target_glow
-        else:
-            text "●" xpos gui.scale(550) ypos gui.scale(232) size gui.scale(292) color active_soft at attribute_gain_target_glow
+        # Artwork scales inside reserved cells. Typography is a separate layer,
+        # drawn after all circles and waves, with a fixed, shared baseline.
+        for orb_id in attribute_order:
+            $ orb_rank = attribute_rank(orb_id)
+            $ orb_size = attribute_orb_size(orb_rank)
+            $ orb_x, orb_y = attribute_orb_position(orb_id)
+            $ orb_delay = attribute_orb_delay(orb_id)
+            $ orb_target = (orb_id == attribute_id)
+            $ orb_start_zoom = 0.72 if orb_target and rank_up else 0.84
 
-        # Start in the middle, then ease into the corresponding orb.
-        if attribute_id == "grace":
             fixed:
-                xalign 0.5
-                yalign 0.5
-                xmaximum gui.scale(260)
-                ymaximum gui.scale(180)
-                at attribute_gain_focus_to_grace
+                xpos gui.scale(orb_x)
+                ypos gui.scale(orb_y)
+                xysize (gui.scale(orb_size), gui.scale(orb_size))
+                at attribute_gain_node_in(orb_delay, orb_start_zoom)
 
-                vbox:
-                    xalign 0.5
-                    yalign 0.5
-                    spacing gui.scale(-8)
+                add Transform(attribute_orb_image(orb_id), alpha=0.85 if orb_target else 0.25) xysize (gui.scale(orb_size), gui.scale(orb_size))
+                add attribute_wave_image(orb_id) xysize (gui.scale(orb_size), gui.scale(orb_size))
 
-                    text current_name style "attribute_gain_name" xalign 0.5 color active_color at attribute_gain_focus_flash
-                    text "[current_total]" style "attribute_gain_amount" xalign 0.5 color active_color at attribute_gain_focus_flash
-                    text "+[amount_text]" style "attribute_gain_plus" xalign 0.5
+            add attribute_ring_displayable(orb_id, attribute_rank_progress(orb_id), orb_size + 28):
+                xpos gui.scale(orb_x)
+                ypos gui.scale(orb_y)
+                xanchor 0.5
+                yanchor 0.5
 
-        elif attribute_id == "insight":
-            fixed:
-                xalign 0.5
-                yalign 0.5
-                xmaximum gui.scale(260)
-                ymaximum gui.scale(180)
-                at attribute_gain_focus_to_insight
+        for orb_id in attribute_order:
+            $ orb_rank = attribute_rank(orb_id)
+            $ orb_x, orb_y = attribute_orb_position(orb_id)
+            $ orb_color = attribute_color(orb_id)
 
-                vbox:
-                    xalign 0.5
-                    yalign 0.5
-                    spacing gui.scale(-8)
+            text "[orb_rank:02d]" style "attribute_gain_orb_number":
+                xpos gui.scale(orb_x)
+                ypos gui.scale(orb_y)
+                xanchor 0.5
+                yanchor 0.5
+                size gui.scale(76)
 
-                    text current_name style "attribute_gain_name" xalign 0.5 color active_color at attribute_gain_focus_flash
-                    text "[current_total]" style "attribute_gain_amount" xalign 0.5 color active_color at attribute_gain_focus_flash
-                    text "+[amount_text]" style "attribute_gain_plus" xalign 0.5
+            vbox:
+                xpos gui.scale(orb_x - 140)
+                ypos gui.scale(516)
+                xsize gui.scale(280)
+                spacing gui.scale(9)
+                text attribute_name(orb_id).upper() style "attribute_gain_name" color orb_color xalign 0.5
+                text "RANK [orb_rank:02d] / 05" style "attribute_gain_rank" xalign 0.5
+                text attribute_blurb(orb_id) style "attribute_gain_ribbon" xalign 0.5
+                text attribute_rank_next_text(orb_id) style "attribute_gain_ribbon" xalign 0.5
 
-        else:
-            fixed:
-                xalign 0.5
-                yalign 0.5
-                xmaximum gui.scale(260)
-                ymaximum gui.scale(180)
-                at attribute_gain_focus_to_nerve
-
-                vbox:
-                    xalign 0.5
-                    yalign 0.5
-                    spacing gui.scale(-8)
-
-                    text current_name style "attribute_gain_name" xalign 0.5 color active_color at attribute_gain_focus_flash
-                    text "[current_total]" style "attribute_gain_amount" xalign 0.5 color active_color at attribute_gain_focus_flash
-                    text "+[amount_text]" style "attribute_gain_plus" xalign 0.5
-
-        # The title waits until the move has already started.
         vbox:
             at attribute_gain_title_in
-            xpos gui.scale(30)
-            ypos gui.scale(82)
-            spacing gui.scale(-18)
+            xpos gui.scale(90)
+            ypos gui.scale(58)
+            spacing gui.scale(8)
 
-            text headline style "attribute_gain_title"
-            text "UP!" style "attribute_gain_title_pop" color active_color
+            text "SOCIAL ATTRIBUTES" style "attribute_gain_kicker"
+            if rank_up:
+                text "RANK UP" style "attribute_gain_title" color active_color
+            else:
+                text "ATTRIBUTE GAIN" style "attribute_gain_title" color active_color
 
-        frame:
+        vbox:
             at attribute_gain_bar_in
-            background Solid("#000000dc")
-            padding (gui.scale(22), gui.scale(11))
-            xalign 0.5
-            ypos gui.scale(462)
+            xpos gui.scale(884)
+            ypos gui.scale(66)
+            xsize gui.scale(306)
+            spacing gui.scale(10)
+            text "[current_name.upper()]  +[amount_text]" style "attribute_gain_name" color active_color xalign 1.0
+            if rank_up:
+                text "RANK [active_rank:02d] / 05" style "attribute_gain_rank" xalign 1.0
+            else:
+                text attribute_rank_next_text(attribute_id) style "attribute_gain_ribbon" xalign 1.0
+            add Solid(active_color) xysize (gui.scale(306), gui.scale(2))
 
-            text current_blurb style "notice_body" color "#eef8ff" size gui.scale(20) xalign 0.5
+        if ready:
+            textbutton "Continue" action SetScreenVariable("hiding", True) style "attribute_gain_continue" xalign 0.97 yalign 0.97 sensitive (not hiding) at attribute_gain_button_in
 
-        frame:
-            at attribute_gain_bar_in
-            background Solid("#000000ee")
-            padding (gui.scale(24), gui.scale(8))
-            xalign 0.5
-            ypos gui.scale(516)
-
-            text "RANK [current_rank]  [current_rank_name.upper()]" style "attribute_gain_rank" xalign 0.5
-
-        # Keep the trio readable, but do not duplicate the moving stat text.
-        if attribute_id != "grace":
-            text "Grace [attribute_total_text(\"grace\")]" xpos gui.scale(408) ypos gui.scale(162) xsize gui.scale(170) style "attribute_gain_mini" color "#f4efe6"
-
-        if attribute_id != "insight":
-            text "Insight [attribute_total_text(\"insight\")]" xpos gui.scale(198) ypos gui.scale(356) xsize gui.scale(180) style "attribute_gain_mini" color "#f4efe6"
-
-        if attribute_id != "nerve":
-            text "Nerve [attribute_total_text(\"nerve\")]" xpos gui.scale(620) ypos gui.scale(356) xsize gui.scale(180) style "attribute_gain_mini" color "#f4efe6"
-
-        textbutton "Okay" action SetScreenVariable("hiding", True) style "notice_button" xalign 0.5 yalign 1.0 yoffset gui.scale(10) sensitive (not hiding)
-
-    # The landing fire is on a timer rather than a second play_sfx call, so it
-    # stays locked to the motion: 1.70s is the moment the stat finishes its
-    # travel and settles into its orb. Retime the transforms and this beat has to
-    # be moved with them.
-    timer 1.70 action Play("sfx", "audio/SFX/attribute_land.wav")
+    timer 1.48 action Play("attribute_ui", "audio/SFX/attribute_tick.wav")
+    timer 1.82 action Play("attribute_ui", "audio/SFX/attribute_settle.wav")
+    timer 1.92 action SetScreenVariable("ready", True)
 
     if hiding:
-        timer 0.440 action Return()
+        timer 0.300 action Return()
 
 # --- THE QUIET GAIN, AND THE ORB CLUSTER ---
 #
 # Two pieces of feedback that run during play rather than stopping it.
 #
 # The chip is what half a point looks like. It appears over the top of the
-# scene, says which attribute moved and by how much, and takes itself away
-# again. It borrows the shape of renpy's own notify screen, `on hide` included,
-# because that is the one part of the engine that already does exactly this.
+# scene beneath its matching labeled circle and takes itself away again.
 #
 # The cluster is the three orbs in the corner of the screen: the same three
 # circles the gain card draws full size, only small. Each one starts almost
@@ -1656,40 +1535,33 @@ transform attribute_tick_appear:
     on hide:
         ease 0.40 alpha 0.0 yoffset gui.scale(-8)
 
-screen attribute_tick(attribute_id, points):
+screen attribute_tick():
     zorder 95
 
-    $ tick_name = attribute_name(attribute_id)
-    $ tick_color = attribute_color(attribute_id)
-    $ tick_points = "+" + format_points(points)
+    for index, attribute_id in enumerate(attribute_order):
+        if attribute_id in attribute_tick_events:
+            $ tick_color = attribute_color(attribute_id)
+            $ tick_points = "+" + format_points(attribute_tick_events[attribute_id])
 
-    frame:
-        at attribute_tick_appear
+            frame:
+                at attribute_tick_appear
+                xpos config.screen_width - gui.scale(221 - index * 77)
+                xanchor 0.5
+                ypos gui.scale(98)
 
-        # Directly under the orbs, not under the dialogue. The number belongs to
-        # the corner it just changed, so it reads as that orb's own readout, and
-        # it stays clear of the line the player is in the middle of reading.
-        xalign 1.0
-        yalign 0.0
-        xoffset gui.scale(-28)
-        yoffset gui.scale(74)
+                background Solid("#111820e8")
+                padding (gui.scale(8), gui.scale(4))
 
-        background Solid("#0e0d0ce0")
-        padding (gui.scale(26), gui.scale(8), gui.scale(26), gui.scale(8))
+                text tick_points style "attribute_tick_text" color tick_color
 
-        hbox:
-            spacing gui.scale(12)
-
-            text tick_name style "attribute_tick_text" color tick_color
-            text tick_points style "attribute_tick_text" color tick_color
-
-    # Long enough to read twice, short enough not to become furniture.
-    timer 2.10 action Hide("attribute_tick")
+    timer 0.10 repeat True action Function(expire_attribute_ticks)
 
 style attribute_tick_text is default:
-    size gui.scale(22)
-    italic True
+    font "DejaVuSans.ttf"
+    size gui.scale(15)
+    bold True
     kerning gui.scale(1)
+    outlines []
 
 # The other half of a decision: not a number going up, but a person deciding
 # something about him. It sits up top, which is where the tick chip used to live,
@@ -1730,20 +1602,11 @@ transform attribute_hud_appear:
     alpha 0.0
     linear 0.55 alpha 1.0
 
-# The cluster breathes as a single unit rather than orb by orb, so a glance at
-# the corner reads it as one object instead of three competing ones.
-transform attribute_hud_breathe:
-    block:
-        ease 2.40 zoom 1.035
-        ease 2.40 zoom 1.0
-        repeat
-
 screen attribute_hud():
     zorder 90
 
-    # The game menu suppresses overlay screens on its own, so the only case left
-    # to guard is the very start of the game, before he is in the world.
-    if show_attribute_hud and not main_menu:
+    # Standalone windows keep the scene visible without gameplay UI behind them.
+    if show_attribute_hud and not main_menu and not standalone_window_active():
 
         hbox:
             at attribute_hud_appear
@@ -1752,38 +1615,34 @@ screen attribute_hud():
             yalign 0.0
             xoffset gui.scale(-28)
             yoffset gui.scale(24)
-            spacing gui.scale(6)
+            spacing gui.scale(5)
 
             for orb_id in attribute_order:
 
                 fixed:
-                    xsize gui.scale(44)
-                    ysize gui.scale(44)
-                    at attribute_hud_breathe
+                    xsize gui.scale(72)
+                    ysize gui.scale(68)
 
-                    # The fill first, then its outline on top, so the ring is
-                    # never swallowed by a nearly-opaque orb.
-                    text "●":
-                        xalign 0.5
-                        yalign 0.5
-                        size gui.scale(36)
-                        color attribute_color_alpha(orb_id, attribute_orb_alpha(orb_id))
+                    add attribute_ring_displayable(orb_id, attribute_rank_progress(orb_id), 46) xalign 0.5
 
-                    text "○":
+                    text attribute_name(orb_id).upper():
                         xalign 0.5
-                        yalign 0.5
-                        size gui.scale(44)
-                        color "#ffffff2b"
+                        ypos gui.scale(51)
+                        size gui.scale(9)
+                        kerning gui.scale(1)
+                        color "#c5cdd4"
+                        outlines []
 
 # --- START LABEL ---
 label start:
+    scene black
 
-    # Before the story, the two notices. Neither can be clicked past: each card
+    # Before the story, the two notices. Neither can be clicked past: each page
     # fades itself in and out and then returns on its own timer, so a new player
     # reads both whether they mean to or not. They only ever run here, which is
     # to say only on a new game. A loaded save resumes where it was.
-    call screen notice_page("DISCLAIMER", notice_text_fiction, "1 / 2")
-    call screen notice_page("BEFORE YOU BEGIN", notice_text_choice, "2 / 2")
+    call screen notice_page("A Work of Fiction", notice_text_fiction, "1 / 2")
+    call screen notice_page("Lasting Decisions", notice_text_choice, "2 / 2")
 
     # Then the one thing the player has to answer for themselves.
     call screen notice_confirm(notice_text_accept)
@@ -1835,31 +1694,26 @@ label prologue:
     #DISABLED FOR NOW# play music "audio/Music/dream sequence 1 (short loop).wav" fadein 2.0#
     play music "audio/SFX/airplane.mp3" fadein 2.0
     
-    "Whoah that is one long flight."
-    "I barely slept for any of it."
-    "But I made it. I'm almost here."
-    "Tokyo, Japan."
-    "I came here thanks to a foreign exchange student program in our university."
+    "That flight felt endless."
+    "I barely slept."
+    "Still, I made it. Tokyo."
+    "I'm here on my university's exchange program."
     
     
-    "I should be more excited. Host family, a new university, a new language, a new life."
-    "But right now, everything feels a little... fuzzy."
-    "I remember filling out the application. Sending the forms. Waiting for months."
-    "I remember being thrilled when I got accepted. My friends said I was brave."
-    "But... what exactly made me choose Japan?"
-    "I must've had a reason. I know I did."
-    "But thinking back now... it's like the memory is just out of reach."
-    "Like trying to recall a dream after waking up."
-    "Maybe it's just the jet lag. Or the nerves. Or being in a completely new place alone."
+    "I should be excited. New university, host family, a year in Japan."
+    "Instead, everything feels slightly out of focus."
+    "I remember the application. The wait. The acceptance email."
+    "I was thrilled when it came through. My friends said I was brave."
+    "I can't remember what made me choose Japan."
+    "There must have been a reason. I just can't get hold of it."
+    "Maybe it's the flight. Or the nerves. Maybe this is what arriving somewhere alone feels like."
 
     
     # The wallet, established before he has spent a single yen of it.
     "I have thirty thousand yen, in cash, folded into the back of my wallet."
-    "That's all of it. But should be enough to get me started with my life."
-    "Thirty thousand yen to start a whole new life..."
-    "No, It's not enough. It's nowhere near enough."
-    "I'll have to figure something out. Maybe find a part time job or something."
-    "I have to. I cannot rely on people to take care of me all the time."
+    "I hope it covers the first few days."
+    "Thirty thousand yen doesn't go far when it has to cover everything."
+    "I'll need to find a part-time job. I can't expect other people to handle it for me."
     
     # Foreshadowing glitch - the first crack in the simulation
     show hospital_flash onlayer overlay at truecenter:
@@ -1894,15 +1748,14 @@ label airport_arrival:
     # them would be answering a question nobody has asked.
     $ show_attribute_hud = True
 
-    "Finally, Tokyo."
-    
-    "Alright, I made it all the way here..."
-    "But I have no idea where I'm going."
-    "Let me check my phone for the Maps app."
+    "Tokyo. I'm here."
+    "Now I just need to get to the address."
+    "I'll check the map on my phone."
+    call screen airport_phone
     "..."
-    "What? No reception?"
-    "I guess I can't use my phone right now."
-    "Maybe I should ask someone around here for directions."
+    "No signal."
+    "So much for the map."
+    "I should ask someone how to get there."
 
 label airport_exploration:
     menu:
@@ -1912,7 +1765,7 @@ label airport_exploration:
             jump talk_timid_man
         "Ask the Cheerful Woman":
             jump talk_cheerful_woman
-        "Ask the Airport Assistant":
+        "Ask the Information Desk":
             jump talk_assistant
         "Ask the Veteran Assistant" if has_pamphlet or (talked_to_security and talked_to_man1 and talked_to_npc2):
             jump talk_veteran_assistant
@@ -1927,21 +1780,21 @@ label talk_security:
     # you get told off twice, by two different people, in two different ways.
     if security_index % 2 == 0:
         security "ちょっと、下がってください。"
-        mc "(Huh? I'm just trying to ask something...)"
+        mc "(I was only trying to ask a question.)"
         security "業務中です。話しかけないでください。"
-        mc "(Did I do something wrong? I just showed my smartphone to him...)"
+        mc "(I showed him the address. Maybe he didn't understand what I wanted.)"
         security "……"
-        mc "(He didn't even *look* at it... Is this guy part robot or something?)"
+        mc "(He didn't even look at the screen. Maybe I should try someone else.)"
     else:
         security2 "……何か？"
-        mc "(She looked at me the way you look at a bug on a windshield.)"
+        mc "(Her expression doesn't change.)"
         security2 "ここは立入制限区域です。この先は関係者以外通れません。"
         mc "(Restricted area. I'm not trying to go anywhere. I just want the exit.)"
         mc "Excuse me. Which way is—"
         security2 "総合案内所はあちらです。"
-        mc "(She pointed without looking. Somewhere behind me. Possibly at the whole building.)"
+        mc "(She points behind me without turning around.)"
         security2 "私は持ち場を離れられません。他の人に聞いてください。"
-        mc "(I understood about four words of that, and all four were 'go away'.)"
+        mc "(I caught 'information desk' and 'can't leave'. The rest went by too fast.)"
         security2 "それ以上は業務妨害とみなします。"
         mc "(Okay. Okay. I'm going.)"
 
@@ -1980,29 +1833,28 @@ label talk_security:
 label answer_security_bow:
     mc "Sumimasen. Sumimasen."
     mc "(I bowed. I have no idea why I bowed. My body just did it.)"
-    mc "(Maybe I should ask someone who isn't radiating pure stress.)"
+    mc "(Maybe the information desk can help.)"
     jump airport_exploration
 
 label answer_security_press:
     mc "Excuse me. 中野3丁目. Please."
-    mc "(They looked at the phone. They looked at me. They looked at the phone again, and then away.)"
-    mc "(That was not a no. It was a wall. There is a difference and I just found it.)"
-    mc "(Maybe I should ask someone who isn't radiating pure stress.)"
+    mc "(They glanced at the phone, then at me, and turned away.)"
+    mc "(I don't know if they understood. Either way, I need to try someone else.)"
+    mc "(Maybe the information desk can help.)"
     jump airport_exploration
 
 label answer_security_watch:
-    mc "(Nevermind. Everyone in this building is walking somewhere, someone will tell me more than they will.)"
-    mc "(Maybe I should ask someone who isn't radiating pure stress.)"
+    mc "(Never mind. If I watch where people are going, I might find the exit.)"
+    mc "(Someone at the information desk might be able to help.)"
     jump airport_exploration
 
 label talk_timid_man:
     timid_man "話しかけないでくれ！"
     timid_man "忙しくて雑談してる暇はないんだ。"
-    mc "(What...? I have no idea what they just said.)"
+    mc "(I didn't catch any of that.)"
     $ talked_to_man1 = True
 
-    # Same shape as the guard: three ways to be turned away, no points, and the
-    # one he picks is the one he is stuck with if he comes back.
+    # Re-entry repeats the answer, but noticing the word only pays once.
     $ prior_answer = remembered_choice("timid_man")
 
     if prior_answer == "again":
@@ -2013,42 +1865,40 @@ label talk_timid_man:
         jump answer_timid_listen
 
     menu:
-        "Ask again, slower.":
+        "Ask where the information desk is.":
             $ remember_choice("timid_man", "again")
             jump answer_timid_again
-        "Step aside.":
+        "Leave him to it.":
             $ remember_choice("timid_man", "aside")
             jump answer_timid_aside
-        "Let him go.":
+        "Listen for a word I recognise.":
             $ remember_choice("timid_man", "listen")
             jump answer_timid_listen
 
 label answer_timid_again:
-    mc "Ah... sorry. Um. Exit?"
-    mc "(He said the same thing again. Exactly the same words, at exactly the same speed.)"
-    mc "(It is not that he can't understand me. It's that I'm not a question he has time for.)"
-    mc "(I guess he doesn't want to talk...)"
+    mc "Sorry. Information desk?"
+    mc "(He repeated himself at the same speed.)"
+    mc "(Maybe he can't stop. Maybe he just doesn't have time for me.)"
+    mc "(I'll leave him alone.)"
     jump airport_exploration
 
 label answer_timid_aside:
     mc "Ah - sorry. Sorry."
-    mc "(I guess he doesn't want to talk...)"
+    mc "(I'll leave him alone.)"
     jump airport_exploration
 
 label answer_timid_listen:
     mc "(...いそがしい.)"
-    mc "(I know that one. It's on the sign in the arrivals hall. It means busy.)"
-    mc "(He isn't angry at me. He's just busy.)"
-    mc "(That's the first thing I've properly understood since I landed, and it was a man telling me to move.)"
-    mc "(I guess he doesn't want to talk...)"
+    mc "(Isogashii. Busy. I practised that one on the plane.)"
+    mc "(He isn't angry. He's busy.)"
+    $ reward_attributes_once("answer_timid_listen", [("insight", "small")], show="auto")
+    mc "(I'll leave him alone.)"
     jump airport_exploration
 
 label talk_cheerful_woman:
     cheerful_woman "こんにちは！日本へようこそ！"
-    cheerful_woman "それでは、失礼いします！幸せになりますように！"
-    mc "(Uhh... she said something about... sushi?)"
-    mc "(Wait. Did she just recommend a sushi restaurant?)"
-    mc "(Or was that a blessing for my sushi-related future?)"
+    cheerful_woman "それでは、失礼します！楽しんでくださいね！"
+    mc "(Welcome. I caught that much.)"
 
     $ talked_to_npc2 = True
 
@@ -2065,19 +1915,19 @@ label talk_cheerful_woman:
         "Smile and bow.":
             $ remember_choice("cheerful_woman", "smile")
             jump answer_woman_smile
-        "Try one of her words.":
+        "Thank her in Japanese.":
             $ remember_choice("cheerful_woman", "echo")
             jump answer_woman_echo
 
 label answer_woman_smile:
-    mc "(She's the first person in this country who has smiled at me.)"
+    mc "(She's the first person here who's smiled at me.)"
     cheerful_woman "あら！ がんばってね！"
     jump airport_exploration
 
 label answer_woman_echo:
-    mc "Ah... すし?"
-    cheerful_woman "え？ ……ああ！ すし！ そうそう！ おいしいよ、すし！"
-    mc "(Whatever I just said, it landed. She's laughing, and it isn't at me.)"
+    mc "Arigatou gozaimasu."
+    cheerful_woman "どういたしまして！"
+    mc "(She smiles and waves before disappearing into the crowd.)"
     jump airport_exploration
 
 label talk_assistant:
@@ -2092,84 +1942,94 @@ label talk_assistant:
     $ assistant_shy = True
     assistant "えっ…えいご…すこしだけ…"
     assistant "えいごのスタッフは…いまやすみ…"
-    assistant "*muttering to herself* English staff... break time now..."
-    mc "...Okay... Umm, I need to find this place."
+    assistant "*quietly to herself* English staff... on break."
+    mc "I need to get to this address."
     assistant "アドレス？うーん… show... me?"
     
-    # The pamphlet fork hands him the thing the whole second act runs on, but it
-    # is a transaction rather than a turning point, so it pays nothing. It is
-    # also the one answer here he has a reason to give twice: if he asks a second
-    # time he asks the same way, and the pamphlet is already in his bag.
+    # Successful requests are latched. Deferring is not a permanent refusal:
+    # the pamphlet is required to leave the airport, including in older saves.
     $ prior_answer = remembered_choice("assistant")
 
     if prior_answer == "ask":
         jump answer_assistant_ask
-    elif prior_answer == "nevermind":
-        jump answer_assistant_nevermind
+    elif prior_answer == "patient":
+        jump answer_assistant_patient
 
     menu:
         "Show her the address.":
             $ remember_choice("assistant", "ask")
             jump answer_assistant_ask
-        "Never mind.":
-            $ remember_choice("assistant", "nevermind")
+        "We can use the map. No rush.":
+            $ remember_choice("assistant", "patient")
+            jump answer_assistant_patient
+        "I'll try another desk.":
             jump answer_assistant_nevermind
 
+label answer_assistant_patient:
+    mc "It's okay. We can use the map. I'm not in a hurry."
+    assistant "Map... yes. ちず。"
+    "She lets out a breath and reaches for a pamphlet."
+    $ reward_attributes_once("answer_assistant_patient", [("grace", "small")], show="auto")
+    jump answer_assistant_ask
+
 label answer_assistant_ask:
-    mc "*Shows address on phone.* Can you tell me how to go here?"
+    mc "*Shows address on phone.* How do I get here?"
     # She cannot find the English for it and it starts to show. The second drawing
     # stays up until the pamphlet is in his hands and she has recovered.
     $ assistant_shy = True
     assistant "あー、これはね…でんしゃ？トレイン？"
     assistant "にっぽりえきから。。。えっと。。。ちょっとまってください。"
-    assistant "*Takes out a japanese map full of arrows and kanji letters.*"
+    assistant "*She unfolds a map covered in arrows and kanji.*"
     $ has_pamphlet = True
     $ add_item("pamphlet")
-    mc "Uh... this is... kind of amazing but also terrifying."
+    mc "This is a lot to take in. Thank you."
     $ assistant_shy = False
-    assistant "No problem, Good Luck! がんばってください！"
-    mc "...Thanks. I'll try my best."
+    assistant "Good luck! がんばってください！"
+    mc "Thanks. I'll give it a try."
     jump airport_exploration
 
 label answer_assistant_nevermind:
-    mc "Nevermind, thanks anyway."
+    mc "Never mind. Thanks anyway."
     $ assistant_shy = False
     jump airport_exploration
 
 label talk_veteran_assistant:
     if not has_pamphlet:
-        veteran "Oh dear, are you a bit lost?"
+        veteran "You look a little lost. Can I help?"
         veteran "If you find a pamphlet lying around, I can try to translate it for you!"
         mc "Pamphlet? I'll go look for one."
         jump airport_exploration
 
-    veteran "Oh dear, are you a bit lost?"
+    veteran "You look a little lost. Can I help?"
     veteran "What is that in your hand?"
-    veteran "Ah... A pamphlet"
-    veteran "Let me have a look at that. These things are more puzzle than guide, huh?"
-    mc "Yes, totally. I can't make sense of it."
-    veteran "Okay then. You're headed to 中野3丁目, right?"
-    mc "Yeah, that's the place."
-    veteran "You've got two ways to get there. Train is cheaper, but a bit tricky. Taxi's simple, but pricey. Want details?"
+    veteran "A pamphlet. Let me see."
+    veteran "You're going to 中野3丁目, right?"
+    mc "That's right."
+    veteran "You can take the train or a taxi. The train is cheaper; a taxi goes straight to the door."
+    veteran "Which would you like to hear about?"
     
     menu:
         "Tell me about the train.":
-            veteran "Alright, here's the deal. First, buy a ticket before going in. You can't enter the platform without it."
-            veteran "Then wait for the express train. Not the local one! Unless you enjoy long rides and sore feet."
-            veteran "Follow the signs for the Keisei Line. It'll get you there in about 45 minutes."
+            veteran "First, buy a ticket before you go through the gate."
+            veteran "Look for the express on the Keisei Line. The local stops at every station and takes much longer."
+            veteran "It should be about forty-five minutes."
             jump taxi_choice
-        "No, I'm good. Thanks!":
+        "Tell me about the taxi.":
+            veteran "Follow the signs outside to the taxi stand. Show the driver the address."
+            veteran "Budget around ¥18,000. More if there's traffic."
+            jump end_airport
+        "I have what I need. Thank you.":
             jump end_airport
 
 label taxi_choice:
-    veteran "Want me to explain the taxi option too, or are you ready to go?"
+    veteran "Would you like to hear about the taxi as well?"
     menu:
         "Tell me about the taxi.":
-            veteran "Just head outside and find the taxi stand. There's usually a line, so be patient."
-            veteran "It might cost around ¥18,000, maybe more if traffic's bad. But it's the easiest route."
-            veteran "Just show the driver your pamphlet. They'll handle the rest."
+            veteran "The taxi stand is just outside. There may be a short wait."
+            veteran "The fare will be around ¥18,000, perhaps more in traffic."
+            veteran "Show the driver the address and they'll take you there."
             jump end_airport
-        "No, I'm good. Thanks!":
+        "I'll take the train. Thank you.":
             jump end_airport
 
 label check_boards:
@@ -2190,8 +2050,8 @@ label look_plants:
 
 label end_airport:
     # Reached only from the veteran's branch, so it is the veteran who sees him off.
-    veteran "Glad to help! Enjoy your trip, and welcome to Japan!"
-    mc "...Thanks. I'll try my best. I hope I can get there."
+    veteran "You're welcome. I hope you enjoy your time here."
+    mc "Thanks. I hope so too."
 
     # He is out of the terminal, so the crowd and its music go with it.
     stop music fadeout 2.0
@@ -2228,10 +2088,7 @@ label travel_choice:
             jump taxi_warning
         "Take the train.":
             $ travel_method = "train"
-            # The one award left in the first act, and the only decision in it
-            # that changes what the rest of the game is like to play. It carries
-            # the whole of the act's progression on its own, which is why it is
-            # sized as a set-piece rather than a tick.
+            # Major route rewards remain larger than conversational gains.
             $ reward_attributes_once("travel_route_attribute", [("insight", "large")])
             jump train_station
 
@@ -2263,22 +2120,17 @@ label taxi_stand:
     scene bg_taxi_stand with walk_fade
     play music "audio/Music/taxi.mp3" fadein 1.5
 
-    "The terminal doors slide open before I even touch them."
-    mc "(They just... opened.)"
-    mc "(I didn't push anything. I didn't press anything. They just knew I was there.)"
-    mc "(Right. This is going to happen to me a lot, isn't it.)"
+    "The terminal doors slide open before I reach them."
+    mc "(Automatic doors. Right.)"
 
     "Outside, a row of taxis idles under the lights, engines ticking over."
     "A man in a white shirt and white gloves waves me toward the front of the line."
     mc "(...Gloves. He's wearing white gloves. To drive a car.)"
     mc "(Okay. Show him the pamphlet. That is the entire plan. Show him the pamphlet.)"
 
-    "The taxi glides to a stop in front of me, and the rear door swings open on its own."
-    mc "(The door opened. By itself.)"
-    mc "(Is he getting out? No. He's still in the driver's seat. He's not even turned around.)"
-    mc "(He pulled a lever and the door opened for me. From the front seat.)"
-    mc "(That is the most impressive thing I have ever seen a car do.)"
-    mc "(...I should get in. There are people behind me. Get in the car.)"
+    "The taxi stops in front of me, and the rear door opens automatically."
+    mc "(The driver opened it from his seat.)"
+    mc "(There's a line behind me. Get in the car.)"
 
     scene bg_taxi_interior with walk_fade
 
@@ -2301,21 +2153,19 @@ label taxi_stand:
     mc "(A confident guess, made by a man who has been awake for twenty hours.)"
     mc "(...Maybe it'll be less. Hopefully it'll be less.)"
 
-    # The first time the game asks him what kind of foreigner he is going to be
-    # about it. All three answers are about the same ten seconds of car, and none
-    # of them pays: the taxi ride is a texture, not a turning point.
     menu:
-        "Try the thank you again.":
+        "Thank him in Japanese.":
             mc "Arigatou... gozaimasu."
             taxi_driver "お。日本語、上手ですね。"
             mc "(I don't know what that was, but it was warm, and he said it to the mirror rather than to me.)"
-        "Ask what the meter is doing.":
-            mc "Excuse me. The meter. Is it supposed to do that?"
-            taxi_driver "Ah. Understand. 高いね。遠いから。"
-            mc "(He caught two words of that and gave me four back. It was worth the asking.)"
-        "Time the clicks.":
-            mc "(Every twenty seconds, almost exactly. I'll know the rhythm of it by the time I get there.)"
-            mc "(There is nothing else to do, so I am going to learn this city's arithmetic off a screen on a dashboard.)"
+        "Ask him to confirm the fare.":
+            mc "Excuse me. Around eighteen thousand yen?"
+            taxi_driver "Yes. About. Traffic, little more."
+            mc "Okay. Thank you."
+            # Asking about money despite embarrassment, not merely spending it.
+            $ reward_attributes_once("answer_taxi_fare", [("nerve", "small")], show="auto")
+        "Watch the city through the window.":
+            mc "(The driver knows the way. I can stop staring at the meter for a minute.)"
 
     "The city slides past the window in long wet streaks of light."
     "Buildings I've only seen in photographs. Signs I can't read. Vending machines on every corner, glowing like little aquariums."
@@ -2327,11 +2177,11 @@ label taxi_stand:
     mc "(Thirteen hundred. We have been in this car for four minutes.)"
 
     "The driver says something and points out of my window. I nod and smile."
-    mc "(No idea. I am going to nod and smile my way through this entire year.)"
+    mc "(I didn't understand a word. Maybe I can get by with a nod until my Japanese improves.)"
 
     "*The meter clicks. I look again.*"
     mc "(Three thousand eight hundred.)"
-    mc "(It clicks, and the number goes up. It clicks every twenty seconds or so. I have been timing it. There is nothing else to do.)"
+    mc "(Another hundred. Then another.)"
     mc "(And it climbs while we sit at a red light. It goes up while we do absolutely nothing.)"
     mc "(Eighteen thousand. That guess was made before I understood anything about anything.)"
 
@@ -2431,9 +2281,8 @@ label train_gate_slam:
     mc "WHOAH!"
     $ play_sfx("audio/SFX/gate.wav")
     "The flaps snap shut hard, right across my shins, and a buzzer goes off above my head loud enough to turn three heads." with gate_shake
-    mc "(That thing almost closed on my legs!)"
-    mc "(Okay. Okay. So that's why everybody has a ticket.)"
-    mc "(Oh. Right. I need to buy a ticket first.)"
+    mc "(That actually hit me.)"
+    mc "(Right. Buy a ticket first.)"
     "Behind me, a man in a station uniform clears his throat. He doesn't say anything. He just looks at me."
     mc "(Yes. Yes, I know. I'm going.)"
 
@@ -2463,7 +2312,7 @@ label ticket_machine:
             $ buy_item(320, "ticket_320")
             "A ticket drops into the tray with a soft clack."
             mc "(That was satisfying. That was also very cheap.)"
-            mc "(...and it goes somewhere that is extremely not 中野.)"
+            mc "(And it doesn't go to 中野.)"
             mc "(Put it down. Try again.)"
             jump ticket_machine
 
@@ -2476,7 +2325,7 @@ label ticket_machine:
             mc "(800. That's the number from the pamphlet.)"
             mc "(That has to be it. Please let that be it.)"
             "I hold it up against the fare map above the machines. The arrow pointing at 中野 lands on a different row entirely."
-            mc "(Not it..)"
+            mc "(Not it.)"
             jump ticket_machine
 
         "Ask the station attendant.":
@@ -2487,11 +2336,7 @@ label ticket_machine:
             mc "(That took her four seconds. It took me four minutes.)"
             mc "Arigatou gozaimasu."
             "She nods, already walking away."
-            # The one award on the train route, and it lands on a person rather
-            # than a flap of metal. He stopped trying to solve the building by
-            # himself and let somebody help him, which is the same thing he will
-            # have to keep doing for the next year, and it is the only thing in
-            # the first act that moves Grace.
+            # Resolving the ticket obstacle is a set-piece reward, not an aside.
             $ reward_attributes_once("answer_ticket_ask", [("grace", "large")])
             jump train_platform
 
@@ -2588,8 +2433,8 @@ label home_arrival:
         "Barely any pavement, and somebody's bicycle leaning against a wall."
         "The taxi pulls away, and then it's just me and the crickets."
     elif boarded_shinkansen:
-        "The walk from the station is short and the neighbourhood lit up by street lights in a cozy way."
-        "Low houses one behind the other, each with a tiny garden and some with bicycle leaning against the wall."
+        "The walk from the station is short. Streetlights give the neighbourhood a warm glow."
+        "Low houses line the street, most with a tiny garden or a bicycle by the wall."
         mc "Managed to catch the express and transfer at the right station. Not bad for my first time navigating solo."
     else:
         "The walk from the station takes forever."
@@ -2599,14 +2444,14 @@ label home_arrival:
 
     "I stand in front of a narrow two-storey house with one light on behind the curtains."
     mc "Home, for a year. I'll find out what that means in the morning."
-    mc "What was the greeting again. Konnichiwa. That has to work."
+    mc "What was the greeting again? Konnichiwa. That should work."
     "*Pushes for the doorbell.*"
     # The chime lands at the same moment as the line describing it, so the sound
     # and the text hit together instead of a beat apart.
     $ play_sfx("audio/SFX/doorbell.mp3")
     pause 3.0
     "*The chime is much louder than I expected. It bounces off the houses opposite.*"
-    mc "(Oh no. Everyone on this street heard that. I hope I didnt wake up anyone in the house.)"
+    mc "(Everyone on this street heard that. I hope I didn't wake anyone in the house.)"
 
     if arrived_late:
         # Late arrival, which is the train. Only the mother is still up, and the
@@ -2653,7 +2498,7 @@ label home_arrival:
         mother "Tetsuo still uses the same flip phone he bought ten years ago."
         mother "But don't worry, I'm happy to help you with anything you need."
         mother "Hikari was the one who sent you all those emails. She's resting now, but you'll meet her in the morning."
-        father "This is our first time hosting someone from abroad. We'll treat you like family here."
+        father "You'll be part of the household while you're here. If you need anything, ask."
         father "Miharu, why don't you take our guest up before the evening chill sets in?"
         mother "Of course. Please, follow me. Your room is just upstairs."
 
@@ -2675,34 +2520,28 @@ label home_arrival:
     $ room_ambient(True)
 
     # The room, and the boxes that arrived before he did.
-    "The stairs creak under both of us. She apologises for the creaking, which is somehow more embarrassing than the creaking."
+    "The stairs creak under both of us. She apologises for it, which only makes me notice it more."
     mother "Well, it's not a lot, but this will be your room for the year."
     mother "Hikari's room is next door, so please try not to make too much noise. She's a light sleeper."
     mother "Oh, and the things you shipped over arrived yesterday. They're still down by the door."
     mother "Would you help your old host mother carry them up?"
     mc "Of course. Let me help."
 
-    # The first thing he ever does for this household, and it is answering the
-    # apologising rather than carrying the cardboard. She has been nervous since
-    # the doorbell, so the fork is about whether he decides to do anything about
-    # that, which is a different question from being polite. It is also the first
-    # night, and the first night is not where a person is decided.
+    mother "Sorry about the stairs. And the boxes. I should have brought them up earlier."
     menu:
-        "You don't have to apologise.":
-            mc "Miharu-san. You don't have to keep saying sorry to me. Not for stairs, and not for boxes."
-            mother "..."
-            mother "Three days I have been tidying that room, and I have been saying sorry to it the whole time."
-            mother "Thank you. That was a kind thing to say to a nervous woman."
-        "Are you worried about me being here?":
-            mc "Can I ask you something? Are you worried about this? About me being here."
-            mother "Every time. There were two students before you and I worried every time."
-            mother "You are the first one who has asked me that."
-            mc "(I don't know what I expected. I didn't expect it to be true.)"
-        "Watch how she carries it.":
-            mc "(She takes the top one and holds it with both hands under the base. Not by the flaps.)"
-            mc "(That's how you carry somebody else's things. I have been carrying mine by the tape for two countries.)"
+        "You've already done a lot for me.":
+            mc "You've already done a lot for me. Let me do this bit."
+            mother "Well. If you're sure. I've been fussing over that room all week."
+            # Acknowledging her effort rather than dismissing her worry.
+            $ reward_attributes_once("answer_boxes_reassure", [("grace", "small")], show="auto")
+        "Which ones go upstairs?":
+            mc "All of these, or just the clothes?"
+            mother "All three. The books are in the bottom one. Careful with that."
+        "Can we leave the books until morning?":
+            mc "Could we bring up the clothes now and leave the books until morning? I'm barely awake."
+            mother "Of course. The books won't mind waiting."
 
-    "*We bring the boxes up together. They are heavier than they look, and she apologises the whole way.*"
+    "*We carry what I need upstairs. She steadies the box while I find the light switch.*"
     if arrived_late:
         mother "Goodnight. Sleep well. We'll talk properly in the morning."
     else:
@@ -2710,14 +2549,14 @@ label home_arrival:
     "*The door clicks shut, and then the house is completely silent.*"
 
     mc "Good thing I sent everything ahead. Thanks to that I only had to carry a small bag."
-    mc "I never would have managed the transfers with luggage."
+    if travel_method == "train":
+        mc "I never would have managed the transfers with luggage."
     mc "Right. Unpacking."
-    "*Cardboard. Tape. Clothes that smell like my old room. Books I probably won't read.*"
+    "*Cardboard. Tape. Clothes that smell like my old room.*"
 
     "Somewhere in the middle of it the room stops looking like a spare room and starts looking like somewhere a person lives."
-    mc "Whew. I am tired, but it finally looks like a proper room."
-    mc "And honestly, I'm grateful I have one at all."
-    mc "I've heard about foreign students sharing bunk beds in rooms half this size."
+    mc "I'm tired, but it finally feels like my room."
+    mc "I'm grateful to have a place of my own."
     if travel_method == "train":
         mc "I slept on the train. So why am I tired again?"
     else:
@@ -2903,7 +2742,7 @@ transform dream_card_hover:
     on idle:
         ease 0.16 zoom 1.0
     on hover:
-        ease 0.16 zoom 1.045
+        ease 0.16 zoom 1.018
 
 # The heading keeps slipping a few pixels, the way the rest of the dream does.
 transform dream_title_glitch:
@@ -2945,8 +2784,8 @@ screen dream_timeline(cards, start_placed, attempts):
     # Interference over the board itself, kept lighter than the full-screen
     # version: it should feel like the picture is unwell, not make the words hard
     # to read.
-    default bars = dream_static_bars(3, 0.16, False)
-    timer 0.09 repeat True action SetScreenVariable("bars", dream_static_bars(3, 0.16, False))
+    default bars = dream_static_bars(3, 0.08, False)
+    timer 0.12 repeat True action SetScreenVariable("bars", dream_static_bars(3, 0.08, False))
 
     # The order being built. It is seeded from what the label handed in, so a
     # reading that came back wrong returns to the board exactly as he left it
@@ -2962,32 +2801,46 @@ screen dream_timeline(cards, start_placed, attempts):
 
     vbox:
         xalign 0.5
-        ypos 28
-        spacing 8
+        ypos 24
+        spacing 5
+
+        text "MEMORY / RECONSTRUCTION" xalign 0.5:
+            size 11
+            kerning 3
+            color "#7f96a8"
+            outlines []
 
         text "PUT THE DAY BACK" at dream_title_glitch:
             xalign 0.5
-            size 32
-            color "#8fd8ff"
+            size 30
+            kerning 2
+            color "#9bdcf5"
             outlines []
 
-        text "Four of these happened today. Put the four back in the order they happened.":
+        text "Four memories happened today. Place them in the order they occurred.":
             xalign 0.5
-            size 18
-            color "#6b7a8c"
+            size 17
+            color "#aab7c1"
             outlines []
 
-    # How many readings he has left. Three dots, and they go out one at a time.
+    # How many readings remain.
     hbox:
         xpos 1210
-        ypos 42
+        ypos 34
         xanchor 1.0
-        spacing 8
+        spacing 7
 
-        text "READINGS LEFT" size 16 color "#6b7a8c" outlines []
+        text "READINGS" size 11 color "#7f96a8" kerning 2 outlines []
 
         for i in range(3):
-            text "●" size 19 outlines [] color ("#8fd8ff" if i < attempts else "#232d3a")
+            add Solid("#9bdcf5" if i < attempts else "#26313a") xysize (22, 4)
+
+        text "[attempts]/3" size 12 color "#bdcbd5" outlines []
+
+    add Solid("#0d131c") xpos 48 ypos 132 xysize (590, 478)
+    add Solid("#0d131c") xpos 652 ypos 132 xysize (580, 478)
+    add Solid("#263542") xpos 48 ypos 132 xysize (590, 1)
+    add Solid("#263542") xpos 652 ypos 132 xysize (580, 1)
 
     # --- the order he is rebuilding ----------------------------------------
     vbox:
@@ -2997,8 +2850,8 @@ screen dream_timeline(cards, start_placed, attempts):
 
         hbox:
             spacing 16
-            text "IN ORDER" size 18 color "#c8a06a" outlines []
-            text "[len(placed)] / 4" size 18 color "#5c6b7d" outlines []
+            text "YOUR SEQUENCE" size 14 kerning 2 color "#9bdcf5" outlines []
+            text "[len(placed)] / 4 PLACED" size 11 kerning 1 color "#7f96a8" outlines []
 
         for i in range(4):
 
@@ -3013,8 +2866,8 @@ screen dream_timeline(cards, start_placed, attempts):
                 button:
                     xysize (560, 86)
                     at dream_card_hover
-                    background Solid("#1b2330")
-                    hover_background Solid("#2b1f28")
+                    background Solid("#18232d")
+                    hover_background Solid("#202f3b")
                     action [
                         Play("sfx", "audio/SFX/type_click.wav"),
                         SetScreenVariable("placed", placed[:i] + placed[i + 1:]),
@@ -3022,19 +2875,20 @@ screen dream_timeline(cards, start_placed, attempts):
 
                     fixed:
                         xysize (560, 86)
-                        add Solid("#8fd8ff22", xysize=(56, 86))
-                        text str(i + 1) xpos 0 xsize 56 text_align 0.5 yalign 0.5 size 26 color "#8fd8ff" outlines []
-                        text slot_text xpos 74 yalign 0.5 xmaximum 430 size 17 line_spacing 3 color "#e8e2d6" outlines []
-                        text "x" xpos 532 yalign 0.5 size 18 color "#5c6b7d" outlines []
+                        add Solid("#9bdcf520", xysize=(54, 86))
+                        add Solid("#263b4a") xysize (2, 86)
+                        text "0[i + 1]" xpos 0 xsize 54 text_align 0.5 yalign 0.5 size 18 color "#9bdcf5" outlines []
+                        text slot_text xpos 72 yalign 0.5 xmaximum 424 size 16 line_spacing 3 color "#e5edf2" outlines []
+                        text "REMOVE" xpos 482 yalign 0.5 size 9 kerning 1 color "#738493" outlines []
 
             else:
 
                 fixed:
                     xysize (560, 86)
                     add Solid("#161d27", xysize=(560, 86))
-                    add Solid("#0a0e14", xysize=(556, 82)) xoffset 2 yoffset 2
-                    text str(i + 1) xpos 2 xsize 56 text_align 0.5 yalign 0.5 size 26 color "#26313f" outlines []
-                    add Solid("#1a2431", xysize=(430, 2)) xpos 84 yalign 0.5
+                    add Solid("#111922", xysize=(556, 82)) xoffset 2 yoffset 2
+                    text "0[i + 1]" xpos 2 xsize 52 text_align 0.5 yalign 0.5 size 18 color "#536475" outlines []
+                    text "SELECT A MEMORY FOR THIS POSITION" xpos 74 yalign 0.5 size 10 kerning 1 color "#465563" outlines []
 
     # --- the pile ----------------------------------------------------------
     vbox:
@@ -3042,16 +2896,16 @@ screen dream_timeline(cards, start_placed, attempts):
         ypos 150
         spacing 8
 
-        text "LOOSE MEMORIES" size 18 color "#c8a06a" outlines []
+        text "AVAILABLE MEMORIES" size 14 kerning 2 color "#9bdcf5" outlines []
 
         for c in pile:
 
             button:
                 xysize (510, 66)
                 at dream_card_hover
-                background Solid("#11151c")
-                hover_background Solid("#1d2531")
-                insensitive_background Solid("#0b0e13")
+                background Solid("#151e27")
+                hover_background Solid("#263642")
+                insensitive_background Solid("#0b1016")
                 sensitive (not full)
                 action [
                     Play("sfx", "audio/SFX/memory_restore.wav"),
@@ -3063,28 +2917,36 @@ screen dream_timeline(cards, start_placed, attempts):
                     yalign 0.5
                     xmaximum 470
                     text_align 0.5
-                    size 17
+                    size 15
                     line_spacing 3
-                    color "#e8e2d6"
+                    color "#e5edf2"
                     outlines []
+
+    text "Select a placed memory to remove it. The sequence is checked only when you submit it.":
+        xalign 0.5
+        ypos 610
+        size 12
+        color "#788895"
+        outlines []
 
     # --- the reading -------------------------------------------------------
     button:
         xpos 640
         xanchor 0.5
-        ypos 636
-        xysize (360, 48)
-        background Solid("#14301f" if full else "#0e131a")
-        hover_background Solid("#1d4a30")
+        ypos 644
+        xysize (380, 46)
+        background Solid("#163744" if full else "#141c24")
+        hover_background Solid("#1e5061")
         sensitive full
         action Return(list(placed))
 
-        text "LOOKS RIGHT":
+        text "REVIEW SEQUENCE":
             xalign 0.5
             yalign 0.5
-            size 22
+            size 14
+            kerning 2
             outlines []
-            color ("#c8f0d8" if full else "#39434f")
+            color ("#b8e9f4" if full else "#647481")
 
 
 label dream_sequence:
@@ -3256,10 +3118,10 @@ label morning_call:
     # this scene is where that track lives, so nothing is overridden.
     scene bg_room_day with Dissolve(2.0)
     $ room_ambient(False)
-    "Whoa.. I just had the weirdest dream ever."
+    "Whoa... I just had the strangest dream."
     "Something about the airport. A road with no end on it. Two voices talking over me like I wasn't in the room."
     mc "What was that about?"
-    mc "It almost looked like a personal nightmare handmade for me."
+    mc "It felt like the dream knew me. That's what I can't shake."
     "I try to hold onto it and it comes apart like wet paper."
     "It takes me three seconds to remember where I am."
     "Japan. The house. The room with the boxes in it."
@@ -3283,7 +3145,7 @@ label morning_call:
 
     scene bg_kitchen with walk_fade
 
-    "The kitchen smells like toast, green tea, and under both of those something older, like a cupboard that has always been a cupboard."
+    "The kitchen smells like toast and green tea, with a faint woody smell underneath."
     "Miharu is at the counter with her sleeves pushed up. Tetsuo is already at the table, and he has not started eating."
     mother "There he is. Sit, sit. It's only rice and soup, but you'll want something warm in you before you go out."
     mc "Thank you. Good morning. Ohayou gozaimasu."
@@ -3318,33 +3180,23 @@ label morning_call:
     hikari "Okay. University. Same department, same building, which was completely not arranged."
     mc "Was it arranged?"
     hikari "It was arranged."
-    hikari "Everyone has been asking about you since April, by the way. There is a pool."
-    mc "A pool."
-    hikari "On whether you'd actually turn up. I'm not telling you what I bet."
-
-    # The first real conversation in the game he is allowed to steer, and it is
-    # with the one person here who has been talking to him for months. He has read
-    # her voice since spring and never heard it; this is where the player decides
-    # what he does with that. Nothing here pays - it is the first morning, and it
-    # is a relationship being started, not a score being kept - but Hikari keeps
-    # the answer either way.
+    hikari "A few people in the department have been asking when you'd arrive."
+    hikari "I told them today. No pressure."
     menu:
-        "Who starts a pool about a person?":
-            mc "Who starts a pool about somebody they've never met?"
-            hikari "Mom. April. And she has been losing steadily ever since, which she will not admit."
-            mc "(Somewhere between the bet and the rice this stopped being a house I'm staying in.)"
-            $ remember("hikari", "asked who started the pool")
-        "What did you bet?":
-            mc "What did you put on me?"
-            hikari "That you'd turn up. And that you'd be shorter."
-            mc "That's not a bet. That's an insult with paperwork."
-            hikari "It's both. That's the good kind."
-            $ remember("hikari", "asked what she bet")
+        "What have you told them about me?":
+            mc "What have you told them about me?"
+            hikari "That you're in our department and you ask a lot of questions."
+            mc "Accurate, unfortunately."
+            $ remember("hikari", "asked what the department knew about him")
+        "Should I introduce myself today?":
+            mc "Should I introduce myself, or wait until I'm less jet-lagged?"
+            hikari "Today. Nobody remembers introductions anyway. It's a free practice run."
+            $ remember("hikari", "asked about meeting the other students")
         "Thank you for the emails.":
-            mc "Before the food. Thank you. For the emails."
-            mc "There were a lot of them, and you answered every one, including the stupid ones."
-            hikari "There were no stupid ones."
-            mc "(She said that fast. She had it ready. She has had it ready for months.)"
+            mc "I never properly thanked you for the emails. You made this a lot less frightening."
+            hikari "You did thank me. Several times."
+            hikari "But you're welcome."
+            $ reward_attributes_once("answer_breakfast_emails", [("grace", "small")], show="auto")
             $ remember("hikari", "thanked her for the emails")
 
     # Tetsuo's one piece of advice for the year, and it is also the thesis of his
@@ -3377,7 +3229,7 @@ label morning_call:
     mother "Go on, both of you. Take an umbrella, it's meant to rain this afternoon."
     mother "And eat something before you leave. You as well, Hikari. That was not breakfast."
     hikari "It was toast."
-    mother "It was one toast."
+    mother "It was one slice."
 
     "And then the kitchen is loud and ordinary, and I am standing in the middle of it."
     "A bowl in my hands, and no idea what to do with either."
@@ -3424,14 +3276,13 @@ label leaving_house:
     # fork is his first real answer to Hikari and she keeps whichever one he gives.
     menu:
         "How can you hear a difference?":
-            mc "How can you tell a mood from a door? It's a door."
+            mc "Does he close it differently when he's angry?"
             hikari "It's the speed. An angry amado is fast, and a fast one bounces off the frame."
             hikari "You'll hear it in a month. Everybody does. It's the first thing this house teaches you."
             $ remember("hikari", "asked her how she hears a door")
         "I didn't hear anything.":
             mc "...I didn't hear anything. Sorry. It was a door closing."
-            hikari "Good. That means you're early."
-            mc "(I thought that would land worse than it did. She said it like it was a stage of something I'm going through.)"
+            hikari "You will. The frame rattles when somebody slams it."
             $ remember("hikari", "admitted he did not hear the door")
 
     # The rule, and the reason for it, because Hikari never gives a rule without a
@@ -3500,15 +3351,9 @@ label school_morning:
 
     "Then the station, and then the train."
 
-    "(She took me the proper way.)"
-    "(That is her father's word for it. He said it this morning like a rule, and I only understood it once we were on the platform.)"
-    "(The proper way is the long one, and she does not take it.)"
-    "(Two changes. One of them at a station so large I could not tell which floor I was standing on.)"
-    "(She crossed the whole thing like a hallway in her own house. I crossed it like a man being carried.)"
-    "(She takes the short way. She told me so before we left, and then she took this one anyway.)"
-    "(She did not say why, and I did not ask.)"
-    "(She says next time she'll show me the fast way.)"
-    "(Next time. She said it like it was already a fact about my life here.)"
+    "(Two changes. At the second station I lose track of which floor we're on.)"
+    "(Hikari waits by the stairs and points out the platform number.)"
+    "(This is her father's route. Next time, she says, she'll show me the shorter one.)"
 
     scene bg_school_gate with Fade(0.0, 0.0, 2.0)
     play music "audio/Music/school.mp3" fadein 2.0
@@ -3551,7 +3396,7 @@ label school_morning:
     # actually about the place rather than about him.
     menu:
         "What did you do, your first day?":
-            mc "What did you do? Your first day here. You'd have been seventeen."
+            mc "Were you this lost on your first day?"
             hikari "...I walked in the wrong door. Twice. There are two entrances and I used the wrong one for a week."
             hikari "Nobody tells you that either. That's the whole thing about this place."
             mc "(She has been giving me a list of everything she had to learn the hard way. I only just noticed.)"
@@ -3563,11 +3408,10 @@ label school_morning:
             mc "The bowing. Maybe."
             hikari "That's a better score than most. Come on."
             $ remember("hikari", "admitted the list he brought was wrong")
-        "Why does nobody tell you where to stand?":
-            mc "If nobody tells you where to stand, how does anybody know where to stand?"
-            hikari "They watch. For a week. And then they stop, and by then you're standing in the right place."
-            mc "(That is the most useful thing anybody has said to me since I landed, and it wasn't about standing.)"
-            $ remember("hikari", "asked how anyone learns where to stand")
+        "Where do I check room changes?":
+            mc "If a class moves, where do I check? The department board?"
+            hikari "The board and the student portal. Check the portal before you leave home."
+            $ remember("hikari", "asked how to check room changes")
     hikari "Ready?"
     mc "No."
     hikari "Honest answer. Come on."
@@ -3604,30 +3448,26 @@ label campus_grounds:
     hikari "Everybody does that. First years, exchange students, and once a visiting professor, which was funnier than it sounds."
     hikari "Come on. The good part is the other direction."
 
-    # She has just said that everybody stops here, which makes it the one place on
-    # campus where a question about her is not a question about the building.
     menu:
-        "What did you see, the first time?":
-            mc "What did you see? The first time. You'd have been seventeen."
-            hikari "A timetable. Honestly. I was late for something and I never once looked up."
-            hikari "I have walked through this since I was seventeen, and you have seen more of it in four minutes than I have in a year."
-            mc "(That landed somewhere I was not expecting it to land.)"
-            $ remember("hikari", "asked what she saw in the courtyard, years ago")
-        "This doesn't feel like a school.":
-            mc "This doesn't feel like a school. It feels like it was something else first, and nobody's telling me what."
-            hikari "You are going to be a lot of fun at parties."
-            mc "(That was a joke. But she looked at the concrete one before she said it.)"
-            $ remember("hikari", "said the campus does not feel like a school")
-        "Work out the order people cross in.":
-            mc "(Left to right, mostly. The ones coming down keep to the rail. Nobody stops in the middle.)"
-            mc "(There is a rule here. I can watch it working and I cannot find it written down anywhere.)"
+        "Which building is ours?":
+            mc "Which building is ours? I want to recognise it when I'm on my own."
+            hikari "The grey one behind the trees. I'll take you there."
+            $ remember("hikari", "asked which building belonged to their department")
+        "These buildings are different ages.":
+            mc "Stone, glass, concrete. Was this built in stages?"
+            hikari "Yes. The gym was here first. They kept adding things around it."
+            $ reward_attributes_once("answer_courtyard_buildings", [("insight", "small")], show="auto")
+            $ remember("hikari", "noticed the campus had been built in stages")
+        "Let's keep moving.":
+            mc "I'll look around later. I don't want to make us late."
+            hikari "Good call. This way."
 
     "She walks fast, which I am starting to understand is just how everyone here walks."
     "She points at things the way a person points at their own house."
     hikari "Library. Open until ten. You will not care about that in September and you will care about it very much in December."
     hikari "That is the cafeteria, and that is the other cafeteria, and there is a reason there are two, and the reason is terrible."
     hikari "Past those, the gym. Nobody uses the gym."
-    mc "Then why is there a gym?"
+    mc "Was that here before the rest?"
     hikari "Because there was a building here before there was a university. The rest grew around it. Stick close at the crossing."
     mc "(Stone next to glass next to concrete, and the concrete is the oldest of the three.)"
     mc "(Nobody designed this place in one go. It happened to it.)"
@@ -3655,10 +3495,7 @@ label department_tour:
     "The corridor is longer than the building looked from outside, which is becoming a theme."
     "Posters on both walls. A reading group, a film screening, a room for rent, three rooms for rent."
     "A lost cat that is almost certainly not still lost."
-    hikari "Which one is yours?"
-    mc "Sorry?"
-    hikari "The posters. Everybody picks one on the first day. That is your department. The wall decides it."
-    mc "(There is no way to answer that without guessing wrong, so I don't.)"
+    hikari "Anything on the board catch your eye?"
 
     # The first door in the game that can be shut, and it is shut by rank rather
     # than by points, so it reads as "he has not become that person yet" instead of
@@ -3667,21 +3504,19 @@ label department_tour:
     # anything. The locked one is the only one that asks him to have *noticed*
     # something nobody pointed out to him.
     menu:
-        "The film one.":
-            mc "The film one. Somebody put that up because they wanted other people to see a thing they liked."
-            hikari "That is the most accurate sentence anybody has ever said about that poster."
+        "The film screening.":
+            mc "The film screening. Can anyone go?"
+            hikari "Anyone with a student card. They show one every Thursday."
             $ remember("hikari", "picked the film screening poster")
         "The three rooms for rent.":
             mc "There are three of those. Three different flats, three different people who all took the same photograph."
-            hikari "Everybody in this building is leaving somewhere, and everybody in this building is arriving somewhere."
-            mc "(It is the same wall. That is either the most ordinary thing in Japan or the most frightening, and I can't tell which.)"
+            hikari "Same agent, probably. People pass the adverts around when they move out."
             $ remember("hikari", "picked the three rooms for rent")
         "[tag_insight] The lost cat." if has_attribute("insight", 2):
             mc "The cat one. The tape has gone yellow and both bottom corners have curled."
             hikari "...Huh."
-            mc "Somebody put that up months ago, and it stopped being true a long time before that, and nobody has taken it down."
-            mc "That's a whole person in one sheet of paper."
-            hikari "Okay. That one. That's your department, and I'm not going to argue with it."
+            mc "There's a date at the bottom. Last semester. Has anyone checked whether they found it?"
+            hikari "I don't know. The number's still there. We could ask later."
             $ reward_attributes_once("answer_wall_cat", [("insight", "small")], show="auto")
             $ remember("hikari", "picked the lost cat nobody had taken down")
 
@@ -3705,7 +3540,7 @@ label student_relations:
 
     scene bg_student_relations with walk_fade
 
-    "A counter, and behind the counter a young woman who has the calm of someone who has seen every version of confused there is."
+    "Behind the counter, a woman looks up from an open file and motions us towards two chairs."
     clerk "Ah. You'll be the new one. [player_name] right?"
     mc "Yes. How did you..."
     clerk "Your file is open on my screen. It has been open since eight."
@@ -3763,18 +3598,15 @@ label student_relations:
             clerk "The reading circle. Four people and a great deal of silence, and they have never once asked me for anything."
             clerk "That is the highest praise I can give a circle."
             $ remember("clerk", "asked which circle she would pick")
-        "I'll go and look at the photography one.":
-            mc "The photography one. I'll go and find out what they argue about."
-            clerk "They will argue with you on the first day. It is how they say hello."
-            mc "(I have had one conversation in this country and I have already committed myself to a second one.)"
-            $ remember("clerk", "said he would go and find the photography club")
-        "[tag_grace] I'll come back." if has_attribute("grace", 2):
-            mc "I'll come back. Not just when something breaks."
-            clerk "..."
-            clerk "I have worked this counter for twenty years. Students do not come back."
-            clerk "I will hold you to that, [player_name]. It is a small thing and I will still hold you to it."
+        "When does the photography club meet?":
+            mc "When does the photography club meet? Can I visit before joining?"
+            clerk "This afternoon. Second floor. They welcome visitors."
+            $ remember("clerk", "asked when he could visit the photography club")
+        "[tag_grace] You've made this much easier." if has_attribute("grace", 2):
+            mc "You've made this much easier. I was worried I'd miss something important."
+            clerk "You're welcome. Keep the booklet. There's a lot to remember on your first day."
             $ reward_attributes_once("answer_circles_back", [("grace", "small")], show="auto")
-            $ remember("clerk", "promised to come back when nothing was broken")
+            $ remember("clerk", "told her the orientation had helped")
 
     mc "Thank you. Really."
     clerk "You are welcome. Come back when something breaks. Something always breaks."
@@ -3808,7 +3640,7 @@ label first_class:
     "Forty people look up at once."
     "At the front, a man in a grey cardigan stands half turned to a blackboard already covered in dates."
     "He does not turn around. He finishes the word he is writing, and then he turns around."
-    professor "You are late."
+    professor "You are late. Your name?"
     mc "I know. I'm the new one."
     "And then I see her."
     "Third row from the front, by the window. Notebook open. Pen out."
@@ -3816,13 +3648,13 @@ label first_class:
     "Hikari. She does not look up."
     mc "(She left me at that counter and she is already inside and settled, and there is an empty seat beside her.)"
     "I start walking towards it."
-    professor "I asked you a question."
+    professor "Wait. I haven't finished."
     mc "Sorry. I'm just going to..."
     "Her hand closes around my sleeve and pulls. Hard."
     "I go down into the seat beside her, and the chair makes a noise the whole room hears."
     hikari "Don't answer him. Sit down. Say sorry and sit down."
     professor "I do not care who you are."
-    professor "I asked who you are. I withdraw the question. It does not matter."
+    professor "We can do introductions after class. Sit down."
     "He has not looked at Hikari once. She came in before the bell, so as far as this room is concerned she is part of the furniture."
     mc "(He is not angry at the room. He is angry at me. It is a very specific kind of being looked at.)"
     professor "Sit. Come to me when the class ends."
@@ -3833,7 +3665,7 @@ label first_class:
     "Somewhere behind us a chair drags and nobody looks at us, which is somehow worse than if they had."
     "Beside me, Hikari has gone back to her notes as though she has been sitting here the whole time. She has."
     mc "(Nobody is late to his class.)"
-    mc "(I have been in this country for one day and I have already broken a rule I did not know existed.)"
+    mc "(The clerk told me about the bell. I should have checked the time.)"
     "On the board the dates are old. 1945. 1960. 1990. And then a column of numbers, all the same shape, all of them going down."
     "He writes the last one and underlines it twice."
     professor "Every generation since is smaller than the one before it. That is not a mystery. It is arithmetic."
@@ -3854,33 +3686,29 @@ label first_class:
     mc "Professor. I wanted to introduce myself properly. I'm [player_name]. I'm the exchange student."
     professor "I know what you are. I read your file. That is not what this is about."
     professor "This is about the clock."
-    professor "You believe you were on time. Arrive at the bell, sit between the bell and my first word, and you have lost the first word."
+    professor "Arrive at the bell, sit between the bell and my first word, and you have lost the first word."
     professor "Do that three times and you have lost the class."
     professor "If it happens again there will be consequences. I do not say that as a threat. It is a description."
-    mc "I'm sorry. I don't think I understand what I did wrong."
-    professor "You were on time."
+    mc "I was registering downstairs. I'm sorry I missed the start."
+    professor "Then next time, allow more time. You should be seated before I begin."
 
-    # The third and last door in this pass, gated on Nerve, and deliberately the
-    # one that opens onto the best outcome in the scene. Asking a professor who has
-    # just finished dismissing you to say the thing again is not a smart answer, it
-    # is a bold one, and it is the only reason he ends the day with something he can
-    # actually use. The two open answers are honest and neither of them gets him it.
+    # Basic attendance information is available on every branch. Nerve opens
+    # a respectful challenge about the official appointment, not a basic rule.
     menu:
-        "Let him finish.":
-            mc "..."
-            $ remember("professor", "took the dismissal without arguing")
-        "Apologise properly.":
+        "I'll write that down.":
+            "I open my notebook and write the class time at the top of the page."
+            $ remember("professor", "wrote down the attendance rule")
+        "It won't happen again.":
             mc "I'm sorry. I'll be here early from now on. I mean it."
             professor "Yes. You will."
             $ remember("professor", "apologised and promised to come early")
-        "[tag_nerve] Say that again. Slowly." if has_attribute("nerve", 2):
-            mc "Could you say that again? Slowly. I would rather ask you now than get it wrong for a year."
+        "[tag_nerve] Can we discuss today's late mark?" if has_attribute("nerve", 2):
+            mc "Could we discuss today's late mark? Student Relations asked me to register before coming here."
             professor "..."
-            professor "Yes. That is the correct question. Nobody in this room has ever asked it."
-            professor "Five minutes before. Always. Write it on the front of your notebook and do not write anything else there."
-            mc "(I don't think I have ever been given advice and a warning in the same sentence before.)"
+            professor "Bring me the registration slip. If the appointment overlapped my class, I will review it."
+            mc "Thank you. I'll bring it tomorrow."
             $ reward_attributes_once("answer_clock_ask", [("nerve", "small")], show="auto")
-            $ remember("professor", "asked him to say the rule again, slowly")
+            $ remember("professor", "asked him to review the registration delay")
 
     professor "Coming on time is late."
     professor "You are seated, ready, notebook open, pen out, five minutes before the class begins."
@@ -3896,13 +3724,13 @@ label first_class:
 
     "At the door Hikari is waiting with her arms folded, watching the corridor the way a person counts something."
     hikari "Well? How did it go?"
-    mc "I think I just got in trouble for being on time."
-    hikari "You did."
+    mc "Five minutes early. That's what he expects."
+    hikari "Notebook open, pen ready. Every class."
     mc "And that went better than expected?"
     hikari "It went better than expected."
     mc "How?"
-    hikari "Because you didn't argue with him. Everybody argues with him. It's the first thing everyone does."
-    hikari "And then it is five minutes of shouting and a term on his list."
+    hikari "Because you stayed and spoke to him. People sometimes just leave."
+    hikari "Then he spends the rest of the week looking for them."
     mc "There's a list?"
     hikari "There's always a list."
     mc "(She is cheerful about this as well. I am starting to think cheerful is just how she carries things.)"
@@ -3916,17 +3744,22 @@ label first_class:
     mc "You knew that if we walked in together, we would both be late."
     hikari "I knew."
     mc "Then why didn't you say anything? Two sentences on the way up. I would have listened."
-    hikari "No, you wouldn't."
-    mc "..."
-    hikari "You'd have heard 'on time means five minutes early' and you'd have nodded."
-    hikari "And you'd have filed it under one man in a cardigan being difficult. Everybody does. I did."
-    hikari "You had to be the one he said it to. Now you know it in your body instead of your head, and I never had to say a word."
-    mc "(The clerk explained everything to me slowly, because that is what she is there for.)"
-    mc "(Hikari explained nothing at all, and I have learned more from her in ten minutes than I did from the whole of that counter.)"
-    mc "(I don't know if that is kind. It worked.)"
-    mc "(But I'm standing in a corridor four floors above a courtyard that swallowed a city.)"
-    mc "(In a building I get to keep for the next year, and I have survived my first hour.)"
-    mc "(Two days in. One hour of class. One rule, learned the hard way.)"
+    hikari "I thought we'd have more time. Then I saw the clock and panicked."
+    hikari "I should have told you where to go before I ran off. I'm sorry."
+    menu:
+        "Next time, warn me before you go.":
+            mc "Next time, warn me before you go. I can't follow a route I don't know."
+            hikari "Fair. I will."
+            $ reward_attributes_once("answer_hikari_warning", [("nerve", "small")], show="auto")
+            $ remember("hikari", "asked her not to leave without warning")
+        "Thanks for saving me a seat.":
+            mc "Thanks for saving me a seat, at least."
+            hikari "Window side. You'll want it when the heating starts."
+            $ remember("hikari", "thanked her for saving him a seat")
+        "Let's get something to eat.":
+            mc "Let's get something to eat. I'd rather not spend all afternoon thinking about it."
+            hikari "That is a very good plan."
+            $ remember("hikari", "chose to move on after the lecture")
     hikari "Come on. I'm hungry, and I know a bad cafeteria and a worse one."
     mc "You said there were two."
     hikari "There are two."
@@ -3958,14 +3791,14 @@ label first_class:
             mc "The photography one. The clerk said they argue constantly. I want to know what about."
             hikari "Second floor, end of the corridor, the door with tape on it. They don't lock it."
             mc "You know where it is."
-            hikari "Everyone knows where it is. Nobody goes in."
+            hikari "I pass it on the way to the library. You'll hear them before you see them."
             $ first_day_activity = "photo_club"
 
     # Said once, and only after he has picked, so the explanation of the free
     # afternoon arrives with something already happening underneath it.
     if not store.after_school_hint_shown:
         $ store.after_school_hint_shown = True
-        $ renpy.call_screen("hint_card", eyebrow="A NOTE ON THE AFTERNOON", body=store.hint_text_after_school)
+        $ renpy.call_screen("hint_card", eyebrow="Free Afternoons", body=store.hint_text_after_school)
 
     if first_day_activity == "walk_alone":
         jump after_school_walk_alone
@@ -4057,35 +3890,37 @@ label after_school_walk_alone:
             mc "(Right. Fine. This is the part where I point.)"
             "I point at a line. Any line. The second one down, because I have seen one of its words on a packet in the kitchen."
             "He glances at where my finger is, and then at me, and his face does not move at all."
-        "Ask him to choose.":
-            mc "You choose. Whatever's good."
+        "Ask for his recommendation.":
+            mc "Sumimasen. Osusume... recommendation?"
             "He stops. He looks at me a second longer than he looked at the money, and then says something short to the pots."
-            mc "(It was not an answer. It was the closest thing to one I am going to get.)"
-            mc "(I handed the decision to a man who has not said a word to me. For no reason I could defend, I think that was correct.)"
+            mc "(I might have said that wrong. He points at the second line and waits for my nod.)"
+            $ reward_attributes_once("answer_ramen_recommendation", [("nerve", "small")], show="auto")
 
     chef "あいよ。"
     "He barks something at somebody. There is nobody else in the room. He is the kitchen and the waiter, and he is barking at himself."
 
     scene bg_ramen with walk_fade
     
-    "A few minutes later he puts down a bowl, and it is not what I ordered, and I am no longer certain I could say what I ordered."
+    "A few minutes later he puts down a bowl. It is much darker than the picture I had in my head."
     "The broth is almost black. More pork than noodle. And a hill of green onions on top of that which should not be legal."
-    mc "(Whatever I did back there, this is not it. This is not remotely it.)"
+    mc "(I thought I was ordering something lighter. I don't know what I actually asked for.)"
     "He crosses his arms and looks at it, and then at me, which is a sentence in a language I can read."
 
-    # Both answers end in the same mouthful. What the player picks is whether he is
-    # the sort of person who sends food back in a country where he cannot say the
-    # words to send it back with.
+    # Both answers lead to the same meal. Restore the counter shot before the
+    # chef speaks, so his portrait never covers the food close-up.
     menu:
-        "Say something.":
-            mc "Uh... sorry. I think this is - this isn't what I -"
-            "He watches me do it. He does not help. He does not move. He lets me run out of sentence."
-            mc "(He is not being unkind. He is waiting for me to finish being a person who is about to send this back.)"
+        "Ask what kind of broth it is.":
+            mc "Sumimasen. Shoyu? Miso?"
+            "He follows my finger towards the bowl."
+            "He points to the dark bottle beside the stove."
+            mc "(Soy sauce. That answers that.)"
             "I stop talking. He pushes the bowl half a centimetre towards me with one finger."
+            scene bg_ramen_shop with walk_fade
             chef "どうぞ。"
             mc "(That one I know. It means here you go. It also means eat it.)"
-        "Eat it anyway.":
+        "Try it before asking.":
             "I pick up the spoon before I can think about it, which he appears to consider the entire conversation."
+            scene bg_ramen_shop with walk_fade
             chef "どうぞ。"
             mc "(That one I know. It means here you go. It also means eat it.)"
 
@@ -4096,7 +3931,16 @@ label after_school_walk_alone:
     "He hears the tone of it even if he does not have the words. He does not turn around."
     chef "うまい、だろ？"
     "I catch one word of that. One. It is the word on the packet in the kitchen and on the sign two doors down from the house."
-    mc "Umai! Yes! Very umai!"
+    menu:
+        "Tell him in Japanese.":
+            mc "Umai. Arigatou gozaimasu."
+            # Meeting him in his language after he hears the reaction.
+            $ reward_attributes_once("chef_first_umai", [("grace", "small")], show="auto")
+        "Ask what gives it the smoky flavour.":
+            mc "The pork? Is that where the smoky taste comes from?"
+            "He taps the edge of the grill with his ladle."
+        "Smile and keep eating.":
+            "I nod with the spoon still in my hand. He turns back to the stove."
 
     "He snorts. A small sound, killed immediately. Something in his face moves for a quarter of a second before he turns back to the pots."
     "He says nothing else. I slurp, badly, and get broth on the counter, and he does not comment."
@@ -4107,7 +3951,7 @@ label after_school_walk_alone:
     # and every route comes back through it to the same empty bowl, the same bill,
     # and the same walk home.
     scene black with Dissolve(2.0)
-    "I ate the rest of it watching the men either side of me, and did what they did."
+    "Two men came in while I ate. I watched how they held their chopsticks and tried the same grip."
     "Chopsticks in one hand, spoon in the other, head down over the bowl."
     "I ended up finishing the whole bowl, soup and all. There was nothing left in it but the pattern on the bottom."
 
@@ -4117,11 +3961,10 @@ label after_school_walk_alone:
     "This time he takes it, counts the change without looking, and sets it beside my hand."
     $ spend_money(900)
     "A hundred yen. Nine hundred for the bowl. I do not know what I actually ordered and I do not think I ever will."
-    mc "(That was the wrong bowl. But I would order it again.)"
+    mc "(Not what I expected. I'd order it again.)"
 
     $ confidant_visits["chef"] = 1
-    $ reward_attributes_once("chef_first_umai", [("grace", "small")], show="auto")
-    $ remember("chef", "sat down in a shop he could not read and said the word back to him")
+    $ remember("chef", "sat down in his shop and finished the bowl")
 
     # Back to the counter shot for this, for the same reason the whole scene
     # works this way: he does not say anything that is not sitting in front of
@@ -4210,19 +4053,15 @@ label after_school_run:
     "I have worked out that she fills silences on purpose. I have not worked out why."
 
     menu:
-        "You didn't have to walk me back.":
-            mc "You didn't have to walk me back."
-            hikari "I know."
-            mc "That wasn't the point. The point is that you did."
+        "Thanks for coming back with me.":
+            mc "Thanks for coming back with me. You must have had other things to do."
             hikari "You're welcome. Don't make it a thing."
-        "You know every corner of this street.":
-            mc "You know every corner of this street."
-            hikari "I've walked it a lot. That is the entire secret of knowing a street."
-        "You could have left me at the gate.":
-            mc "You could have left me at the gate, like everyone else."
-            hikari "..."
-            hikari "I answered every email you sent this year. That was my job."
-            hikari "Walking you home is the same job. I'm just doing it where you can see it."
+        "How long have you lived here?":
+            mc "Have you lived on this street your whole life?"
+            hikari "Since primary school. Mom still calls the bakery by its old name."
+        "Which turning is ours?":
+            mc "Which turning is ours? The one after the bakery?"
+            hikari "Yes. Then straight until you see the blue gate."
 
     "We get to the house and she does not go in."
     "She walks past it, to the corner, and stops, and starts doing something to her shoes."
@@ -4234,9 +4073,9 @@ label after_school_run:
         "Out where?":
             mc "Out where?"
             hikari "The river. Two or three times a week, except the weeks it's five. Tonight counts."
-        "You run. At this hour.":
-            mc "You run. At this hour, on your first evening off."
-            hikari "There's no evening off. There's just the part of the day nobody's watching."
+        "Is this your usual running route?":
+            mc "Do you always go out from here?"
+            hikari "Usually. It saves me putting my shoes back on."
         "Can I come?":
             mc "Can I come?"
             hikari "..."
@@ -4290,18 +4129,19 @@ label after_school_run:
 
     "Twenty minutes later I am on my knees at a vending machine with my hands on my thighs."
     "She is not out of breath. She has bought us both something without asking, and mine is an energy drink I would never have chosen."
-    mc "(She picked the one I would have picked. I don't know how she knew.)"
+    mc "(Cold, at least. Right now that's enough.)"
     hikari "You're not unfit. You're just new. Those are different things and it's rude to confuse them."
     mc "Thank you."
     hikari "That wasn't a compliment. That was a diagnosis."
 
-    "We drink them standing up, under the lamp, with the river doing the thing rivers do."
+    "We drink them under the lamp, listening to the water move past."
 
     menu:
-        "(Say nothing.)":
-            "I don't say anything, because she has filled every silence today, and this is the first one she left open."
+        "Let her enjoy the quiet.":
+            "I sit beside her and leave the silence alone."
             hikari "..."
-            hikari "Yeah."
+            "Her shoulders settle. She puts the empty can down between her feet."
+            $ reward_attributes_once("answer_river_quiet", [("grace", "small")], show="auto")
         "Do you do this every day?":
             mc "Every day?"
             hikari "Most. The days I don't, I'm in the house, and I don't like who I am in the house on those days."
@@ -4326,7 +4166,7 @@ label after_school_run:
 
     $ first_run_started = True
     $ hikari_visits = 1
-    $ reward_attributes_once("run_first_river", [("nerve", "small")], show="auto")
+    $ reward_attributes_once("run_first_river", [("nerve", "medium")], show="card")
     $ remember("hikari", "ran the river path with her on the first afternoon")
 
     # She is the one who put WIRE on the phone in the first place, so she is the
@@ -4369,7 +4209,7 @@ label after_school_run:
 
     "Mother and Father are at the table, and neither of them is doing anything, which is how I know they have been waiting."
     mother "You are both very late."
-    father "It is a school night. You are in this house by eight. That is the rule, and it is not a new rule."
+    father "It's a school night. You are expected home by eight. That's the rule."
     hikari "I know. I'm sorry."
     mc "It's my fault. I asked her to show me the river."
     father "..."
@@ -4382,7 +4222,7 @@ label after_school_run:
     hikari "We got lost in the conversation. It won't happen again."
     father "..."
     father "Eat something before you go up. There is rice."
-    mc "(That is the whole punishment. It is somehow worse than shouting.)"
+    mc "(He doesn't raise his voice. Somehow that makes it harder to answer.)"
     hikari "We're fine. Goodnight."
     jump end_of_first_day
 
@@ -4435,15 +4275,16 @@ label after_school_photo_club:
     "The room says it back at me in one voice. Somebody waves. Somebody takes a bag off the chair beside him and puts it on the floor."
 
     menu:
-        "I found the right door, then.":
-            mc "I found the right door, then. The paper one."
-            sim "You did. No fees, no pressure, just us and some cameras and a great deal of trial and error."
-        "So do I look like a lost tourist?":
-            mc "So... do I look like a lost tourist?"
-            sim "(grinning) Maybe a little. But that is the perfect place to start from. Most of us began exactly there."
-        "I wasn't sure this was the right room.":
-            mc "I wasn't sure I had the right room. There's tape on your door."
-            sim "Then you did. See? You found it anyway. The tape just made it take longer."
+        "Is this the photography club?":
+            mc "Is this the photography club? I saw the notice downstairs."
+            sim "Yes. No fees, no pressure, just us and some cameras and a great deal of trial and error."
+        "Could I join today's session?":
+            mc "Could I join today's session? I haven't done this with other people before."
+            sim "Of course. There's a chair right here. We were just getting started."
+            $ reward_attributes_once("answer_circle_join", [("nerve", "small")], show="auto")
+        "Hikari told me I could drop in.":
+            mc "Hikari said I could drop in. Is now a good time?"
+            sim "Perfect timing. Come and sit with us."
 
     "I sit in the gap, which is exactly one person wide, next to a boy asleep with his arms folded and entirely committed to it."
 
@@ -4456,34 +4297,44 @@ label after_school_photo_club:
     sim "So. Do you have a camera?"
 
     menu:
-        "No. At least not today.":
-            mc "Nothing. I got here yesterday. My camera is in a suitcase in a house I can't find my way back to."
-        "Just my phone. Not well.":
-            mc "Just my phone. I was caught off guard and didn't think of bringing it today."
-            mc "So I can only shoot with my phone today."
+        "My camera's at home.":
+            mc "My camera's at home. I wasn't expecting to come here today."
+        "Only my phone today.":
+            mc "Only my phone today. Will that be okay?"
 
     "I look at my hands, which are empty, and he follows my eyes down to them."
-    sim "Then that is the best possible answer, and I am not saying it to be polite."
+    sim "Then we'll use your phone."
     sim "Phone cameras are better than most beginners realise."
-    sim "And more usefully, if you had brought one, you would have spent the hour choosing a wall."
-    sim "This way you have to look at the room first. The room is the part everybody skips."
-    "He holds his hand out. I give a stranger my phone, which is a strange thing to do in a room I have been in for four minutes."
-    "I do it anyway."
-    "He turns it round, frames the light coming off the wall, and hands it back."
-    sim "There. Now you have shot something. The light is wrong and it is crooked, and it is entirely yours."
+    sim "Start with the light, not the settings. Look at the wall beside the window."
+    "He gestures across the room. I raise the phone and take a picture."
+    sim "There. Now you have shot something. A little crooked, perhaps, but we can work with it."
     sim "See? First step. Half the prints on that wall started exactly like that one."
+    sim "What do you notice?"
+    menu:
+        "The window is brighter than everything else.":
+            mc "The window's so bright I can barely see the wall. Would leaving it out of the frame help?"
+            sim "Try it."
+            "I turn a little and take another picture. This time the strip of light on the wall keeps its shape."
+            sim "There it is. Same room, different photograph."
+            $ reward_attributes_once("sim_circle_first", [("insight", "small")], show="auto")
+        "I tilted the phone.":
+            mc "I tilted the phone. The door looks like it's falling over."
+            sim "Easy to do. Try lining it up with the side of the screen."
+        "I'm not sure what to look for yet.":
+            mc "I'm not sure what to look for yet."
+            sim "That's fine. Take a second one and compare them. Start with what changes."
 
     sim "I should say who I am, since I am the strange one here. I don't study here. I come in twice a week because they let me."
     sim "By day I am in an office with the numbers. This is the other half of the day, and this is the half I would keep."
     sim "Ten years in this country, and I still feel like a beginner most days. I have decided that is the good part."
 
     menu:
-        "You've been here that long?":
-            mc "You've been here that long?"
-            sim "Ten years. I came for one, and then this room happened, and a room like this is very hard to leave."
-        "Do you ever think of leaving?":
-            mc "Do you ever think of leaving?"
-            sim "(shrugs) Sometimes. Then I think of this place. The people in it. It keeps me here, every time."
+        "How did Circle start?":
+            mc "How did Circle start?"
+            sim "A few people wanted somewhere to show their photographs. We borrowed a room and kept coming back."
+        "Do you shoot outside the club too?":
+            mc "Do you shoot outside the club too?"
+            sim "Whenever I can. Walking with a camera is a very good excuse to take the long way home."
 
     "The woman from the argument says something across the room."
     "He answers her in Japanese without changing gear, then comes back to me in English."
@@ -4493,13 +4344,17 @@ label after_school_photo_club:
     sim "She gets practice, they get their portfolio, and nobody has to be anybody's boss."
 
     menu:
-        "And this is all volunteer?":
-            mc "And this is all volunteer? Nobody is paying for any of it?"
-            sim "Nobody pays for any of it. That is rather the point of it."
-            sim "No client. No brief. Nobody to tell you what a good photograph is."
-        "Sounds too good. What's the catch?":
-            mc "Sounds too good. What's the catch?"
-            sim "(grinning) The only catch is that once you come, you want to come again. That is the entire business model."
+        "Can I help set things up?":
+            mc "Can I help set things up? She shouldn't have to move all those chairs herself."
+            sim "Yes, thank you. Leave her some space by the window."
+            "I move the spare chairs back against the wall while she sets her bag down."
+            $ reward_attributes_once("answer_circle_help", [("grace", "small")], show="auto")
+        "Can I watch for a while first?":
+            mc "Can I watch for a while first? I'd like to see how you work."
+            sim "Absolutely. Sit where you can see, and ask whenever you want."
+        "Do you choose a new theme each week?":
+            mc "Do you choose a new theme each week?"
+            sim "Usually. Someone suggests one, then we see what everyone makes of it."
 
     sim "You don't have to join anything. Come. Sit. Look at what people put on the wall. That is the whole club."
     sim "Join us whenever you are ready. Everybody here started by sitting in that chair and saying nothing."
@@ -4512,12 +4367,10 @@ label after_school_photo_club:
     "He turns back to the prints and starts talking about one of them."
     "He does not ask me a single question about where I am from."
     "By the end of the hour I am fairly sure that is the kindest thing anybody in this city has done for me."
-    mc "(Nobody has told me what to do tonight. Nobody has handed me anything.)"
-    mc "(I am sitting on a plastic chair in a room that smells of fixer.)"
+    mc "(My phone has two new photographs on it. Neither looks like the ones on the wall.)"
 
     $ confidant_visits["sim"] = 1
-    $ reward_attributes_once("sim_circle_first", [("insight", "small")], show="auto")
-    $ remember("sim", "walked into the circle with empty hands and was told it was the good answer")
+    $ remember("sim", "joined the first session with his phone camera")
 
     # He does not gate the club behind anything, so the group is the one thing he
     # has to give that costs him nothing and asks nothing. He gives it the same
@@ -4528,15 +4381,14 @@ label after_school_photo_club:
     sim "Then you are already most of the way in. That is the entire entry requirement."
     "He puts his hand out, the way he did an hour ago, and this time I hand the phone over without thinking about it."
     sim "There is a group. It is called Circle, and it is older than the room is."
-    sim "Everybody posts what they shot that week, and everybody else says something about it. Mostly rude. Always useful."
-    mc "And you want me in it."
-    sim "(grinning) I want you in it because nobody in there knows your name yet, and that is a very easy thing to fix."
-    "He gives the phone back with the group already open on it and my name already in the list."
-    "He had it before I finished saying it this afternoon. I am not sure at which point he took it."
+    sim "Everybody posts what they shot that week. We share ideas between meetings too."
+    mc "Should I post the ones I took today?"
+    sim "(grinning) Please do. We'd love to see them."
+    "He opens the group invitation and hands the phone back. I type my name and join."
     $ wire_unlock("sim")
 
-    "An hour later he walks me to the door and points down the corridor at the stairs. He tells me when they meet, and to bring nothing."
-    "The nothing is the point, he says. Then he goes back in and shuts the door, and I can hear the argument starting again behind it."
+    "By the time I leave, the windows have gone dark. Sim walks me to the door and writes the next meeting time on a spare flyer."
+    "Bring the camera if you like, he says. The phone is fine too."
     mc "(That is one place in this city I can find now without being shown.)"
 
     scene bg_home_exterior_night with walk_fade
@@ -4570,7 +4422,7 @@ label after_school_photo_club:
     father "Eight o'clock. On a school night. We eat together, and we eat at eight."
     mc "I understand."
     father "Then eat. There is rice."
-    mc "(That is the whole warning. It is somehow worse than shouting.)"
+    mc "(He leaves it there. I can't tell if that's better.)"
     hikari "Go on. Before he finds another sentence."
     jump end_of_first_day
 
@@ -4591,14 +4443,14 @@ label end_of_first_day:
 
     "Upstairs, the door shuts behind me and the house goes quiet."
     "The quiet a house makes when everyone has agreed to stop talking about something."
-    "I sit on the edge of the bed with my shoes still on and go through the day from the beginning."
+    "I sit on the edge of the bed with my bag in my lap and go through the day from the beginning."
     "I want to hear whether it sounds real."
     "A station at nine in the morning, and a sister who took me the long way for no reason she would give."
-    "A professor who told me that arriving on time is late. A cafeteria I could not read."
+    "A professor who expects everyone seated before the bell. A student card with my photograph on it."
     "And then an afternoon that belonged to nobody but me."
 
     if first_day_activity == "walk_alone":
-        mc "(I got lost on purpose and it worked. That is the first thing in this country I have done by myself.)"
+        mc "(Two convenience stores. The blue cloth. I should write down the street name tomorrow.)"
         mc "(Somewhere four minutes from this house there is a man who will not remember my face.)"
         mc "(And a bowl I will think about for a week.)"
     elif first_day_activity == "walk_hikari":
@@ -4609,13 +4461,13 @@ label end_of_first_day:
         mc "(There are prints on that wall with marker on them. Somebody was angry about a photograph. That is the whole club.)"
 
     mc "(Yesterday I got off a plane without knowing one word of the language.)"
-    mc "(Today I went to school late, made a stranger laugh, found a place in this city, and came home after dark.)"
+    mc "(The student card is still in my pocket. I put it beside the bag so I won't forget it.)"
     mc "(I wonder if every day here is going to be like this.)"
     mc "(Full of new things, and surprises, and people who turn out to be nothing like the first thing you thought.)"
 
     "I lie back and look at a ceiling I have now looked at twice."
     "Out in the street somebody wheels a bicycle past, and then there is nothing at all."
-    mc "(I would like every day to be like this one. I would like to be the sort of person this day was for.)"
+    mc "(I should set an alarm.)"
     "I do not remember deciding to close my eyes."
     "They are heavier than they were a minute ago, and the lamp is further away than it was, and the day carries on without me."
     "Tomorrow there is a class at five minutes to nine, and nothing else written anywhere."

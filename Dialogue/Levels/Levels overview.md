@@ -5,8 +5,10 @@ odaiba
 harajuku
 akihabara
 yokohama- chinatown
-school
-home / room
-train
-train station
-airport
+
+school - done
+home / room - done
+train - done 
+train station - done
+taxi 
+airport - done

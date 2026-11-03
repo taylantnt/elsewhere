@@ -58,8 +58,22 @@ the three endings (Escape / Blue Pill / Failure), designed in `game_concept.md`.
 ## 2. Prologue, Part One — The Arrival
 
 ### 2.1 The notices and the name (`label start`, `label prologue`)
-- `start` is not the story. It runs the two unskippable notice cards
-  (DISCLAIMER, BEFORE YOU BEGIN), the acceptance card, and the name entry loop.
+- `start` is not the story. It runs the two unskippable notice pages
+  (A Work of Fiction, Lasting Decisions), the confirmation, and the name entry loop.
+- Opening pages use a borderless monochrome layout on pure black, separate
+  from the 760 x 480 in-game guide windows in `game/notice_windows.rpy`.
+  Neither layout is a phone page, and neither carries an ELSEWHERE header.
+- New Game, Continue and Load fade out over 1.4 seconds, hold black for two
+  seconds, then fade into the destination. Loads use `before_load` and
+  `config.after_load_transition`, preserving the normal load confirmations.
+- I Understand fades the opening text out over 1.4 seconds, holds black for
+  two seconds, then fades the name page in over 1.4 seconds.
+- Modal windows draw at z-order 180, above dialogue, the HUD and bottom controls,
+  but below system confirmations. They block game-menu and rollback shortcuts.
+- Dialogue, portraits, the attribute HUD and bottom controls are hidden while
+  standalone windows or attribute gain cards are open, then restored afterward.
+- Opening notices each last eight seconds, including their fades, and cannot
+  be dismissed early. Guides close with Got It; name entry supports Begin or Enter.
 - The name entry cannot be left blank; the loop re-opens until something is typed.
 - Starting state: `money = 30000`, `inventory = ["phone"]`, `japanese_fluency = 0`.
 - `prologue` is the plane. He talks over the engine, establishes the thirty
@@ -69,6 +83,10 @@ the three endings (Escape / Blue Pill / Failure), designed in `game_concept.md`.
   appears at the top of `airport_arrival`, not during the notices.
 
 ### 2.2 The terminal (`label airport_arrival`, `label airport_exploration`)
+- After "I'll check the map on my phone.", the illustrated handset rises and
+  displays NO SIGNAL. It holds for 2.5 seconds and lowers automatically.
+  Gameplay controls and dialogue are hidden during this modal interlude.
+  The existing "...", "No signal.", and "So much for the map." lines follow.
 - `airport_arrival` sets the scene, kills the phone (no reception), and opens
   the **exploration hub**.
 - The hub is a loop. He can talk to everyone and look at everything, in any order,
@@ -79,7 +97,7 @@ the three endings (Escape / Blue Pill / Failure), designed in `game_concept.md`.
 | Ask the Security Guard | `talk_security` | Two officers share the post; which one answers depends on `security_index` |
 | Ask the Timid Man | `talk_timid_man` | |
 | Ask the Cheerful Woman | `talk_cheerful_woman` | |
-| Ask the Airport Assistant | `talk_assistant` | Gives the pamphlet (`has_pamphlet`) |
+| Ask the Information Desk | `talk_assistant` | Gives the pamphlet (`has_pamphlet`) |
 | Ask the Veteran Assistant | `talk_veteran_assistant` | **Gated**: needs the pamphlet or all three of the others |
 | Check the Information Boards | `check_boards` | Board text advances with `board_message_index` |
 | Look at the Plants | `look_plants` | The plants get stranger each look (`plant_index`) |
@@ -89,11 +107,9 @@ the three endings (Escape / Blue Pill / Failure), designed in `game_concept.md`.
   has already tried the other doors.
 
 ### 2.3 The travel decision (`label end_airport`, `label travel_choice`)
-- Leaving the terminal is the first **essential choice** in the game, and the
-  first thing that writes to the attribute system.
-- It is also the act's **only** paying decision, and it is worth a full rank:
-  the train opens **Insight**, the taxi opens **Nerve**. Which door can be
-  unlocked on the first day is decided here and nowhere else.
+- Leaving the terminal is the first major attribute decision: the train awards
+  **2.0 Insight**, the taxi **2.0 Nerve**. Selected airport replies can already
+  award small gains, but this remains the larger route-defining event.
 - Taxi and train are deliberately not equal: they are two different afternoons,
   and both settle into the same house at different hours.
 
@@ -109,11 +125,8 @@ plays, which dream he has, and how much money he has left.
   driver in a language he does not have.
 - The meter is the set piece: ¥500 base plus ¥100 increments, and he sits and
   learns the rhythm of it because there is nothing else to do.
-- `taxi_stand` carries the first "what kind of foreigner are you going to be"
-  fork: try the thank you again (Grace), ask about the meter (Nerve), or say
-  nothing and time the clicks (Insight). None of the three pays — the taxi
-  already paid **Nerve** at the route decision, and a conversation in the car
-  does not change what the afternoon is.
+- In `taxi_stand`, confirming the fare despite embarrassment awards **0.5 Nerve**.
+  Thanking the driver or looking out of the window earns nothing.
 
 ### 3.2 Train route (`label train_station` → `train_gate_slam` → `train_ticket`
 → `ticket_machine` → `train_platform` → `train_board`)
@@ -125,9 +138,8 @@ plays, which dream he has, and how much money he has left.
   meets the station rather than who he is becoming.
 - The ticket machine is a reading puzzle — he matches the fare map against the
   pamphlet and gets it wrong anyway.
-- Giving up and asking the station attendant is the **one Grace award on the
-  train route** (`large`), and the only way a train player can open the Grace
-  door on the first day. He stops trying to solve the building alone.
+- Asking the station attendant resolves the ticket obstacle and awards
+  **2.0 Grace**. Small empathetic dialogue gains are separate from this event.
 - The platform is the express-versus-local fork. The local is **not** a mistake;
   it is the slower, more deliberate answer, and neither sign pays — the choice
   only decides which `home_arrival` opening he gets.
@@ -170,20 +182,17 @@ story rather than being carried through it.
   face.
 
 ### 4.3 Morning (`label morning_call`, `label leaving_house`)
-- `morning_call` is the first breakfast, and the first real conversation he is
-  allowed to steer. The mother's betting pool on whether he would turn up is the
-  hook; the fork is who started it (Insight), what she bet (Nerve), or thanking
-  Hikari for the emails (Grace).
+- At breakfast, Hikari mentions students asking about his arrival. He can ask
+  what they know, ask about introductions, or explain how her emails helped.
+  The last reply awards **0.5 Grace**; the other replies are neutral.
 - `leaving_house` is the amado (the sliding shutter) and the two-door fork: ask
   how she can hear a mood in a door (Insight), or admit he heard nothing (Nerve).
 
 ### 4.4 The walk to school (`label school_morning`, `label campus_grounds`)
 - `school_morning` is the front-door list — the rules he memorised on the plane
   and the ones he got wrong. Fork: ask what she did on her own first day (Grace),
-  admit the list was wrong (Nerve), or ask why nobody tells you where to stand
-  (Insight).
-- `campus_grounds` is the courtyard, and the one place on campus where a question
-  about Hikari is not a question about the building.
+  admit the list was wrong, or ask where to check room changes. These are neutral.
+- In the courtyard, noticing buildings from different periods awards **0.5 Insight**.
 
 ### 4.5 The university (`label department_tour`, `label student_relations`,
 `label first_class`)
@@ -213,8 +222,10 @@ story rather than being carried through it.
   her, and is stopped before he reaches it; she pulls him down, and only he is
   addressed, because she was not late. The professor's lecture (a shrinking
   population, "it is arithmetic") is the thematic spine of the whole game stated
-  out loud for the first time. After the class she explains that she told him
-  nothing on purpose: it lands differently when you are the one it is said to.
+  out loud for the first time. All replies receive the attendance rule. The
+  Nerve-gated reply requests review of the registration-related late mark.
+  Afterwards Hikari acknowledges leaving without directions. Asking her to
+  warn him next time awards **0.5 Nerve** without requiring an existing rank.
   It does not end the scene: she hands him the rest of the day and the fork opens
   (§4.6).
 
@@ -237,23 +248,18 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
 - **All three routes end the same way**: a walk home, `scene black`, the music
   down, `return`. Three different afternoons, one unchanged night. That is what
   makes this the act break rather than the last bell.
-- **Each route pays exactly one attribute, and only one route happens.** The
-  ramen shop pays a `small` Grace, the run a `small` Nerve, the circle a `small`
-  Insight — one per attribute, the same way the first three gates are one per
-  attribute. Because the afternoon can only be spent once, a playthrough of Act 1
-  can collect at most one of the three. This is scarcity by exclusivity rather
-  than by price, and it needs no rule to enforce it.
-- `after_school_walk_alone` — he deliberately ignores the map on his phone, gets
-  it wrong, and finds the ramen shop by being lost, which is also the demonstration
+- **Only one afternoon route happens.** Within each route, selected answers
+  award small gains. Ramen has Japanese recommendation and appreciation replies;
+  the run has an empathetic silence choice plus **1.0 Nerve** for completion;
+  photography has participation, observation, and practical-help replies.
+- `after_school_walk_alone` — he cannot use the map without reception, gets
+  lost, and finds the ramen shop, which is also the demonstration
   that the shop was always findable. Contains the **Chef's first visit** in full
-  (`いらっしゃい` / `あいよ` / the wrong bowl / `どうぞ` / `うまい、だろ？`), pays
-  `spend_money(900)`, sets `confidant_visits["chef"] = 1`, awards the Grace, and
-  logs a memory against the chef. It holds **two menus**, and both are about
-  having no language: how he orders (*in English* / *point at something* / *ask
-  the chef to choose*) and what he does about the wrong bowl (*say something* /
-  *eat it anyway*). Every answer ends in the same bowl, because the chef is the
-  one steering; the choice is what kind of person he is when he cannot be
-  understood.
+  (`いらっしゃい` / `あいよ` / an unexpected broth / `どうぞ` / `うまい、だろ？`),
+  spends 900 yen and sets `confidant_visits["chef"] = 1`.
+  Three menus cover ordering, asking about the broth, and responding to the chef.
+  Recommendation earns Nerve; Japanese appreciation earns Grace. Other replies
+  earn nothing. The counter background returns before the chef's next line.
 - `after_school_run` — the sister's arc, not a numbered confidant chain. He walks
   home with Hikari, and she does not go into the house: she walks past it and
   changes her shoes, because the run is her daily thing and he has been handed the
@@ -271,13 +277,13 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
   himself is always smaller than the truth; the warmest thing he says in the scene
   lands on the protagonist, not on himself. The circle is the school activity and
   the mentor is the visitor, which is what keeps his seven-visit farewell possible.
-  He arrives **carrying a camera and the protagonist does not**, which is the point:
-  Sim approves of the empty hands, because a camera would have been spent choosing a
-  wall rather than looking at the room. Four menus (the doorway, the camera
-  question, how long he has been in the country, whether the club is really free),
+  The protagonist uses his phone to take and compare photographs.
+  Five menus cover the doorway, camera availability, observing the first image,
+  Sim's photography and the club's origins, and participating in the session.
   and the scene draws its lines from `Dialogue/Locations/Photography Club - Sim/1st
-  interaction.md`. Sets `confidant_visits["sim"] = 1`, awards the Insight, and logs
-  a memory against Sim.
+  interaction.md`. Sets `confidant_visits["sim"] = 1` and logs a memory.
+  Selected replies earn Nerve for joining, Insight for reframing, or Grace for
+  helping the model. Sitting through the meeting does not automatically pay.
 - **The first visit is the whole of each confidant's presence in the script.**
   Nothing reads `confidant_visits` yet; the counter is written here so the hub has
   something true to read when it is wired up (§5.7).
@@ -292,18 +298,21 @@ is the index.
 
 ### 5.1 Character attributes — see `character_attributes.md`
 - Three attributes: **Insight** (understand), **Grace** (connect), **Nerve** (act),
-  each carrying its own colour — blue, green, red — on every orb, chip, card and tag.
-- **Points are scarce.** Most forks pay nothing; a reward is reserved for a
-  **turning point**. In the first act only the route decision (`large`), the
-  ticket attendant (`large`) and the three rank-gated answers (`small`) pay.
+  each carrying its own colour — blue, green, red — on every circular meter, tick, card and tag.
+- **Points are selective.** Small gains occur on concrete, thoughtful, observant,
+  or courageous dialogue actions. Routine replies do not automatically pay.
+  Larger events remain distinct from conversation rewards.
 - Points are **fractional** (halves). Named sizes: `small` = 0.5, `medium` = 1.0
-  (defined but unused), `large` = 2.0. A `large` is exactly rank 2, so the route
+  (first-reading puzzle success and first run), `large` = 2.0. A `large` is exactly rank 2, so the route
   decision is the one answer in the act that moves a rank on its own.
 - Presentation: a quiet **tick chip** in the top-right corner for an ordinary
   gain (`show="auto"`) and the full **gain card** for a rank-up or a turning point.
-- **Orbs fill as points gather** — drawn translucent when empty and progressively
-  solid as they fill, measured against the final threshold, so they only ever
-  solidify.
+- The full-screen card uses fixed circle cells, outward ripples, and separately
+  layered text. Qualitative ribbons are replaced by `RANK 02 / 05`.
+  The phone page uses circular progress, concise descriptions, and totals.
+- **Circular meters fill toward the next rank** — the three labeled rings begin
+  empty and fill in colored segments as points accumulate; each ring resets when
+  its rank advances.
 - Every award goes through `reward_attributes_once` with a unique
   `answer_<scene>_<choice>` flag. A hub conversation also **latches its answer**
   with `remember_choice`, so re-entering it replays the stored reply instead of
@@ -318,7 +327,7 @@ is the index.
 - **The first day up to the walk to campus contains no locked answers.** The
   first three gates are one per attribute, and all three are in the university:
   Insight at the poster wall, Grace at student relations, Nerve in the lecture hall.
-- See `character_attributes.md` §5.5 for the map of the five surviving answer flags.
+- See `character_attributes.md` §5.5 for the complete implemented reward map.
 
 ### 5.2 Language progression
 - Japanese starts plain and turns coloured as fluency rises. The `{jp}` tag and
@@ -341,9 +350,14 @@ is the index.
   the counter and the exam-disqualification flag belong.
 
 ### 5.5 The dream mini-game
-- The travel-route card sort in `dream_sequence`. Cannot be failed; wrong picks
-  are annotated rather than punished.
-- Glitches are intentional and intense (`dream_static`: flashing bands and washes).
+- The memory-ordering board in `dream_sequence`. The player has three readings;
+  an incorrect submitted order costs one reading and preserves the current board.
+  Only solving it on the first reading awards Insight.
+- Glitches are intentional and intense (`dream_static`: flashing bands and washes);
+  while the memory board is active, the interference is softened so card text
+  and ordering controls remain easy to read.
+- The board separates the ordered sequence from available memories, labels
+  remaining readings, and offers a clear review action when all four slots are filled.
 
 ### 5.6 Presentation
 - **Portraits**: large, centred, anchored at `yalign 1.0`, `zoom 1.8`, with a
@@ -380,21 +394,17 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   whole reason this is not hard branching: the hub fans out, and every branch
   falls back onto the same next scene. The only true forks are the few that
   settle an ending flag.
-- **The hub** (`screen location_hub`) is the list of places with the state of
-  each one marked:
-  - `( ! )` means a scene is waiting here, and the row is clickable.
-  - **two bars** means paused: the act has not caught up yet.
-  - **two dark bars** means finished: the story has been told out.
-  The legend under the list spells the marks out in place, because a bare symbol
-  is read as "something is here" on day one, and on day one that reading is
-  backwards.
+- **The hub** (`screen location_hub`) shares the standalone notice window.
+  Each row spells out its state: Visit available, No new visit yet, or Story
+  complete. Only available rows are clickable. The destination list scrolls;
+  Head Home remains available in the fixed footer.
 - **The hub screen is not used yet, and the first free afternoon does not use it.**
   The Act 1 fork is a hand-written three-way branch inside `first_class` (§4.6),
   because Hikari is asking the question and the answers are lines of dialogue
   rather than rows to click. `location_hub` exists for the point where the day is
   a standing offer rather than a scene — when it is wired up the shape is
   `call screen location_hub([...])`, then branch on `_return`, where `None` means
-  the day was left unspent. It carries the state marks and the legend; the
+  the day was left unspent. It carries the destination status labels; the
   dialogue that opens it is written per scene.
 
 ---
@@ -418,7 +428,7 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
 | `remembered_choices` | `remember_choice()` | The answer he already gave a person, so they replay it instead of re-rolling |
 | `character_memories` | `remember()` | What an important character is holding onto |
 | `memory_names` | `remember()` | How those people are named in the `(X will remember that)` notice |
-| `show_attribute_hud` | `airport_arrival` | Whether the orb cluster is on screen |
+| `show_attribute_hud` | `airport_arrival` | Whether the three labeled attribute meters are on screen |
 | `money_hint_shown` / `pamphlet_hint_shown` / `after_school_hint_shown` | first use of each | One-time tutorial cards |
 | `first_day_activity` | the Act 1 fork in `first_class` | Which shape of afternoon he picked (`walk_alone` / `walk_hikari` / `photo_club`); read immediately, never shown |
 | `first_run_started` | `after_school_run` | The first river run happened. The run is not a confidant slot yet, so this is the only record of it |

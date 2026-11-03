@@ -30,12 +30,12 @@
 ## Keys on an entry:
 ##   "name"     what the app calls them.
 ##   "handle"   the line under the name, in the app's own idiom.
-##   "note"     the one line the row shows. Keep it short: two lines fit a row,
-##              a third one does not.
+##   "note"     the short line the row shows. It can wrap to two lines.
 ##   "color"    the contact's own colour on the tile and the meter.
 ##   "progress" optional. A path into the store. Defaults to the person's own
 ##              slot in confidant_visits.
-##   "photo"    optional. A square image to use instead of the monogram tile.
+##   "photo"    optional. A portrait image to use instead of the monogram tile.
+##   "photo_crop" optional. A normalized (x, y, width, height) face crop.
 
 
 ## The order the roster lists people in. It is fixed rather than
@@ -53,6 +53,8 @@ define wire_contacts = {
         # in the street, which is the reason she wants to be on here at all.
         "note": "The things she will not say out loud.",
         "color": "#e0849b",
+        "photo": "images/characters/sister.png",
+        "photo_crop": (0.13, 0.015, 0.60, 0.40),
         "progress": ("hikari_visits",),
     },
 
@@ -63,6 +65,8 @@ define wire_contacts = {
         # one piece of information he decided a stranger actually needed.
         "note": "Closed Wednesdays. Don't walk here for nothing.",
         "color": "#d2793a",
+        "photo": "images/characters/chef.png",
+        "photo_crop": (0.25, 0.005, 0.48, 0.32),
     },
 
     "sim": {
@@ -70,6 +74,8 @@ define wire_contacts = {
         "handle": "@circle",
         "note": "The club group. Everybody posts what they shot.",
         "color": "#4fb8d9",
+        "photo": "images/characters/sim.png",
+        "photo_crop": (0.25, 0.0, 0.50, 0.333),
     },
 }
 
@@ -136,12 +142,12 @@ init python:
 
         if not store.wire_hint_shown:
             store.wire_hint_shown = True
-            renpy.call_screen("hint_card", eyebrow="A NOTE ON YOUR PHONE",
+            renpy.call_screen("hint_card", eyebrow="WIRE",
                               body=store.hint_text_wire)
 
         # The same soft landing the attribute screen uses when a point arrives.
         # A name going into the phone is the same kind of event.
-        play_sfx("audio/SFX/attribute_land.wav")
+        play_sfx("audio/SFX/wire_connect.wav")
 
         renpy.call_screen("wire_app", new=contact_id)
         return True
@@ -150,7 +156,7 @@ init python:
 # The one and only explanation of what the phone is for. It says what a name on
 # the list means and stops there: what the player can do with the list is not
 # decided yet, and a card that promises a mechanic would be lying.
-define hint_text_wire = "WIRE is on your phone. It is where the people you meet end up.\n\nEvery name on it carries how far the two of you have come, and what that person is still holding on to.\n\nThere is no signal here yet. Everything on it is saved on the device."
+define hint_text_wire = "WIRE keeps a record of the people you get to know.\n\nSelect a contact to see your visits and the moments they remember. New contacts appear as you meet them.\n\nWIRE works offline. The records are stored on your phone."
 
 
 ################################################################################
@@ -198,8 +204,8 @@ style wire_badge is default:
     outlines []
 
 style wire_note is default:
-    size gui.scale(14)
-    line_spacing gui.scale(2)
+    size gui.scale(13)
+    line_spacing gui.scale(1)
     color "#8b97a3"
     outlines []
 
@@ -291,7 +297,8 @@ screen wire_avatar(cid, px):
         xysize (px, px)
 
         if wire_photo and renpy.loadable(wire_photo):
-            add Transform(wire_photo, xysize=(px, px), fit="cover")
+            add Solid(wire_accent + "26", xysize=(px, px))
+            add Transform(wire_photo, crop=wire_entry.get("photo_crop"), xysize=(px, px))
         else:
             add Solid(wire_accent + "26", xysize=(px, px))
 
@@ -326,52 +333,50 @@ screen wire_row(cid, is_new):
     $ wire_accent = wire_entry["color"]
     $ wire_seen = wire_progress(cid)
 
-    # A row is as wide as the roster column, not as wide as the screen, because
-    # the roster is inset by 12 either side. `wire_row_w` is the width the row
-    # actually gets, and the two right-hand values below are measured back from
-    # its right edge rather than from the display.
+    # The progress readout sits below the note so long descriptions keep the
+    # full width of the card.
     $ wire_row_w = wire_screen_w - 24
-    $ wire_readout_w = 64
-    $ wire_info_w = wire_row_w - 178
+    $ wire_info_w = wire_row_w - 108
 
     fixed:
-        xysize (gui.scale(wire_row_w), gui.scale(118))
+        xysize (gui.scale(wire_row_w), gui.scale(112))
 
-        add Solid("#182129" if is_new else "#121920", xysize=(gui.scale(wire_row_w), gui.scale(118)))
+        add Solid("#1a282d" if is_new else "#141c22", xysize=(gui.scale(wire_row_w), gui.scale(112)))
 
         # The contact's colour down the left edge. On the new row it breathes.
         if is_new:
-            add Solid(wire_accent, xysize=(gui.scale(4), gui.scale(118))) at wire_new_pulse
+            add Solid(wire_accent, xysize=(gui.scale(3), gui.scale(112))) at wire_new_pulse
         else:
-            add Solid(wire_accent + "55", xysize=(gui.scale(4), gui.scale(118)))
+            add Solid(wire_accent + "55", xysize=(gui.scale(3), gui.scale(112)))
 
         # `use` cannot take a property block, so the tile gets a box of its own
         # to sit in and the box does the placing.
         fixed:
-            xpos gui.scale(16)
-            ypos gui.scale(20)
-            xysize (gui.scale(64), gui.scale(64))
-            use wire_avatar(cid, gui.scale(64))
+            xpos gui.scale(14)
+            ypos gui.scale(22)
+            xysize (gui.scale(56), gui.scale(56))
+            use wire_avatar(cid, gui.scale(56))
 
         vbox:
-            xpos gui.scale(96)
-            ypos gui.scale(16)
-            spacing gui.scale(5)
+            xpos gui.scale(82)
+            ypos gui.scale(10)
+            spacing gui.scale(2)
 
             fixed:
                 xsize gui.scale(wire_info_w)
-                ysize gui.scale(30)
+                ysize gui.scale(24)
 
                 text wire_entry["name"] style "wire_name":
                     xpos 0
                     ypos 0
-                    xmaximum gui.scale(wire_info_w - 62)
+                    size gui.scale(19)
+                    xmaximum gui.scale(wire_info_w - 58)
 
                 if is_new:
                     fixed:
-                        xpos gui.scale(wire_info_w - 52)
+                        xpos gui.scale(wire_info_w - 48)
                         ypos gui.scale(2)
-                        xysize (gui.scale(52), gui.scale(20))
+                        xysize (gui.scale(46), gui.scale(18))
                         at wire_new_pulse
 
                         add Solid(wire_accent + "22")
@@ -380,26 +385,18 @@ screen wire_row(cid, is_new):
                             xalign 0.5
                             yalign 0.5
 
-            text wire_entry["handle"] style "wire_handle" xmaximum gui.scale(wire_info_w)
+            text wire_entry["handle"] style "wire_handle" size gui.scale(12) xmaximum gui.scale(wire_info_w)
 
-            # Stops 12 short of the readout block, so a long note wraps instead
-            # of running under the meter.
-            text wire_entry["note"] style "wire_note" xmaximum gui.scale(wire_info_w)
+            text wire_entry["note"] style "wire_note" xmaximum gui.scale(wire_info_w) ymaximum gui.scale(34)
 
-        # The readout on the right is given a width of its own, so the meter and
-        # the count line up on the right edge together instead of each ending
-        # wherever its own text happens to stop.
-        vbox:
-            xpos gui.scale(wire_row_w - 72)
-            xsize gui.scale(wire_readout_w)
-            ypos gui.scale(18)
-            spacing gui.scale(12)
+        hbox:
+            xpos gui.scale(82)
+            ypos gui.scale(91)
+            spacing gui.scale(7)
 
-            hbox:
-                xalign 1.0
-                use wire_meter(wire_seen, gui.scale(4), gui.scale(14), wire_accent)
+            use wire_meter(wire_seen, gui.scale(4), gui.scale(8), wire_accent)
 
-            text "[wire_seen] / [confidant_visits_total]" style "wire_count" xalign 1.0
+            text "[wire_seen] / [confidant_visits_total]" style "wire_count" yalign 0.5
 
 
 ## Everything the app knows about one person. The list at the bottom is the same
@@ -412,12 +409,11 @@ screen wire_profile(cid):
     $ wire_seen = wire_progress(cid)
     $ wire_memories = character_memories.get(cid, [])
 
-    # The viewport is inset by the same 12 the header uses, so every line of
-    # text in the app starts on the same left edge whichever page is open.
+    # The viewport stays below the status and navigation bars.
     viewport:
         xpos gui.scale(12)
-        ypos gui.scale(58)
-        xysize (gui.scale(wire_screen_w - 24), gui.scale(wire_screen_h - 82))
+        ypos gui.scale(68)
+        xysize (gui.scale(wire_screen_w - 24), gui.scale(wire_screen_h - 92))
         mousewheel True
         draggable True
         scrollbars None
@@ -432,7 +428,7 @@ screen wire_profile(cid):
                 text wire_entry["name"] style "wire_name" size gui.scale(27)
                 text wire_entry["handle"] style "wire_handle"
 
-            add Solid("#1e252d") xysize (gui.scale(wire_screen_w - 24), 1)
+            add Solid("#243139") xysize (gui.scale(wire_screen_w - 24), 1)
 
             vbox:
                 spacing gui.scale(10)
@@ -444,7 +440,7 @@ screen wire_profile(cid):
 
                 text wire_entry["note"] style "wire_note" size gui.scale(15) xmaximum gui.scale(wire_screen_w - 24)
 
-            add Solid("#1e252d") xysize (gui.scale(wire_screen_w - 24), 1)
+            add Solid("#243139") xysize (gui.scale(wire_screen_w - 24), 1)
 
             text "WHAT THEY REMEMBER" style "wire_label"
 
@@ -492,18 +488,36 @@ screen wire_app(new=None):
 
             add Solid("#0a0d11")
 
+            # A quiet status bar makes the app feel native to the handset
+            # without adding controls that the story does not support.
+            text "9:41":
+                xpos gui.scale(16)
+                ypos gui.scale(5)
+                size gui.scale(10)
+                color "#75838d"
+                outlines []
+
+            text "NO SIGNAL":
+                xpos gui.scale(wire_screen_w - 16)
+                xanchor 1.0
+                ypos gui.scale(5)
+                size gui.scale(9)
+                kerning gui.scale(1)
+                color "#596872"
+                outlines []
+
             if selected:
 
                 fixed:
                     xalign 0.5
-                    ypos gui.scale(10)
-                    xysize (gui.scale(84), gui.scale(6))
-                    add Solid("#1a2128")
+                    ypos gui.scale(25)
+                    xysize (gui.scale(42), gui.scale(4))
+                    add Solid("#26313a")
 
                 # --- the app's second page, and the way back to the first ---
                 textbutton "BACK" action SetScreenVariable("selected", None) style "wire_button":
-                    xpos gui.scale(16)
-                    ypos gui.scale(20)
+                    xpos gui.scale(12)
+                    ypos gui.scale(22)
 
                 use wire_profile(selected)
 
@@ -512,18 +526,18 @@ screen wire_app(new=None):
                 # --- safe area / top app chrome ---
                 fixed:
                     xalign 0.5
-                    ypos gui.scale(10)
-                    xysize (gui.scale(84), gui.scale(6))
-                    add Solid("#1a2128")
+                    ypos gui.scale(25)
+                    xysize (gui.scale(42), gui.scale(4))
+                    add Solid("#26313a")
 
                 fixed:
                     xpos gui.scale(16)
-                    ypos gui.scale(24)
-                    xysize (gui.scale(wire_screen_w - 32), gui.scale(72))
+                    ypos gui.scale(34)
+                    xysize (gui.scale(wire_screen_w - 32), gui.scale(68))
 
                     fixed:
                         xpos 0
-                        ypos gui.scale(8)
+                        ypos gui.scale(10)
                         xysize (gui.scale(6), gui.scale(6))
                         at wire_live_dot
                         add Solid("#7fe0d0", xysize=(gui.scale(6), gui.scale(6)))
@@ -531,7 +545,7 @@ screen wire_app(new=None):
                     text "WIRE":
                         xpos gui.scale(14)
                         ypos 0
-                        size gui.scale(27)
+                        size gui.scale(25)
                         kerning gui.scale(5)
                         color "#7fe0d0"
                         outlines []
@@ -542,26 +556,19 @@ screen wire_app(new=None):
                         style "wire_label"
 
                     fixed:
-                        xpos gui.scale(wire_screen_w - 140)
-                        ypos gui.scale(30)
-                        xysize (gui.scale(108), gui.scale(24))
+                        xpos gui.scale(wire_screen_w - 100)
+                        ypos gui.scale(34)
+                        xysize (gui.scale(84), gui.scale(24))
 
-                        add Solid("#141b22")
+                        add Solid("#18232a")
 
                         text "OFFLINE":
                             xalign 0.5
                             ypos gui.scale(3)
                             style "wire_status"
-                            color "#6d7c88"
+                            color "#8998a2"
 
-                    text "SAVED ON DEVICE":
-                        xpos gui.scale(wire_screen_w - 16)
-                        xanchor 1.0
-                        ypos gui.scale(58)
-                        style "wire_status"
-                        color "#3f4d56"
-
-                add Solid("#1e252d") xysize (gui.scale(wire_screen_w - 32), 1) xpos gui.scale(16) ypos gui.scale(108)
+                add Solid("#243139") xysize (gui.scale(wire_screen_w - 32), 1) xpos gui.scale(16) ypos gui.scale(110)
 
                 # --- the roster ---
                 #
@@ -570,14 +577,14 @@ screen wire_app(new=None):
                 viewport:
                     at wire_body_in
                     xpos gui.scale(16)
-                    ypos gui.scale(124)
-                    xysize (gui.scale(wire_screen_w - 32), gui.scale(wire_screen_h - 236))
+                    ypos gui.scale(122)
+                    xysize (gui.scale(wire_screen_w - 32), gui.scale(wire_screen_h - 228))
                     mousewheel True
                     draggable True
                     scrollbars None
 
                     vbox:
-                        spacing gui.scale(12)
+                        spacing gui.scale(9)
 
                         for wire_cid in roster:
                             button:
@@ -587,23 +594,24 @@ screen wire_app(new=None):
                                 use wire_row(wire_cid, wire_cid == new)
 
                 # --- footer ---
-                add Solid("#1e252d") xysize (gui.scale(wire_screen_w - 32), 1) xpos gui.scale(16) ypos gui.scale(wire_screen_h - 96)
+                add Solid("#243139") xysize (gui.scale(wire_screen_w - 32), 1) xpos gui.scale(16) ypos gui.scale(wire_screen_h - 92)
 
-                text "WIRE 1.0":
+                text "SAVED ON DEVICE":
                     xpos gui.scale(16)
-                    ypos gui.scale(wire_screen_h - 72)
+                    ypos gui.scale(wire_screen_h - 73)
                     style "wire_status"
-                    color "#39464f"
+                    color "#596872"
 
                 textbutton "PUT IT AWAY" action SetScreenVariable("hiding", True) style "wire_button" sensitive (not hiding):
-                    xalign 0.5
-                    ypos gui.scale(wire_screen_h - 84)
+                    xalign 1.0
+                    xoffset gui.scale(-16)
+                    ypos gui.scale(wire_screen_h - 82)
 
                 fixed:
                     xalign 0.5
-                    ypos gui.scale(wire_screen_h - 24)
-                    xysize (gui.scale(116), gui.scale(5))
-                    add Solid("#1a2128")
+                    ypos gui.scale(wire_screen_h - 15)
+                    xysize (gui.scale(72), gui.scale(4))
+                    add Solid("#26313a")
 
     if hiding:
         timer 0.300 action Return()

@@ -158,106 +158,35 @@ screen hub_mark(state):
 ## a paused or finished place does nothing when clicked, which is the point of
 ## the mark.
 
-screen location_hub(places=None, heading="AFTER SCHOOL", blurb="The rest of the day is yours. Pick one place."):
+screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one destination for this afternoon."):
 
     modal True
-
+    zorder notice_window_zorder
     $ hub_places = places if places is not None else confidant_order
 
-    add Solid("#0b0a09e6")
-
-    vbox:
-        xalign 0.5
-        yalign 0.5
-        spacing gui.scale(30)
-
-        vbox:
-            xalign 0.5
-            spacing gui.scale(13)
-
-            text heading style "notice_label" xalign 0.5
-            add Solid("#3a352e") xysize (gui.scale(380), 1) xalign 0.5
-            text blurb style "notice_body" xalign 0.5
-
-        vbox:
-            xalign 0.5
-            spacing gui.scale(2)
-
-            for place in hub_places:
-
-                $ place_state = destination_state(place)
-                $ place_name = destination_names.get(place, place)
-
-                button:
-                    style "hub_button"
-                    action Return(place)
-                    sensitive (place_state == "ready")
-
-                    fixed:
-                        xsize gui.scale(560)
-                        ysize gui.scale(44)
-
-                        text place_name:
-                            style "hub_place"
-                            color hub_state_color(place_state)
-                            xalign 0.0
-                            yalign 0.5
-
+    add Solid("#000000") at notice_backdrop_in
+    use standalone_notice_window(heading, "DESTINATIONS", notice_window_in):
+        text blurb style "guide_body" xsize gui.scale(648)
+        viewport:
+            ypos gui.scale(54)
+            xysize (gui.scale(648), gui.scale(156))
+            mousewheel True
+            draggable True
+            vbox:
+                spacing gui.scale(4)
+                for place in hub_places:
+                    $ place_state = destination_state(place)
+                    $ place_name = destination_names.get(place, place)
+                    $ place_status = {"ready": "Visit available", "paused": "No new visit yet", "closed": "Story complete"}[place_state]
+                    button:
+                        action Return(place)
+                        sensitive (place_state == "ready")
+                        background Solid("#25221d")
+                        hover_background Solid("#393126")
+                        insensitive_background Solid("#181714")
+                        padding (gui.scale(12), gui.scale(10))
                         fixed:
-                            xalign 1.0
-                            yalign 0.5
-                            use hub_mark(place_state)
-
-        vbox:
-            xalign 0.5
-            spacing gui.scale(9)
-
-            add Solid("#241f19") xysize (gui.scale(380), 1) xalign 0.5
-
-            hbox:
-                xalign 0.0
-                spacing gui.scale(18)
-
-                fixed:
-                    xsize gui.scale(54)
-                    ysize gui.scale(24)
-                    text "( ! )" style "hub_mark_text" color gui.accent_color xalign 0.5 yalign 0.5
-
-                text "Something is waiting here." style "hub_legend_text" yalign 0.5
-
-            hbox:
-                xalign 0.0
-                spacing gui.scale(18)
-
-                fixed:
-                    xsize gui.scale(54)
-                    ysize gui.scale(24)
-                    hbox:
-                        xalign 0.5
-                        yalign 0.5
-                        spacing gui.scale(5)
-                        add Solid(hub_bar_color("paused")) xysize (gui.scale(3), gui.scale(18))
-                        add Solid(hub_bar_color("paused")) xysize (gui.scale(3), gui.scale(18))
-
-                text "Nothing new yet. Come back later in the story." style "hub_legend_text" yalign 0.5
-
-            hbox:
-                xalign 0.0
-                spacing gui.scale(18)
-
-                fixed:
-                    xsize gui.scale(54)
-                    ysize gui.scale(24)
-                    hbox:
-                        xalign 0.5
-                        yalign 0.5
-                        spacing gui.scale(5)
-                        add Solid(hub_bar_color("closed")) xysize (gui.scale(3), gui.scale(18))
-                        add Solid(hub_bar_color("closed")) xysize (gui.scale(3), gui.scale(18))
-
-                text "Their story has finished, and they have moved on." style "hub_legend_text" yalign 0.5
-
-        # A hub with no door out is a softlock waiting to happen, so leaving is
-        # always on offer. It costs the day, which is what makes picking a place
-        # matter.
-        textbutton "Leave it for today." action Return(None) style "notice_button" xalign 0.5
+                            xysize (gui.scale(624), gui.scale(26))
+                            text place_name style "guide_body" color hub_state_color(place_state) yalign 0.5
+                            text place_status style "guide_meta" xalign 1.0 yalign 0.5
+        use standalone_notice_footer("Scroll to see more destinations.", "Head Home", Return(None))

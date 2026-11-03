@@ -105,11 +105,12 @@ screen say(who, what):
     ## A character appears here by being declared with image="name" and given an
     ## "image side name" picture; anyone without one (the narrator, the MC) shows
     ## nothing. No room for it on the phone variant.
-    if not renpy.variant("small"):
+    if not renpy.variant("small") and not standalone_window_active():
         add SideImage() xalign 0.5 ypos config.screen_height yanchor 1.0 zoom 1.8
 
     window:
         id "window"
+        at Transform(alpha=0.0 if standalone_window_active() else 1.0)
 
         ## A hairline of accent light along the top edge of the dialogue plate,
         ## aligned with the column the text sits in. It ties the textbox to the
@@ -294,7 +295,7 @@ screen quick_menu():
     ## Ensure this appears on top of other screens.
     zorder 100
 
-    if quick_menu:
+    if quick_menu and not standalone_window_active():
 
         frame:
             style "quick_menu_frame"
@@ -423,85 +424,82 @@ style wallet_text:
 
 init python:
 
-    def sakura_petals(count=30):
-        """A fresh bag of blossom routes, one per petal.
+    import math
+    import random
+    import time
 
-        The screen calls this once, through `default`, so the arrangement is
-        only decided when the menu opens and then holds still. Opening the menu
-        again deals a new one.
-        """
+    def sakura_petals(count=84):
+        """Independent small and medium petals, already spread through the sky."""
         width = config.screen_width
+        rng = random.Random()
         petals = []
 
         for _i in range(count):
-
-            fall = renpy.random.uniform(9.0, 17.0)
-
+            small = _i % 3 != 0
+            fall = rng.uniform(11.0, 23.0) if small else rng.uniform(8.0, 18.0)
             petals.append({
-                # Where it comes in, and how long the whole descent takes. The
-                # spread of fall times is what stops the petals ever marching
-                # in step: the fast ones lap the slow ones within a pass or two.
-                "x": renpy.random.randint(-40, width + 40),
+                "x": rng.uniform(-60, width + 60),
                 "fall": fall,
-
-                # A short head start, so they do not all leave the tree on the
-                # same beat when the menu first opens.
-                "phase": renpy.random.uniform(0.2, 5.0),
-
-                # How far it wanders sideways, its size, how solid it is, and
-                # how far it turns. The turn is a whole number of rotations so
-                # that the loop joins up without a visible snap.
-                "sway": renpy.random.randint(50, 150) * renpy.random.choice((-1, 1)),
-                "size": renpy.random.uniform(0.5, 1.05),
-                "fade": renpy.random.uniform(0.4, 0.8),
-                "spin": renpy.random.choice((-720.0, -360.0, 360.0, 720.0)),
+                "phase": rng.uniform(0.0, fall),
+                "sway": rng.uniform(12.0, 40.0),
+                "sway_period": rng.uniform(3.0, 7.0),
+                "drift": rng.uniform(-5.0, 14.0),
+                "size": rng.uniform(0.14, 0.32) if small else rng.uniform(0.34, 0.58),
+                "fade": rng.uniform(0.35, 0.70),
+                "spin": rng.uniform(12.0, 48.0) * rng.choice((-1, 1)),
+                "wind_response": rng.uniform(1.0, 1.45) if small else rng.uniform(0.65, 1.0),
             })
-
         return petals
 
+    def sakura_field():
+        # Session-only weather keeps moving through menu changes without touching
+        # saves or consuming the story's rollback-aware random number stream.
+        field = renpy.session.get("menu_sakura_field")
+        if field is None:
+            rng = random.Random()
+            gusts = []
+            cursor = 0.0
+            for _i in range(4):
+                cursor += rng.uniform(11.0, 19.0)
+                duration = rng.uniform(3.5, 6.5)
+                gusts.append((cursor, duration, rng.uniform(110.0, 210.0) * rng.choice((-1, 1))))
+                cursor += duration
+            field = {
+                "started_at": time.monotonic(),
+                "petals": sakura_petals(),
+                "gusts": gusts,
+                "period": cursor + 12.0,
+            }
+            renpy.session["menu_sakura_field"] = field
+        return field
 
-## One blossom. Each block below repeats on its own, forever, and each one sets
-## its own starting value first, which is what lets the loop join up cleanly.
-transform petal_fall(p):
+    def sakura_wind(elapsed, field):
+        cycle, local = divmod(elapsed, field["period"])
+        displacement = cycle * sum(gust[2] for gust in field["gusts"])
+        for start, duration, strength in field["gusts"]:
+            progress = min(1.0, max(0.0, (local - start) / duration))
+            displacement += strength * (0.5 - 0.5 * math.cos(math.pi * progress))
+        return displacement
 
+    def sakura_motion(trans, st, at, p, field):
+        elapsed = time.monotonic() - field["started_at"]
+        progress = ((elapsed + p["phase"]) % p["fall"]) / p["fall"]
+        sway = p["sway"] * math.sin((elapsed + p["phase"]) * 2.0 * math.pi / p["sway_period"])
+        horizontal = p["x"] + p["drift"] * elapsed + sway + sakura_wind(elapsed, field) * p["wind_response"]
+        # Float positions are relative in Ren'Py; these coordinates are pixels.
+        trans.xpos = int(horizontal % (config.screen_width + 120) - 60)
+        trans.ypos = int(-90 + progress * (config.screen_height + 180))
+        trans.rotate = (elapsed + p["phase"]) * p["spin"] % 360
+        trans.alpha = p["fade"] * min(1.0, progress / 0.10, (1.0 - progress) / 0.12)
+        return 1.0 / 30.0
+
+
+transform petal_fall(p, field):
     subpixel True
     xanchor 0.5
     yanchor 0.5
     zoom p["size"]
-
-    parallel:
-        # Wait its turn, drift all the way down, then start again from the top.
-        pause p["phase"]
-        ypos -90
-        linear p["fall"] ypos config.screen_height + 80
-        repeat
-
-    parallel:
-        # Fades up just after it leaves the top edge, and out again near the
-        # floor, so neither end of the journey shows a hard edge.
-        pause p["phase"]
-        alpha 0.0
-        linear 0.9 alpha p["fade"]
-        pause p["fall"] - 2.0
-        linear 1.1 alpha 0.0
-        repeat
-
-    parallel:
-        # The breeze: over to the right, back past where it started, home.
-        pause p["phase"]
-        xpos p["x"]
-        ease p["fall"] * 0.3 xpos p["x"] + p["sway"]
-        ease p["fall"] * 0.4 xpos p["x"] - p["sway"]
-        ease p["fall"] * 0.3 xpos p["x"]
-        repeat
-
-    parallel:
-        # And a lazy turn as it goes.
-        pause p["phase"]
-        rotate 0
-        linear p["fall"] * 0.55 rotate p["spin"] * 0.55
-        linear p["fall"] * 0.45 rotate p["spin"]
-        repeat
+    function renpy.curry(sakura_motion)(p=p, field=field)
 
 ## The blossom itself. Drawn as art rather than a wingding character: neither of
 ## the game's fonts carries the ❀/✿ dingbats, so text petals rendered as blank
@@ -510,13 +508,10 @@ image petal = "images/ui/petal.png"
 
 screen sakura_blossoms():
 
-    ## Decided once, when the menu opens, and then left alone. Building the list
-    ## inside the loop instead would re-roll every petal on each screen refresh,
-    ## which would make them jump around mid-air.
-    default petals = sakura_petals()
+    default field = sakura_field()
 
-    for p in petals:
-        add "petal" at petal_fall(p)
+    for p in field["petals"]:
+        add "petal" at petal_fall(p, field)
 
 
 ################################################################################
@@ -533,16 +528,28 @@ screen navigation():
     vbox:
         style_prefix "navigation"
 
-        xpos gui.navigation_xpos
-        yalign 0.5
-
-        spacing gui.navigation_spacing
+        xpos gui.scale(34 if renpy.variant("small") else 74)
+        ypos gui.scale(76)
+        spacing gui.scale(5)
 
         if main_menu:
 
-            textbutton _("Start") action Start()
+            text "ELSEWHERE":
+                style "menu_nav_brand"
+
+            text _("TITLE MENU"):
+                style "menu_nav_section"
+
+            textbutton _("New Story") action [Function(cinematic_departure), Start()]
+            textbutton _("Continue") action Continue()
 
         else:
+
+            text "ELSEWHERE":
+                style "menu_nav_brand"
+
+            text _("IN THIS STORY"):
+                style "menu_nav_section"
 
             textbutton _("History") action ShowMenu("history")
 
@@ -554,7 +561,7 @@ screen navigation():
 
         textbutton _("Load") action ShowMenu("load")
 
-        textbutton _("Preferences") action ShowMenu("preferences")
+        textbutton _("Settings") action ShowMenu("preferences")
 
         if _in_replay:
 
@@ -574,18 +581,46 @@ screen navigation():
         if renpy.variant("pc"):
 
             ## The quit button is banned on iOS and unnecessary on Android and Web.
-            textbutton _("Quit") action Quit(confirm=not main_menu)
+            textbutton _("Quit") action Quit(confirm=True)
 
 
 style navigation_button is gui_button
 style navigation_button_text is gui_button_text
 
 style navigation_button:
-    size_group "navigation"
     properties gui.button_properties("navigation_button")
+    background Solid("#ffffff08")
+    hover_background Solid("#e8a9c222")
+    insensitive_background Solid("#ffffff04")
+    xfill True
+    padding (gui.scale(12), gui.scale(8))
 
 style navigation_button_text:
     properties gui.text_properties("navigation_button")
+    size gui.scale(19)
+    color "#d7dce7"
+    hover_color "#fff1e2"
+    selected_color gui.accent_color
+    hover_underline False
+    xalign 0.0
+
+style menu_nav_brand is gui_text
+style menu_nav_section is gui_text
+
+style menu_nav_brand:
+    font "DejaVuSans.ttf"
+    size gui.scale(22)
+    bold True
+    color "#fff5e8"
+    kerning gui.scale(1)
+    bottom_margin gui.scale(12)
+
+style menu_nav_section:
+    font gui.interface_text_font
+    size gui.scale(11)
+    color "#dfa8c0"
+    kerning gui.scale(1)
+    bottom_margin gui.scale(6)
 
 
 ## Main Menu screen ############################################################
@@ -596,46 +631,15 @@ style navigation_button_text:
 
 screen main_menu():
 
-    ## This ensures that any other menu screen is replaced.
     tag menu
+    use phone_title
 
-    ## The title art, in two layers of the same file.
-    ##
-    ## The back layer is the picture zoomed to cover the whole screen and
-    ## blurred, so the space the centred picture does not reach reads as frosted
-    ## glass rather than a black bar. It is a little larger than the screen on
-    ## purpose: blurring fades the picture out at its own border, and this keeps
-    ## that soft edge off the visible area.
-    ##
-    ## The front layer is the whole picture, scaled to fit and centred, so
-    ## nothing is cropped off the sides.
-    add Transform(gui.main_menu_background, xysize=(int(config.screen_width * 1.15), int(config.screen_height * 1.15)), fit="cover", blur=32.0, xalign=0.5, yalign=0.5)
-    add Transform(gui.main_menu_background, xysize=(config.screen_width, config.screen_height), fit="contain", xalign=0.5, yalign=0.5)
-    use sakura_blossoms
 
-    ## This empty frame darkens the main menu.
-    frame:
-        style "main_menu_frame"
-
-    ## A hairline of accent light down the inner edge of the dark column, so the
-    ## title block on the right reads as a panel of its own.
-    add Solid(gui.accent_color) xpos gui.scale(280) ypos 0 xsize gui.scale(2) ysize config.screen_height
-
-    ## The use statement includes another screen inside this one. The actual
-    ## contents of the main menu are in the navigation screen.
-    use navigation
-
-    if gui.show_name:
-
-        vbox:
-            style "main_menu_vbox"
-
-            ## Only the version sits here now. The title block used to sit above it,
-            ## but the wordmark on the background art carries the name already.
-            add Solid(gui.accent_color) xsize gui.scale(240) ysize gui.scale(2) xalign 1.0
-
-            text "[config.version]":
-                style "main_menu_version"
+transform title_phone_enter:
+    alpha 0.0
+    zoom 0.9
+    yoffset gui.scale(35)
+    easeout 0.62 alpha 1.0 zoom 1.0 yoffset 0
 
 
 style main_menu_frame is empty
@@ -666,6 +670,105 @@ style main_menu_title:
 style main_menu_version:
     properties gui.text_properties("version")
 
+style title_start_button is button
+style title_start_text is gui_text
+style title_start_arrow is gui_text
+style title_phone_status is gui_text
+style title_phone_back_button is button
+style title_phone_brand is gui_text
+style title_phone_heading is gui_text
+style title_phone_subheading is gui_text
+style title_phone_menu_button is button
+style title_phone_menu_marker is gui_text
+style title_phone_menu_title is gui_text
+style title_phone_menu_detail is gui_text
+style title_phone_footer is gui_text
+
+style title_start_button:
+    background Solid("#0b1425dd")
+    hover_background Solid("#1b2940ed")
+    padding (gui.scale(18), gui.scale(12))
+    xalign 0.0
+    yalign 0.0
+
+style title_start_text:
+    font "DejaVuSans.ttf"
+    size gui.scale(20)
+    bold True
+    color "#fff5e8"
+    kerning gui.scale(1)
+    yalign 0.5
+
+style title_start_arrow:
+    font "DejaVuSans.ttf"
+    size gui.scale(34)
+    color gui.accent_color
+    yalign 0.42
+
+style title_phone_status:
+    font "DejaVuSans.ttf"
+    size gui.scale(9)
+    color "#f5f7fb"
+    yalign 0.5
+
+style title_phone_back_button:
+    background Solid("#ffffff14")
+    hover_background Solid("#ffffff30")
+    padding (gui.scale(4), gui.scale(0))
+    xsize gui.scale(24)
+    ysize gui.scale(24)
+
+style title_phone_back_button_text:
+    font "DejaVuSans.ttf"
+    size gui.scale(22)
+    color "#f4f4fa"
+    yalign 0.5
+    xalign 0.5
+
+style title_phone_brand:
+    font "DejaVuSans.ttf"
+    size gui.scale(14)
+    bold True
+    color "#f5f7fb"
+    kerning gui.scale(1)
+
+style title_phone_heading:
+    font gui.interface_text_font
+    size gui.scale(19)
+    color "#fff5e8"
+
+style title_phone_subheading:
+    font gui.interface_text_font
+    size gui.scale(12)
+    color "#b7c5d8"
+
+style title_phone_menu_button:
+    background Solid("#ffffff0b")
+    hover_background Solid("#e8a9c233")
+    insensitive_background Solid("#ffffff05")
+    padding (gui.scale(9), gui.scale(4))
+
+style title_phone_menu_marker:
+    font "DejaVuSans.ttf"
+    size gui.scale(22)
+    yalign 0.5
+
+style title_phone_menu_title:
+    font gui.interface_text_font
+    size gui.scale(14)
+    color "#f6f3f5"
+
+style title_phone_menu_detail:
+    font gui.interface_text_font
+    size gui.scale(9)
+    color "#b5c0d0"
+
+style title_phone_footer:
+    font "DejaVuSans.ttf"
+    size gui.scale(8)
+    color "#8c9fb4"
+    xalign 0.5
+
 
 ## Game Menu screen ############################################################
 ##
@@ -678,79 +781,8 @@ style main_menu_version:
 
 screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
-    style_prefix "game_menu"
-
-    ## The main menu's background is built the same way here, so opening the
-    ## Preferences or Load pages from the title screen does not suddenly crop it.
-    if main_menu:
-        add Transform(gui.main_menu_background, xysize=(int(config.screen_width * 1.15), int(config.screen_height * 1.15)), fit="cover", blur=32.0, xalign=0.5, yalign=0.5)
-        add Transform(gui.main_menu_background, xysize=(config.screen_width, config.screen_height), fit="contain", xalign=0.5, yalign=0.5)
-    else:
-        add gui.game_menu_background
-
-    frame:
-        style "game_menu_outer_frame"
-
-        hbox:
-
-            ## Reserve space for the navigation section.
-            frame:
-                style "game_menu_navigation_frame"
-
-            frame:
-                style "game_menu_content_frame"
-
-                if scroll == "viewport":
-
-                    viewport:
-                        yinitial yinitial
-                        scrollbars "vertical"
-                        mousewheel True
-                        draggable True
-                        pagekeys True
-
-                        side_yfill True
-
-                        vbox:
-                            spacing spacing
-
-                            transclude
-
-                elif scroll == "vpgrid":
-
-                    vpgrid:
-                        cols 1
-                        yinitial yinitial
-
-                        scrollbars "vertical"
-                        mousewheel True
-                        draggable True
-                        pagekeys True
-
-                        side_yfill True
-
-                        spacing spacing
-
-                        transclude
-
-                else:
-
-                    transclude
-
-    ## The same hairline as the main menu, so the two menus feel like one place.
-    add Solid(gui.accent_color) xpos gui.scale(280) ypos 0 xsize gui.scale(2) ysize config.screen_height
-
-    use navigation
-
-    textbutton _("Return"):
-        style "return_button"
-
-        action Return()
-
-    label title
-
-    if main_menu:
-        key "game_menu" action ShowMenu("main_menu")
+    use phone_game_menu(title, scroll, yinitial, spacing):
+        transclude
 
 
 style game_menu_outer_frame is empty
@@ -767,22 +799,32 @@ style return_button is navigation_button
 style return_button_text is navigation_button_text
 
 style game_menu_outer_frame:
-    bottom_padding gui.scale(30)
-    top_padding gui.scale(120)
-
-    background "gui/overlay/game_menu.png"
+    xsize gui.scale(1200)
+    ysize gui.scale(670)
+    xalign 0.5
+    yalign 0.5
+    padding (gui.scale(22), gui.scale(22))
+    background Solid("#0a1422e8")
 
 style game_menu_navigation_frame:
-    xsize gui.scale(280)
+    xsize gui.scale(230)
     yfill True
+    background Solid("#121f30")
+    padding (gui.scale(10), gui.scale(16))
 
 style game_menu_content_frame:
-    left_margin gui.scale(40)
-    right_margin gui.scale(20)
-    top_margin gui.scale(10)
+    left_margin gui.scale(20)
+    right_margin gui.scale(4)
+    top_margin gui.scale(16)
+    bottom_margin gui.scale(8)
+    xfill True
+    yfill True
+    background Solid("#101a28d9")
+    padding (gui.scale(24), gui.scale(18))
 
 style game_menu_viewport:
-    xsize gui.scale(920)
+    xfill True
+    yfill True
 
 style game_menu_vscrollbar:
     unscrollable gui.unscrollable
@@ -791,18 +833,20 @@ style game_menu_side:
     spacing gui.scale(10)
 
 style game_menu_label:
-    xpos gui.scale(50)
-    ysize gui.scale(120)
+    xpos gui.scale(300)
+    ypos gui.scale(32)
+    ysize gui.scale(64)
 
 style game_menu_label_text:
-    size gui.scale(50)
-    color gui.accent_color
+    size gui.scale(34)
+    color "#f4d6e2"
     yalign 0.5
 
 style return_button:
-    xpos gui.navigation_xpos
+    xpos gui.scale(42)
     yalign 1.0
-    yoffset gui.scale(-30)
+    yoffset gui.scale(-34)
+    xsize gui.scale(190)
 
 
 ## About screen ################################################################
@@ -853,126 +897,7 @@ style about_label_text:
 screen inventory():
 
     tag menu
-
-    ## Which slot the player is currently looking at.
-    default browsing = 0
-
-    ## Which item is open, if any. Selecting a usable item sets this and the item
-    ## is drawn large over the menu; closing it clears the variable again.
-    default viewing = None
-
-    use game_menu(_("Bag")):
-
-        style_prefix "inventory"
-
-        if inventory:
-            $ current_index = browsing if browsing < len(inventory) else 0
-            $ current_item = inventory[current_index]
-
-        vbox:
-            spacing gui.scale(18)
-
-            frame:
-                style "inventory_money_frame"
-
-                hbox:
-                    spacing gui.scale(14)
-
-                    text _("Cash") style "inventory_money_label"
-                    text "¥ [money]" style "inventory_money_value"
-
-            if inventory:
-
-                frame:
-                    style "inventory_grid_frame"
-
-                    vpgrid:
-                        cols 4
-                        mousewheel True
-                        draggable True
-                        spacing gui.scale(14)
-                        ymaximum gui.scale(265)
-
-                        for i, item in enumerate(inventory):
-
-                            button:
-                                style "inventory_slot_button"
-                                action SetScreenVariable("browsing", i)
-                                selected (i == current_index)
-
-                                vbox:
-                                    xalign 0.5
-                                    yalign 0.5
-                                    spacing gui.scale(8)
-
-                                    add item_icon(item, gui.scale(94)) xalign 0.5
-                                    text item_name(item) style "inventory_slot_name" xalign 0.5
-
-                frame:
-                    style "inventory_detail_frame"
-
-                    hbox:
-                        spacing gui.scale(24)
-
-                        add item_icon(current_item, gui.scale(150)) yalign 0.5
-
-                        vbox:
-                            spacing gui.scale(10)
-                            xsize gui.scale(560)
-
-                            text item_name(current_item) style "inventory_item_name"
-
-                            ## A thing he can actually do something with gets a
-                            ## button that says what the thing does, not just a
-                            ## label saying it is possible. Everything else still
-                            ## says so, in red, so the difference is readable at a
-                            ## glance.
-                            if item_usable(current_item):
-                                textbutton item_use_label(current_item) action SetScreenVariable("viewing", current_item) style "inventory_action_button"
-                            else:
-                                text _("Cannot be used") style "inventory_unusable"
-
-                            null height gui.scale(2)
-
-                            text item_desc(current_item) style "inventory_item_desc"
-
-            else:
-
-                frame:
-                    style "inventory_detail_frame"
-
-                    text _("Nothing yet. Everything he owns still fits in his suitcase.") style "inventory_empty_text"
-
-    ## Opening an item. The Bag stays a menu, so the item is drawn large over it
-    ## rather than replacing it: the room dims, the thing itself takes the middle
-    ## of the screen, and it closes the same way it opened. Anywhere outside the
-    ## card closes it too, which is what a person tries first.
-    if viewing:
-
-        button:
-            style "inventory_dimmer"
-            action SetScreenVariable("viewing", None)
-            xfill True
-            yfill True
-
-            add Solid("#0b0a09e6")
-
-        frame:
-            background Solid("#1c1b18f2")
-            padding (gui.scale(34), gui.scale(28))
-            xalign 0.5
-            yalign 0.5
-
-            vbox:
-                spacing gui.scale(20)
-                xalign 0.5
-
-                text item_name(viewing) style "notice_label" xalign 0.5
-                add Solid("#3a352e") xysize (gui.scale(420), 1) xalign 0.5
-
-                add item_icon(viewing, gui.scale(520)) xalign 0.5
-
-                textbutton _("Close") action SetScreenVariable("viewing", None) style "notice_button" xalign 0.5
+    use phone_inventory
 
 
 style inventory_label is label_text
@@ -1091,109 +1016,49 @@ style inventory_empty_text:
 screen attributes():
 
     tag menu
-
-    use game_menu(_("Attributes")):
-
-        style_prefix "attributes"
-
-        vbox:
-            spacing gui.scale(16)
-
-            text _("He grows by understanding the world, by connecting with the people in it, and by acting when acting is difficult.") style "attributes_intro"
-
-            for attribute_id in attribute_order:
-
-                $ orb_color = attribute_color(attribute_id)
-                $ orb_soft = attribute_color_alpha(attribute_id, attribute_orb_alpha(attribute_id))
-                $ orb_rank = attribute_rank(attribute_id)
-                $ orb_rank_name = attribute_rank_name(attribute_id)
-                $ orb_total = attribute_total_text(attribute_id)
-                $ orb_progress = attribute_progress(attribute_id)
-                $ orb_next = attribute_rank_next_text(attribute_id)
-
-                frame:
-                    style "attributes_row"
-
-                    hbox:
-                        spacing gui.scale(24)
-
-                        ## The same circle the gain card draws full size, at rest
-                        ## here: filled first, then its outline on top, so the ring
-                        ## never gets swallowed by a nearly-solid orb.
-                        fixed:
-                            xysize (gui.scale(92), gui.scale(92))
-
-                            text "●":
-                                xalign 0.5
-                                yalign 0.5
-                                size gui.scale(74)
-                                color orb_soft
-
-                            text "○":
-                                xalign 0.5
-                                yalign 0.5
-                                size gui.scale(92)
-                                color "#ffffff26"
-
-                        vbox:
-                            spacing gui.scale(9)
-                            xsize gui.scale(560)
-
-                            hbox:
-                                spacing gui.scale(16)
-
-                                text attribute_name(attribute_id) style "attributes_name" color orb_color
-                                text "Rank [orb_rank]  [orb_rank_name]" style "attributes_rank"
-
-                            text attribute_blurb(attribute_id) style "attributes_blurb"
-
-                            bar:
-                                value orb_progress
-                                range 1.0
-                                xsize gui.scale(520)
-                                ysize gui.scale(10)
-                                left_bar Solid(orb_color)
-                                right_bar Solid("#ffffff14")
-
-                            hbox:
-                                spacing gui.scale(12)
-
-                                text orb_next style "attributes_next"
-                                text "· [orb_total] total" style "attributes_total"
+    use phone_attributes
 
 
 style attributes_intro is gui_text:
-    size gui.scale(19)
-    color "#b9b3a7"
+    size gui.scale(17)
+    color "#c5cdd4"
     xmaximum gui.scale(720)
 
+style attributes_kicker is gui_text:
+    size gui.scale(12)
+    color "#8796a2"
+    kerning gui.scale(3)
+
 style attributes_row is frame:
-    background Solid("#151310dd")
-    padding (gui.scale(20), gui.scale(16), gui.scale(20), gui.scale(16))
+    background Solid("#111820e8")
+    padding (gui.scale(20), gui.scale(14), gui.scale(20), gui.scale(14))
 
 style attributes_bar is bar:
     left_bar Solid("#ffffff")
     right_bar Solid("#ffffff14")
 
 style attributes_name is gui_text:
-    size gui.scale(36)
+    size gui.scale(27)
+    kerning gui.scale(2)
 
 style attributes_rank is gui_text:
-    size gui.scale(19)
-    color "#c6c0b4"
+    size gui.scale(13)
+    color "#d7dfe5"
+    kerning gui.scale(1)
     yalign 0.5
 
 style attributes_blurb is gui_text:
-    size gui.scale(19)
-    color "#8f887c"
+    size gui.scale(17)
+    color "#a7b1ba"
 
 style attributes_next is gui_text:
-    size gui.scale(17)
-    color "#c6c0b4"
+    size gui.scale(14)
+    color "#d2dbe2"
 
 style attributes_total is gui_text:
-    size gui.scale(17)
-    color "#7d766a"
+    size gui.scale(12)
+    color "#788691"
+    kerning gui.scale(1)
 
 
 ## Load and Save screens #######################################################
@@ -1221,93 +1086,7 @@ screen load():
 
 screen file_slots(title):
 
-    default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
-
-    use game_menu(title):
-
-        fixed:
-
-            ## This ensures the input will get the enter
-            ## event before any of the buttons do.
-            order_reverse True
-
-            ## The page name, which can be edited by clicking on a button.
-            button:
-                style "page_label"
-
-                key_events True
-                xalign 0.5
-                action page_name_value.Toggle()
-
-                input:
-                    style "page_label_text"
-                    value page_name_value
-
-            ## The grid of file slots.
-            grid gui.file_slot_cols gui.file_slot_rows:
-                style_prefix "slot"
-
-                xalign 0.5
-                yalign 0.5
-
-                spacing gui.slot_spacing
-
-                for i in range(gui.file_slot_cols * gui.file_slot_rows):
-
-                    $ slot = i + 1
-
-                    button:
-                        action FileAction(slot)
-
-                        has vbox
-
-                        add FileScreenshot(slot) xalign 0.5
-
-                        text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
-                            style "slot_time_text"
-
-                        text FileSaveName(slot):
-                            style "slot_name_text"
-
-                        key "save_delete" action FileDelete(slot)
-
-            ## Buttons to access other pages.
-            vbox:
-                style_prefix "page"
-
-                xalign 0.5
-                yalign 1.0
-
-                hbox:
-                    xalign 0.5
-
-                    spacing gui.page_spacing
-
-                    textbutton _("<") action FilePagePrevious()
-                    key "save_page_prev" action FilePagePrevious()
-
-                    if config.has_autosave:
-                        textbutton _("{#auto_page}A") action FilePage("auto")
-
-                    if config.has_quicksave:
-                        textbutton _("{#quick_page}Q") action FilePage("quick")
-
-                    ## range(1, 10) gives the numbers from 1 to 9.
-                    for page in range(1, 10):
-                        textbutton "[page]" action FilePage(page)
-
-                    textbutton _(">") action FilePageNext()
-                    key "save_page_next" action FilePageNext()
-
-                if config.has_sync:
-                    if CurrentScreenName() == "save":
-                        textbutton _("Upload Sync"):
-                            action UploadSync()
-                            xalign 0.5
-                    else:
-                        textbutton _("Download Sync"):
-                            action DownloadSync()
-                            xalign 0.5
+    use phone_files(title)
 
 
 style page_label is gui_label
@@ -1324,28 +1103,56 @@ style page_label:
     xpadding gui.scale(50)
     ypadding gui.scale(3)
     xalign 0.5
+    background Solid("#17263a")
 
 style page_label_text:
     textalign 0.5
     layout "subtitle"
-    hover_color gui.hover_color
+    color "#f2edf1"
+    hover_color gui.accent_color
 
 style page_button:
-    properties gui.button_properties("page_button")
+    background Solid("#ffffff08")
+    hover_background Solid("#e8a9c222")
+    selected_background Solid("#e8a9c233")
+    padding (gui.scale(10), gui.scale(6))
 
 style page_button_text:
     properties gui.text_properties("page_button")
+    color "#d7dce7"
+    hover_color "#fff1e2"
+    selected_color gui.accent_color
 
 style slot_button:
-    properties gui.button_properties("slot_button")
+    background Solid("#17263a")
+    hover_background Solid("#263a53")
+    selected_background Solid("#263a53")
+    padding (gui.scale(8), gui.scale(8))
+    xsize gui.slot_button_width
+    ysize gui.slot_button_height
 
 style slot_button_text:
-    properties gui.text_properties("slot_button")
+    font gui.interface_text_font
+    size gui.scale(13)
+    color "#e8eaf0"
+    xalign 0.5
+
+style slot_time_text:
+    font gui.interface_text_font
+    size gui.scale(11)
+    color "#a6b1c2"
+    xalign 0.5
+
+style slot_name_text:
+    font gui.interface_text_font
+    size gui.scale(14)
+    color "#fff5e8"
+    xalign 0.5
 
 
-## Preferences screen ##########################################################
+## Options screen ##########################################################
 ##
-## The preferences screen allows the player to configure the game to better
+## The options screen allows the player to configure the game to better
 ## suit themselves.
 ##
 ## https://www.renpy.org/doc/html/screen_special.html#preferences
@@ -1353,82 +1160,7 @@ style slot_button_text:
 screen preferences():
 
     tag menu
-
-    use game_menu(_("Preferences"), scroll="viewport"):
-
-        vbox:
-
-            hbox:
-                box_wrap True
-
-                if renpy.variant("pc") or renpy.variant("web"):
-
-                    vbox:
-                        style_prefix "radio"
-                        label _("Display")
-                        textbutton _("Window") action Preference("display", "window")
-                        textbutton _("Fullscreen") action Preference("display", "fullscreen")
-
-                vbox:
-                    style_prefix "check"
-                    label _("Skip")
-                    textbutton _("Unseen Text") action Preference("skip", "toggle")
-                    textbutton _("After Choices") action Preference("after choices", "toggle")
-                    textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle"))
-
-                ## Additional vboxes of type "radio_pref" or "check_pref" can be added here, to
-                ## add additional creator-defined preferences.
-
-            null height (4 * gui.pref_spacing)
-
-            hbox:
-                style_prefix "slider"
-                box_wrap True
-
-                vbox:
-
-                    label _("Text Speed")
-
-                    bar value Preference("text speed")
-
-                    label _("Auto-Forward Time")
-
-                    bar value Preference("auto-forward time")
-
-                vbox:
-
-                    if config.has_music:
-                        label _("Music Volume")
-
-                        hbox:
-                            bar value Preference("music volume")
-
-                    if config.has_sound:
-
-                        label _("Sound Volume")
-
-                        hbox:
-                            bar value Preference("sound volume")
-
-                            if config.sample_sound:
-                                textbutton _("Test") action Play("sound", config.sample_sound)
-
-
-                    if config.has_voice:
-                        label _("Voice Volume")
-
-                        hbox:
-                            bar value Preference("voice volume")
-
-                            if config.sample_voice:
-                                textbutton _("Test") action Play("voice", config.sample_voice)
-
-                    if config.has_music or config.has_sound or config.has_voice:
-                        null height gui.pref_spacing
-
-                        textbutton _("Mute All"):
-                            action Preference("all mute", "toggle")
-                            style "mute_all_button"
+    use phone_preferences
 
 
 style pref_label is gui_label
@@ -1463,6 +1195,8 @@ style pref_label:
 
 style pref_label_text:
     yalign 1.0
+    color "#f0d2df"
+    size gui.scale(18)
 
 style pref_vbox:
     xsize gui.scale(225)
@@ -1471,24 +1205,38 @@ style radio_vbox:
     spacing gui.pref_button_spacing
 
 style radio_button:
-    properties gui.button_properties("radio_button")
+    background Solid("#ffffff08")
+    hover_background Solid("#e8a9c222")
+    selected_background Solid("#e8a9c233")
+    padding (gui.scale(10), gui.scale(6))
     foreground "gui/button/radio_[prefix_]foreground.png"
 
 style radio_button_text:
     properties gui.text_properties("radio_button")
+    color "#d7dce7"
+    hover_color "#fff1e2"
+    selected_color gui.accent_color
 
 style check_vbox:
     spacing gui.pref_button_spacing
 
 style check_button:
-    properties gui.button_properties("check_button")
+    background Solid("#ffffff08")
+    hover_background Solid("#e8a9c222")
+    selected_background Solid("#e8a9c233")
+    padding (gui.scale(10), gui.scale(6))
     foreground "gui/button/check_[prefix_]foreground.png"
 
 style check_button_text:
     properties gui.text_properties("check_button")
+    color "#d7dce7"
+    hover_color "#fff1e2"
+    selected_color gui.accent_color
 
 style slider_slider:
     xsize gui.scale(350)
+    left_bar Solid(gui.accent_color)
+    right_bar Solid("#ffffff25")
 
 style slider_button:
     properties gui.button_properties("slider_button")
@@ -1601,30 +1349,7 @@ style history_label_text:
 screen help():
 
     tag menu
-
-    default device = "keyboard"
-
-    use game_menu(_("Help"), scroll="viewport"):
-
-        style_prefix "help"
-
-        vbox:
-            spacing gui.scale(15)
-
-            hbox:
-
-                textbutton _("Keyboard") action SetScreenVariable("device", "keyboard")
-                textbutton _("Mouse") action SetScreenVariable("device", "mouse")
-
-                if GamepadExists():
-                    textbutton _("Gamepad") action SetScreenVariable("device", "gamepad")
-
-            if device == "keyboard":
-                use keyboard_help
-            elif device == "mouse":
-                use mouse_help
-            elif device == "gamepad":
-                use gamepad_help
+    use phone_help
 
 
 screen keyboard_help():
@@ -1773,27 +1498,7 @@ screen confirm(message, yes_action, no_action):
 
     zorder 200
 
-    style_prefix "confirm"
-
-    add "gui/overlay/confirm.png"
-
-    frame:
-
-        vbox:
-            xalign .5
-            yalign .5
-            spacing gui.scale(30)
-
-            label _(message):
-                style "confirm_prompt"
-                xalign 0.5
-
-            hbox:
-                xalign 0.5
-                spacing gui.scale(100)
-
-                textbutton _("Yes") action yes_action
-                textbutton _("No") action no_action
+    use phone_confirm(message, yes_action, no_action)
 
     ## Right-click and escape answer "no".
     key "game_menu" action no_action
@@ -2144,7 +1849,7 @@ screen quick_menu():
 
     zorder 100
 
-    if quick_menu:
+    if quick_menu and not standalone_window_active():
 
         hbox:
             style "quick_menu"
@@ -2179,19 +1884,39 @@ style main_menu_frame:
 
 style game_menu_outer_frame:
     variant "small"
-    background "gui/phone/overlay/game_menu.png"
+    xsize config.screen_width - gui.scale(24)
+    ysize config.screen_height - gui.scale(24)
+    padding (gui.scale(12), gui.scale(12))
+    background Solid("#0a1422e8")
 
 style game_menu_navigation_frame:
     variant "small"
-    xsize gui.scale(340)
+    xsize gui.scale(180)
+    yfill True
+    padding (gui.scale(6), gui.scale(10))
 
 style game_menu_content_frame:
     variant "small"
-    top_margin 0
+    left_margin gui.scale(10)
+    right_margin gui.scale(2)
+    xfill True
+    yfill True
+    padding (gui.scale(12), gui.scale(10))
+
+style game_menu_label:
+    variant "small"
+    xpos gui.scale(205)
+    ypos gui.scale(15)
+
+style return_button:
+    variant "small"
+    xpos gui.scale(18)
+    xsize gui.scale(150)
 
 style game_menu_viewport:
     variant "small"
-    xsize gui.scale(870)
+    xfill True
+    yfill True
 
 style pref_vbox:
     variant "small"
