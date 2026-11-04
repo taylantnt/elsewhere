@@ -282,6 +282,7 @@ screen phone_links():
         if main_menu:
             use phone_row(_("New Game"), Start())
             use phone_row(_("Continue"), Continue())
+            use phone_row(_("Load Game"), ShowMenu("load"))
             use phone_row(_("Settings"), ShowMenu("preferences"))
         else:
             use phone_row(_("Resume"), Return())

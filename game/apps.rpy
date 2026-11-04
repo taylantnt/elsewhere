@@ -295,7 +295,7 @@ screen phone_app_wire_contents(selected_contact):
                 style_prefix "phone_apps"
                 scrollbars "vertical"
                 vbox:
-                    spacing gui.scale(10)
+                    spacing gui.scale(9)
 
                     fixed:
                         xfill True
@@ -306,46 +306,49 @@ screen phone_app_wire_contents(selected_contact):
                             kerning gui.scale(2)
                             color "#71808b"
                             outlines []
-                        text ("LTE" if cellular_data_active else "OFFLINE"):
-                            xalign 1.0
-                            yalign 0.5
-                            size gui.scale(11)
-                            color ("#7fe0d0" if cellular_data_active else "#75838d")
-                            outlines []
+
+                    add Solid("#243139") xysize (gui.scale(210), gui.scale(1))
 
                     for cid in contact_ids:
                         $ contact = wire_contacts[cid]
                         $ seen = wire_progress(cid)
                         button:
                             xfill True
-                            ysize gui.scale(82)
+                            ysize gui.scale(112)
                             background Solid("#141c22")
                             hover_background Solid("#1a282d")
                             action [SetVariable("phone_apps_wire_profile", cid), With(Dissolve(0.16))]
 
                             fixed:
-                                xysize (gui.scale(210), gui.scale(82))
-                                add Solid(contact["color"] + "66") xysize (gui.scale(3), gui.scale(82))
+                                xysize (gui.scale(210), gui.scale(112))
+                                add Solid(contact["color"] + "66") xysize (gui.scale(3), gui.scale(112))
                                 fixed:
-                                    xpos gui.scale(10)
+                                    xpos gui.scale(14)
                                     yalign 0.5
-                                    xysize (gui.scale(46), gui.scale(46))
-                                    use wire_avatar(cid, gui.scale(46))
+                                    xysize (gui.scale(64), gui.scale(64))
+                                    use wire_avatar(cid, gui.scale(64))
                                 vbox:
-                                    xpos gui.scale(66)
-                                    ypos gui.scale(12)
+                                    xpos gui.scale(88)
+                                    ypos gui.scale(13)
                                     spacing gui.scale(3)
                                     text contact["name"]:
-                                        size gui.scale(13)
+                                        size gui.scale(19)
                                         color "#e8eef2"
                                         outlines []
                                     text contact["handle"]:
-                                        size gui.scale(11)
+                                        size gui.scale(14)
                                         color contact["color"]
                                         outlines []
-                                    text "[seen] / [confidant_visits_total] visits":
-                                        size gui.scale(10)
-                                        color "#83909a"
+                                hbox:
+                                    xpos gui.scale(88)
+                                    ypos gui.scale(82)
+                                    spacing gui.scale(8)
+                                    use wire_meter(seen, gui.scale(4), gui.scale(8), contact["color"])
+                                    text "[seen] / [confidant_visits_total]":
+                                        size gui.scale(12)
+                                        kerning gui.scale(1)
+                                        color "#5a6a76"
+                                        yalign 0.5
                                         outlines []
     else:
         vbox:

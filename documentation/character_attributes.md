@@ -354,18 +354,27 @@ The thresholds and names are configured in one place (`init python` in
 trade-off. Totals stop at 0.0 and 15.0; feedback shows the signed amount actually
 applied. Rank thresholds are unchanged.
 
-Standard reward sizes are named; custom amounts are written on the specific
-choice that uses them:
+Use named reward sizes in story code so point changes remain consistent as the
+dialogue grows. Losses have a named counterpart; reserve raw numbers for gates,
+formatting, and calculations rather than individual dialogue rewards:
 
 | Size | Points | Used for |
 |---|---|---|
-| `small` | 0.5 | Selected dialogue answers |
-| `medium` | 1.0 | First-reading memory puzzle success; completing the first run |
-| `large` | 2.0 | Reserved for future set-piece rewards |
+| `tiny` | 0.1 | A brief first contact or small gesture |
+| `micro` | 0.2 | A short, clear answer |
+| `micro_loss` | -0.2 | A mild, intentional trade-off |
+| `nudge` | 0.3 | A thoughtful response or modest observation |
+| `small` | 0.5 | A meaningful choice or route-defining beat |
+| `medium` | 1.0 | A substantial set piece |
+| `large` | 2.0 | Reserved for later act-turning decisions |
 
 `add_attribute_points(attribute_id, amount, show)` accepts either a name or a
-raw signed number. Use named sizes for standard amounts and explicit numbers
-when a choice needs a custom reward.
+raw signed number. Prefer a named size for dialogue rewards; use explicit numbers
+for point thresholds and formulas.
+
+For the opening days, keep routine choices around 0.2–0.3 and a first-afternoon
+route closer at 0.5. A single early scene should not award a full rank by
+itself; reserve 1.0-point rewards for substantial set pieces.
 
 ### 6.4 Displaying progress
 
