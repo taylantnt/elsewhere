@@ -512,7 +512,7 @@ screen phone_app_journal_contents():
                 outlines []
 
             if _history_list:
-                for entry in reversed(_history_list):
+                for entry in _history_list:
                     vbox:
                         xfill True
                         spacing gui.scale(4)
