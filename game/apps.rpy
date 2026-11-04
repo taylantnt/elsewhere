@@ -10,14 +10,14 @@ init python:
 
     phone_apps_catalog = [
         ("messages", "Messages", True),
-        ("wire", "WIRE", False),
-        ("settings", "Settings", False),
+        ("journal", "Journal", False),
         ("camera", "Camera", True),
         ("inventory", "Inventory", False),
-        ("maps", "Maps", False),
+        ("wire", "WIRE", False),
         ("stats", "Stats", False),
-        ("journal", "Journal", False),
+        ("maps", "Maps", False),
         ("backup", "Backup", False),
+        ("settings", "Settings", False),
     ]
 
     phone_map_locations = [
