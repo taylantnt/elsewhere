@@ -270,7 +270,7 @@ screen notice_page(eyebrow, body, page):
     add Solid("#000000")
     use opening_layout(eyebrow, notice_page_motion):
         text body style "opening_body" xalign 0.5 xsize gui.scale(680)
-        use opening_footer("%s  /  Continues automatically" % page)
+        use opening_footer("%s  Continues automatically" % page)
     timer notice_page_duration action Return()
 
 screen notice_confirm(question):

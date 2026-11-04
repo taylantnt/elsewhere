@@ -305,14 +305,13 @@ screen quick_menu():
                 style "quick_menu"
 
                 textbutton _("Back") action Rollback()
-                textbutton _("History") action ShowMenu('history')
                 textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
                 textbutton _("Auto") action Preference("auto-forward", "toggle")
-                textbutton _("Save") action ShowMenu('save')
                 textbutton _("Q.Save") action QuickSave()
                 textbutton _("Q.Load") action QuickLoad()
-                textbutton _("Bag") action ShowMenu('inventory')
-                textbutton _("Attributes") action ShowMenu('attributes')
+                if wire_unlocked:
+                    textbutton _("WIRE") action Function(wire_open)
+                textbutton _("Apps") action Function(apps_open)
                 textbutton _("Settings") action ShowMenu('preferences')
 
 
@@ -1858,7 +1857,9 @@ screen quick_menu():
             textbutton _("Back") action Rollback()
             textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Auto") action Preference("auto-forward", "toggle")
-            textbutton _("Bag") action ShowMenu('inventory')
+            if wire_unlocked:
+                textbutton _("WIRE") action Function(wire_open)
+            textbutton _("Apps") action Function(apps_open)
             textbutton _("Menu") action ShowMenu()
 
 

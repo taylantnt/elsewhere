@@ -232,6 +232,8 @@ define gate_shake = Move((22, 0), (-22, 0), .18, bounce=True, repeat=True, delay
 image bg_airport = Transform("images/backgrounds/bg_airport.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_station = Transform("images/backgrounds/bg_station.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_platform = Transform("images/backgrounds/bg_platform.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_akihabara_hamada_outside = Transform("images/backgrounds/bg_akihabara_hamada_outside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_akihabara_hamada_inside = Transform("images/backgrounds/bg_akihabara_hamada_inside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 # The house and his bedroom each come in two lights: the night he arrives in, and
 # the morning he wakes up to. They are the same rooms either way, so they are named
 # by time of day rather than by room. Pick whichever matches the hour of the scene.
@@ -361,6 +363,10 @@ default after_school_hint_shown = False
 # `first_class` and read immediately afterwards; declared here so it rolls back
 # with everything else. The name is never shown to the player.
 default first_day_activity = ""
+
+# The haiku lesson is the first topic the player is asked to study deliberately.
+# Keep their chosen approach in save data so a later exam can acknowledge it.
+default haiku_study_method = ""
 
 # True once the river run has happened once. The run is not a confidant slot in
 # locations.rpy yet, so this is the only thing that records it for now.
@@ -1043,6 +1049,7 @@ define veteran = Character("Veteran Assistant", callback=type_sound, image="vete
 # was coming before he arrived. Both of those are the point of their scenes.
 define professor = Character("Professor", color="#c9c4b0", callback=type_sound, image="professor")
 define clerk = Character("Student Relations", color="#b8c6bd", callback=type_sound, image="clerk")
+define hamada_staff = Character("Yamada", color="#b6d2e8", callback=type_sound, image="hamada_staff")
 
 # --- PORTRAITS ---
 # The picture in the left gutter belongs to whoever is talking. Two things are
@@ -1130,6 +1137,7 @@ image side taxi_driver = At(Transform("images/characters/taxidriver.png", xysize
 
 # The professor already has a portrait on disk, so he uses it.
 image side professor = At(Transform("images/characters/teacher.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side hamada_staff = At(Transform("images/characters/hamadadenki.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
 # The two people whose stories the first free afternoon can open: the ramen chef
 # near home, and Sim, who runs the photography club, Circle. Both portraits are already
@@ -1177,7 +1185,7 @@ transform standing:
 init python:
     for _standing_tag in (
         "assistant", "veteran", "security", "security2", "mother", "father",
-        "sister", "taxi_driver", "professor", "chef", "sim",
+        "sister", "taxi_driver", "professor", "hamada_staff", "chef", "sim",
         "clerk", "timid_man", "cheerful_woman",
     ):
         renpy.image(_standing_tag + "_standing", At("side " + _standing_tag, standing))
@@ -1728,7 +1736,7 @@ label prologue:
         linear 0.1 alpha 0.3
         linear 0.1 alpha 0.0
     
-    "Initiating..."
+    "Syncing..."
     
     "I should focus on what's ahead."
     "A door, and a family I have only ever seen in photographs."
@@ -2537,10 +2545,10 @@ label home_arrival:
     mother "Sorry about the stairs. And the boxes. I should have brought them up earlier."
     menu:
         "You've already done a lot for me.":
-            mc "You've already done a lot for me. Let me do this bit."
-            mother "Well. If you're sure. I've been fussing over that room all week."
             # Acknowledging her effort rather than dismissing her worry.
             $ reward_attributes_once("answer_boxes_reassure", [("grace", 0.3)], show="auto")
+            mc "You've already done a lot for me. Let me do this bit."
+            mother "Well. If you're sure. I've been fussing over that room all week."
         "Which ones go upstairs?":
             mc "All of these, or just the clothes?"
             mother "All three. The books are in the bottom one. Careful with that."
@@ -2986,7 +2994,7 @@ label dream_sequence:
         alpha 0.0
         linear 0.1 alpha 0.45
         linear 0.1 alpha 0.0
-    "Keep the room at eighteen. He dreams less when it's cold."
+    "Keep the pod at eighteen."
 
     show screen dream_static
     pause 0.6
@@ -3021,7 +3029,7 @@ label dream_sequence:
         linear 0.08 alpha 0.6
         linear 0.08 alpha 0.0
     "Six hours. He has been under six hours."
-    "Let him finish the day. The consolidation needs the whole day."
+    "Let him finish the day."
 
     scene black with Dissolve(0.6)
     "And then the pieces of today come loose and scatter."
@@ -3192,20 +3200,20 @@ label morning_call:
     hikari "I told them today. No pressure."
     menu:
         "What have you told them about me?":
+            $ reward_attributes_once("answer_breakfast_questions", [("nerve", -0.3)], show="auto")
             mc "What have you told them about me?"
             hikari "That you're in our department and you ask a lot of questions."
             mc "Accurate, unfortunately."
-            $ reward_attributes_once("answer_breakfast_questions", [("nerve", -0.3)], show="auto")
             $ remember("hikari", "asked what the department knew about him")
         "Should I introduce myself today?":
             mc "Should I introduce myself, or wait until I'm less jet-lagged?"
             hikari "Today. Nobody remembers introductions anyway. It's a free practice run."
             $ remember("hikari", "asked about meeting the other students")
         "Thank you for the emails.":
+            $ reward_attributes_once("answer_breakfast_emails", [("grace", "small")], show="auto")
             mc "I never properly thanked you for the emails. You made this a lot less frightening."
             hikari "You did thank me. Several times."
             hikari "But you're welcome."
-            $ reward_attributes_once("answer_breakfast_emails", [("grace", "small")], show="auto")
             $ remember("hikari", "thanked her for the emails")
 
     # Tetsuo's one piece of advice for the year, and it is also the thesis of his
@@ -3463,9 +3471,9 @@ label campus_grounds:
             hikari "The grey one behind the trees. I'll take you there."
             $ remember("hikari", "asked which building belonged to their department")
         "These buildings are different ages.":
+            $ reward_attributes_once("answer_courtyard_buildings", [("insight", 0.2)], show="auto")
             mc "Stone, glass, concrete. Was this built in stages?"
             hikari "Yes. The gym was here first. They kept adding things around it."
-            $ reward_attributes_once("answer_courtyard_buildings", [("insight", 0.2)], show="auto")
             $ remember("hikari", "noticed the campus had been built in stages")
         "Let's keep moving.":
             mc "I'll look around later. I don't want to make us late."
@@ -3684,7 +3692,7 @@ label first_class:
     mc "You're not coming?"
     hikari "It's you he wants. I'll be by the door."
     show sister_standing
-    hide sister_standing with Dissolve(3.0)
+    hide sister_standing with Dissolve(2.0)
     
 
     "I walk to the front. It is a long walk, and the room empties around me the whole way, and it is emptier when I get there."
@@ -3712,7 +3720,7 @@ label first_class:
             professor "..."
             professor "Bring me the registration slip. If the appointment overlapped my class, I will review it."
             mc "Thank you. I'll bring it tomorrow."
-            $ reward_attributes_once("answer_clock_ask", [("nerve", 0.3)], show="auto")
+            $ reward_attributes_once("answer_clock_ask", [("grace", -0.2)], show="auto")
             $ remember("professor", "asked him to review the registration delay")
 
     professor "Coming on time is late."
@@ -3753,9 +3761,9 @@ label first_class:
     hikari "I should have told you where to go before I ran off. I'm sorry."
     menu:
         "Next time, warn me before you go.":
+            $ reward_attributes_once("answer_hikari_warning", [("nerve", 0.5), ("grace", -0.5)], show="auto")
             mc "Next time, warn me before you go. I can't follow a route I don't know."
             hikari "Fair. I will."
-            $ reward_attributes_once("answer_hikari_warning", [("nerve", 0.5), ("grace", -0.5)], show="auto")
             $ remember("hikari", "asked her not to leave without warning")
         "Thanks for saving me a seat.":
             mc "Thanks for saving me a seat, at least."
@@ -3880,6 +3888,7 @@ label after_school_walk_alone:
     "I put a thousand yen on the counter. He does not look at it."
     "He pushes it back with one finger and grunts at the empty space in front of the seat, which I take to mean afterwards."
 
+    voice "audio/VO/welcome.wav"
     chef "いらっしゃい。"
     mc "(I know that one. Every shop in this country says it when a person walks in. It means welcome, and it means get on with it.)"
 
@@ -4022,7 +4031,7 @@ label after_school_walk_alone:
     father "You still have school tomorrow."
     show father_standing
     mc "*I nod with my head.* (He goes to bed.)"
-    hide father_standing with dissolve
+    hide father_standing with Dissolve(2.0)
     mc "Sorry Hikari, I should have listened and come home with you."
     mc "But on the bright side, I found this ramen place with a red lantern over the door."
     mc "Four seats. One man. He gave me a bowl I didn't order, and it was the best thing I've eaten here."
@@ -4067,31 +4076,32 @@ label after_school_run:
             mc "Have you lived on this street your whole life?"
             hikari "Since primary school. Mom still calls the bakery by its old name."
             $ reward_attributes_once("answer_run_history", [("insight", 0.3)], show="auto")
-        "Which turning is ours?":
-            mc "Which turning is ours? The one after the bakery?"
+        "Which turn is ours?":
+            mc "Which turn is ours? The one after the bakery?"
             hikari "Yes. Then straight until you see the blue gate."
 
     "We get to the house and she does not go in."
-    "She walks past it, to the corner, and stops, and starts doing something to her shoes."
     mc "(She is not going inside.)"
-    hikari "Don't go in yet. If you sit down now you won't get back up. I've known you a day and that's already your method."
-    hikari "I'm going out again. Same as every day."
+    hikari "Would you like to go for a run?"
+    hikari "I'm running after this. You can come if you want."
 
     menu:
         "Out where?":
             mc "Out where?"
             hikari "The river. Two or three times a week, except the weeks it's five. Tonight counts."
-        "Is this your usual running route?":
-            mc "Do you always go out from here?"
-            hikari "Usually. It saves me putting my shoes back on."
         "Can I come?":
             mc "Can I come?"
             hikari "..."
+            hikari "Yes. You can come."
             $ reward_attributes_once("answer_run_join", [("nerve", 0.2)], show="auto")
+        "I don't run.":
+            $ reward_attributes_once("answer_run_reject", [("grace", -0.3)], show="auto")
+            mc "I'm tired."
+            hikari "Then you can walk. I don't care. Just come."
 
-    hikari "You can come. Go and change into something you can move in."
-    mc "You're serious."
-    hikari "I'm waiting outside. Don't take an hour."
+    hikari "Go and change into something you can move in."
+    mc "Oh? You're serious."
+    hikari "I'm going to change as well. Let's meet in the front yard. Don't take an hour."
 
     window hide
     scene black with Dissolve(1.5)
@@ -4118,6 +4128,7 @@ label after_school_run:
     "She sets a pace and then forgets me for about ten minutes, which I have decided was the test."
 
     scene bg_river with walk_fade
+    play music "audio/Music/(shibuya night?) rain_at_the_crossing.mp3" fadein 2.0
 
     "The path along the water goes further than I can see. A fence, a row of trees."
     "Every few hundred metres, a vending machine lit like an aquarium."
@@ -4393,7 +4404,9 @@ label after_school_photo_club:
     sim "Everybody posts what they shot that week. We share ideas between meetings too."
     mc "Should I post the ones I took today?"
     sim "(grinning) Please do. We'd love to see them."
-    "He opens the group invitation and hands the phone back. I type my name and join."
+    "He opens the group invitation and hands the phone back. I type my name, and WIRE saves the invitation."
+    mc "I can't see the posts yet."
+    sim "Not without a signal. They will be there when you get connected."
     $ wire_unlock("sim")
 
     "By the time I leave, the windows have gone dark. Sim walks me to the door and writes the next meeting time on a spare flyer."
@@ -4445,6 +4458,201 @@ label after_school_photo_club:
 ## in the dark. One label for all three, because the shape of the ending belongs
 ## to the day rather than to the place he ended it.
 
+init python:
+    def build_first_day_memory_deck(activity):
+        common = [
+            ("station", "The morning platform", "bg_station", "#76c6d9"),
+            ("student_id", "A new student card", "images/ui/student_card.png", "#a9c8a4"),
+            ("lecture", "The first lecture", "bg_lecture_hall", "#d4b77a"),
+            ("home", "The house at night", "bg_home_exterior_night", "#8d9db9"),
+        ]
+
+        if activity == "walk_alone":
+            route = [
+                ("alley", "The wrong turn", "bg_alley", "#c07c56"),
+                ("ramen_shop", "The red-lantern shop", "bg_ramen_shop", "#e38c55"),
+                ("ramen_bowl", "The bowl I finished", "bg_ramen", "#d1a353"),
+                ("chef", "The card on the counter", "images/characters/chef.png", "#b59a79"),
+            ]
+        elif activity == "walk_hikari":
+            route = [
+                ("river", "The river path", "bg_river", "#65aeb1"),
+                ("running", "Hikari at a run", "images/characters/sister_run.png", "#df8ea5"),
+                ("kitchen", "The kitchen light", "images/backgrounds/bg_kitchen_night.png", "#e8c686"),
+                ("home_wait", "Someone waiting at home", "images/backgrounds/bg_home_inside_night.png", "#8d9db9"),
+            ]
+        else:
+            route = [
+                ("club", "The room called Circle", "bg_photo_club", "#67b8d0"),
+                ("sim", "Sim at the door", "images/characters/sim.png", "#86c2d4"),
+                ("campus", "The campus corridor", "bg_campus_interior", "#9aa9bd"),
+                ("club_hall", "The club's hallway", "bg_department_hall", "#b4a68d"),
+            ]
+
+        cards = []
+        for pair_id, title, art, accent in common + route:
+            for copy in range(2):
+                cards.append({
+                    "pair": pair_id,
+                    "title": title,
+                    "art": art,
+                    "accent": accent,
+                })
+
+        return cards
+
+
+screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False):
+    modal True
+    zorder 100
+    default first_selection = None
+    default previewing = preview
+
+    add Solid("#070b11")
+    add Solid("#101923") xysize (config.screen_width, 1) ypos 118
+
+    vbox:
+        xalign 0.5
+        ypos 20
+        spacing 5
+
+        text "FIRST NIGHT / MEMORY":
+            xalign 0.5
+            size 11
+            kerning 3
+            color "#8193a5"
+            outlines []
+
+        text "KEEP THE DAY TOGETHER":
+            xalign 0.5
+            size 28
+            kerning 2
+            color "#c5e0e8"
+            outlines []
+
+        text "Study the revealed board, then find all eight pairs before the third mismatch.":
+            xalign 0.5
+            size 15
+            color "#a7b5c1"
+            outlines []
+
+    hbox:
+        xalign 0.5
+        ypos 103
+        spacing 22
+
+        text "PAIRS [len(matched) // 2] / 8":
+            size 12
+            kerning 2
+            color "#7fc8bd"
+            outlines []
+
+        text "MISMATCHES":
+            size 12
+            kerning 2
+            color "#8193a5"
+            outlines []
+
+        for mark in range(3):
+            add Solid("#df8e8e" if mark < misses else "#27313b") xysize (28, 4) yalign 0.5
+
+        text "[misses] / 3":
+            size 12
+            color "#c6d0d7"
+            outlines []
+
+    grid 4 4:
+        xalign 0.5
+        ypos 139
+        spacing 11
+
+        for i in range(len(cards)):
+            $ face_up = previewing or i in matched or i == first_selection or (reveal_pair and i in reveal_pair)
+
+            button:
+                xysize (222, 112)
+                background Solid("#111a24")
+                hover_background Solid("#1b2936")
+                sensitive (not previewing and not reveal_pair and i not in matched and i != first_selection)
+
+                if first_selection is None:
+                    action [
+                        Play("sfx", "audio/SFX/type_click.wav"),
+                        SetScreenVariable("first_selection", i),
+                    ]
+                else:
+                    action [
+                        Play("sfx", "audio/SFX/type_click.wav"),
+                        Return((first_selection, i)),
+                    ]
+
+                fixed:
+                    xysize (222, 112)
+
+                    if face_up:
+                        add Transform(cards[i]["art"], xysize=(222, 112), fit="cover")
+                        add Solid("#071018c8") ypos 77 xysize (222, 35)
+                        add Solid(cards[i]["accent"]) xysize (4, 112)
+
+                        text cards[i]["title"]:
+                            xpos 14
+                            ypos 84
+                            xmaximum 194
+                            size 13
+                            color "#f0f3f4"
+                            outlines [(1, "#071018", 0, 0)]
+
+                        if i in matched:
+                            text "REMEMBERED":
+                                xpos 12
+                                ypos 8
+                                size 8
+                                kerning 1
+                                color "#d7f0e5"
+                                outlines [(1, "#071018", 0, 0)]
+                    else:
+                        add Solid("#17232e")
+                        add Solid("#2b3c49") xysize (222, 1)
+                        add Solid("#7fc8bd") xysize (3, 112)
+
+                        text "ELSEWHERE":
+                            xalign 0.5
+                            yalign 0.43
+                            size 15
+                            kerning 3
+                            color "#b9d1d8"
+                            outlines []
+
+                        text "DAY 01  /  MEMORY":
+                            xalign 0.5
+                            yalign 0.73
+                            size 8
+                            kerning 2
+                            color "#647b8a"
+                            outlines []
+
+    if previewing:
+        timer 6.0 action SetScreenVariable("previewing", False)
+    elif reveal_pair:
+        timer 0.85 action Return(None)
+
+    hbox:
+        xalign 0.5
+        ypos 638
+        spacing 12
+
+        text ("MEMORIZE THE BOARD" if previewing else "MATCH THE MOMENTS"):
+            size 10
+            kerning 2
+            color "#7b8b98"
+            outlines []
+
+        text ("The cards will turn over in a few seconds." if previewing else "The day is already starting to blur."):
+            size 12
+            color "#a7b5c1"
+            outlines []
+
+
 label end_of_first_day:
 
     scene bg_room_night with stair_fade
@@ -4470,20 +4678,288 @@ label end_of_first_day:
         mc "(There are prints on that wall with marker on them. Somebody was angry about a photograph. That is the whole club.)"
 
     mc "(Yesterday I got off a plane without knowing one word of the language.)"
-    mc "(The student card is still in my pocket. I put it beside the bag so I won't forget it.)"
-    mc "(I wonder if every day here is going to be like this.)"
-    mc "(Full of new things, and surprises, and people who turn out to be nothing like the first thing you thought.)"
+    mc "(Today I found a place, or a person, or a room I would not have found if I had stayed home.)"
 
-    "I lie back and look at a ceiling I have now looked at twice."
-    "Out in the street somebody wheels a bicycle past, and then there is nothing at all."
-    mc "(I should set an alarm.)"
-    "I do not remember deciding to close my eyes."
-    "They are heavier than they were a minute ago, and the lamp is further away than it was, and the day carries on without me."
-    "Tomorrow there is a class at five minutes to nine, and nothing else written anywhere."
+    "I sit on the edge of the bed and check WIRE once more."
+    if first_day_activity == "walk_alone":
+        mc "(The chef's hours are here. The rest of the app still has nothing to show me.)"
+    elif first_day_activity == "walk_hikari":
+        mc "(Hikari's name is here. I can see the profile, but not send anything.)"
+    else:
+        mc "(Sim's invitation is saved. The group is still waiting for a connection.)"
+
+    "The contact record is on the phone. The rest of WIRE is still out of reach."
+    "A knock comes at the door, and Hikari opens it before I can answer."
+    show sister_standing with dissolve
+    hikari "You're still up."
+    mc "I was looking at WIRE. The profile is there, but I can't message anyone or see the group."
+    hikari "Right. The records stay on the phone. Everything new needs data."
+    mc "I thought it was supposed to be on the phone already."
+    hikari "The app is. The connection isn't."
+    "She leans against the doorframe, the practical part of her already making a list."
+    hikari "Tomorrow after school, we'll go to Akihabara and get you a plan."
+    hikari "You already have a phone."
+    hikari "We just need a sensible student plan, not a new handset and twelve things you don't need."
+    mc "You know how to do that?"
+    hikari "I know how to say no when somebody tries to sell us something extra."
+    mc "That sounds useful."
+    hikari "It is. Get some sleep. I'll come get you in the morning."
+    hide sister_standing with dissolve
+
+    "I put the phone beside my student card and turn off the lamp."
     mc "(Five minutes early. Notebook open. Pen out.)"
-    "I mean to think about that. I am asleep before I start."
-
+    "The day starts to break apart behind my eyes: the platform, the classroom, the place I chose."
+    "I try to hold on to the order they came in."
     window hide
     scene black with Dissolve(2.5)
     stop music fadeout 2.0
+    call first_night_memory
+    jump second_morning
+
+
+label first_night_memory:
+    play music "audio/Music/dream sequence.wav" fadein 2.0
+    $ day_memory_cards = build_first_day_memory_deck(first_day_activity)
+    $ renpy.random.shuffle(day_memory_cards)
+    $ day_memory_matched = []
+    $ day_memory_misses = 0
+    $ day_memory_preview = True
+
+    while len(day_memory_matched) < len(day_memory_cards) and day_memory_misses < 3:
+        call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, None, day_memory_preview)
+        $ day_memory_preview = False
+        $ selected_pair = _return
+
+        if day_memory_cards[selected_pair[0]]["pair"] == day_memory_cards[selected_pair[1]]["pair"]:
+            $ day_memory_matched.extend(selected_pair)
+        else:
+            $ day_memory_misses += 1
+            call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, selected_pair, False)
+
+    if len(day_memory_matched) == len(day_memory_cards):
+        "The last two pictures settle into place. For a moment, the whole day makes sense in order."
+        $ reward_attributes_once("first_night_memory_pairs", [("insight", 0.3)], show="auto")
+    else:
+        "Three wrong pairs, and the day slips out of order again."
+
+    stop music fadeout 2.0
+    return
+
+
+label second_morning:
+    scene bg_room_day with Dissolve(1.5)
+    $ room_ambient(False)
+
+    "I wake before the alarm, with the dream still caught in the back of my mind."
+    mc "(The station was there again. This time the signs had no words on them.)"
+    mc "(I knew where the train was going anyway. I just couldn't remember how.)"
+    "The dreams are getting stranger. I try to make a list of what they have in common, and the list keeps changing."
+    "A knock taps twice against the door."
+    hikari "You awake? Breakfast. Dad's already asking questions."
+    mc "About me?"
+    hikari "About everything. Get dressed."
+    "She waits just long enough to make sure I heard, then disappears down the stairs."
+
+    scene bg_kitchen with walk_fade
+
+    "The kitchen is bright with morning. Mother has set rice, miso soup, and grilled fish on the table."
+    mother "Eat while it's warm. You have a full day."
+    mc "Thank you. It smells great."
+    father "How was your first day?"
+    hikari "And don't start with the clock again."
+    father "I was asking about the day."
+    mc "A little confusing. I was late to class, but I found somewhere to go after school."
+
+    if first_day_activity == "walk_alone":
+        mc "I got lost and found a ramen shop. The chef gave me his WIRE contact."
+        father "You got lost and made a contact. That is one way to do it."
+    elif first_day_activity == "walk_hikari":
+        mc "Hikari showed me the river path. I added her on WIRE."
+        hikari "He kept up for most of it."
+        mc "That is not what happened."
+    else:
+        mc "I went to the photography club. Sim invited me to their group."
+        father "A club already. You have been here one day."
+
+    father "WIRE. What is that?"
+    mc "It's an app for contacts and groups. I can see the profiles, but the messages and group posts won't load without an internet connection."
+    father "I haven't kept up with every new app. You mean the phone has no data?"
+    hikari "He only has Wi-Fi. Outside the house, the app can't sync."
+    father "Then get a proper plan. Just don't let the shop put you on a plan with extras you don't need."
+    hikari "We won't. I'll take him to Akihabara after school."
+    father "Read the monthly cost. Read the contract. If it says free, find out when it stops being free."
+    hikari "I know, Dad."
+    mother "He is helping, in his own way."
+    father "I am helping."
+    mc "(They have the same conversation every morning. I think that is how I know I am starting to belong here.)"
+
+    mother "There's more fish if you're still hungry."
+    hikari "We should leave soon. Today we are not going to run for the train."
+    mc "I thought the proper way was the long way."
+    hikari "It is. We can be early on the proper way."
+    "I finish breakfast, pack my notebook, and make sure the student card is still in my bag."
+
+    jump second_school_day
+
+
+label second_school_day:
+    scene bg_home_exterior_day with walk_fade
+    play music "audio/Music/(shibuya morning) scramble_hour.mp3" fadein 2.0
+
+    "The route feels less like a test today. I recognize the corner shop and the station entrance."
+    hikari "Tell me which platform we should take."
+
+    menu:
+        "The one on the left.":
+            mc  "The one on the left. Local train, not the rapid."
+            hikari "Good. You were listening yesterday."
+            $ reward_attributes_once("answer_left", [("insight", 0.3)], show="auto")
+        "The one on the right.":
+            $ reward_attributes_once("answer_right", [("insight", -0.2)], show="auto")
+            mc  "The one on the right. Rapid train, not the local."
+            hikari "What? You were listening to anything I said yesterday?"
+            hikari "Anyways let's get to the platform. We can talk on the train."
+
+    "On the train she tells me which parts of Akihabara are older than the signs make them look, and which streets fill up before lunch."
+    hikari "It is easier to get around when you know what you are looking for."
+    mc "And if I don't?"
+    hikari "Then you look around until something answers."
+
+    scene black with Fade(1.0, 0.3, 0.0)
+    stop music fadeout 1.0
+    "The underground train carries us across the city."
+    "By the time we come up near campus, the morning has found its pace."
+
+    scene bg_school_gate with Fade(0.0, 0.0, 1.5)
+    play music "audio/Music/school.mp3" fadein 1.5
+
+    "We reach the gate with enough time to walk instead of hurry."
+    hikari "Look at that. A whole morning without sprinting."
+    mc "I am learning."
+    hikari "Don't get used to the praise."
+
+    scene bg_department_hall with walk_fade
+    "The corridor is busier than yesterday. I find the lecture room before the bell."
+    "At five minutes to nine, my notebook is open and my pen is ready."
+
+    scene bg_lecture_hall with walk_fade
+    professor "You are early today."
+    mc "I remembered what you said."
+    professor "Good. Then remember this as well. Today we begin with haiku."
+    "He writes three short lines on the board, then circles a single word."
+    professor "A haiku is often taught as five, seven, five. In Japanese, those are mora, not English syllables."
+    professor "For today's lesson, remember the kigo: the seasonal word. It places the poem in a time of year, even when the poem never names that season directly."
+    "He reads an example aloud. A frog, an old pond, the sound of water."
+    "The room is still for a moment after he finishes."
+    professor "The small detail is not decoration. It is the door into the whole poem."
+    mc "(A season hidden inside one word. I write it in the margin.)"
+    professor "You will see this again. Pay attention to what the word is doing, not only to how many syllables you can count."
+
+    menu:
+        "Take careful notes on the kigo.":
+            $ haiku_study_method = "notes"
+            mc "(I write: kigo = seasonal word; notice what it implies.)"
+            $ reward_attributes_once("haiku_lesson_notes", [("grace", 0.3)], show="auto")
+        "Listen closely to the example.":
+            $ haiku_study_method = "listening"
+            mc "(I set the pen down and listen to the poem again, looking for the season in the image.)"
+            $ reward_attributes_once("haiku_lesson_listen", [("insight", 0.3)], show="auto")
+        "Look up more examples online after class.":
+            $ haiku_study_method = "research"
+            mc "(I mark the word and make a note to compare a few translations later.)"
+            $ reward_attributes_once("haiku_lesson_research", [("nerve", 0.3)], show="auto")
+
+    "The bell rings. The professor closes his book, and the room breaks into conversation."
+    hikari "You made it through a whole lecture on time."
+    mc "I even wrote something down."
+    hikari "Then let's not waste the rest of the day. Akihabara."
+    mc "Now?"
+    hikari "Now. The shop is less crowded before everyone gets out of work."
+
+    scene black with Fade(1.5, 0.4, 0.0)
+    stop music fadeout 1.0
+    "We take the underground train. The stations pass in a bright sequence of names, transfers, and doors."
+    "When we come back above ground, Akihabara is already louder than the train."
+
+    scene bg_akihabara_hamada_outside with Fade(0.0, 0.0, 1.8)
+    "Hamada Denki rises over the intersection, floor after floor of glass and red signs."
+    hikari "Eight floors. Cosmetics, refrigerators, cameras, console games, and parts for things I've never heard of."
+    hikari "If you need to buy something and don't know where to start, this is usually the place."
+    mc "And today?"
+    hikari "A cellular plan. You already have a phone; we do not need to buy you another one."
+    hikari "Stay close, and let me do most of the talking. If they ask you something, answer honestly. If they offer an extra, wait until we know what it costs."
+    mc "Understood."
+    hikari "Good. Let's go."
+
+    scene bg_akihabara_hamada_inside with walk_fade
+    stop music fadeout 1.0
+    play music "audio/Music/hamadadenki.mp3" fadein 1.5
+
+    "The entrance opens onto a bright floor that seems to run all the way to the ceiling."
+    "Displays rise above the counters. A sign points up to cameras, games, appliances, audio, and mobile service."
+    mc "(The outside looked enormous. From in here it looks like the outside was only the first room.)"
+    hikari "Phones and service are on this floor. We're not shopping for a handset."
+    "A staff member with a tablet approaches us."
+    hamada_staff "Welcome to Hamada Denki. Are you looking for a phone today?"
+    hikari "Not a phone. He needs a cellular plan for a device he already owns."
+    hamada_staff "Of course. Is this your first plan in Japan?"
+    mc "Yes. I mostly need maps, messages, and the university group."
+    hamada_staff "Then let's compare the student plans before we add anything."
+
+    menu:
+        "A modest plan for maps and messages sounds right.":
+            mc "I mostly need maps and messages. A modest plan sounds right."
+            hamada_staff "Then we can start with the student plan and check whether its data allowance fits."
+            $ reward_attributes_once("cellular_plan_modest", [("insight", 0.2)], show="auto")
+        "I would rather have enough data not to worry about every search.":
+            mc "I would rather have enough data not to worry about every search."
+            hamada_staff "We can compare the next tier too, and look at the monthly difference before you decide."
+            $ reward_attributes_once("cellular_plan_usage", [("nerve", 0.2)], show="auto")
+        "Could we see the lowest student rate first?":
+            mc "Could we see the lowest student rate first?"
+            hamada_staff "Certainly. Your student ID may qualify you for the student discount."
+            $ reward_attributes_once("cellular_plan_student_rate", [("grace", 0.2)], show="auto")
+
+    hamada_staff "May I see your student ID?"
+    "I take the card from my wallet and pass it across the counter."
+    hamada_staff "Thank you. This confirms your student discount. The account details you already registered will verify the line."
+    hikari "And this plan is only the monthly data and calls? No handset payment?"
+    hamada_staff "Correct. The phone is yours already. The student plan has a monthly fee; calls are charged only if you use them."
+    hikari "Good. And what are these add-ons?"
+    "He turns the tablet so we can see a list: device insurance, a video service, and extra cloud storage."
+    hamada_staff "All optional. None is needed to activate the line."
+
+    menu:
+        "No add-ons. Show us the full monthly total.":
+            mc "We don't need those. Could you show us the full monthly total before we sign?"
+            hikari "Exactly."
+            $ reward_attributes_once("cellular_plan_total", [("insight", 0.2)], show="auto")
+        "Let's keep it to the student plan and nothing else.":
+            mc "Let's keep it to the student plan and nothing else, please."
+            hikari "The basic plan is enough for now."
+            $ reward_attributes_once("cellular_plan_basic", [("grace", 0.2)], show="auto")
+        "No extras, thanks.":
+            mc "No extras, thanks."
+            hamada_staff "Understood. I'll leave every optional service unchecked."
+            $ reward_attributes_once("cellular_plan_decline_extras", [("nerve", 0.2)], show="auto")
+
+    "Yamada walks us through the monthly fee, the first partial bill, and the cancellation terms."
+    "Hikari reads the summary twice. I read it once, then again where she points."
+    hikari "No handset, no streaming service, no insurance. Just the plan we agreed on."
+    mc "I understand."
+    "I sign the form on the tablet. Yamada fits a SIM card into the phone and waits for the network to register."
+    hamada_staff "There. The line is active. You should see the signal now."
+    $ cellular_data_active = True
+    call screen cellular_connection_phone
+    "At the top of the screen, the empty signal indicator fills with bars."
+    hikari "Open WIRE."
+    "The app opens. The contact is still there; this time, the connection is too."
+    call screen wire_app
+    hikari "There. Now you can message the group and check the map without waiting for Wi-Fi."
+    mc "And I can finally tell someone if I get lost."
+    hikari "Let's not make that the first thing you test."
+
+    stop music fadeout 2.0
+    scene black with Dissolve(2.0)
+    "We take the train home with a working phone, a new word in my notebook, and a day that feels less like a list of firsts."
     return

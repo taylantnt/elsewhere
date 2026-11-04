@@ -11,6 +11,7 @@
 ##   * the story decides who he meets and when, and calls wire_unlock();
 ##   * wire_unlock() is the only thing that ever writes to wire_unlocked, so a
 ##     contact cannot be added twice and the app can never open for nothing;
+##   * wire_open() is how menus and the quick shortcut reopen the app later;
 ##   * the screen only reads. It never touches a visit count.
 ##
 ## It reads those counts from where they already live. A contact whose id is in
@@ -82,6 +83,9 @@ define wire_contacts = {
 ## Who is in the phone. Only wire_unlock() writes to this list.
 default wire_unlocked = []
 
+## Local contact records remain available offline; syncing needs mobile data.
+default cellular_data_active = False
+
 ## False until the app has been explained once, the same way every other system
 ## in the game earns its one explanation and then never repeats it.
 default wire_hint_shown = False
@@ -152,11 +156,25 @@ init python:
         renpy.call_screen("wire_app", new=contact_id)
         return True
 
+    def wire_open():
+        """Reopen WIRE from a menu or shortcut. Quiet if the list is still empty."""
+        if not store.wire_unlocked:
+            return
+        # A new context keeps the quick menu from eating the dialogue underneath.
+        renpy.call_in_new_context("_wire_open")
+
+
+# Private entry point for wire_open(). Kept as a label so call screen can Return
+# cleanly without the shortcut needing to know how the phone dismisses itself.
+label _wire_open:
+    call screen wire_app
+    return
+
 
 # The one and only explanation of what the phone is for. It says what a name on
 # the list means and stops there: what the player can do with the list is not
 # decided yet, and a card that promises a mechanic would be lying.
-define hint_text_wire = "WIRE keeps a record of the people you get to know.\n\nSelect a contact to see your visits and the moments they remember. New contacts appear as you meet them.\n\nWIRE works offline. The records are stored on your phone."
+define hint_text_wire = "WIRE keeps local records of the people you get to know. Select a contact to see your visits and the moments they remember.\n\nProfiles stay on your phone, but messages, group posts, and updates need an internet connection. Without a data plan, WIRE cannot sync when you are away from Wi-Fi."
 
 
 ################################################################################
@@ -497,14 +515,24 @@ screen wire_app(new=None):
                 color "#75838d"
                 outlines []
 
-            text "NO SIGNAL":
-                xpos gui.scale(wire_screen_w - 16)
-                xanchor 1.0
-                ypos gui.scale(5)
-                size gui.scale(9)
-                kerning gui.scale(1)
-                color "#596872"
-                outlines []
+            if cellular_data_active:
+                text "HAMADA LTE":
+                    xpos gui.scale(wire_screen_w - 16)
+                    xanchor 1.0
+                    ypos gui.scale(5)
+                    size gui.scale(9)
+                    kerning gui.scale(1)
+                    color "#7fe0d0"
+                    outlines []
+            else:
+                text "NO SIGNAL":
+                    xpos gui.scale(wire_screen_w - 16)
+                    xanchor 1.0
+                    ypos gui.scale(5)
+                    size gui.scale(9)
+                    kerning gui.scale(1)
+                    color "#596872"
+                    outlines []
 
             if selected:
 
@@ -540,7 +568,7 @@ screen wire_app(new=None):
                         ypos gui.scale(10)
                         xysize (gui.scale(6), gui.scale(6))
                         at wire_live_dot
-                        add Solid("#7fe0d0", xysize=(gui.scale(6), gui.scale(6)))
+                        add Solid("#7fe0d0" if cellular_data_active else "#75838d", xysize=(gui.scale(6), gui.scale(6)))
 
                     text "WIRE":
                         xpos gui.scale(14)
@@ -562,11 +590,21 @@ screen wire_app(new=None):
 
                         add Solid("#18232a")
 
-                        text "OFFLINE":
-                            xalign 0.5
-                            ypos gui.scale(3)
-                            style "wire_status"
-                            color "#8998a2"
+                        if cellular_data_active:
+                            for bar in range(4):
+                                add Solid("#7fe0d0") xpos gui.scale(8 + bar * 5) ypos gui.scale(15 - bar * 3) xysize (gui.scale(3), gui.scale(5 + bar * 3))
+
+                            text "LTE":
+                                xpos gui.scale(34)
+                                ypos gui.scale(3)
+                                style "wire_status"
+                                color "#7fe0d0"
+                        else:
+                            text "OFFLINE":
+                                xalign 0.5
+                                ypos gui.scale(3)
+                                style "wire_status"
+                                color "#8998a2"
 
                 add Solid("#243139") xysize (gui.scale(wire_screen_w - 32), 1) xpos gui.scale(16) ypos gui.scale(110)
 
@@ -596,11 +634,11 @@ screen wire_app(new=None):
                 # --- footer ---
                 add Solid("#243139") xysize (gui.scale(wire_screen_w - 32), 1) xpos gui.scale(16) ypos gui.scale(wire_screen_h - 92)
 
-                text "SAVED ON DEVICE":
+                text ("SYNCED / SAVED ON DEVICE" if cellular_data_active else "SAVED ON DEVICE"):
                     xpos gui.scale(16)
                     ypos gui.scale(wire_screen_h - 73)
                     style "wire_status"
-                    color "#596872"
+                    color ("#7fa99f" if cellular_data_active else "#596872")
 
                 textbutton "PUT IT AWAY" action SetScreenVariable("hiding", True) style "wire_button" sensitive (not hiding):
                     xalign 1.0

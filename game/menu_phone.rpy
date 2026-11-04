@@ -99,11 +99,14 @@ transform phone_lower(closed_at, initial_offset):
 transform phone_sleep(closed_at, initial_alpha):
     function renpy.curry(menu_phone_dimming)(closed_at=closed_at, initial_alpha=initial_alpha)
 
-screen phone_hardware(animate=False, raised_at=0.0, closing=False):
+screen phone_hardware(animate=False, raised_at=0.0, closing=False, closing_at=None, close_offset=None, close_alpha=None):
     fixed:
         xysize (config.screen_width, config.screen_height)
         if closing:
-            at phone_lower(menu_phone_closed_at, menu_phone_close_offset)
+            at phone_lower(
+                menu_phone_closed_at if closing_at is None else closing_at,
+                menu_phone_close_offset if close_offset is None else close_offset,
+            )
         elif animate:
             at phone_raise(raised_at)
         add "images/ui/menu_hand.png":
@@ -115,7 +118,10 @@ screen phone_hardware(animate=False, raised_at=0.0, closing=False):
             ypos gui.scale(menu_phone_y)
             xysize (gui.scale(menu_phone_w), gui.scale(menu_phone_h))
             if closing:
-                at phone_sleep(menu_phone_closed_at, menu_phone_close_alpha)
+                at phone_sleep(
+                    menu_phone_closed_at if closing_at is None else closing_at,
+                    menu_phone_close_alpha if close_alpha is None else close_alpha,
+                )
             elif animate:
                 at phone_wake(raised_at)
             transclude
@@ -132,11 +138,26 @@ screen phone_status():
             xalign 0.5
             yalign 0.5
             xysize (gui.scale(52), gui.scale(8))
-        text "OFFLINE":
-            style "phone_status"
-            xalign 1.0
-            xoffset gui.scale(-17)
-            yalign 0.5
+        if cellular_data_active:
+            fixed:
+                xalign 1.0
+                xoffset gui.scale(-17)
+                yalign 0.5
+                xysize (gui.scale(48), gui.scale(15))
+
+                for bar in range(4):
+                    add Solid("#7fe0d0") xpos gui.scale(bar * 4) ypos gui.scale(11 - bar * 3) xysize (gui.scale(2), gui.scale(4 + bar * 3))
+
+                text "LTE":
+                    style "phone_status"
+                    xpos gui.scale(20)
+                    yalign 0.5
+        else:
+            text "OFFLINE":
+                style "phone_status"
+                xalign 1.0
+                xoffset gui.scale(-17)
+                yalign 0.5
 
 transform airport_phone_motion:
     yoffset gui.scale(760)
@@ -181,6 +202,61 @@ screen airport_phone():
                     xalign 0.5
     timer 4.15 action Return()
 
+screen cellular_connection_phone():
+    modal True
+    zorder notice_window_zorder
+    key "game_menu" action NullAction()
+    key "rollback" action NullAction()
+    key "dismiss" action NullAction()
+
+    add Solid("#070b11d0")
+
+    fixed:
+        xysize (config.screen_width, config.screen_height)
+
+        use phone_hardware():
+            add Solid("#101112")
+            use phone_status()
+
+            text "WIRE":
+                    font menu_phone_font
+                    size gui.scale(13)
+                    kerning gui.scale(3)
+                    color "#7fe0d0"
+                    outlines []
+                    xalign 0.5
+                    ypos gui.scale(76)
+
+            vbox:
+                    xalign 0.5
+                    yalign 0.48
+                    spacing gui.scale(14)
+
+                    text "CONNECTED":
+                        font menu_phone_font
+                        size gui.scale(20)
+                        bold True
+                        color "#d5eee9"
+                        outlines []
+                        xalign 0.5
+
+                    text "HAMADA LTE":
+                        font menu_phone_font
+                        size gui.scale(14)
+                        kerning gui.scale(2)
+                        color "#7fe0d0"
+                        outlines []
+                        xalign 0.5
+
+                    text "Messages and group updates can sync.":
+                        font menu_phone_font
+                        size gui.scale(10)
+                        color "#9ba9ad"
+                        outlines []
+                        xalign 0.5
+
+    timer 3.5 action Return()
+
 screen phone_row(caption, action, detail=None):
     button:
         style "phone_row"
@@ -208,12 +284,6 @@ screen phone_links():
             use phone_row(_("Continue"), Continue())
         else:
             use phone_row(_("Resume"), Return())
-            use phone_row(_("Log"), ShowMenu("history"))
-            use phone_row(_("Save"), ShowMenu("save"))
-            use phone_row(_("Bag"), ShowMenu("inventory"))
-            use phone_row(_("Attributes"), ShowMenu("attributes"))
-        use phone_row(_("Load Game"), ShowMenu("load"))
-        use phone_row(_("Settings"), ShowMenu("preferences"))
         use phone_row(_("About"), ShowMenu("about"))
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
             use phone_row(_("Help"), ShowMenu("help"))
@@ -281,7 +351,7 @@ screen phone_game_menu(title, scroll=None, yinitial=0.0, spacing=0, back_action=
             xpos gui.scale(14)
             ypos gui.scale(29)
             xysize (gui.scale(menu_phone_content_w), gui.scale(43))
-            textbutton _("Back"):
+            textbutton _("Hide"):
                 style "phone_small_button"
                 yalign 0.5
                 action (SetLocalVariable("drawer", False) if drawer else (back_action if back_action is not None else (ShowMenu("main_menu") if main_menu else Return())))
@@ -320,7 +390,7 @@ screen phone_game_menu(title, scroll=None, yinitial=0.0, spacing=0, back_action=
                     xsize gui.scale(230)
                     spacing spacing
                     transclude
-        textbutton (_("Menu") if show_navigation else _("Close")):
+        textbutton (_("Home") if show_navigation else _("Close")):
             style "phone_small_button"
             xalign 0.5
             yalign 1.0
