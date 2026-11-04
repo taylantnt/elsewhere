@@ -31,6 +31,15 @@ Present three crops of the same scene and ask which one best preserves a small
 clue or emotional detail. Sim can explain what changes between the frames.
 Use it to teach observation and character perspective, not as a reflex test.
 
+### Dance: Neon Step
+
+The current prototype is a four-lane rhythm game with an original 110 BPM
+instrumental and a chart aligned to its beat. Arrows scroll toward a clear hit
+line; players can use keyboard arrows or tap the matching on-screen lane.
+Perfect, great, good, and miss judgments build a score and accuracy result.
+Keep the full song playable without audio by retaining the visible beat line,
+scrolling arrows, and timing feedback.
+
 ### Station: Choose the Route
 
 Let the player compare two or three real-feeling routes by transfers, cost, and
@@ -44,3 +53,4 @@ reasonable alternative still reaches the scene with a different consequence.
 - Award progression once per meaningful scene, not once per replay or attempt.
 - Provide non-audio cues and avoid reaction-time requirements unless the scene
   specifically calls for them.
+- Keep rhythm timing cues visible and provide touch controls for mobile play.
