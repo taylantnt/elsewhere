@@ -4,7 +4,7 @@
 
 | Field | Detail |
 | :--- | :--- |
-| **Role** | Maid at an Akihabara-style café; the café's English-speaking host for foreign guests |
+| **Role** | Maid at an Akihabara-style café; "Aya" is her maid name and she is the café's English-speaking host for foreign guests |
 | **Location** | Maid Cafe |
 | **Archetype** | The Hidden Dreamer / The Soft Goodbye |
 | **Affection Variable** | `aya_affection` |
@@ -32,7 +32,7 @@ Aya studied abroad briefly (Canada or Australia) and loved the freedom of it. Co
 | 4 | Cultural exchange. She talks about studying abroad, and about uniforms, roles and smiles "like masks." |
 | 5 | Vulnerability. She's thinking about quitting; her parents disapprove. "When I talk with you, I feel a little braver." |
 | 6 | Resolve. She auditioned for something — applying alone made her feel alive. |
-| 7 | **Farewell.** She says this may be the last time. She drops the persona and gives her real name: **Aya**. |
+| 7 | **Farewell.** She says this may be the last time. She drops the persona and gives her real name: **Shiori**. |
 
 ## How Her Arc Ends (The Departure Theme)
 She chooses the unsafe thing. She leaves the café to chase her dream, and the protagonist cannot follow her into that next life.

@@ -19,7 +19,7 @@ She looks down, voice shaking just a little.
 Narration (Player thought): Courage… me? I didn’t do much. But maybe that was enough.
 
 Final Moment
-Maid (smiling, standing up): “Ah, one more thing. I should finally introduce myself properly, shouldn’t I? My name is Aya.”
-Aya (bows slightly): “Thank you for everything. Maybe… someday, somewhere, we’ll meet again.”
-Narration (Player thought): Aya. That’s her name. I’ll remember it.
+Maid (smiling, standing up): “Ah, one more thing. I should finally introduce myself properly, shouldn’t I? My name is Shiori.”
+Shiori (bows slightly): “Thank you for everything. Maybe… someday, somewhere, we’ll meet again.”
+Narration (Player thought): Shiori. That’s her name. I’ll remember it.
 [Scene fades.]

@@ -7,14 +7,14 @@ Progression Summary
     •    4: Talks about her study abroad & masks in society.
     •    5: Vulnerability about quitting café, family disapproval.
     •    6: New resolve, auditions/performance attempts.
-    •    7: Farewell, real name reveal (Aya), gratitude, hope.
+    •    7: Farewell, real name reveal (Shiori), gratitude, hope.
 
 Encounter 1 — First Visit
-    •    The player is surprised by the maid café concept.
-    •    English-speaking maid greets them.
-    •    First “Moe moe kyun” spell, some laughs, and the meal.
+    •    After leaving Hamada Denki, the player explores Akihabara while Hikari goes shopping in Shibuya.
+    •    The player meets Aya, the cafe's English-speaking maid, who explains the seating charge, time limit, optional extras, and playful service.
+    •    The player orders omurice, sees Aya draw a kitty, and can join or watch the first “Moe moe kyun” spell.
     •    She encourages the player to return.
-    •    Tone: awkward but warm.
+    •    Tone: curious and awkward at first, then warm and reassuring.
 
 Encounter 2 — Recognition
     •    The maid recognizes the player: “Welcome back, Master! I remembered you!”
@@ -64,7 +64,7 @@ Encounter 6 — Resolve
 Encounter 7 — Farewell / True Self
     •    She greets warmly but says this might be the last time they meet here. She might leave the café soon if her other path works out.
     •    She admits: “At first, I was just the ‘maid with pink hair.’ But with you, I could just… be myself. Not a character, not a mask.”
-    •    Finally reveals her name: “My real name is Aya.”
+    •    Finally reveals her real name: “My real name is Shiori.” Until then, the player knows her by her maid name, Aya.
     •    Soft emotional moment: she thanks the player sincerely for being part of her story.
     •    Tone: bittersweet but uplifting, showing growth and closure. 
 

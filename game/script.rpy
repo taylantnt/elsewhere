@@ -234,6 +234,9 @@ image bg_station = Transform("images/backgrounds/bg_station.png", xysize=(config
 image bg_platform = Transform("images/backgrounds/bg_platform.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_akihabara_hamada_outside = Transform("images/backgrounds/bg_akihabara_hamada_outside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_akihabara_hamada_inside = Transform("images/backgrounds/bg_akihabara_hamada_inside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_akihabara = Transform("images/backgrounds/bg_akihabara.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_maidcafe = Transform("images/backgrounds/bg_maidcafe.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_maidcafe_omurice = Transform("images/characters/omurice.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 # The house and his bedroom each come in two lights: the night he arrives in, and
 # the morning he wakes up to. They are the same rooms either way, so they are named
 # by time of day rather than by room. Pick whichever matches the hour of the scene.
@@ -622,6 +625,7 @@ init python:
             x = int(center + math.cos(angle) * radius - (dot_size * 0.5))
             y = int(center + math.sin(angle) * radius - (dot_size * 0.5))
             color = attribute_color(attribute_id) if i < filled else empty_color
+            dots.append(Solid("#05080db8", xysize=(dot_size + gui.scale(2), dot_size + gui.scale(2)), xpos=x - gui.scale(1), ypos=y - gui.scale(1)))
             dots.append(Solid(color, xysize=(dot_size, dot_size), xpos=x, ypos=y))
 
         return Fixed(*dots, xysize=(gui.scale(size), gui.scale(size)))
@@ -1027,7 +1031,7 @@ define hikari = Character("Hikari", color="#ffb6c1", callback=type_sound, image=
 define orson = Character("Orson", color="#a9a9a9", callback=type_sound)
 define chef = Character("Chef", color="#deb887", callback=type_sound, image="chef")
 define sim = Character("Sim", color="#add8e6", callback=type_sound, image="sim")
-define aya = Character("Aya", color="#dda0dd", callback=type_sound)
+define aya = Character("Aya", color="#dda0dd", callback=type_sound, image="aya")
 define hana = Character("Hana", color="#98fb98", callback=type_sound)
 
 # Generic NPCs
@@ -1044,7 +1048,6 @@ define cheerful_woman = Character("Cheerful Woman", callback=type_sound, image="
 # man, security2.png is the woman.
 define security = Character("Security", callback=type_sound, image="security")
 define security2 = Character("Security", callback=type_sound, image="security2")
-
 # The driver who takes him home if he picks the taxi.
 define taxi_driver = Character("Taxi Driver", callback=type_sound, image="taxi_driver")
 
@@ -1154,6 +1157,7 @@ image side taxi_driver = At(Transform("images/characters/taxidriver.png", xysize
 # The professor already has a portrait on disk, so he uses it.
 image side professor = At(Transform("images/characters/teacher.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side hamada_staff = At(Transform("images/characters/hamadadenki.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side aya = At(Transform("images/characters/aya.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
 # The two people whose stories the first free afternoon can open: the ramen chef
 # near home, and Sim, who runs the photography club, Circle. Both portraits are already
@@ -1661,8 +1665,9 @@ screen attribute_hud():
                         ypos gui.scale(51)
                         size gui.scale(9)
                         kerning gui.scale(1)
+                        bold True
                         color "#c5cdd4"
-                        outlines []
+                        outlines [(gui.scale(1), "#05080de8", 0, gui.scale(1))]
 
 # --- START LABEL ---
 label start:
@@ -4999,12 +5004,11 @@ label second_school_day:
     hikari "Tell me which platform we should take."
 
     menu:
-        "The one on the left.":
+        "The one on the left. Local train":
             mc  "The one on the left. Local train, not the rapid."
             hikari "Good. You were listening yesterday."
             $ reward_attributes_once("answer_left", [("insight", "nudge")], show="auto")
-        "The one on the right.":
-            $ reward_attributes_once("answer_right", [("insight", "micro_loss")], show="auto")
+        "The one on the right. Rapid train":
             mc  "The one on the right. Rapid train, not the local."
             hikari "What? You were listening to anything I said yesterday?"
             hikari "Anyways let's get to the platform. We can talk on the train."
@@ -5032,6 +5036,7 @@ label second_school_day:
     "At five minutes to nine, my notebook is open and my pen is ready."
 
     scene bg_lecture_hall with walk_fade
+    mc "Professor sees me and nods. I take my seat."
     professor "You are early today."
     mc "I remembered what you said."
     professor "Good. Then remember this as well. Today we begin with haiku."
@@ -5063,7 +5068,7 @@ label second_school_day:
     mc "I even wrote something down."
     hikari "Then let's not waste the rest of the day. Akihabara."
     mc "Now?"
-    hikari "Now. The shop is less crowded before everyone gets out of work."
+    hikari "Now. The shop is less crowded while everyone is still at work."
 
     scene black with Fade(1.5, 0.4, 0.0)
     stop music fadeout 1.0
@@ -5103,17 +5108,17 @@ label second_school_day:
 
     menu:
         "A basic plan is enough for now.":
+            $ reward_attributes_once("cellular_plan_modest", [("insight", "micro")], show="auto")
             mc "A basic plan sounds right. I want to keep the monthly cost predictable."
             hamada_staff "Then we can start with the student plan and check whether its data allowance fits."
-            $ reward_attributes_once("cellular_plan_modest", [("insight", "micro")], show="auto")
         "I would rather have enough data not to worry about every search.":
+            $ reward_attributes_once("cellular_plan_usage", [("nerve", "micro")], show="auto")
             mc "I would rather have enough data not to worry about every search."
             hamada_staff "We can compare the next tier too, and look at the monthly difference before you decide."
-            $ reward_attributes_once("cellular_plan_usage", [("nerve", "micro")], show="auto")
         "Could we see the lowest student rate first?":
+            $ reward_attributes_once("cellular_plan_student_rate", [("grace", "micro")], show="auto")
             mc "Could we see the lowest student rate first?"
             hamada_staff "Certainly. Your student ID may qualify you for the student discount."
-            $ reward_attributes_once("cellular_plan_student_rate", [("grace", "micro")], show="auto")
 
     hamada_staff "May I see your student ID?"
     "I take the card from my wallet and pass it across the counter."
@@ -5159,9 +5164,193 @@ label second_school_day:
     else:
         hikari "There. Now you can see what Circle has been posting."
         mc "I can send them the pictures I took, once I pick the right one."
-    hikari "Use the map to get us to the station. No more accidental tours."
+    hikari "Your map has Akihabara saved now. Use it if you want to get back to the station, and message me if you need anything."
+    mc "I'll try the map before I try guessing."
+    hikari "Good. Guessing is how you end up on the wrong side of a very large electronics store."
+    "She checks the time on her phone and makes a small, apologetic face."
+    hikari "I have to get to Shibuya for some shopping later, so I should head out soon. You should still explore Akihabara while you're here; there's a lot to see."
+    hikari "I wanted to show you around properly, but I'm sorry I can't stay and guide you."
+    mc "It's all right. I can look around for a bit."
+    hikari "You have a working map and a working phone now. That's a pretty good start."
+    mc "And a very detailed warning about maid cafes?"
+    hikari "One warning, yes. If someone in a maid outfit is handing out flyers, don't get pulled into a maid cafe tour. They can be persistent if you stop to talk."
+    mc "That sounds suspiciously specific."
+    hikari "I'm serious. Don't get lost in the maid cafes."
+    mc "I'll do my best."
+    hikari "Message me when you're heading back. Have fun, okay?"
+    "She gives me a quick wave and heads toward the station, already checking the time."
 
+    scene bg_akihabara with walk_fade
+    stop music fadeout 1.0
+    play music "audio/Music/akihabara.mp3" fadein 1.5
+    "Without Hikari beside me, Akihabara seems to get louder."
+    "Arcade music spills through open doors. A racing game revs its engine while a crowd cheers at a rhythm game, and the metallic clatter of a prize machine cuts through both."
+    mc "(I can hear three different games from here, and I can't tell which one is winning.)"
+    "The electronic shops are just as imposing as Hamada Denki. Their windows are packed with cameras, headphones, game consoles, tiny components, and displays bright enough to compete with the signs above them."
+    mc "(We spent all that time in one store, and it still felt like we only saw a corner of it.)"
+    "I stop at a display of cameras. The models look almost identical until I read the labels, and then the numbers make them seem even more different."
+    mc "(A month ago, I might have walked past without thinking. Now I keep wondering what I could photograph here.)"
+    "A little farther on, I pass a narrow game shop stacked from floor to ceiling with boxes. A few people are studying the shelves with the concentration of students before an exam."
+    mc "(Everyone here seems to know exactly what they came for. I wonder if that feeling comes from living here long enough.)"
+    "I open the map on my phone. The blue marker gives my location, but not a reason to choose one street over another."
+
+    menu:
+        "Follow the arcade sounds for a while.":
+            $ reward_attributes_once("akihabara_explore_arcades", [("nerve", "micro")], show="auto")
+            "I follow the music to the entrance of an arcade. Rows of machines glow under the dark ceiling."
+            mc "(I don't have to be good at any of them to look.)"
+        "Take a closer look at the camera displays.":
+            $ reward_attributes_once("akihabara_explore_cameras", [("insight", "micro")], show="auto")
+            "I pause in front of the camera shop window and compare the compact models with the larger lenses."
+            mc "(The one with the bigger lens looks more serious. That probably isn't a useful way to choose.)"
+        "Keep to the main street and watch the crowd.":
+            $ reward_attributes_once("akihabara_explore_crowd", [("grace", "micro")], show="auto")
+            "I stay on the main street and watch the crowd flow around signboards, shop entrances, and people passing out flyers."
+            mc "(There are patterns to it. Once I notice them, the crowd feels a little less like something I have to fight.)"
+
+    "The streets are full of small decisions: which entrance to try, which sign to read, when to step aside and let a group pass."
+    "Between the shopfronts, I start noticing the maids: black-and-white dresses, colorful aprons, little signs held out toward the passing crowd."
+    "Some people accept a flyer. Others smile and keep walking. The maids call after them, but no one seems surprised by the routine."
+    mc "(Hikari did say they could be persistent.)"
+    "I'd heard about maid cafes before coming to Japan. Back home, they had sounded almost like a story someone made up: a cafe where the staff dressed as maids and called the customers Master."
+    mc "(I wanted to see one. I just hadn't decided if I wanted to admit that out loud.)"
+
+    "One of the maids approaches, leaving enough space that I can keep walking if I want to."
+    aya "Hello! Are you exploring Akihabara for the first time? We have a maid cafe just upstairs. I can explain how it works, if you're curious."
+
+    menu:
+        "I'm only looking around. I'm not sure yet.":
+            $ reward_attributes_once("akihabara_maid_cafe_cautious", [("grace", "micro")], show="auto")
+            mc "I'm only looking around. I'm not sure it's for me."
+            aya "That's completely fine. You can look at the menu and the prices first. If you decide it's not your thing, no hard feelings."
+        "I've heard about maid cafes. I've wanted to see one.":
+            $ reward_attributes_once("akihabara_maid_cafe_curiosity", [("nerve", "micro")], show="auto")
+            mc "I've heard about maid cafes. I've wanted to see one, actually."
+            aya "Then your timing is perfect! I'll explain everything before you order. First visits can be a little surprising."
+        "How do I know what to expect inside?":
+            $ reward_attributes_once("akihabara_maid_cafe_questions", [("insight", "micro")], show="auto")
+            mc "How do I know what to expect inside?"
+            aya "A fair question. I'll go through the prices and the rules before you decide. You can say no at any point."
+
+    "She points to a standing menu beside the entrance. The prices are printed clearly, and through the open doorway I can see other customers at their tables."
+    aya "There's a seating charge, and the menu lists the time limit and any extra options separately. You only order what you want. I won't add anything without asking you first."
+    mc "(That is more practical than the mystery I had built up in my head.)"
+    aya "No rush. I'll show you the menu, and you can still change your mind."
+    mc "(Hikari's warning is still in my head. But Aya hasn't tugged at my sleeve or tried to hurry me. She seems friendly, and the place is bright and busy.)"
+    mc "(Maybe being nervous and being curious can happen at the same time.)"
+    mc "All right. I'll take a look."
+    aya "Wonderful! This way, please."
+
+    scene bg_maidcafe with walk_fade
     stop music fadeout 2.0
+    play music "audio/Music/maidcafe.mp3" fadein 1.5
+    "The street noise falls away behind the door. Pink lights glow against polished tables, and a cheerful greeting rises from around the room."
+    "The other maids greet the room in Japanese. I recognize the sound from the street, but not every word."
+    aya "Welcome, Master! Is this your first time here?"
+    mc "Yes. I've heard about maid cafes, but I wasn't sure what to expect."
+    aya "I'm Aya, by the way. I'll be looking after you today."
+    mc "(So Aya is the name on the badge. That makes this feel a little less like walking into a storybook.)"
+    aya "The idea is that we're not only serving food. We make the visit playful. You can call us by our maid names, and we'll call you Master or Princess if you prefer."
+    mc "And the magic spell?"
+    aya "That's one of the little performances. Before some dishes, we do a short 'deliciousness' spell together. You can join in, or just watch. Nobody will make you do it."
+    mc "(Somehow, being told I can refuse makes me more willing to try.)"
+    "Aya checks that I understand the seating charge and points out the order section of the menu. The time limit is printed beside it, along with the prices for optional photos and special sets."
+    aya "If you want anything, just call me over. If you're not sure what something is, ask. I can explain it in English."
+    "She gives me time to look through the menu instead of filling the silence for me."
+
+    menu:
+        "Ask what the extra options are for.":
+            $ reward_attributes_once("maid_cafe_understand_options", [("insight", "micro")], show="auto")
+            mc "Could you explain the extra options?"
+            aya "Of course. Some sets include a drink or dessert, and some include a photo with a maid. Each one has its own price, so you can choose separately."
+            mc "(The menu is a lot easier to read when someone explains the categories.)"
+        "Tell her the whole place is a little overwhelming.":
+            $ reward_attributes_once("maid_cafe_admit_nerves", [("nerve", "micro")], show="auto")
+            mc "I think I'm a little overwhelmed."
+            aya "That's normal on a first visit. We can take it one step at a time: choose a drink or meal, and ignore everything else until you feel ready."
+            mc "(One step at a time. I can do that.)"
+        "Thank her for explaining things clearly.":
+            $ reward_attributes_once("maid_cafe_thank_aya", [("grace", "micro")], show="auto")
+            mc "Thanks for explaining all of that. It helps."
+            aya "You're welcome. I like when first-time guests know what they're choosing."
+            mc "(That sounds sincere. Maybe the cheerful voice isn't all an act.)"
+
+    aya "Would you like a recommendation, or would you rather choose for yourself?"
+
+    menu:
+        "Please recommend something.":
+            $ reward_attributes_once("maid_cafe_first_recommendation", [("grace", "micro")], show="auto")
+            mc "A recommendation would be nice."
+            aya "Then I suggest the omurice. It's fluffy, and I can draw something on top with ketchup just for you."
+            mc "(That sounds good. The drawing is the part I'm less prepared for.)"
+        "I'll try choosing for myself.":
+            $ reward_attributes_once("maid_cafe_first_independent_order", [("nerve", "micro")], show="auto")
+            mc "I'll try choosing for myself."
+            aya "Ooh, confident! I'll be curious to see what you pick."
+            mc "(Somehow, even the menu feels like a test.)"
+        "What do most people order?":
+            $ reward_attributes_once("maid_cafe_first_popular_order", [("insight", "micro")], show="auto")
+            mc "What do most people order?"
+            aya "The omurice is our specialty. The parfaits are popular too, especially if you want something sweet."
+            mc "(Omurice seems like the sensible first choice. If there is such a thing here.)"
+
+    "I settle on the omurice. Aya repeats the order and its price before she takes the menu, giving me one last chance to change it."
+    mc "That's right."
+    aya "Then I'll make it special for you."
+    "When she returns, she sets the plate down carefully and reaches for the ketchup bottle."
+    scene bg_maidcafe_omurice with Dissolve(0.5)
+    "Aya draws a small kitty on the golden omelet, adding whiskers and a tiny bow before turning the plate toward me."
+    aya "There! What do you think?"
+    mc "(It looks too cheerful to eat. That isn't going to stop me, is it?)"
+    scene bg_maidcafe with Dissolve(0.5)
+    aya "Before you eat, we do the magic spell together. Copy me, okay?"
+    "She makes a heart with her hands and leans toward the plate."
+    menu:
+        "Try the spell with her.":
+            $ reward_attributes_once("maid_cafe_join_spell", [("nerve", "micro")], show="auto")
+            aya "Moe moe..."
+            mc "(I am in a crowded cafe in Akihabara, making a heart with my hands over lunch. This is really happening.)"
+            aya "Kyun!"
+            mc "Moe moe... kyun."
+            aya "Perfect! Now it'll be extra delicious."
+        "Smile and let her do the spell for both of us.":
+            $ reward_attributes_once("maid_cafe_watch_spell", [("grace", "micro")], show="auto")
+            mc "I think I'll watch this time."
+            aya "Of course! I'll do it for both of us."
+            "Aya makes the heart shape over the plate and chants the spell with a flourish."
+            mc "(I still feel a little silly, but I don't feel like I'm being tested.)"
+    "The omurice is better than I expected. Aya checks in once, then gives me room to eat while the room's noise settles into something almost comfortable."
+    aya "Did you enjoy it, Master?"
+    mc "Yeah. More than I expected."
+    aya "I'm glad! You did great for your first visit."
+    mc "I mostly ordered lunch."
+    aya "And learned the spell. That counts."
+    "She clears the plate and leaves a small card beside the bill, with the cafe's name and opening hours printed on it."
+    aya "If you come back, you can ask for me. I'll remember your first visit."
+    mc "(I don't know if I'll be back soon, but the idea doesn't feel strange anymore.)"
+    aya "Thank you for visiting, Master. Please be careful on your way back to the station."
+    mc "I will. Thanks, Aya."
+
+    scene bg_akihabara with walk_fade
+    stop music fadeout 1.0
+    play music "audio/Music/akihabara.mp3" fadein 1.5
+    "Outside, the arcades and bright shop signs are waiting exactly where I left them."
+    "I message Hikari that I'm heading to the station. Her reply comes back before I reach the corner: 'Good. Don't get lost in any more cafes.'"
+    mc "(I wasn't lost. I knew exactly where I was. More or less.)"
+    "A group of students passes me, comparing keychains from a capsule machine. The city no longer feels like one enormous place I have to understand all at once."
+    "I find the station using the map. This time I check the sign before choosing an entrance."
+    scene bg_train_interior with walk_fade
+    stop music fadeout 0.8
+    play music "audio/Music/train.mp3" fadein 1.5
+    "On the train, I open my notebook and write down the phrase I heard at the cafe door: 'okaerinasaimase' — welcome home."
+    "Under it, I add a small drawing of a cat with a bow. It comes out less like a cat and more like a dumpling."
+    mc "(I'll remember the real one better.)"
+    "My phone buzzes. Hikari asks if I found the station. I send back a picture of the notebook page."
+    hikari "That cat looks like it needs help."
+    mc "It's a work in progress."
+    hikari "Good. You can practice on the train."
+    "The city slips past the window. Hamada Denki, the arcade signs, and the cafe's pink lights settle into separate memories instead of one long blur."
+    "I arrived with a phone that could only reach the house. Now it can get me across the city, and I have a reason to look forward to opening it again."
     scene black with Dissolve(2.0)
-    "We take the train home with a working phone, a new word in my notebook, and a day that feels less like a list of firsts."
+    stop music fadeout 2.0
     return
