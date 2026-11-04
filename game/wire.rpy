@@ -42,7 +42,7 @@
 ## The order the roster lists people in. It is fixed rather than
 ## most-recent-first so that the list does not reshuffle itself every time
 ## somebody is added, which is how a real contact list behaves.
-define wire_order = ["hikari", "chef", "sim"]
+define wire_order = ["hikari", "chef", "sim", "aya"]
 
 define wire_contacts = {
 
@@ -77,6 +77,16 @@ define wire_contacts = {
         "color": "#4fb8d9",
         "photo": "images/characters/sim.png",
         "photo_crop": (0.25, 0.0, 0.50, 0.333),
+    },
+
+    "aya": {
+        "name": "Aya",
+        "handle": "@maidfever",
+        "note": "A first visit, a kitty in ketchup, and a little magic.",
+        "color": "#e084b7",
+        "photo": "images/characters/aya.png",
+        "photo_crop": (0.28, 0.04, 0.45, 0.28),
+        "progress": ("confidant_visits", "aya"),
     },
 }
 
@@ -516,7 +526,7 @@ screen wire_app(new=None):
                 outlines []
 
             if cellular_data_active:
-                text "HAMADA LTE":
+                text "HAMADA 5G":
                     xpos gui.scale(wire_screen_w - 16)
                     xanchor 1.0
                     ypos gui.scale(5)
@@ -594,7 +604,7 @@ screen wire_app(new=None):
                             for bar in range(4):
                                 add Solid("#7fe0d0") xpos gui.scale(8 + bar * 5) ypos gui.scale(15 - bar * 3) xysize (gui.scale(3), gui.scale(5 + bar * 3))
 
-                            text "LTE":
+                            text "5G":
                                 xpos gui.scale(34)
                                 ypos gui.scale(3)
                                 style "wire_status"
@@ -634,13 +644,13 @@ screen wire_app(new=None):
                 # --- footer ---
                 add Solid("#243139") xysize (gui.scale(wire_screen_w - 32), 1) xpos gui.scale(16) ypos gui.scale(wire_screen_h - 92)
 
-                text ("SYNCED / SAVED ON DEVICE" if cellular_data_active else "SAVED ON DEVICE"):
+                text ("SYNCED" if cellular_data_active else "SAVED ON DEVICE"):
                     xpos gui.scale(16)
                     ypos gui.scale(wire_screen_h - 73)
                     style "wire_status"
                     color ("#7fa99f" if cellular_data_active else "#596872")
 
-                textbutton "PUT IT AWAY" action SetScreenVariable("hiding", True) style "wire_button" sensitive (not hiding):
+                textbutton "CLOSE APP" action SetScreenVariable("hiding", True) style "wire_button" sensitive (not hiding):
                     xalign 1.0
                     xoffset gui.scale(-16)
                     ypos gui.scale(wire_screen_h - 82)

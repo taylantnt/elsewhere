@@ -148,7 +148,7 @@ screen phone_status():
                 for bar in range(4):
                     add Solid("#7fe0d0") xpos gui.scale(bar * 4) ypos gui.scale(11 - bar * 3) xysize (gui.scale(2), gui.scale(4 + bar * 3))
 
-                text "LTE":
+                text "5G":
                     style "phone_status"
                     xpos gui.scale(20)
                     yalign 0.5
@@ -240,7 +240,7 @@ screen cellular_connection_phone():
                         outlines []
                         xalign 0.5
 
-                    text "HAMADA LTE":
+                    text "HAMADA 5G":
                         font menu_phone_font
                         size gui.scale(14)
                         kerning gui.scale(2)

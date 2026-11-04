@@ -22,7 +22,7 @@ label _cinematic_departure:
 
 # Runs only after a load has been confirmed, before saved state replaces menus.
 label before_load:
-    call _cinematic_departure
+    call _cinematic_departure from _call__cinematic_departure
     return
 
 transform cinematic_black_in:
