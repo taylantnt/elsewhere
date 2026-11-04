@@ -288,7 +288,8 @@ image bg_ramen_empty = bg_or_placeholder("bg_ramen_empty", "#2b2118", "EMPTY BOW
 image bg_photo_club = bg_or_placeholder("bg_photo_club", "#2f3230", "PHOTOGRAPHY CLUB\nCIRCLE - CLUB ROOM")
 
 # The river path Hikari runs. Real art, so no placeholder label.
-image bg_river = bg_or_placeholder("bg_river", "#1a2230", "RIVER PATH\nEVENING")
+image bg_river = bg_or_placeholder("bg_river_dusk", "#1a2230", "RIVER PATH\nEVENING")
+image bg_river_night = Transform("images/backgrounds/bg_river_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 
 # The narrow street he ends up in when he takes the wrong turn out of the school
 # gate, and walks deeper into the evening until he finds the ramen shop doorway.
@@ -1028,12 +1029,12 @@ init python:
 # re-read [player_name] each time instead of resolving it once at boot.
 define mc = Character("[player_name]", dynamic=True, callback=type_sound)
 define hikari = Character("Hikari", color="#ffb6c1", callback=type_sound, image="sister")
-define orson = Character("Orson", color="#a9a9a9", callback=type_sound)
+define orson = Character("Orson", color="#a9a9a9", callback=type_sound, image="orson")
 define chef = Character("Chef", color="#deb887", callback=type_sound, image="chef")
 define sim = Character("Sim", color="#add8e6", callback=type_sound, image="sim")
 define aya = Character("Aya", color="#dda0dd", callback=type_sound, image="aya")
-define maid = Character("Maid", color="#dca0dd", callback=type_sound)
-define hana = Character("Hana", color="#98fb98", callback=type_sound)
+define maid = Character("Maid", color="#dca0dd", callback=type_sound, image="maid")
+define hana = Character("Hana", color="#98fb98", callback=type_sound, image="hana")
 
 # Generic NPCs
 #
@@ -1159,6 +1160,7 @@ image side taxi_driver = At(Transform("images/characters/taxidriver.png", xysize
 image side professor = At(Transform("images/characters/teacher.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side hamada_staff = At(Transform("images/characters/hamadadenki.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side aya = At(Transform("images/characters/aya.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side aya = At(Transform("images/characters/maid.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
 # The two people whose stories the first free afternoon can open: the ramen chef
 # near home, and Sim, who runs the photography club, Circle. Both portraits are already
@@ -3752,7 +3754,7 @@ label first_class:
             mc "I'm sorry. I'll be here early from now on. I mean it."
             professor "Yes. You will."
             $ remember("professor", "apologised and promised to come early")
-        "[tag_nerve] Can we discuss today's late mark?" if has_attribute_points("nerve", "nudge"):
+        "[tag_nerve] Can we discuss today's late mark?" if has_attribute_points("nerve", attribute_reward_value("nudge")):
             mc "Could we discuss today's late mark? Student Relations asked me to register before coming here."
             professor "..."
             professor "Bring me the registration slip. If the appointment overlapped my class, I will review it."
@@ -4130,16 +4132,6 @@ label after_school_run:
             hikari "..."
             hikari "Yes. You can come."
             $ reward_attributes_once("answer_run_join", [("nerve", "micro")], show="auto")
-        "I don't run.":
-            # A real soft exit. Declining costs nothing; it simply sends him home
-            # while she keeps the route that was already hers.
-            mc "I'm tired. I don't think I can run tonight."
-            hikari "..."
-            hikari "Fine. I'm still going."
-            hikari "Don't wait up. And don't let Dad start a speech without me."
-            $ declined_first_run = True
-            $ remember("hikari", "declined the first river run")
-            jump after_school_run_declined
 
     hikari "Go and change into something you can move in."
     mc "Oh? You're serious."
@@ -4229,6 +4221,8 @@ label after_school_run:
     hikari "It was a lap. A generous one. Same time next week?"
     mc "Same time next week."
     hikari "Good. I wasn't asking."
+    scene bg_river_night with walk_fade
+
 
     $ first_run_started = True
     $ hikari_visits = 1
