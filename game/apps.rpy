@@ -69,22 +69,6 @@ init python:
             "image": "images/backgrounds/bg_asakusa_kaminarimon.png",
             "position": (104, 167),
         },
-        {
-            "id": "station",
-            "name": "Central Station",
-            "area": "Chiyoda",
-            "description": "A maze of platforms and transfers I have not explored yet.",
-            "image": "images/backgrounds/bg_station.png",
-            "position": (202, 94),
-        },
-        {
-            "id": "hospital",
-            "name": "Medical District",
-            "area": "Bunkyo",
-            "description": "This place is still a blank spot on my map.",
-            "image": "images/backgrounds/bg_hospital.png",
-            "position": (24, 170),
-        },
     ]
 
     def apps_open():

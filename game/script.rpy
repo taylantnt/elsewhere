@@ -236,7 +236,7 @@ image bg_akihabara_hamada_outside = Transform("images/backgrounds/bg_akihabara_h
 image bg_akihabara_hamada_inside = Transform("images/backgrounds/bg_akihabara_hamada_inside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_akihabara = Transform("images/backgrounds/bg_akihabara.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_maidcafe = Transform("images/backgrounds/bg_maidcafe.png", xysize=(config.screen_width, config.screen_height), fit="cover")
-image bg_maidcafe_omurice = Transform("images/characters/omurice.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_maidcafe_omurice = Transform("images/backgrounds/bg_omurice.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 # The house and his bedroom each come in two lights: the night he arrives in, and
 # the morning he wakes up to. They are the same rooms either way, so they are named
 # by time of day rather than by room. Pick whichever matches the hour of the scene.
