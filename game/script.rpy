@@ -2043,7 +2043,7 @@ label talk_veteran_assistant:
         mc "Pamphlet? I'll go look for one."
         jump airport_exploration
 
-    veteran "You look a little lost. That pamphlet — are you trying to get to 中野3丁目?"
+    veteran "You look a little lost. That pamphlet! Let me see... Are you trying to get to 中野3丁目?"
     mc "That's right."
     veteran "..."
     "He unfolds it and runs a finger down the margin."
