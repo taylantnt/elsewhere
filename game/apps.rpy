@@ -14,13 +14,125 @@ init python:
         ("settings", "Settings", False),
         ("camera", "Camera", True),
         ("inventory", "Inventory", False),
+        ("maps", "Maps", False),
         ("stats", "Stats", False),
         ("journal", "Journal", False),
         ("backup", "Backup", False),
     ]
 
+    phone_map_locations = [
+        {
+            "id": "school",
+            "name": "University Campus",
+            "area": "Bunkyo",
+            "description": "The campus where my new life is supposed to begin.",
+            "image": "images/backgrounds/bg_school_gate.png",
+            "position": (35, 40),
+        },
+        {
+            "id": "photo_club",
+            "name": "Photography Club",
+            "area": "Campus, Circle Room",
+            "description": "A room full of photographs, opinions, and people who know each other already.",
+            "image": "images/backgrounds/bg_photo_club.png",
+            "position": (105, 75),
+        },
+        {
+            "id": "ramen_shop",
+            "name": "Ramen Shop",
+            "area": "Side Street",
+            "description": "A small counter, a handwritten menu, and a bowl I still remember.",
+            "image": "images/backgrounds/bg_ramen_shop.png",
+            "position": (178, 43),
+        },
+        {
+            "id": "akihabara",
+            "name": "Akihabara",
+            "area": "Chiyoda",
+            "description": "Bright signs, crowded streets, and Hamada Denki's eight floors.",
+            "image": "images/backgrounds/bg_akihabara_hamada_outside.png",
+            "position": (55, 153),
+        },
+        {
+            "id": "harajuku",
+            "name": "Harajuku",
+            "area": "Shibuya",
+            "description": "A district of narrow streets, small boutiques, and places still waiting to be found.",
+            "image": "images/backgrounds/bg_harajuku.png",
+            "position": (144, 122),
+        },
+        {
+            "id": "asakusa",
+            "name": "Asakusa",
+            "area": "Taito",
+            "description": "The old temple district. Its map details have not been added yet.",
+            "image": "images/backgrounds/bg_asakusa_kaminarimon.png",
+            "position": (104, 167),
+        },
+        {
+            "id": "station",
+            "name": "Central Station",
+            "area": "Chiyoda",
+            "description": "A maze of platforms and transfers I have not explored yet.",
+            "image": "images/backgrounds/bg_station.png",
+            "position": (202, 94),
+        },
+        {
+            "id": "hospital",
+            "name": "Medical District",
+            "area": "Bunkyo",
+            "description": "This place is still a blank spot on my map.",
+            "image": "images/backgrounds/bg_hospital.png",
+            "position": (24, 170),
+        },
+    ]
+
     def apps_open():
         renpy.call_in_new_context("_phone_apps_open")
+
+    def phone_map_visit(location_id):
+        if location_id not in store.phone_map_unlocked:
+            store.phone_map_unlocked.append(location_id)
+        if location_id not in store.phone_map_visited:
+            store.phone_map_visited.append(location_id)
+
+    def phone_map_is_unlocked(location_id):
+        if location_id in store.phone_map_unlocked:
+            return True
+
+        # Preserve map discoveries for saves made before this feature existed.
+        if location_id == "ramen_shop":
+            return store.confidant_visits.get("chef", 0) > 0
+        if location_id == "photo_club":
+            return (
+                store.confidant_visits.get("sim", 0) > 0
+                or getattr(store, "first_day_activity", None) == "photo_club"
+            )
+        if location_id == "akihabara":
+            return store.cellular_data_active
+
+        return False
+
+    def phone_map_is_visited(location_id):
+        if location_id in store.phone_map_visited:
+            return True
+
+        if location_id == "school":
+            return (
+                getattr(store, "first_day_activity", None) is not None
+                or getattr(store, "current_act", 1) > 1
+            )
+        if location_id == "ramen_shop":
+            return store.confidant_visits.get("chef", 0) > 0
+        if location_id == "photo_club":
+            return (
+                store.confidant_visits.get("sim", 0) > 0
+                or getattr(store, "first_day_activity", None) == "photo_club"
+            )
+        if location_id == "akihabara":
+            return store.cellular_data_active
+
+        return False
 
     def phone_apps_begin_close():
         if store.phone_apps_closing:
@@ -40,11 +152,17 @@ default phone_apps_inventory_item = None
 default phone_apps_inventory_open = False
 default phone_apps_backup_mode = None
 default phone_apps_settings_tab = "general"
+default phone_apps_map_location = "school"
+default phone_apps_more_open = False
+default phone_apps_more_return_page = None
+default phone_apps_help_device = "keyboard"
 default phone_apps_started_at = 0.0
 default phone_apps_closing = False
 default phone_apps_closed_at = 0.0
 default phone_apps_close_offset = 0
 default phone_apps_close_alpha = 1.0
+default phone_map_unlocked = ["school"]
+default phone_map_visited = []
 
 
 label _phone_apps_open:
@@ -54,6 +172,10 @@ label _phone_apps_open:
     $ phone_apps_inventory_open = False
     $ phone_apps_backup_mode = None
     $ phone_apps_settings_tab = "general"
+    $ phone_apps_map_location = "school"
+    $ phone_apps_more_open = False
+    $ phone_apps_more_return_page = None
+    $ phone_apps_help_device = "keyboard"
     $ phone_apps_started_at = time.monotonic()
     $ phone_apps_closing = False
     $ phone_apps_close_offset = 0
@@ -116,37 +238,37 @@ screen phone_app_wire_contents(selected_contact):
                 vbox:
                     spacing gui.scale(11)
 
-                    use wire_avatar(selected_contact, gui.scale(54))
+                    use wire_avatar(selected_contact, gui.scale(88))
 
                     text contact["name"]:
-                        size gui.scale(18)
+                        size gui.scale(27)
                         color "#e8eef2"
                         outlines []
 
                     text contact["handle"]:
-                        size gui.scale(13)
+                        size gui.scale(12)
                         color contact_color
                         outlines []
 
                     add Solid("#243139") xysize (gui.scale(210), 1)
 
                     text contact["note"]:
-                        size gui.scale(14)
+                        size gui.scale(15)
                         color "#c3ccd5"
                         xmaximum gui.scale(210)
                         outlines []
 
                     hbox:
                         spacing gui.scale(5)
-                        use wire_meter(wire_progress(selected_contact), gui.scale(5), gui.scale(10), contact_color)
+                        use wire_meter(wire_progress(selected_contact), gui.scale(7), gui.scale(18), contact_color)
                         text "[wire_progress(selected_contact)] / [confidant_visits_total]":
-                            size gui.scale(11)
+                            size gui.scale(12)
                             color "#8c9aa4"
                             outlines []
 
                     add Solid("#243139") xysize (gui.scale(210), 1)
                     text "WHAT THEY REMEMBER":
-                        size gui.scale(11)
+                        size gui.scale(12)
                         kerning gui.scale(1)
                         color "#71808b"
                         outlines []
@@ -154,13 +276,13 @@ screen phone_app_wire_contents(selected_contact):
                     if contact_memories:
                         for note in contact_memories:
                             text note:
-                                size gui.scale(13)
+                                size gui.scale(15)
                                 color "#c3ccd5"
                                 xmaximum gui.scale(210)
                                 outlines []
                     else:
                         text "Nothing yet.":
-                            size gui.scale(13)
+                            size gui.scale(15)
                             italic True
                             color "#75838d"
                             outlines []
@@ -241,6 +363,130 @@ screen phone_app_wire_contents(selected_contact):
                 size gui.scale(13)
                 color "#83909a"
                 outlines []
+
+
+screen phone_app_maps_contents(selected_location):
+    $ map_location = next(
+        (place for place in phone_map_locations if place["id"] == selected_location),
+        phone_map_locations[0],
+    )
+    $ map_location_unlocked = phone_map_is_unlocked(map_location["id"])
+    $ map_location_visited = phone_map_is_visited(map_location["id"])
+
+    fixed:
+        xysize (gui.scale(menu_phone_content_w), gui.scale(474))
+
+        fixed:
+            xysize (gui.scale(230), gui.scale(218))
+            add Solid("#111c23")
+
+            # A quiet street grid keeps the map legible beneath its location pins.
+            add Solid("#27363d") xpos gui.scale(18) ypos gui.scale(45) xysize (gui.scale(190), gui.scale(7))
+            add Solid("#27363d") xpos gui.scale(18) ypos gui.scale(112) xysize (gui.scale(190), gui.scale(7))
+            add Solid("#27363d") xpos gui.scale(18) ypos gui.scale(177) xysize (gui.scale(190), gui.scale(7))
+            add Solid("#27363d") xpos gui.scale(43) ypos gui.scale(18) xysize (gui.scale(7), gui.scale(184))
+            add Solid("#27363d") xpos gui.scale(111) ypos gui.scale(18) xysize (gui.scale(7), gui.scale(184))
+            add Solid("#27363d") xpos gui.scale(178) ypos gui.scale(18) xysize (gui.scale(7), gui.scale(184))
+
+            text "TOKYO  /  CITY MAP":
+                xpos gui.scale(8)
+                ypos gui.scale(5)
+                size gui.scale(10)
+                kerning gui.scale(1)
+                color "#94a9b5"
+                outlines []
+
+            for index, place in enumerate(phone_map_locations, start=1):
+                $ place_unlocked = phone_map_is_unlocked(place["id"])
+                $ pin_asset = "images/ui/apps/map_pin.png" if place_unlocked else "images/ui/apps/map_pin_locked.png"
+                button:
+                    xpos gui.scale(place["position"][0])
+                    ypos gui.scale(place["position"][1])
+                    xysize (gui.scale(27), gui.scale(33))
+                    background None
+                    hover_background None
+                    action [
+                        SetVariable("phone_apps_map_location", place["id"]),
+                        With(Dissolve(0.16)),
+                    ]
+                    add pin_asset xysize (gui.scale(27), gui.scale(33))
+                    text "[index]":
+                        xalign 0.5
+                        ypos gui.scale(2)
+                        size gui.scale(9)
+                        bold True
+                        color "#f5f8fa"
+                        outlines []
+
+        add Solid("#ffffff16") ypos gui.scale(222) xysize (gui.scale(230), gui.scale(1))
+
+        fixed:
+            ypos gui.scale(230)
+            xysize (gui.scale(230), gui.scale(236))
+
+            if map_location_unlocked:
+                add Transform(
+                    map_location["image"],
+                    xysize=(gui.scale(220), gui.scale(112)),
+                    fit="cover",
+                ) xpos gui.scale(5) ypos gui.scale(2)
+                text map_location["name"]:
+                    xpos gui.scale(7)
+                    ypos gui.scale(121)
+                    size gui.scale(17)
+                    color "#f1eee7"
+                    outlines []
+                text map_location["area"].upper():
+                    xpos gui.scale(7)
+                    ypos gui.scale(146)
+                    size gui.scale(10)
+                    kerning gui.scale(1)
+                    color "#90a4ae"
+                    outlines []
+                text ("VISITED" if map_location_visited else "NOT VISITED"):
+                    xalign 1.0
+                    xoffset gui.scale(-7)
+                    ypos gui.scale(146)
+                    size gui.scale(10)
+                    bold True
+                    color ("#82d7bf" if map_location_visited else "#e2bb79")
+                    outlines []
+                text map_location["description"]:
+                    xpos gui.scale(7)
+                    ypos gui.scale(168)
+                    xmaximum gui.scale(216)
+                    size gui.scale(12)
+                    color "#c2ccd1"
+                    outlines []
+            else:
+                add Transform(
+                    map_location["image"],
+                    xysize=(gui.scale(220), gui.scale(112)),
+                    fit="cover",
+                    matrixcolor=SaturationMatrix(0.0),
+                ) xpos gui.scale(5) ypos gui.scale(2)
+                add Solid("#10171c88") xpos gui.scale(5) ypos gui.scale(2) xysize (gui.scale(220), gui.scale(112))
+                text map_location["name"]:
+                    xpos gui.scale(7)
+                    ypos gui.scale(121)
+                    size gui.scale(17)
+                    color "#89939a"
+                    outlines []
+                text "NOT VISITED  /  LOCKED":
+                    xpos gui.scale(7)
+                    ypos gui.scale(146)
+                    size gui.scale(10)
+                    bold True
+                    kerning gui.scale(0.5)
+                    color "#78848d"
+                    outlines []
+                text "Details and photos will be added when this place is discovered.":
+                    xpos gui.scale(7)
+                    ypos gui.scale(168)
+                    xmaximum gui.scale(216)
+                    size gui.scale(12)
+                    color "#89939a"
+                    outlines []
 
 
 screen phone_app_journal_contents():
@@ -634,6 +880,139 @@ screen phone_app_settings_contents(tab):
                         xmaximum gui.scale(210)
 
 
+screen phone_apps_about_contents():
+    viewport:
+        xfill True
+        yfill True
+        mousewheel True
+        draggable True
+        style_prefix "phone_apps"
+        scrollbars "vertical"
+        vbox:
+            spacing gui.scale(14)
+            text "[config.name!t]":
+                style "phone_heading"
+                size gui.scale(24)
+            text "Version [config.version!t]":
+                style "phone_detail"
+                size gui.scale(14)
+            if gui.about:
+                text "[gui.about!t]":
+                    style "phone_body"
+                    size gui.scale(14)
+            text "Made with Ren'Py [renpy.version_only].":
+                style "phone_body"
+                size gui.scale(14)
+            text "[renpy.license!t]":
+                style "phone_detail"
+                size gui.scale(12)
+
+
+screen phone_apps_help_contents(device):
+    vbox:
+        spacing gui.scale(10)
+        hbox:
+            spacing gui.scale(3)
+            textbutton "KEYBOARD":
+                style "phone_small_button"
+                text_color ("#e7c08d" if device == "keyboard" else "#aab4bb")
+                action SetVariable("phone_apps_help_device", "keyboard")
+            textbutton "MOUSE":
+                style "phone_small_button"
+                text_color ("#e7c08d" if device == "mouse" else "#aab4bb")
+                action SetVariable("phone_apps_help_device", "mouse")
+            if GamepadExists():
+                textbutton "PAD":
+                    style "phone_small_button"
+                    text_color ("#e7c08d" if device == "gamepad" else "#aab4bb")
+                    action SetVariable("phone_apps_help_device", "gamepad")
+
+        viewport:
+            xfill True
+            ysize gui.scale(420)
+            mousewheel True
+            draggable True
+            style_prefix "phone_apps"
+            scrollbars "vertical"
+            vbox:
+                spacing gui.scale(11)
+                if device == "keyboard":
+                    $ bindings = [
+                        ("Enter", "Advance dialogue or activate a control."),
+                        ("Space", "Advance dialogue."),
+                        ("Arrow Keys", "Navigate the interface."),
+                        ("Escape", "Open the phone."),
+                        ("Ctrl / Tab", "Hold to skip / toggle skipping."),
+                        ("Page Up / Down", "Roll back / roll forward."),
+                        ("H", "Hide the interface."),
+                        ("S", "Take a screenshot."),
+                        ("V", "Toggle self-voicing."),
+                        ("Shift+A", "Open accessibility settings."),
+                    ]
+                elif device == "mouse":
+                    $ bindings = [
+                        ("Left Click", "Advance dialogue or activate a control."),
+                        ("Middle Click", "Hide the interface."),
+                        ("Right Click", "Right-click is disabled during gameplay."),
+                        ("Mouse Wheel", "Scroll menus and roll back dialogue."),
+                    ]
+                else:
+                    $ bindings = [
+                        ("A / Right Trigger", "Advance dialogue or activate a control."),
+                        ("Left Shoulder", "Roll back."),
+                        ("Right Shoulder", "Roll forward."),
+                        ("D-Pad / Sticks", "Navigate controls."),
+                        ("Start / B", "Open or close the phone."),
+                        ("Y", "Hide the interface."),
+                    ]
+                for caption, description in bindings:
+                    vbox:
+                        spacing gui.scale(2)
+                        text caption:
+                            style "phone_heading"
+                            size gui.scale(15)
+                        text description:
+                            style "phone_body"
+                            size gui.scale(13)
+                            xmaximum gui.scale(215)
+                if device == "gamepad":
+                    textbutton "CALIBRATE CONTROLLER":
+                        style "phone_option"
+                        action GamepadCalibrate()
+
+
+screen phone_apps_exit_confirm(kind):
+    vbox:
+        xalign 0.5
+        yalign 0.4
+        xsize gui.scale(216)
+        spacing gui.scale(16)
+        text ("Return to the title screen?" if kind == "title" else "Quit the game?"):
+            style "phone_heading"
+            size gui.scale(20)
+            xalign 0.5
+            textalign 0.5
+        text (
+            "Unsaved progress may be lost."
+            if kind == "title"
+            else "Are you sure you want to close the game?"
+        ):
+            style "phone_body"
+            size gui.scale(14)
+            xalign 0.5
+            textalign 0.5
+        textbutton "YES":
+            style "phone_option"
+            action (MainMenu(confirm=False) if kind == "title" else Quit(confirm=False))
+        textbutton "CANCEL":
+            style "phone_option"
+            action [
+                SetVariable("phone_apps_page", phone_apps_more_return_page),
+                SetVariable("phone_apps_more_open", True),
+                With(Dissolve(0.16)),
+            ]
+
+
 screen phone_apps():
     modal True
     zorder 130
@@ -675,19 +1054,30 @@ screen phone_apps():
                             if phone_apps_page == "inventory" and phone_apps_inventory_item else
                             [SetVariable("phone_apps_backup_mode", None), With(Dissolve(0.16))]
                             if phone_apps_page == "backup" and phone_apps_backup_mode else
+                            [
+                                SetVariable("phone_apps_page", phone_apps_more_return_page),
+                                SetVariable("phone_apps_more_open", True),
+                                With(Dissolve(0.16)),
+                            ]
+                            if phone_apps_page in ("about", "help", "confirm_title", "confirm_quit") else
                             [SetVariable("phone_apps_page", None), With(Dissolve(0.16))]
                         )
 
                 $ app_titles = {
-                    None: "Apps",
+                    None: "Phone",
                     "messages": "Messages",
                     "wire": "WIRE",
                     "settings": "Settings",
                     "camera": "Camera",
                     "inventory": "Inventory",
+                    "maps": "Maps",
                     "stats": "Stats",
                     "journal": "Journal",
                     "backup": ("Cloud / " + phone_apps_backup_mode.title() if phone_apps_backup_mode else "Cloud"),
+                    "about": "About",
+                    "help": "Help",
+                    "confirm_title": "Return to Title",
+                    "confirm_quit": "Quit Game",
                 }
 
                 text app_titles[phone_apps_page]:
@@ -738,13 +1128,19 @@ screen phone_apps():
                                     [SetVariable("phone_apps_page", app_id), With(Dissolve(0.16))],
                                 )
 
-                            null width gui.scale(74) height gui.scale(112)
-
                         text "A few apps are still finding their place.":
                             xalign 0.5
                             size gui.scale(11)
                             color "#64727e"
                             outlines []
+                elif phone_apps_page == "about":
+                    use phone_apps_about_contents
+                elif phone_apps_page == "help":
+                    use phone_apps_help_contents(phone_apps_help_device)
+                elif phone_apps_page == "confirm_title":
+                    use phone_apps_exit_confirm("title")
+                elif phone_apps_page == "confirm_quit":
+                    use phone_apps_exit_confirm("quit")
                 elif phone_apps_page in ("messages", "camera"):
                     vbox:
                         xalign 0.5
@@ -772,6 +1168,8 @@ screen phone_apps():
                     use phone_app_wire_contents(phone_apps_wire_profile)
                 elif phone_apps_page == "inventory":
                     use phone_app_inventory_contents(phone_apps_inventory_item)
+                elif phone_apps_page == "maps":
+                    use phone_app_maps_contents(phone_apps_map_location)
                 elif phone_apps_page == "stats":
                     use phone_app_stats_contents
                 elif phone_apps_page == "journal":
@@ -792,12 +1190,72 @@ screen phone_apps():
                 sensitive not phone_apps_closing
                 action Function(phone_apps_begin_close)
 
+            textbutton "⋮":
+                style "phone_small_button"
+                xalign 1.0
+                yalign 1.0
+                xoffset gui.scale(-10)
+                yoffset gui.scale(7)
+                sensitive not phone_apps_closing
+                action ToggleVariable("phone_apps_more_open")
+
+            if phone_apps_more_open:
+                frame:
+                    xpos gui.scale(38)
+                    ypos gui.scale(333)
+                    xsize gui.scale(190)
+                    background Solid("#17242df2")
+                    padding (gui.scale(8), gui.scale(8))
+                    vbox:
+                        spacing gui.scale(3)
+                        textbutton "ABOUT":
+                            style "phone_apps_menu_option"
+                            action [
+                                SetVariable("phone_apps_more_return_page", phone_apps_page),
+                                SetVariable("phone_apps_page", "about"),
+                                SetVariable("phone_apps_more_open", False),
+                                With(Dissolve(0.16)),
+                            ]
+                        textbutton "HELP":
+                            style "phone_apps_menu_option"
+                            action [
+                                SetVariable("phone_apps_more_return_page", phone_apps_page),
+                                SetVariable("phone_apps_help_device", "keyboard"),
+                                SetVariable("phone_apps_page", "help"),
+                                SetVariable("phone_apps_more_open", False),
+                                With(Dissolve(0.16)),
+                            ]
+                        if not main_menu:
+                            textbutton "RETURN TO TITLE":
+                                style "phone_apps_menu_option"
+                                action [
+                                    SetVariable("phone_apps_more_return_page", phone_apps_page),
+                                    SetVariable("phone_apps_page", "confirm_title"),
+                                    SetVariable("phone_apps_more_open", False),
+                                    With(Dissolve(0.16)),
+                                ]
+                        if renpy.variant("pc"):
+                            textbutton "QUIT GAME":
+                                style "phone_apps_menu_option"
+                                action [
+                                    SetVariable("phone_apps_more_return_page", phone_apps_page),
+                                    SetVariable("phone_apps_page", "confirm_quit"),
+                                    SetVariable("phone_apps_more_open", False),
+                                    With(Dissolve(0.16)),
+                                ]
+
     if phone_apps_closing:
         timer 0.70 action Return()
 
     key "game_menu" action Function(phone_apps_begin_close)
-    key "rollback" action NullAction()
 
 
 style phone_apps_vscrollbar is phone_vscrollbar:
     xsize gui.scale(8)
+
+style phone_apps_menu_option is phone_option:
+    yminimum gui.scale(34)
+    padding (gui.scale(7), gui.scale(4))
+
+style phone_apps_menu_option_text is phone_option_text:
+    size gui.scale(12)

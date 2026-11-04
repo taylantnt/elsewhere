@@ -3373,6 +3373,7 @@ label school_morning:
     "(This is her father's route. Next time, she says, she'll show me the shorter one.)"
 
     scene bg_school_gate with Fade(0.0, 0.0, 2.0)
+    $ phone_map_visit("school")
     play music "audio/Music/school.mp3" fadein 2.0
 
     "And then there it is."
@@ -3873,6 +3874,7 @@ label after_school_walk_alone:
     # he cannot read, gets a bowl he did not order, and answers in the one Japanese
     # word he owns. The shop pays nothing for being entered; the point is his.
     scene bg_ramen_shop with walk_fade
+    $ phone_map_visit("ramen_shop")
     play music "audio/Music/ramen_shop.mp3" fadein 2.0
 
     "Broth, and steam, and fat hitting a hot pan behind a wall. My whole body turns towards it before I have decided anything."
@@ -4281,6 +4283,7 @@ label after_school_photo_club:
     "I open the door."
 
     scene bg_photo_club with walk_fade
+    $ phone_map_visit("photo_club")
 
     "Someone has taken every chair in this room and put it in a rough circle. There are six people in it. None of them looks up."
     "One wall is covered in prints held on with the same tape."
@@ -4882,6 +4885,7 @@ label second_school_day:
     "When we come back above ground, Akihabara is already louder than the train."
 
     scene bg_akihabara_hamada_outside with Fade(0.0, 0.0, 1.8)
+    $ phone_map_visit("akihabara")
     "Hamada Denki rises over the intersection, floor after floor of glass and red signs."
     hikari "Eight floors. Cosmetics, refrigerators, cameras, console games, and parts for things I've never heard of."
     hikari "If you need to buy something and don't know where to start, this is usually the place."

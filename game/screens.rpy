@@ -311,8 +311,9 @@ screen quick_menu():
                 textbutton _("Q.Load") action QuickLoad()
                 if wire_unlocked:
                     textbutton _("WIRE") action Function(wire_open)
-                textbutton _("Apps") action Function(apps_open)
-                textbutton _("Settings") action ShowMenu('preferences')
+                textbutton _("Phone") action Function(apps_open)
+
+        key "game_menu" action Function(apps_open)
 
 
 ## This code ensures that the quick_menu screen is displayed in-game, whenever
@@ -1859,8 +1860,9 @@ screen quick_menu():
             textbutton _("Auto") action Preference("auto-forward", "toggle")
             if wire_unlocked:
                 textbutton _("WIRE") action Function(wire_open)
-            textbutton _("Apps") action Function(apps_open)
-            textbutton _("Menu") action ShowMenu()
+            textbutton _("Phone") action Function(apps_open)
+
+        key "game_menu" action Function(apps_open)
 
 
 style window:
