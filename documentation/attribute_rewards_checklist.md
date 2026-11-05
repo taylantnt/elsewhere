@@ -2,7 +2,7 @@
 
 Current code snapshot: November 3, 2026.
 
-This is an editable checklist of all 34 story choice menus currently in
+This is an editable checklist of all 44 story choice menus currently in
 `game/script.rpy`, including every answer with no attribute reward. The two
 non-dialogue rewards are listed separately. Unwritten future scenes and the
 developer rank-up shortcut are not story rewards.
@@ -281,7 +281,7 @@ Context: Student Relations registration made the protagonist late for his first 
 |---|---|---|---|
 | M21.01 | I'll write that down. | No rewards | Records the attendance rule; the professor remembers. |
 | M21.02 | It won't happen again. | No rewards | Apologises and promises to arrive early; the professor remembers. |
-| M21.03 | [Nerve] Can we discuss today's late mark? | Nerve +0.3 | Requires 0.5 Nerve points; flag `answer_clock_ask`; requests review of the registration conflict; the professor remembers. |
+| M21.03 | [Nerve] Can we discuss today's late mark? | Grace -0.2 | Requires 0.3 Nerve points; flag `answer_clock_ask`; requests review of the registration conflict; the professor remembers. |
 
 ### M22. Responding To Hikari After Class
 
@@ -290,7 +290,7 @@ Prompt: "I should have told you where to go before I ran off. I'm sorry."
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M22.01 | Next time, warn me before you go. | Nerve +0.5, Grace -0.5 | Sets a boundary about being left without directions; flag `answer_hikari_warning`; Hikari remembers. |
+| M22.01 | Next time, warn me before you go. | Nerve +0.5, Grace -0.2 | Sets a boundary about being left without directions; flag `answer_hikari_warning`; Hikari remembers. |
 | M22.02 | Thanks for saving me a seat. | No rewards | Hikari remembers the thanks. |
 | M22.03 | Let's get something to eat. | No rewards | Moves on from the lecture; Hikari remembers. |
 
@@ -367,10 +367,10 @@ Context: Hikari walks past the house and says she is going out again.
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M28.01 | Out where? | No rewards | Asks where she is going. |
-| M28.02 | Is this your usual running route? | No rewards | Asks whether she normally leaves from here. |
-| M28.03 | Can I come? | Nerve +0.2 | Asks to join her; flag `answer_run_join`. |
+| M28.02 | Can I come? | Nerve +0.2 | Asks to join her; flag `answer_run_join`. |
+| M28.03 | I stay here. | No rewards | Sets `declined_first_run = True`; jumps to `after_school_run_declined`. WIRE still unlocks at the house; the run completion reward in E02 does not fire. |
 
-All three answers lead to the run. M28.03's small Nerve reward is separate from
+M28.01 and M28.02 lead to the run. M28.03 declines it. M28.02's small Nerve reward is separate from
 the completion reward in E02.
 
 ### M29. Resting Beside The River
@@ -443,6 +443,120 @@ Completing the session, recording Sim's first visit and unlocking WIRE do not
 award extra attribute points. `sim_circle_first` pays for M32.01 specifically,
 not for attending the club.
 
+## First Evening And Night
+
+All three afternoon routes converge here.
+
+### M35. First Evening Dinner
+
+Source: [`first_evening_dinner`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M35.01 | Try the natto. | Nerve +0.2 | flag `first_dinner_natto`; father remembers. |
+| M35.02 | How long to get used to the neighborhood? | Insight +0.2 | flag `first_dinner_neighborhood`; father remembers. |
+| M35.03 | Sorry I kept you waiting. | Grace +0.2 | flag `first_dinner_apology`; father remembers. |
+
+### M36. First Night With Hikari
+
+Source: [`end_of_first_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M36.01 | Thank her for helping me figure it out. | Grace +0.2 | Flag `first_night_hikari_thanks`. |
+| M36.02 | Tell her she makes the house easier to understand. | Insight +0.2 | Flag `first_night_hikari_observation`. |
+| M36.03 | Promise you will be ready when she comes. | Nerve +0.2 | Flag `first_night_hikari_promise`. |
+
+## Second Day
+
+### M37. Choosing The Platform
+
+Source: [`second_school_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M37.01 | The one on the left. Local train. | Insight +0.3 | Correct; flag `answer_left`. |
+| M37.02 | The one on the right. Rapid train. | No rewards | Wrong; rapid skips their stop. |
+
+### M38. The Haiku Lesson
+
+Source: [`second_school_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M38.01 | Take careful notes on the kigo. | Insight +0.3 | Flag `haiku_lesson_notes`. |
+| M38.02 | Listen closely to the example. | Insight +0.3 | Flag `haiku_lesson_listen`. |
+| M38.03 | Look up more examples online after class. | Nerve +0.3 | Flag `haiku_lesson_research`. |
+
+### M39. Choosing A Cellular Plan
+
+Source: [`second_school_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M39.01 | A basic plan is enough for now. | Insight +0.2 | Flag `cellular_plan_modest`. |
+| M39.02 | I would rather have enough data not to worry. | Nerve +0.2 | Flag `cellular_plan_usage`. |
+| M39.03 | Could we see the lowest student rate first? | Grace +0.2 | Flag `cellular_plan_student_rate`. |
+
+### M40. Declining Plan Add-ons
+
+Source: [`second_school_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M40.01 | No add-ons. Show us the full monthly total. | Insight +0.2 | Flag `cellular_plan_total`. |
+| M40.02 | Keep it to the student plan and nothing else. | Grace +0.2 | Flag `cellular_plan_basic`. |
+| M40.03 | No extras, thanks. | Nerve +0.2 | Flag `cellular_plan_decline_extras`. |
+
+### M41. Exploring Akihabara
+
+Source: [`second_school_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M41.01 | Follow the arcade sounds for a while. | Nerve +0.2 | Flag `akihabara_explore_arcades`. |
+| M41.02 | Take a closer look at the camera displays. | Insight +0.2 | Flag `akihabara_explore_cameras`. |
+| M41.03 | Keep to the main street and watch the crowd. | Grace +0.2 | Flag `akihabara_explore_crowd`. |
+
+### M42. Approaching The Maid Cafe
+
+Source: [`second_school_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M42.01 | Only looking around. Not sure yet. | Grace +0.2 | Flag `akihabara_maid_cafe_cautious`. |
+| M42.02 | Heard about maid cafes. Wanted to see one. | Nerve +0.2 | Flag `akihabara_maid_cafe_curiosity`. |
+| M42.03 | How do I know what to expect inside? | Insight +0.2 | Flag `akihabara_maid_cafe_questions`. |
+
+### M43. Understanding The Maid Cafe Menu
+
+Source: [`second_school_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M43.01 | Ask what the extra options are for. | Insight +0.2 | Flag `maid_cafe_understand_options`. |
+| M43.02 | Tell her the whole place is overwhelming. | Nerve +0.2 | Flag `maid_cafe_admit_nerves`. |
+| M43.03 | Thank her for explaining things clearly. | Grace +0.2 | Flag `maid_cafe_thank_aya`. |
+
+### M44. Ordering At The Maid Cafe
+
+Source: [`second_school_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M44.01 | Please recommend something. | Grace +0.2 | Flag `maid_cafe_first_recommendation`. |
+| M44.02 | Try choosing for myself. | Nerve +0.2 | Flag `maid_cafe_first_independent_order`. |
+| M44.03 | What do most people order? | Insight +0.2 | Flag `maid_cafe_first_popular_order`. |
+
+### M45. The Magic Spell
+
+Source: [`second_school_day`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M45.01 | Try the spell with her. | Nerve +0.2 | Flag `maid_cafe_join_spell`. |
+| M45.02 | Smile and let her do the spell. | Grace +0.2 | Flag `maid_cafe_watch_spell`. |
+
 ## Rewards Outside Dialogue Choices
 
 ### E01. Put The Day Back: Memory Puzzle
@@ -466,7 +580,32 @@ Source: [`after_school_run`](../game/script.rpy#L4032), reward at line 4169.
 
 | ID | Outcome / Action | Reward (editable) | Notes |
 |---|---|---|---|
-| E02.01 | Complete the first river run with Hikari. | Nerve +1.0 | Flag `run_first_river`; awarded on the run route regardless of M27-M29 answers. |
+| E02.01 | Complete the first river run with Hikari. | Nerve +0.5 | Flag `run_first_river`; awarded on the run route regardless of M27-M29 answers. |
+
+### E03. First Night Memory Puzzle
+
+Source: [`first_night_memory`](../game/script.rpy).
+
+| ID | Outcome / Action | Reward (editable) | Notes |
+|---|---|---|---|
+| E03.01 | Match all pairs within three misses. | Insight +0.3 | Flag `first_night_memory_pairs`. |
+| E03.02 | Exceed three misses. | No rewards | The day slips out of order. |
+
+### E04. Walk Route Closer
+
+Source: [`after_school_walk_alone`](../game/script.rpy).
+
+| ID | Outcome / Action | Reward (editable) | Notes |
+|---|---|---|---|
+| E04.01 | Finish the first ramen-shop visit. | Insight +0.5 | Flag `walk_first_found`. |
+
+### E05. Photography Club Route Closer
+
+Source: [`after_school_photo_club`](../game/script.rpy).
+
+| ID | Outcome / Action | Reward (editable) | Notes |
+|---|---|---|---|
+| E05.01 | Finish the first Circle session. | Grace +0.5 | Flag `photo_first_session`. |
 
 ## Other Existing Screens
 

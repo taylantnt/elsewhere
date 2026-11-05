@@ -249,7 +249,7 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
   makes this the act break rather than the last bell.
 - **Only one afternoon route happens.** Within each route, selected answers
   award small gains. Ramen has Japanese recommendation and appreciation replies;
-  the run has an empathetic silence choice plus **1.0 Nerve** for completion;
+  the run has an empathetic silence choice plus **0.5 Nerve** for completion;
   photography has participation, observation, and practical-help replies.
 - `after_school_walk_alone` — he cannot use the map without reception, gets
   lost, and finds the ramen shop, which is also the demonstration
@@ -434,8 +434,8 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
 | `first_day_activity` | the Act 1 fork in `first_class` | Which shape of afternoon he picked (`walk_alone` / `walk_hikari` / `photo_club`); read immediately, never shown |
 | `first_run_started` | `after_school_run` | The first river run happened. The run is not a confidant slot yet, so this is the only record of it |
 | `current_act` | the story, at each act break | Which act's caps are in force (`act_confidant_cap`) |
-| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim) | How many of the seven visits each person has had; `destination_state()` and the hub read it, nothing else writes it yet |
-| `sister_affection`, `sim_affection`, `orson_affection`, `chef_affection`, `aya_affection`, `hana_affection` | **nothing yet** | Declared placeholders for a confidant's *relationship quality*; no code reads or writes them. Note this is not the visit count, which is `confidant_visits` |
+| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), and the maid cafe scene (aya) | How many of the seven visits each person has had; `destination_state()` and the hub read it, nothing else writes it yet |
+| `sister_affection`, `sim_affection`, `orson_affection`, `chef_affection`, `aya_affection`, `hana_affection` | **nothing yet** | Declared placeholders for a confidant's *relationship quality*; the story now writes them, though nothing reads them yet. Note this is not the visit count, which is `confidant_visits` |
 
 ---
 

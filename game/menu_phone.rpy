@@ -295,7 +295,7 @@ screen phone_links():
             if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
                 use phone_row(_("Help"), ShowMenu("help"))
             if renpy.variant("pc"):
-                use phone_row(_("Quit"), Quit(confirm=True))
+                use phone_row(_("Quit Game"), Quit(confirm=True))
 
 screen phone_title():
     default raise_phone = not menu_phone_open
@@ -322,7 +322,7 @@ screen phone_title():
                 vbox:
                     spacing gui.scale(12)
                     text "elsewhere" style "phone_brand"
-                    text _("TITLE SCREEN") style "phone_detail"
+                    text _("") style "phone_detail"
                     viewport:
                         style_prefix "phone"
                         mousewheel True

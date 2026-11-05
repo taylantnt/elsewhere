@@ -445,6 +445,8 @@ default memory_names = {
     "hikari": "Hikari",
     "clerk": "the clerk",
     "professor": "the professor",
+    "father": "Tetsuo",
+    "sim": "Sim",
 }
 
 # The orb cluster in the corner. It stays off until the story proper begins, so
@@ -1070,7 +1072,7 @@ define veteran = Character("Veteran Assistant", callback=type_sound, image="vete
 # was coming before he arrived. Both of those are the point of their scenes.
 define professor = Character("Professor", color="#c9c4b0", callback=type_sound, image="professor")
 define clerk = Character("Student Relations", color="#b8c6bd", callback=type_sound, image="clerk")
-define hamada_staff = Character("Yamada", color="#b6d2e8", callback=type_sound, image="hamada_staff")
+define yamada = Character("Yamada", color="#b6d2e8", callback=type_sound, image="yamada")
 
 # --- PORTRAITS ---
 # The picture in the left gutter belongs to whoever is talking. Two things are
@@ -1158,7 +1160,7 @@ image side taxi_driver = At(Transform("images/characters/taxidriver.png", xysize
 
 # The professor already has a portrait on disk, so he uses it.
 image side professor = At(Transform("images/characters/teacher.png", xysize=(256, 384), fit="contain"), portrait_idle)
-image side hamada_staff = At(Transform("images/characters/hamadadenki.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side yamada = At(Transform("images/characters/hamadadenki.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side aya = At(Transform("images/characters/aya.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side aya = At(Transform("images/characters/maid.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
@@ -1208,7 +1210,7 @@ transform standing:
 init python:
     for _standing_tag in (
         "assistant", "veteran", "security", "security2", "mother", "father",
-        "sister", "taxi_driver", "professor", "hamada_staff", "chef", "sim",
+        "sister", "taxi_driver", "professor", "yamada", "chef", "sim",
         "clerk", "timid_man", "cheerful_woman",
     ):
         renpy.image(_standing_tag + "_standing", At("side " + _standing_tag, standing))
@@ -4132,6 +4134,11 @@ label after_school_run:
             hikari "..."
             hikari "Yes. You can come."
             $ reward_attributes_once("answer_run_join", [("nerve", "micro")], show="auto")
+        "I'll stay here.":
+            mc "I'll stay here. I'm done for the day."
+            hikari "Okay. I'll be back in an hour."
+            $ declined_first_run = True
+            jump after_school_run_declined
 
     hikari "Go and change into something you can move in."
     mc "Oh? You're serious."
@@ -5055,7 +5062,7 @@ label second_school_day:
         "Take careful notes on the kigo.":
             $ haiku_study_method = "notes"
             mc "(I write: kigo = seasonal word; notice what it implies.)"
-            $ reward_attributes_once("haiku_lesson_notes", [("grace", "nudge")], show="auto")
+            $ reward_attributes_once("haiku_lesson_notes", [("insight", "nudge")], show="auto")
         "Listen closely to the example.":
             $ haiku_study_method = "listening"
             mc "(I set the pen down and listen to the poem again, looking for the season in the image.)"
@@ -5064,8 +5071,14 @@ label second_school_day:
             $ haiku_study_method = "research"
             mc "(I mark the word and make a note to compare a few translations later.)"
             $ reward_attributes_once("haiku_lesson_research", [("nerve", "nudge")], show="auto")
-
+                
+    scene black with Fade(1.0, 0.3, 0.0)
+    "I write the last line of the haiku in my notebook, then look up at the professor."
     "The bell rings. The professor closes his book, and the room breaks into conversation."
+    scene bg_department_hall with walk_fade
+
+
+
     hikari "You made it through a whole lecture on time."
     mc "I even wrote something down."
     hikari "Then let's not waste the rest of the day. Akihabara."
@@ -5078,6 +5091,7 @@ label second_school_day:
     "When we come back above ground, Akihabara is already louder than the train."
 
     scene bg_akihabara_hamada_outside with Fade(0.0, 0.0, 1.8)
+    play music "audio/SFX/akihabara.mp3" fadein 1.5
     $ phone_map_visit("akihabara")
     "Hamada Denki rises over the intersection, floor after floor of glass and red signs."
     hikari "Eight floors. Cosmetics, refrigerators, cameras, console games, and parts for things I've never heard of."
@@ -5097,39 +5111,39 @@ label second_school_day:
     mc "(The outside looked enormous. From in here it looks like the outside was only the first room.)"
     hikari "Phones and service are on this floor. We're not shopping for a handset."
     "A staff member with a tablet approaches us."
-    hamada_staff "Welcome to Hamada Denki. Are you looking for a phone today?"
+    yamada "Welcome to Hamada Denki. Are you looking for a phone today?"
     hikari "Not a phone. He needs a cellular plan for a device he already owns."
-    hamada_staff "Of course. Is this your first plan in Japan?"
+    yamada "Of course. Is this your first plan in Japan?"
     if first_day_activity == "walk_alone":
         mc "Yes. Mostly maps, and a way to check a place's hours before I head out."
     elif first_day_activity == "walk_hikari":
         mc "Yes. Mostly maps, and a reliable way to reach my family when plans change."
     else:
         mc "Yes. Mostly maps, messages, and the Circle group Sim invited me to."
-    hamada_staff "Then let's compare the student plans before we add anything."
+    yamada "Then let's compare the student plans before we add anything."
 
     menu:
         "A basic plan is enough for now.":
             $ reward_attributes_once("cellular_plan_modest", [("insight", "micro")], show="auto")
             mc "A basic plan sounds right. I want to keep the monthly cost predictable."
-            hamada_staff "Then we can start with the student plan and check whether its data allowance fits."
+            yamada "Then we can start with the student plan and check whether its data allowance fits."
         "I would rather have enough data not to worry about every search.":
             $ reward_attributes_once("cellular_plan_usage", [("nerve", "micro")], show="auto")
             mc "I would rather have enough data not to worry about every search."
-            hamada_staff "We can compare the next tier too, and look at the monthly difference before you decide."
+            yamada "We can compare the next tier too, and look at the monthly difference before you decide."
         "Could we see the lowest student rate first?":
             $ reward_attributes_once("cellular_plan_student_rate", [("grace", "micro")], show="auto")
             mc "Could we see the lowest student rate first?"
-            hamada_staff "Certainly. Your student ID may qualify you for the student discount."
+            yamada "Certainly. Your student ID may qualify you for the student discount."
 
-    hamada_staff "May I see your student ID?"
+    yamada "May I see your student ID?"
     "I take the card from my wallet and pass it across the counter."
-    hamada_staff "Thank you. This confirms your student discount. The account details you already registered will verify the line."
+    yamada "Thank you. This confirms your student discount. The account details you already registered will verify the line."
     hikari "And this plan is only the monthly data and calls? No handset payment?"
-    hamada_staff "Correct. The phone is yours already. The student plan has a monthly fee; calls are charged only if you use them."
+    yamada "Correct. The phone is yours already. The student plan has a monthly fee; calls are charged only if you use them."
     hikari "Good. And what are these add-ons?"
     "He turns the tablet so we can see a list: device insurance, a video service, and extra cloud storage."
-    hamada_staff "All optional. None is needed to activate the line."
+    yamada "All optional. None is needed to activate the line."
 
     menu:
         "No add-ons. Show us the full monthly total.":
@@ -5142,7 +5156,7 @@ label second_school_day:
             $ reward_attributes_once("cellular_plan_basic", [("grace", "micro")], show="auto")
         "No extras, thanks.":
             mc "No extras, thanks."
-            hamada_staff "Understood. I'll leave every optional service unchecked."
+            yamada "Understood. I'll leave every optional service unchecked."
             $ reward_attributes_once("cellular_plan_decline_extras", [("nerve", "micro")], show="auto")
 
     "Yamada walks us through the monthly fee, the first partial bill, and the cancellation terms."
@@ -5150,7 +5164,7 @@ label second_school_day:
     hikari "No handset, no streaming service, no insurance. Just the plan we agreed on."
     mc "I understand."
     "I sign the form on the tablet. Yamada fits a SIM card into the phone and waits for the network to register."
-    hamada_staff "There. The line is active. You should see the signal now."
+    yamada "There. The line is active. You should see the signal now."
     $ cellular_data_active = True
     call screen cellular_connection_phone
     "At the top of the screen, the empty signal indicator fills with bars."

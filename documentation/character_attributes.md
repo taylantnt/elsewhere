@@ -528,7 +528,7 @@ as a short centred notice that fades in under the top of the screen and fades ou
 Design rules:
 
 - **Memory is not a reward.** A remembered answer pays nothing and a paying answer is still remembered; the two systems are independent and neither substitutes for the other. That is the whole point: an answer can be free and still matter.
-- **Memory is for people who matter.** Tag someone when losing them is a scene the story is going to spend; do not tag a stranger the protagonist will never see again. The characters tagged so far are **Hikari**, the **circles clerk**, and the **professor**.
+- **Memory is for people who matter.** Tag someone when losing them is a scene the story is going to spend; do not tag a stranger the protagonist will never see again. The characters tagged so far are **Hikari**, the **circles clerk**, the **professor**, **Tetsuo** (the father), and **Sim**.
 - **Write the note as a plain fact, first person.** `remember("hikari", "asked what she saw in the courtyard, years ago")` - not "was kind", not "earned Grace". It is a log of what he did, not of what it was worth.
 - **A replayed answer is still remembered, but only once.** A latched answer (§5.4) that the game plays back on a second visit must not log its memory again, so the notice does not repeat.
 - **The name on screen is not the id.** The keys are lowercase ids; the notice reads from `memory_names` so it can say "Hikari" rather than "hikari", and anything untagged falls back to a capitalised id.
