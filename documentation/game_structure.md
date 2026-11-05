@@ -277,6 +277,15 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
   interaction.md`. Sets `confidant_visits["sim"] = 1` and logs a memory.
   Selected replies earn Nerve for joining, Insight for reframing, or Grace for
   helping the model. Sitting through the meeting does not automatically pay.
+- `first_evening_dinner` closes every route. On the walk-alone route only, he
+  is genuinely still full from the ramen, so the table gets one extra choice
+  before the usual natto menu: **be honest** ("I'm still full") or **cover it**
+  ("I'm starving"). Honest costs a little Grace (`first_dinner_declined`,
+  `declined_dinner = True`) — Hikari names the shop, Tetsuo is disappointed but
+  says it can't be helped because they couldn't communicate, and he explains
+  the dinner-time rule; covering pays Grace and his regard. `second_morning`
+  breakfast reads `declined_dinner` so father, mother and Hikari follow up on
+  whichever happened.
 - **The first visit is the whole of each confidant's presence in the script.**
   Nothing reads `confidant_visits` yet; the counter is written here so the hub has
   something true to read when it is wired up (§5.7).
@@ -300,9 +309,12 @@ The first day that belongs to him, and the template for every day after it.
   Aya's first visit, scripted in full: rules and pricing, omurice with the
   ketchup cat, the moe moe kyun spell, the WIRE card (`confidant_visits["aya"] = 1`,
   `wire_unlock("aya")`), and the walk back to the station.
-- The scene ends on the train home with `return` — **the game currently stops
-  here**. The day loop (morning → lecture → `free_afternoon` → night) is what
-  Act 2 needs next; `free_afternoon` is wired but uncalled (§5.7).
+- The scene ends on the train home. Leaving the cafe he texts Hikari through
+  the new **Messages** app (`run_chat`, §5.8), and on the train her "did you
+  find the station?" exchange — including the notebook-cat photo and a
+  three-way reply choice — plays out as real texts. The day loop (morning →
+  lecture → `free_afternoon` → night) is what Act 2 needs next;
+  `free_afternoon` is wired but uncalled (§5.7).
 
 ---
 
@@ -429,6 +441,31 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   hand-written dialogue because Hikari is asking the question there — that is
   deliberate, not an oversight.
 
+### 5.8 Messages — texting, threads, and the buzz
+`game/messages.rpy`. WIRE is the contacts book; Messages is the conversation.
+Threads are keyed by the same contact ids, so unlocking somebody in WIRE is
+what makes them textable.
+
+- `send_message` / `receive_message` are the only writers; `receive_message`
+  plays `audio/SFX/message_buzz.wav` and bumps the thread's unread count.
+- `run_chat(cid, beats)` is how a scene plays an exchange: every beat lands in
+  the thread AND shows it inside the quick-menu phone (`phone_chat_scene`
+  reuses `phone_backdrop`/`phone_hardware`/`phone_status`/`phone_row`, so the
+  chat looks like it happens in the phone in his hand), so app history and
+  what the player saw cannot disagree. Beats buzz before the phone comes up.
+  Beat types: `{"them": ..., "img"?}`, `{"say": ..., "img"?}`, and `"options"`
+  on ANY beat turns the bottom of the phone into reply buttons
+  (`{"label","send","img"?,"them":[...]}`).
+- `queue_message` + `flush_pending_messages` is the timing answer for texts
+  that should arrive while he is busy: queue during a scene, flush at day
+  turns (`second_morning`, `free_afternoon`). No signal, no delivery — the
+  queue just waits.
+- The Messages app inside the phone launcher (`phone_app_messages_contents` /
+  `phone_app_messages_thread_contents`) is read-only history: conversation
+  list with unread badges, then bubbles. Replies only happen in story scenes.
+- First use: the Akihabara walk home and the train ride home from the maid
+  cafe (§4.7).
+
 ---
 
 ## 6. State Written by the Story
@@ -458,10 +495,14 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
 | `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the future `confidant_visit_*` stubs | How many of the seven visits each person has had; `destination_state()` and the hub read it |
 | `hikari_visits` | `after_school_run`, `after_school_run_declined` | Hikari's own visit count — feeds her WIRE progress ticks, separate from the confidant table |
 | `declined_first_run` | the Act 1 fork | He said no to the first river run; changes `second_morning`/`first_night_memory`/`second_school_day` dialogue |
+| `declined_dinner` | `first_evening_dinner` (walk-alone route only) | He told the family he was still full from ramen; `second_morning` breakfast reads it so the two days agree |
 | `sister_affection`, `sim_affection`, `chef_affection`, `aya_affection` | `after_school_run*` and the first-visit scenes | Relationship quality, written by the story; **nothing reads them yet** |
 | `orson_affection`, `hana_affection` | **nothing yet** | Declared placeholders; written when those arcs are scripted |
 | `cellular_data_active` | `second_school_day` (Hamada Denki) | WIRE can sync off-Wi-Fi; gates `phone_map_is_unlocked("akihabara")` |
 | `wire_unlocked` | `wire_unlock()` in the visit scenes | Who is in the WIRE roster (`wire_order` = hikari, chef, sim, aya) |
+| `message_threads` / `message_unread` | `send_message()` / `receive_message()` in `messages.rpy` | The actual texts, per contact; unread counts per thread |
+| `pending_messages` | `queue_message()` | Texts that arrive while the phone is out of reach; `flush_pending_messages()` delivers them at day turns if `cellular_data_active` |
+| `phone_apps_messages_contact` | the Messages app | Which thread is open inside the phone UI |
 | `phone_map_unlocked` / `phone_map_visited` | `phone_map_visit()` | Which map pins exist and which have been seen |
 | `day_memory_*` | `first_night_memory` | The 4×4 day-recall board state |
 | `haiku_study_method` | `second_school_day` haiku menu | Which study approach he picked; read by nothing yet |

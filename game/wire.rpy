@@ -326,7 +326,12 @@ screen wire_avatar(cid, px):
 
         if wire_photo and renpy.loadable(wire_photo):
             add Solid(wire_accent + "26", xysize=(px, px))
-            add Transform(wire_photo, crop=wire_entry.get("photo_crop"), xysize=(px, px))
+            add Transform(
+                wire_photo,
+                crop=wire_entry.get("photo_crop"),
+                crop_relative=True,
+                xysize=(px, px),
+            )
         else:
             add Solid(wire_accent + "26", xysize=(px, px))
 

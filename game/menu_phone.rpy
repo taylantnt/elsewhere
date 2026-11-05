@@ -572,7 +572,7 @@ screen phone_attributes():
                         fixed:
                             xysize (gui.scale(76), gui.scale(76))
                             add attribute_ring_displayable(attribute_id, orb_progress, 76)
-                            text "[orb_rank:02d]":
+                            text "[orb_rank]":
                                 font "DejaVuSans.ttf"
                                 size gui.scale(26)
                                 bold True
@@ -589,7 +589,7 @@ screen phone_attributes():
                                 kerning gui.scale(1)
                                 bold True
                                 color orb_color
-                            text "RANK [orb_rank:02d] / 05" style "phone_detail" size gui.scale(10)
+                            text "RANK [orb_rank] / 5" style "phone_detail" size gui.scale(10)
                             text attribute_rank_next_text(attribute_id) style "phone_detail"
                     text attribute_blurb(attribute_id) style "phone_detail"
                     hbox:

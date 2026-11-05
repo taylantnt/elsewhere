@@ -322,6 +322,10 @@ default hana_affection = 0
 # habit; he simply is not on it yet, and WIRE unlocks later at the house instead.
 default declined_first_run = False
 
+# True if he told the family he was still full from ramen and skipped dinner.
+# Only possible on the walk-alone route; the next morning's breakfast reads it.
+default declined_dinner = False
+
 # Airport state
 default talked_to_security = False
 default talked_to_man1 = False
@@ -563,11 +567,11 @@ init python:
     # smaller than a half point, so they accumulate toward this ladder.
     attribute_rank_thresholds = [0.0, 2.0, 5.0, 9.5, 15.0]
     attribute_rank_names = [
-        "Rank 01",
-        "Rank 02",
-        "Rank 03",
-        "Rank 04",
-        "Rank 05",
+        "Rank 1",
+        "Rank 2",
+        "Rank 3",
+        "Rank 4",
+        "Rank 5",
     ]
 
     # Standard reward sizes live here. Prefer a name over a raw number so later
@@ -810,7 +814,12 @@ init python:
             # the reward reads as a follow-through rather than a cut.
             renpy.pause(0.45, hard=True)
             # Screen timers synchronize the landing and settle with the reveal.
-            play_sfx("audio/SFX/attribute_swell.wav")
+            # A rank change is the rare, bigger moment, so it gets its own cue;
+            # an ordinary card keeps the swell.
+            if rank_up:
+                play_sfx("audio/SFX/attribute_rankup.wav")
+            else:
+                play_sfx("audio/SFX/attribute_swell.wav")
             renpy.call_screen("attribute_gain_card", attribute_id=attribute_id,
                               amount=points, rank_up=rank_up, rank_down=rank_down)
             # The card has already returned, so the screen is clear again.
@@ -1035,7 +1044,7 @@ define orson = Character("Orson", color="#a9a9a9", callback=type_sound, image="o
 define chef = Character("Chef", color="#deb887", callback=type_sound, image="chef")
 define sim = Character("Sim", color="#add8e6", callback=type_sound, image="sim")
 define aya = Character("Aya", color="#dda0dd", callback=type_sound, image="aya")
-define maid = Character("Maid", color="#dca0dd", callback=type_sound, image="maid")
+define maid = Character("Maid", color="#dca0dd", callback=type_sound, image="Maid")
 define hana = Character("Hana", color="#98fb98", callback=type_sound, image="hana")
 
 # Generic NPCs
@@ -1162,7 +1171,7 @@ image side taxi_driver = At(Transform("images/characters/taxidriver.png", xysize
 image side professor = At(Transform("images/characters/teacher.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side yamada = At(Transform("images/characters/hamadadenki.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side aya = At(Transform("images/characters/aya.png", xysize=(256, 384), fit="contain"), portrait_idle)
-image side aya = At(Transform("images/characters/maid.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side Maid = At(Transform("images/characters/maid.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
 # The two people whose stories the first free afternoon can open: the ramen chef
 # near home, and Sim, who runs the photography club, Circle. Both portraits are already
@@ -1499,7 +1508,7 @@ screen attribute_gain_card(attribute_id, amount, rank_up=False, rank_down=False)
             $ orb_x, orb_y = attribute_orb_position(orb_id)
             $ orb_color = attribute_color(orb_id)
 
-            text "[orb_rank:02d]" style "attribute_gain_orb_number":
+            text "[orb_rank]" style "attribute_gain_orb_number":
                 xpos gui.scale(orb_x)
                 ypos gui.scale(orb_y)
                 xanchor 0.5
@@ -1512,7 +1521,7 @@ screen attribute_gain_card(attribute_id, amount, rank_up=False, rank_down=False)
                 xsize gui.scale(280)
                 spacing gui.scale(9)
                 text attribute_name(orb_id).upper() style "attribute_gain_name" color orb_color xalign 0.5
-                text "RANK [orb_rank:02d] / 05" style "attribute_gain_rank" xalign 0.5
+                text "RANK [orb_rank] / 5" style "attribute_gain_rank" xalign 0.5
                 text attribute_blurb(orb_id) style "attribute_gain_ribbon" xalign 0.5
                 text attribute_rank_next_text(orb_id) style "attribute_gain_ribbon" xalign 0.5
 
@@ -1540,7 +1549,7 @@ screen attribute_gain_card(attribute_id, amount, rank_up=False, rank_down=False)
             spacing gui.scale(10)
             text "[current_name.upper()]  [amount_text]" style "attribute_gain_name" color active_color xalign 1.0
             if rank_up:
-                text "RANK [active_rank:02d] / 05" style "attribute_gain_rank" xalign 1.0
+                text "RANK [active_rank] / 5" style "attribute_gain_rank" xalign 1.0
             else:
                 text attribute_rank_next_text(attribute_id) style "attribute_gain_ribbon" xalign 1.0
             add Solid(active_color) xysize (gui.scale(306), gui.scale(2))
@@ -1923,7 +1932,7 @@ label answer_timid_again:
     jump airport_exploration
 
 label answer_timid_aside:
-    mc "Ah - sorry. Sorry."
+    mc "Ah, sorry. Sorry."
     mc "(I'll leave him alone.)"
     jump airport_exploration
 
@@ -2357,7 +2366,7 @@ label train_ticket:
 
 label ticket_machine:
     menu:
-        "Try the 320 yen button — it's cheap enough to test.":
+        "Try the 320 yen button, it's cheap enough to test.":
             if has_item("ticket_320"):
                 mc "(I already purchased this ticket. It's the wrong one.)"
                 jump ticket_machine
@@ -3972,12 +3981,10 @@ label after_school_walk_alone:
             mc "(Soy sauce. That answers that.)"
             "I stop talking. He pushes the bowl half a centimetre towards me with one finger."
             $ reward_attributes_once("answer_ramen_broth", [("insight", "nudge")], show="auto")
-            scene bg_ramen_shop with walk_fade
             chef "どうぞ。"
             mc "(That one I know. It means here you go. It also means eat it.)"
         "Try it before asking.":
             "I pick up the spoon before I can think about it, which he appears to consider the entire conversation."
-            scene bg_ramen_shop with walk_fade
             chef "どうぞ。"
             mc "(That one I know. It means here you go. It also means eat it.)"
 
@@ -4017,6 +4024,7 @@ label after_school_walk_alone:
     # The meal continues in the shop. No more choices, just the eating, and the
     # room around it. Every route comes back through the same empty bowl, the
     # same bill, and the same walk home.
+    scene black with walk_fade
     "Two men come in while I eat. They sit at the other end of the counter without speaking, and the chef puts two bowls down without looking at either of them."
     "I watch how they hold their chopsticks and try the same grip. It is not the grip I know."
     "Chopsticks in one hand, spoon in the other, head down over the bowl. They eat the way this country eats, and I copy it badly, and neither of them looks up."
@@ -4387,6 +4395,7 @@ label after_school_photo_club:
     "I open the door."
 
     scene bg_photo_club with walk_fade
+    play music "audio/Music/circle.mp3" fadein 2.0
     $ phone_map_visit("photo_club")
 
     "Someone has taken every chair in this room and put it in a rough circle. There are six people in it. None of them looks up."
@@ -4502,7 +4511,7 @@ label after_school_photo_club:
     # He does not gate the club behind anything, so the group is the one thing he
     # has to give that costs him nothing and asks nothing. He gives it the same
     # way he gave the phone back an hour ago: like it was already mine.
-    sim "Oh - wait. One thing before you go."
+    sim "Oh, wait. One thing before you go."
     sim "You have WIRE, don't you? Everybody in this room does."
     mc "Hikari put it on my phone. My host sister. I haven't really used it."
     sim "Then you are already most of the way in. That is the entire entry requirement."
@@ -4786,6 +4795,33 @@ label first_evening_dinner:
     father "I have not."
     "For the first time since I came home, the corner of his mouth moves."
 
+    # Only the ramen route leaves him genuinely full. Everyone else came home
+    # hungry, so the choice below would not exist for them — and the morning
+    # after reads `declined_dinner` to keep the two days consistent.
+    if first_day_activity == "walk_alone":
+        mc "(I am still full. That bowl was enormous. But Mother kept this warm, and they waited for me.)"
+        menu:
+            "Be honest. Tell them you're still full from the ramen.":
+                mc "I... I actually just had a really big bowl of ramen. I'm still full."
+                "The table goes quiet for a second. Mother looks at the fish, then at me."
+                hikari "The one near the two convenience stores."
+                mc "Yeah. The chef made me a bowl I didn't order, and it was... a lot."
+                father "..."
+                father "I'm glad you found somewhere to eat. But when this family sits down, we eat together."
+                father "We couldn't talk to you about it, and that isn't your fault. But dinner time is dinner time."
+                mother "There's rice in the pot. If you get hungry later."
+                $ declined_dinner = True
+                $ reward_attributes_once("first_dinner_declined", [("grace", "micro_loss")], show="auto")
+                $ remember("father", "told him he was still full from ramen on his first night")
+                $ remember("hikari", "covered for him when he skipped dinner")
+                jump end_of_first_day
+            "Say you're hungry, and sit down to eat with them.":
+                mc "I'm starving, actually. What is natto?"
+                $ reward_attributes_once("first_dinner_covered", [("grace", "small")], show="auto")
+                $ father_affection += 1
+                $ remember("father", "ate dinner with the family even though he was still full")
+                $ remember("hikari", "he covered for being too full to explain")
+
     menu:
         "Try the natto. Admit you're not sure about it yet.":
             "I take a small bite. The texture is stranger than the taste."
@@ -4955,6 +4991,8 @@ label first_night_memory:
 ## repeats — the difference is that from here on the afternoon is the hub's.
 
 label second_morning:
+    # Anything queued while the phone had no signal lands here, with the buzz.
+    $ flush_pending_messages()
     scene bg_room_day with Dissolve(1.5)
     $ room_ambient(False)
 
@@ -4979,8 +5017,14 @@ label second_morning:
     mc "A little confusing. I was late to class, but I found somewhere to go after school."
 
     if first_day_activity == "walk_alone":
-        mc "I got lost and found a ramen shop. The chef gave me his WIRE contact."
-        father "You got lost and made a contact. That is one way to do it."
+        if declined_dinner:
+            mc "I got lost, found a ramen shop, and told them I was too full for dinner. Dad didn't say much about it."
+            father "You don't skip dinner in this house. If you're hungry, we eat together. That's the rule."
+            hikari "He found a ramen place by getting completely lost. Honestly, that's kind of amazing."
+            mother "There's rice in the pot if you want some before we leave."
+        else:
+            mc "I got lost and found a ramen shop. The chef gave me his WIRE contact."
+            father "You got lost and made a contact. That is one way to do it."
     elif first_day_activity == "walk_hikari":
         if declined_first_run:
             mc "Hikari went running. I stayed home. She added me on WIRE when she got back."
@@ -5381,20 +5425,54 @@ label second_school_day:
     stop music fadeout 1.0
     play music "audio/Music/akihabara.mp3" fadein 1.5
     "Outside, the arcades and bright shop signs are waiting exactly where I left them."
-    "I message Hikari that I'm heading to the station. Her reply comes back before I reach the corner: 'Good. Don't get lost in any more cafes.'"
-    mc "(I wasn't lost. I knew exactly where I was. More or less.)"
+    "Hikari said to message her when I head back, so I take out the phone while the light lasts."
+    $ run_chat("hikari", [
+        {"say": "I'm heading back to the station now."},
+        {"them": "Good. Don't get lost in any more cafes."},
+        {"them": "Did you actually go in, or did you just collect flyers?", "options": [
+            {"label": "\"I went in. Ordered lunch. Did the spell.\"",
+             "send": "I went in. Ordered lunch. Did the spell.",
+             "them": ["Good. First-timer rites complete.",
+                      "The kitty drawing better be good."]},
+            {"label": "\"I might have collected a flyer or two.\"",
+             "send": "I might have collected a flyer or two.",
+             "them": ["Honest. I respect it.",
+                      "The cafe will still be there next time."]},
+        ]},
+    ])
+    mc "(I went in. I ordered lunch. I did the spell. That is going in.)"
     "A group of students passes me, comparing keychains from a capsule machine. The city no longer feels like one enormous place I have to understand all at once."
     "I find the station using the map. This time I check the sign before choosing an entrance."
     scene bg_train_interior with walk_fade
     stop music fadeout 0.8
     play music "audio/Music/train.mp3" fadein 1.5
-    "On the train, I open my notebook and write down the phrase I heard at the cafe door: 'okaerinasaimase' — welcome home."
+    "On the train, I open my notebook and write down the phrase I heard at the cafe door: 'okaerinasaimase', welcome home."
     "Under it, I add a small drawing of a cat with a bow. It comes out less like a cat and more like a dumpling."
     mc "(I'll remember the real one better.)"
-    "My phone buzzes. Hikari asks if I found the station. I send back a picture of the notebook page."
-    hikari "That cat looks like it needs help."
-    mc "It's a work in progress."
-    hikari "Good. You can practice on the train."
+    "My phone buzzes against my leg. Hikari asks if I found the station."
+    mc "(Right. Cellular. The phone is actually a phone now.)"
+    $ run_chat("hikari", [
+        {"them": "Did you make it to the station okay?", "options": [
+            {"label": "\"Just got here.\"",
+             "send": "Just got here.",
+             "them": ["Good."]},
+            {"label": "\"Lost again, but I found the exit.\"",
+             "send": "Lost again, but I found the exit.",
+             "them": ["You have a map now. Use it."]},
+        ]},
+        {"say": "(photo)", "img": "images/messages/notebook_page.png"},
+        {"them": "That cat looks like it needs help.", "options": [
+            {"label": "\"It's a work in progress.\"",
+             "send": "It's a work in progress.",
+             "them": ["Good. You can practice on the train."]},
+            {"label": "\"It's supposed to be a cat.\"",
+             "send": "It's supposed to be a cat.",
+             "them": ["Sure it is.", "Practice anyway."]},
+            {"label": "\"I'll send you the real one later.\"",
+             "send": "I'll send you the real one later.",
+             "them": ["I'll hold you to that."]},
+        ]},
+    ])
     "The city slips past the window. Hamada Denki, the arcade signs, and the cafe's pink lights settle into separate memories instead of one long blur."
     "I arrived with a phone that could only reach the house. Now it can get me across the city, and I have a reason to look forward to opening it again."
     scene black with Dissolve(2.0)
@@ -5422,6 +5500,8 @@ label second_school_day:
 
 label free_afternoon:
 
+    # Overnight and between-visit texts arrive here if the line is live.
+    $ flush_pending_messages()
     $ place = renpy.call_screen("location_hub")
 
     if place == "sim":

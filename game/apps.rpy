@@ -9,7 +9,7 @@ init python:
     import time
 
     phone_apps_catalog = [
-        ("messages", "Messages", True),
+        ("messages", "Messages", False),
         ("journal", "Journal", False),
         ("camera", "Camera", True),
         ("inventory", "Inventory", False),
@@ -132,6 +132,7 @@ init python:
 
 default phone_apps_page = None
 default phone_apps_wire_profile = None
+default phone_apps_messages_contact = None
 default phone_apps_inventory_item = None
 default phone_apps_inventory_open = False
 default phone_apps_backup_mode = None
@@ -152,6 +153,7 @@ default phone_map_visited = []
 label _phone_apps_open:
     $ phone_apps_page = None
     $ phone_apps_wire_profile = None
+    $ phone_apps_messages_contact = None
     $ phone_apps_inventory_item = None
     $ phone_apps_inventory_open = False
     $ phone_apps_backup_mode = None
@@ -652,7 +654,7 @@ screen phone_app_stats_contents():
                         fixed:
                             xysize (gui.scale(76), gui.scale(76))
                             add attribute_ring_displayable(attribute_id, orb_progress, 76)
-                            text "[orb_rank:02d]":
+                            text "[orb_rank]":
                                 font "DejaVuSans.ttf"
                                 size gui.scale(26)
                                 bold True
@@ -669,7 +671,7 @@ screen phone_app_stats_contents():
                                 kerning gui.scale(1)
                                 bold True
                                 color orb_color
-                            text "RANK [orb_rank:02d] / 05":
+                            text "RANK [orb_rank] / 5":
                                 style "phone_detail"
                                 size gui.scale(12)
                             text attribute_rank_next_text(attribute_id):
@@ -1042,6 +1044,12 @@ screen phone_apps():
                             [SetVariable("phone_apps_backup_mode", None), With(Dissolve(0.16))]
                             if phone_apps_page == "backup" and phone_apps_backup_mode else
                             [
+                                SetVariable("phone_apps_page", "messages"),
+                                SetVariable("phone_apps_messages_contact", None),
+                                With(Dissolve(0.16)),
+                            ]
+                            if phone_apps_page == "messages_thread" and phone_apps_messages_contact else
+                            [
                                 SetVariable("phone_apps_page", phone_apps_more_return_page),
                                 SetVariable("phone_apps_more_open", True),
                                 With(Dissolve(0.16)),
@@ -1053,6 +1061,7 @@ screen phone_apps():
                 $ app_titles = {
                     None: "Phone",
                     "messages": "Messages",
+                    "messages_thread": "Messages",
                     "wire": "WIRE",
                     "settings": "Settings",
                     "camera": "Camera",
@@ -1067,14 +1076,30 @@ screen phone_apps():
                     "confirm_quit": "Quit Game",
                 }
 
-                text app_titles[phone_apps_page]:
-                    xalign 0.5
-                    yalign 0.5
-                    xmaximum gui.scale(172)
-                    textalign 0.5
-                    size gui.scale(15)
-                    color "#f0eee8"
-                    outlines []
+                if phone_apps_page == "messages_thread":
+                    vbox:
+                        xalign 0.5
+                        yalign 0.5
+                        spacing gui.scale(1)
+                        text "Messages":
+                            xalign 0.5
+                            size gui.scale(15)
+                            color "#f0eee8"
+                            outlines []
+                        text msg_contact_name(phone_apps_messages_contact):
+                            xalign 0.5
+                            size gui.scale(10)
+                            color "#9aa8b0"
+                            outlines []
+                else:
+                    text app_titles[phone_apps_page]:
+                        xalign 0.5
+                        yalign 0.5
+                        xmaximum gui.scale(172)
+                        textalign 0.5
+                        size gui.scale(15)
+                        color "#f0eee8"
+                        outlines []
 
                 textbutton "×":
                     style "phone_small_button"
@@ -1128,7 +1153,11 @@ screen phone_apps():
                     use phone_apps_exit_confirm("title")
                 elif phone_apps_page == "confirm_quit":
                     use phone_apps_exit_confirm("quit")
-                elif phone_apps_page in ("messages", "camera"):
+                elif phone_apps_page == "messages":
+                    use phone_app_messages_contents
+                elif phone_apps_page == "messages_thread":
+                    use phone_app_messages_thread_contents(phone_apps_messages_contact)
+                elif phone_apps_page == "camera":
                     vbox:
                         xalign 0.5
                         yalign 0.5
@@ -1140,11 +1169,7 @@ screen phone_apps():
                             kerning gui.scale(1)
                             color "#dce4e8"
                             outlines []
-                        text (
-                            "Messages will be added later."
-                            if phone_apps_page == "messages"
-                            else "The camera is not available yet."
-                        ):
+                        text "The camera is not available yet.":
                             xalign 0.5
                             textalign 0.5
                             xmaximum gui.scale(205)

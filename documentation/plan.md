@@ -90,6 +90,20 @@ which is the simulation removing people as the test measures his equilibrium.
 - [x] 2026-11-05 — Level stubs created for akihabara/harajuku/asakusa/
       odaiba/yokohama_chinatown; empty Part Time Jobs folders removed (ideas
       moved here).
+- [x] 2026-11-05 — Dialogue scrub: removed " - " and em-dashes from
+      player-facing text; ranks unpadded to "Rank 1–5" everywhere
+      (`attribute_rank_names`, HUD, phone app, docs).
+- [x] 2026-11-05 — `audio/SFX/attribute_rankup.wav` generated (synthesized
+      chime); rank-ups now play it instead of `attribute_swell.wav`.
+- [x] 2026-11-05 — Ramen dinner choice: `first_evening_dinner` (walk-alone
+      route) offers honest-full (punished: `declined_dinner`, Grace loss,
+      father's dinner-time rule) vs cover-and-eat (rewarded); `second_morning`
+      breakfast follows up on either.
+- [x] 2026-11-05 — Messages app: `game/messages.rpy` (threads keyed by WIRE
+      contact ids, `run_chat` beat player, `queue_message`/`flush_pending_messages`
+      for off-screen texts, `message_buzz.wav`), Messages page in the phone
+      launcher (list + read-only thread), and the Akihabara/train-home
+      exchanges rewritten as live chats.
 - [ ] Wire `free_afternoon` into a real day loop (needs a day-3+ scene:
       morning → lecture → hub → night). Visit labels
       (`confidant_visit_<place>`) are stubs until the Act 2 scenes are written.
@@ -118,13 +132,17 @@ which is the simulation removing people as the test measures his equilibrium.
 - [ ] Portraits still missing: `hana.png` (needed before her scenes),
       orson, fortune teller, side characters.
 - [ ] `images/ui/camera_frame.png` referenced by `screen photo_mode`.
+- [ ] `images/messages/notebook_page.png` is a generated placeholder for the
+      notebook-cat photo texted on the train — replace with real art when
+      ready (swap the path in `script.rpy` `run_chat` or drop a new file in).
 - [ ] Sim's supporting cast portraits (user will provide): Rika, Nami,
       Marco, Riku — see `Characters/characters overview.md`.
 
 ### Design decisions still open
 
-- [ ] Rank names are currently "Rank 01–05" — settle real names when Act 2
-      content needs gates (see `character_attributes.md` §11).
+- [x] 2026-11-05 — Rank names settled as "Rank 1–5" (see
+      `character_attributes.md` §11); real names can replace them later if
+      Act 2 gates want them.
 - [ ] Whether Act 4 needs its own cap row or the 7-default is enough.
 - [ ] Part-time jobs (ideas below) — none scheduled.
 

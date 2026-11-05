@@ -336,11 +336,11 @@ Progression is a five-rank ladder:
 
 | Rank | Name | Begins at (cumulative points) |
 |---|---|---|
-| 1 | Rank 01 | 0.0 |
-| 2 | Rank 02 | 2.0 |
-| 3 | Rank 03 | 5.0 |
-| 4 | Rank 04 | 9.5 |
-| 5 | Rank 05 | 15.0 |
+| 1 | Rank 1 | 0.0 |
+| 2 | Rank 2 | 2.0 |
+| 3 | Rank 3 | 5.0 |
+| 4 | Rank 4 | 9.5 |
+| 5 | Rank 5 | 15.0 |
 
 These are **cumulative totals, not points-per-rank**: rank 2 begins when the attribute has 2.0 points in it, in total, since the beginning of the game. Each step costs more than the last, so the early game moves quickly and the later game means something.
 
@@ -675,11 +675,11 @@ content shows where the pacing actually lands.
 
 | Rank | Total points needed | Name (current) |
 |------|--------------------:|----------------|
-| 1 | 0 | Rank 01 |
-| 2 | 2.0 | Rank 02 |
-| 3 | 5.0 | Rank 03 |
-| 4 | 9.5 | Rank 04 |
-| 5 | 15.0 | Rank 05 |
+| 1 | 0 | Rank 1 |
+| 2 | 2.0 | Rank 2 |
+| 3 | 5.0 | Rank 3 |
+| 4 | 9.5 | Rank 4 |
+| 5 | 15.0 | Rank 5 |
 
 The gaps widen on purpose (2 → 3 → 4.5 → 5.5), so early game moves fast and
 the top ranks mean something. Attributes clamp at 0–15.
@@ -698,7 +698,7 @@ the top ranks mean something. Attributes clamp at 0–15.
 
 ### Still genuinely open
 
-- **Rank names.** "Rank 01–05" is a placeholder ladder. When Act 2 gates start
+- **Rank names.** "Rank 1–05" is a placeholder ladder. When Act 2 gates start
   mattering, pick real names — they appear on the gain card and the Attributes
   page, so they should mean something (e.g. per-attribute names, or a shared
   vocabulary like Observer → Fixture → Known → Indispensable → ???).
