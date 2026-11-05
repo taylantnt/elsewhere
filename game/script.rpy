@@ -318,10 +318,6 @@ default chef_affection = 0
 default aya_affection = 0
 default hana_affection = 0
 
-# True if he declined Hikari's first river invitation. The run still exists as her
-# habit; he simply is not on it yet, and WIRE unlocks later at the house instead.
-default declined_first_run = False
-
 # True if he told the family he was still full from ramen and skipped dinner.
 # Only possible on the walk-alone route; the next morning's breakfast reads it.
 default declined_dinner = False
@@ -4062,6 +4058,9 @@ label after_school_walk_alone:
     mc "So I know if you're shut before I walk down here for nothing."
     "He turns the card back round and goes to the pots, which is the conversation over."
     $ wire_unlock("chef")
+    # The shop's only broadcast, sent while the phone still has no data. It
+    # waits in the queue until the line goes live the next day.
+    $ queue_message("chef", "New bowl. 900 yen. Closed Wednesday.", day="yesterday")
     # Forced closer for the walk route. Finding the shop by getting lost is the
     # Insight beat that matches the run's Nerve and the club's Grace.
     $ reward_attributes_once("walk_first_found", [("insight", "small")], show="card")
@@ -4276,6 +4275,9 @@ label after_school_run:
     hikari "That's it."
     mc "(It is not it.)"
     $ wire_unlock("hikari")
+    # The thing she would not say in the kitchen. It is sent before his phone
+    # has data, so it reaches him at Hamada Denki with everything else.
+    $ queue_message("hikari", "Thanks for coming out with me. You kept up better than you think. Don't tell anyone I said that.", day="yesterday")
 
     "We walk back. Twenty minutes this time, because neither of us is in a hurry."
     "She talks less on the way back. Not nothing, less."
@@ -4310,59 +4312,6 @@ label after_school_run:
     father "Dinner is still warm. Sit down before you go upstairs."
     mc "(He doesn't raise his voice. Somehow that makes it harder to answer.)"
     hikari "We'll eat first. Come on."
-    jump first_evening_dinner
-
-
-label after_school_run_declined:
-
-    # He said no, and the game means it. She keeps the river; he keeps the house.
-    # WIRE still unlocks tonight — she put the app on his phone in the first place —
-    # but the Nerve card for finishing the run does not fire.
-
-    scene bg_home_exterior_day with walk_fade
-
-    "She turns toward the river without waiting for me to change my mind."
-    "I watch her until the street bends and takes her, and then I am alone with the blue gate."
-    mc "(That was the first invitation I have refused in this country.)"
-    mc "(It feels smaller than I expected. And also worse.)"
-
-    scene bg_home_day with walk_fade
-
-    "Inside, the house is still in its afternoon shape. Mother's shoes by the door. A radio somewhere on low."
-    mother "Back already?"
-    mc "Hikari went for a run. I stayed."
-    mother "Good. You look tired enough for two people."
-    mother "There's barley tea in the fridge. Help yourself. Dinner is at eight, same as always."
-    "She leaves me the kitchen and a glass that is already clean."
-
-    "I drink the tea. I look at the street through the kitchen window. I do not open WIRE."
-    mc "(If I open it now, there will be nobody on it, and that will feel like a decision I already made.)"
-
-    window hide
-    scene black with Dissolve(1.5)
-    "The light outside thins. Someone comes home. The clock does the rest."
-
-    scene bg_home_night with Dissolve(1.5)
-
-    "Hikari comes back through the door with her hair damp and her face flushed the colour of exercise."
-    hikari "You actually stayed."
-    mc "You told me to."
-    hikari "I told you not to wait up. That is different."
-    "She drops her shoes, drinks water straight from the tap, and holds her hand out."
-    hikari "Phone."
-    mc "Why."
-    hikari "Because I'm not explaining it twice, and because you are not getting out of this just because you sat on a chair."
-    "I hand it over. She opens WIRE, finds her own name missing, and puts it there."
-    hikari "Add me so I can tell you when I'm running late. And when I'm not coming home."
-    mc "That's cheerful."
-    hikari "It's practical."
-    $ wire_unlock("hikari")
-    $ sister_affection += 1
-    $ remember("hikari", "added her on WIRE after declining the run")
-
-    father "Dinner."
-    "One word from the kitchen, and the conversation is over."
-    hikari "Come on. He means both of us."
     jump first_evening_dinner
 
 
@@ -4524,6 +4473,9 @@ label after_school_photo_club:
     mc "I can't see the posts yet."
     sim "Not without a signal. They will be there when you get connected."
     $ wire_unlock("sim")
+    # Circle's welcome message. Like the chef's advert, it is queued until the
+    # phone has a data plan; Hikari is still standing there when it lands.
+    $ queue_message("sim", "Welcome to Circle! I posted the two photographs you took today. The window one already has replies. Next meeting is Thursday. Bring the camera if you have it.", day="yesterday")
     # Forced closer for the photo route. Sitting in a room of strangers and staying
     # is the Grace beat that matches the other first-afternoon finales.
     $ reward_attributes_once("photo_first_session", [("grace", "small")], show="card")
@@ -4595,20 +4547,12 @@ init python:
                 ("chef", "The card on the counter", "images/characters/chef.png", "#b59a79"),
             ]
         elif activity == "walk_hikari":
-            if store.declined_first_run:
-                route = [
-                    ("gate", "The blue gate alone", "bg_home_exterior_day", "#65aeb1"),
-                    ("tea", "Barley tea in the kitchen", "images/backgrounds/bg_kitchen_day.png", "#e8c686"),
-                    ("wire", "Her name on WIRE", "images/characters/sister.png", "#df8ea5"),
-                    ("home_wait", "Dinner called from the kitchen", "images/backgrounds/bg_home_inside_night.png", "#8d9db9"),
-                ]
-            else:
-                route = [
-                    ("river", "The river path", "bg_river", "#65aeb1"),
-                    ("running", "Hikari at a run", "images/characters/sister_run.png", "#df8ea5"),
-                    ("kitchen", "The kitchen light", "images/backgrounds/bg_kitchen_night.png", "#e8c686"),
-                    ("home_wait", "Someone waiting at home", "images/backgrounds/bg_home_inside_night.png", "#8d9db9"),
-                ]
+            route = [
+                ("river", "The river path", "bg_river", "#65aeb1"),
+                ("running", "Hikari at a run", "images/characters/sister_run.png", "#df8ea5"),
+                ("kitchen", "The kitchen light", "images/backgrounds/bg_kitchen_night.png", "#e8c686"),
+                ("home_wait", "Someone waiting at home", "images/backgrounds/bg_home_inside_night.png", "#8d9db9"),
+            ]
         else:
             route = [
                 ("club", "The room called Circle", "bg_photo_club", "#67b8d0"),
@@ -4882,12 +4826,8 @@ label end_of_first_day:
         mc "(Somewhere four minutes from this house there is a man who will not remember my face.)"
         mc "(And a bowl I will think about for a week.)"
     elif first_day_activity == "walk_hikari":
-        if declined_first_run:
-            mc "(I said no to the river. She went anyway. That is still a kind of answer.)"
-            mc "(Later she put her name on my phone like it was unfinished business.)"
-        else:
-            mc "(I ran until I could not breathe, next to somebody who was not out of breath at all.)"
-            mc "(She showed me a thing she does not show anybody, and then she walked me home and got shouted at for it.)"
+        mc "(I ran until I could not breathe, next to somebody who was not out of breath at all.)"
+        mc "(She showed me a thing she does not show anybody, and then she walked me home and got shouted at for it.)"
     else:
         mc "(I walked into a room full of strangers and nobody asked me a single question about where I come from.)"
         mc "(There are prints on that wall with marker on them. Somebody was angry about a photograph. That is the whole club.)"
@@ -5026,14 +4966,9 @@ label second_morning:
             mc "I got lost and found a ramen shop. The chef gave me his WIRE contact."
             father "You got lost and made a contact. That is one way to do it."
     elif first_day_activity == "walk_hikari":
-        if declined_first_run:
-            mc "Hikari went running. I stayed home. She added me on WIRE when she got back."
-            hikari "He was honest about being tired. That counts."
-            father "Good. Better that than promising something he can't do."
-        else:
-            mc "Hikari showed me the river path. I added her on WIRE."
-            hikari "He kept up for most of it."
-            mc "That is not what happened."
+        mc "Hikari showed me the river path. I added her on WIRE."
+        hikari "He kept up for most of it."
+        mc "That is not what happened."
     else:
         mc "I went to the photography club. Sim invited me to their group."
         father "A club already. You have been here one day."
@@ -5057,6 +4992,51 @@ label second_morning:
     "I finish breakfast, pack my notebook, and make sure the student card is still in my bag."
 
     jump second_school_day
+
+
+label first_connection_messages:
+    # The Hamada Denki line is live. The queue was filled on day one, before the
+    # phone could sync; this is the first moment those texts can arrive.
+    if not pending_messages:
+        return
+
+    $ arrived_from = pending_messages[0]["contact"]
+
+    "My phone buzzes once against my palm."
+    $ deliver_pending_messages()
+
+    if arrived_from == "hikari":
+        hikari "That should be me."
+        mc "You're standing right here."
+        hikari "I know. Look at the message I sent yesterday."
+        $ run_chat("hikari", [
+            {"options": [
+                {"label": "\"Testing. Can you see this?\"",
+                 "send": "Testing. Can you see this?"},
+            ], "options_delay": 0.5},
+        ])
+        $ msg_buzz()
+        hikari "There. See? I got your message."
+        mc "You could have just told me."
+        hikari "And for the record, I meant what I wrote."
+        mc "..."
+        hikari "Don't make it a thing."
+
+    elif arrived_from == "chef":
+        hikari "That was your phone. The chef found you."
+        $ run_chat("chef", [])
+        hikari "An advertisement. You've been a customer for one day."
+        mc "It's the most he's ever said to me."
+        hikari "Then he must want you back."
+
+    elif arrived_from == "sim":
+        hikari "That was your phone. Sim already found you."
+        $ run_chat("sim", [])
+        hikari "He posted your photographs, didn't he."
+        mc "The window one has replies."
+        hikari "Of course it does. He probably replied first."
+
+    return
 
 
 label second_school_day:
@@ -5236,6 +5216,7 @@ label second_school_day:
     else:
         hikari "There. Now you can see what Circle has been posting."
         mc "I can send them the pictures I took, once I pick the right one."
+    call first_connection_messages
     hikari "Your map has Akihabara saved now. Use it if you want to get back to the station, and message me if you need anything."
     mc "I'll try the map before I try guessing."
     hikari "Good. Guessing is how you end up on the wrong side of a very large electronics store."
@@ -5427,7 +5408,10 @@ label second_school_day:
     "Outside, the arcades and bright shop signs are waiting exactly where I left them."
     "Hikari said to message her when I head back, so I take out the phone while the light lasts."
     $ run_chat("hikari", [
-        {"say": "I'm heading back to the station now."},
+        {"options": [
+            {"label": "\"I'm heading back to the station now.\"",
+             "send": "I'm heading back to the station now."},
+        ]},
         {"them": "Good. Don't get lost in any more cafes."},
         {"them": "Did you actually go in, or did you just collect flyers?", "options": [
             {"label": "\"I went in. Ordered lunch. Did the spell.\"",

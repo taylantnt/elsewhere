@@ -304,7 +304,9 @@ The first day that belongs to him, and the template for every day after it.
 - `second_school_day` is the full rhythm: walk to campus, the **haiku lecture**
   (kigo = the seasonal word; three study-method choices paying Insight/Nerve),
   then Akihabara with Hikari for the **cellular plan** at Hamada Denki
-  (`cellular_data_active` flips on, WIRE gets signal), Hikari leaves for
+  (`cellular_data_active` flips on, WIRE gets signal, and the day-one message
+  queue finally delivers — chef advert, Sim welcome, or Hikari's river text,
+  with a test reply on her route), Hikari leaves for
   Shibuya, and the afternoon is free exploration ending in the **maid cafe** —
   Aya's first visit, scripted in full: rules and pricing, omurice with the
   ketchup cat, the moe moe kyun spell, the WIRE card (`confidant_visits["aya"] = 1`,
@@ -449,17 +451,39 @@ what makes them textable.
 - `send_message` / `receive_message` are the only writers; `receive_message`
   plays `audio/SFX/message_buzz.wav` and bumps the thread's unread count.
 - `run_chat(cid, beats)` is how a scene plays an exchange: every beat lands in
-  the thread AND shows it inside the quick-menu phone (`phone_chat_scene`
-  reuses `phone_backdrop`/`phone_hardware`/`phone_status`/`phone_row`, so the
-  chat looks like it happens in the phone in his hand), so app history and
-  what the player saw cannot disagree. Beats buzz before the phone comes up.
-  Beat types: `{"them": ..., "img"?}`, `{"say": ..., "img"?}`, and `"options"`
-  on ANY beat turns the bottom of the phone into reply buttons
-  (`{"label","send","img"?,"them":[...]}`).
+  the thread AND shows it inside the quick-menu phone (`phone_chat_popup`
+  reuses `phone_hardware`/`phone_status` and the shared `phone_app_shell`, so
+  the chat has the same header, body bounds, and bubbles as the Messages app),
+  so app history and what the player saw cannot disagree. Beat types:
+  `{"them": ..., "img"?}`, `{"say": ..., "img"?}`, and `"options"` on ANY beat
+  turns the bottom of the phone into a sliding reply sheet
+  (`{"label","send","img"?,"them":[...]}`). An opening `options`-only beat is
+  legal: the thread starts empty with the first line offered as a suggestion.
+- Incoming beats arrive on their own. `run_chat` shows a typing bubble for
+  `phone_chat_typing_time(text)` (scaled to line length, capped at 1.85s), then
+  appends the message and holds it briefly before the next step. Choosing a
+  reply appends the outgoing bubble immediately; any `them` replies attached to
+  that choice then arrive one at a time with their own typing beat. Bubbles
+  animate in from their stored `anim_at` monotonic timestamp, so a rebuild of
+  the same screen does not restart the entrance — the effect is time-based,
+  not tied to the screen's lifetime.
+- The popup reserves its footer at all times: the reply sheet or composer
+  floats over the bottom of the thread, and the thread gets matching bottom
+  padding so the newest bubble never hides behind it. While the conversation
+  is live the header shows no close button; once every beat has arrived, the
+  composer becomes a pulsing **TAP TO CONTINUE** pill (and the header `×`
+  appears) as the way back to the scene.
 - `queue_message` + `flush_pending_messages` is the timing answer for texts
   that should arrive while he is busy: queue during a scene, flush at day
   turns (`second_morning`, `free_afternoon`). No signal, no delivery — the
-  queue just waits.
+  queue just waits. Entries may carry `day="yesterday"` and an optional image;
+  the thread renderer prints `YESTERDAY` / `TODAY` separators from that field.
+- `deliver_pending_messages()` is the same queue for a scene that stages the
+  arrival itself. The first connection at Hamada Denki uses it: the chef's
+  advert (walk-alone), Sim's Circle welcome (photo club), or Hikari's message
+  from the river (run route) lands while Hikari is still standing there. The
+  Hikari branch then offers one test reply in the popup, sends it, and lets her
+  confirm in person that it arrived.
 - The Messages app inside the phone launcher (`phone_app_messages_contents` /
   `phone_app_messages_thread_contents`) is read-only history: conversation
   list with unread badges, then bubbles. Replies only happen in story scenes.
@@ -493,8 +517,7 @@ what makes them textable.
 | `first_run_started` | `after_school_run` | The first river run happened. The run is not a confidant slot yet, so this is the only record of it |
 | `current_act` | `morning_call` (→ 2); future act breaks | Which act's caps are in force (`act_confidant_cap`) |
 | `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the future `confidant_visit_*` stubs | How many of the seven visits each person has had; `destination_state()` and the hub read it |
-| `hikari_visits` | `after_school_run`, `after_school_run_declined` | Hikari's own visit count — feeds her WIRE progress ticks, separate from the confidant table |
-| `declined_first_run` | the Act 1 fork | He said no to the first river run; changes `second_morning`/`first_night_memory`/`second_school_day` dialogue |
+| `hikari_visits` | `after_school_run` | Hikari's own visit count — feeds her WIRE progress ticks, separate from the confidant table |
 | `declined_dinner` | `first_evening_dinner` (walk-alone route only) | He told the family he was still full from ramen; `second_morning` breakfast reads it so the two days agree |
 | `sister_affection`, `sim_affection`, `chef_affection`, `aya_affection` | `after_school_run*` and the first-visit scenes | Relationship quality, written by the story; **nothing reads them yet** |
 | `orson_affection`, `hana_affection` | **nothing yet** | Declared placeholders; written when those arcs are scripted |

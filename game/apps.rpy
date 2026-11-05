@@ -1002,6 +1002,60 @@ screen phone_apps_exit_confirm(kind):
             ]
 
 
+screen phone_app_shell(title, subtitle=None, back_action=None, close_action=None, close_sensitive=True):
+    # Shared chrome for every in-phone app. The story chat popup uses this too,
+    # so a message arriving during a scene cannot drift away from the Messages
+    # app's header, content bounds, and footer placement.
+    fixed:
+        xpos gui.scale(14)
+        ypos gui.scale(34)
+        xysize (gui.scale(menu_phone_content_w), gui.scale(548))
+
+        fixed:
+            xfill True
+            ysize gui.scale(38)
+            if back_action is not None:
+                textbutton "<":
+                    style "phone_small_button"
+                    xsize gui.scale(34)
+                    yalign 0.5
+                    action back_action
+
+            vbox:
+                xalign 0.5
+                yalign 0.5
+                spacing gui.scale(1)
+                text title:
+                    xalign 0.5
+                    xmaximum gui.scale(172)
+                    textalign 0.5
+                    size gui.scale(15)
+                    color "#f0eee8"
+                    outlines []
+                if subtitle:
+                    text subtitle:
+                        xalign 0.5
+                        size gui.scale(10)
+                        color "#9aa8b0"
+                        outlines []
+
+            if close_action is not None:
+                textbutton "×":
+                    style "phone_small_button"
+                    xalign 1.0
+                    yalign 0.5
+                    sensitive close_sensitive
+                    action close_action
+
+        add Solid("#ffffff16") ypos gui.scale(42) xysize (gui.scale(menu_phone_content_w), gui.scale(1))
+
+        fixed:
+            xpos 0
+            ypos gui.scale(50)
+            xysize (gui.scale(menu_phone_content_w), gui.scale(474))
+            transclude
+
+
 screen phone_apps():
     modal True
     zorder 130
@@ -1021,98 +1075,59 @@ screen phone_apps():
             xysize (gui.scale(menu_phone_w), gui.scale(menu_phone_h))
         use phone_status
 
-        fixed:
-            xpos gui.scale(14)
-            ypos gui.scale(34)
-            xysize (gui.scale(menu_phone_content_w), gui.scale(548))
+        $ app_titles = {
+            None: "Phone",
+            "messages": "Messages",
+            "messages_thread": "Messages",
+            "wire": "WIRE",
+            "settings": "Settings",
+            "camera": "Camera",
+            "inventory": "Inventory",
+            "maps": "Maps",
+            "stats": "Stats",
+            "journal": "Journal",
+            "backup": ("Cloud / " + phone_apps_backup_mode.title() if phone_apps_backup_mode else "Cloud"),
+            "about": "About",
+            "help": "Help",
+            "confirm_title": "Return to Title",
+            "confirm_quit": "Quit Game",
+        }
+        $ app_title = app_titles[phone_apps_page]
+        $ app_subtitle = msg_contact_name(phone_apps_messages_contact) if phone_apps_page == "messages_thread" else None
+        $ app_back_action = None if phone_apps_page is None else (
+            [SetVariable("phone_apps_wire_profile", None), With(Dissolve(0.16))]
+            if phone_apps_page == "wire" and phone_apps_wire_profile else
+            [SetVariable("phone_apps_inventory_open", False), With(Dissolve(0.16))]
+            if phone_apps_page == "inventory" and phone_apps_inventory_open else
+            [SetVariable("phone_apps_inventory_item", None), With(Dissolve(0.16))]
+            if phone_apps_page == "inventory" and phone_apps_inventory_item else
+            [SetVariable("phone_apps_backup_mode", None), With(Dissolve(0.16))]
+            if phone_apps_page == "backup" and phone_apps_backup_mode else
+            [
+                SetVariable("phone_apps_page", "messages"),
+                SetVariable("phone_apps_messages_contact", None),
+                With(Dissolve(0.16)),
+            ]
+            if phone_apps_page == "messages_thread" and phone_apps_messages_contact else
+            [
+                SetVariable("phone_apps_page", phone_apps_more_return_page),
+                SetVariable("phone_apps_more_open", True),
+                With(Dissolve(0.16)),
+            ]
+            if phone_apps_page in ("about", "help", "confirm_title", "confirm_quit") else
+            [SetVariable("phone_apps_page", None), With(Dissolve(0.16))]
+        )
 
-            fixed:
-                xfill True
-                ysize gui.scale(38)
-                if phone_apps_page is not None:
-                    textbutton "<":
-                        style "phone_small_button"
-                        xsize gui.scale(34)
-                        yalign 0.5
-                        action (
-                            [SetVariable("phone_apps_wire_profile", None), With(Dissolve(0.16))]
-                            if phone_apps_page == "wire" and phone_apps_wire_profile else
-                            [SetVariable("phone_apps_inventory_open", False), With(Dissolve(0.16))]
-                            if phone_apps_page == "inventory" and phone_apps_inventory_open else
-                            [SetVariable("phone_apps_inventory_item", None), With(Dissolve(0.16))]
-                            if phone_apps_page == "inventory" and phone_apps_inventory_item else
-                            [SetVariable("phone_apps_backup_mode", None), With(Dissolve(0.16))]
-                            if phone_apps_page == "backup" and phone_apps_backup_mode else
-                            [
-                                SetVariable("phone_apps_page", "messages"),
-                                SetVariable("phone_apps_messages_contact", None),
-                                With(Dissolve(0.16)),
-                            ]
-                            if phone_apps_page == "messages_thread" and phone_apps_messages_contact else
-                            [
-                                SetVariable("phone_apps_page", phone_apps_more_return_page),
-                                SetVariable("phone_apps_more_open", True),
-                                With(Dissolve(0.16)),
-                            ]
-                            if phone_apps_page in ("about", "help", "confirm_title", "confirm_quit") else
-                            [SetVariable("phone_apps_page", None), With(Dissolve(0.16))]
-                        )
-
-                $ app_titles = {
-                    None: "Phone",
-                    "messages": "Messages",
-                    "messages_thread": "Messages",
-                    "wire": "WIRE",
-                    "settings": "Settings",
-                    "camera": "Camera",
-                    "inventory": "Inventory",
-                    "maps": "Maps",
-                    "stats": "Stats",
-                    "journal": "Journal",
-                    "backup": ("Cloud / " + phone_apps_backup_mode.title() if phone_apps_backup_mode else "Cloud"),
-                    "about": "About",
-                    "help": "Help",
-                    "confirm_title": "Return to Title",
-                    "confirm_quit": "Quit Game",
-                }
-
-                if phone_apps_page == "messages_thread":
-                    vbox:
-                        xalign 0.5
-                        yalign 0.5
-                        spacing gui.scale(1)
-                        text "Messages":
-                            xalign 0.5
-                            size gui.scale(15)
-                            color "#f0eee8"
-                            outlines []
-                        text msg_contact_name(phone_apps_messages_contact):
-                            xalign 0.5
-                            size gui.scale(10)
-                            color "#9aa8b0"
-                            outlines []
-                else:
-                    text app_titles[phone_apps_page]:
-                        xalign 0.5
-                        yalign 0.5
-                        xmaximum gui.scale(172)
-                        textalign 0.5
-                        size gui.scale(15)
-                        color "#f0eee8"
-                        outlines []
-
-                textbutton "×":
-                    style "phone_small_button"
-                    xalign 1.0
-                    yalign 0.5
-                    sensitive not phone_apps_closing
-                    action Function(phone_apps_begin_close)
-
-            add Solid("#ffffff16") ypos gui.scale(42) xysize (gui.scale(menu_phone_content_w), gui.scale(1))
-
+        use phone_app_shell(
+            title=app_title,
+            subtitle=app_subtitle,
+            back_action=app_back_action,
+            close_action=Function(phone_apps_begin_close),
+            close_sensitive=not phone_apps_closing,
+        ):
             fixed:
                 xpos 0
-                ypos gui.scale(50)
+                ypos 0
                 xysize (gui.scale(menu_phone_content_w), gui.scale(474))
 
                 if phone_apps_page is None:
@@ -1194,11 +1209,25 @@ screen phone_apps():
                 elif phone_apps_page == "settings":
                     use phone_app_settings_contents(phone_apps_settings_tab)
 
+        fixed:
+            xpos gui.scale(14)
+            ypos gui.scale(34)
+            xysize (gui.scale(menu_phone_content_w), gui.scale(548))
+
+            # A quiet footer edge separates the app body from CLOSE and the
+            # menu handle. It sits exactly where every app's 474px body ends.
+            add Solid("#ffffff10"):
+                ypos gui.scale(524)
+                xysize (gui.scale(menu_phone_content_w), 1)
+
             textbutton "CLOSE":
                 style "phone_small_button"
                 xalign 0.5
                 yalign 1.0
-                yoffset gui.scale(7)
+                yoffset gui.scale(2)
+                text_size gui.scale(11)
+                text_kerning gui.scale(1)
+                padding (gui.scale(8), gui.scale(2))
                 sensitive not phone_apps_closing
                 action Function(phone_apps_begin_close)
 
@@ -1206,8 +1235,11 @@ screen phone_apps():
                 style "phone_small_button"
                 xalign 1.0
                 yalign 1.0
-                xoffset gui.scale(-10)
-                yoffset gui.scale(7)
+                xoffset gui.scale(-8)
+                yoffset gui.scale(1)
+                text_font "DejaVuSans.ttf"
+                text_size gui.scale(17)
+                padding (gui.scale(6), gui.scale(1))
                 sensitive not phone_apps_closing
                 action ToggleVariable("phone_apps_more_open")
 
