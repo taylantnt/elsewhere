@@ -1,5 +1,5 @@
 Progression Summary 
-    •    1: Awkward introduction, wrong order, curiosity sparks.
+    •    1: Awkward introduction, wrong order, curiosity sparks. The chef teaches the first word: umai.
     •    2: Recognition, learns simple word (oishii), playful encouragement.
     •    3: Miscommunication leads to spicy mishap (karai), shared laughter.
     •    4: Hikari appears, translates, reveals family recipe roots.

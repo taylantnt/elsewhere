@@ -25,6 +25,16 @@
 - **The Doctors**: Clinical voices from the real world (Future Japan Facility).
 - **The Fortune Teller**: An omnipotent, potentially meta guide who knows the simulation's rules.
 
+## Supporting Cast
+
+Recurring non-confidant characters who give the locations their texture:
+
+- **Circle members** (Rika, Nami, Marco, Riku) — Sim's photography club;
+  see [`-Side Characters/Circle members.md`](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/-Side%20Characters/Circle%20members.md)
+- **The Reading Circle regular** — Hana's silent scene partner at the library
+- **Lupin's Den regulars** — the fox, the rabbit, the white mask; Orson's
+  clientele
+
 ---
 
 ## Detailed Character Links

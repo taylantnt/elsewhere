@@ -22,40 +22,34 @@ re-opened, a person who cannot be un-met, a truth that cannot be put back.
 Length is not the measure. A fortnight in which nothing is settled is still the
 same act; a single afternoon in which everything is, is a new one.
 
-The break between the prologue and Act 1 is therefore a night, not a landmark.
-The prologue ends when he sleeps; Act 1 begins when he wakes up in a house that
-is already his. The break between Act 1 and Act 2 is the night at the end of the
-first free afternoon. The last bell is not the boundary — the day does not stop
-when class does, and the first afternoon in which he is allowed to choose
-something is still Act 1. Act 1 ends when that afternoon is spent and he is back
-in the house, which is the first fact of the game that nothing can undo.
+The break between Act 1 and Act 2 is the first dream and the night it ends.
+Act 1 is the arrival — the plane, the terminal, the journey, the house, and
+the first dream. Act 2 begins the next morning and is deliberately one big
+act: it holds the first day, the second day, the hub, and every confidant
+arc. Act 3 is the glitch era, when the leaks turn structural. Act 4 is the
+revelation and the endings.
 
 ### 1.2 The acts
 
 | Act | Title | What it covers | Ends on |
 |-----|-------|----------------|---------|
-| Prologue | The Arrival | The plane, Narita terminal, the travel decision, the journey home, the house, the first dream | Falling asleep on the first night |
-| 1 | The First Day | Morning, breakfast, the walk to university, the first hour of class, the first free afternoon and the three ways to spend it | The night at the end of the first free afternoon |
-| 2 | The Long Middle | The free-roam hub, the seven-visit confidant stories, the leak worsening | *not written* |
-| 3 | The End | The revelation and the endings | *not written* |
+| 1 | The Arrival | The plane, Narita terminal, the travel decision, the journey home, the house, the first dream | Falling asleep on the first night |
+| 2 | The Long Middle | The first day, the second day, the free-roam hub, the seven-visit confidant stories | *not written* — ends when the glitches turn structural |
+| 3 | The Glitch | The simulation leaks stop being atmospheric and start breaking the world (treatment "Escalating Mystery" stages 1–5) | *not written* |
+| 4 | The End | Hikari's revelation at the river, the three endings, the epilogue coda | *not written* |
 
-The prologue and Act 1 are built end to end. Act 1 ends on the night of the first
-free afternoon — every one of the three after-school routes closes the same way,
-on `scene black` after he is home (§4.6). That is the clean stopping point for a
-demo build; the free-roam hub in §5.7 is what comes next, and §7 lists what is
-waiting behind it.
-
-Act 2 is expected to be much the longest, because it is the act that holds
-everybody else's stories rather than the protagonist's. Act 3 is the endgame and
-the three endings (Escape / Blue Pill / Failure), designed in `game_concept.md`.
+The prologue content and the first day are built end to end. Days 1 and 2 are
+scripted; the hub (`label free_afternoon` + `screen location_hub`) is wired
+but no day scene calls it yet, and the confidant visit labels are stubs.
 
 > The older numbering (Act 1 = the airport, Act 2 = the journey, Act 3 = the
-> first day) is retired. Everything that was Act 1 and Act 2 is now the prologue,
-> and everything that was Act 3 is now Act 1.
+> first day) is retired, and so is the intermediate numbering that made the
+> first day "Act 1". Under the current map Act 1 is only the arrival; Act 2
+> begins at `morning_call`, which is where `current_act` becomes 2.
 
 ---
 
-## 2. Prologue, Part One — The Arrival
+## 2. Act 1, Part One — The Arrival
 
 ### 2.1 The notices and the name (`label start`, `label prologue`)
 - `start` is not the story. It runs the two unskippable notice pages
@@ -115,7 +109,7 @@ the three endings (Escape / Blue Pill / Failure), designed in `game_concept.md`.
 
 ---
 
-## 3. Prologue, Part Two — The Journey Home
+## 3. Act 1, Part Two — The Journey Home
 
 The route taken here changes almost everything downstream: which arrival scene
 plays, which dream he has, and how much money he has left.
@@ -147,11 +141,11 @@ plays, which dream he has, and how much money he has left.
 
 ---
 
-## 4. Prologue Ends, Then Act 1 — Home and the First Day
+## 4. Act 1 Ends, Act 2 Begins — Home, the First Day, the Second Day
 
-Everything from §4.1 to §4.2 is the last of the prologue. **The act break is the
-night:** §4.3 onwards is Act 1, the first act in which he is awake inside the
-story rather than being carried through it.
+Everything from §4.1 to §4.2 is the end of Act 1. **The act break is the first
+dream and the night it ends:** `morning_call` sets `current_act = 2`, and
+§4.3 onwards is Act 2 — the long middle that holds every confidant arc.
 
 ### 4.1 Arrival at the house (`label home_arrival`)
 - One label, three openings, chosen by the journey:
@@ -279,13 +273,36 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
   The protagonist uses his phone to take and compare photographs.
   Five menus cover the doorway, camera availability, observing the first image,
   Sim's photography and the club's origins, and participating in the session.
-  and the scene draws its lines from `Dialogue/Locations/Photography Club - Sim/1st
+  and the scene draws its lines from `documentation/Locations/Photography Club - Sim/1st
   interaction.md`. Sets `confidant_visits["sim"] = 1` and logs a memory.
   Selected replies earn Nerve for joining, Insight for reframing, or Grace for
   helping the model. Sitting through the meeting does not automatically pay.
 - **The first visit is the whole of each confidant's presence in the script.**
   Nothing reads `confidant_visits` yet; the counter is written here so the hub has
   something true to read when it is wired up (§5.7).
+
+### 4.7 The second day (`label first_night_memory`, `label second_morning`,
+`label second_school_day`)
+
+The first day that belongs to him, and the template for every day after it.
+
+- `first_night_memory` runs between the days: the day-memory matching board
+  (4×4 pairs from `build_first_day_memory_deck`, three misses allowed, a win
+  pays 0.3 Insight once). It is the night that closes day one.
+- `second_morning` is breakfast at the house — the WIRE/phone-plan argument
+  with Tetsuo, conditional on `first_day_activity` — and hands off to
+  `second_school_day`.
+- `second_school_day` is the full rhythm: walk to campus, the **haiku lecture**
+  (kigo = the seasonal word; three study-method choices paying Insight/Nerve),
+  then Akihabara with Hikari for the **cellular plan** at Hamada Denki
+  (`cellular_data_active` flips on, WIRE gets signal), Hikari leaves for
+  Shibuya, and the afternoon is free exploration ending in the **maid cafe** —
+  Aya's first visit, scripted in full: rules and pricing, omurice with the
+  ketchup cat, the moe moe kyun spell, the WIRE card (`confidant_visits["aya"] = 1`,
+  `wire_unlock("aya")`), and the walk back to the station.
+- The scene ends on the train home with `return` — **the game currently stops
+  here**. The day loop (morning → lecture → `free_afternoon` → night) is what
+  Act 2 needs next; `free_afternoon` is wired but uncalled (§5.7).
 
 ---
 
@@ -380,7 +397,7 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   the attribute is the reward. This restates `game_concept.md` so the two cannot
   drift apart.
 - **A link's story is told in seven visits**, one per outing
-  (`Dialogue/Locations/overview.md`). After the seventh the story is over: the
+  (`documentation/Locations/overview.md`). After the seventh the story is over: the
   person leaves or the place shuts, and the row stops offering anything.
 - **Growth is capped by act, not by time slots.** `act_confidant_cap` is the one
   dial. It says how much of anybody's story the current act allows, and a place
@@ -388,6 +405,11 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   talking, but nothing new about them happens until the story moves on. This is
   what stops a player from spending the whole game on one person, and it needs no
   scheduling system to enforce.
+- **Introductions come before revisits.** A place with zero visits is always
+  available (within the act cap). A place already visited shows **later** —
+  "Come back another day" — until *every* confidant has been met at least
+  once. `all_confidants_met()` in `locations.rpy` is the check. This keeps the
+  first week of Act 2 a tour of the city rather than a single friendship.
 - **One scene per outing.** Picking a place spends the day, and the answer is
   latched with `remember_choice`, so the same visit cannot be farmed twice.
 - **Links never move the spine.** The plot happens whether the player visits
@@ -396,17 +418,16 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   falls back onto the same next scene. The only true forks are the few that
   settle an ending flag.
 - **The hub** (`screen location_hub`) shares the standalone notice window.
-  Each row spells out its state: Visit available, No new visit yet, or Story
-  complete. Only available rows are clickable. The destination list scrolls;
-  Head Home remains available in the fixed footer.
-- **The hub screen is not used yet, and the first free afternoon does not use it.**
-  The Act 1 fork is a hand-written three-way branch inside `first_class` (§4.6),
-  because Hikari is asking the question and the answers are lines of dialogue
-  rather than rows to click. `location_hub` exists for the point where the day is
-  a standing offer rather than a scene — when it is wired up the shape is
-  `call screen location_hub([...])`, then branch on `_return`, where `None` means
-  the day was left unspent. It carries the destination status labels; the
-  dialogue that opens it is written per scene.
+  Each row spells out its state: Visit available, No new visit yet,
+  Come back another day, or Story complete. Only available rows are clickable.
+  The destination list scrolls; Head Home remains available in the fixed footer.
+- **The hub is wired but not yet reached.** `label free_afternoon` (end of
+  `script.rpy`) calls the screen and jumps to `confidant_visit_<place>`; those
+  five labels are stubs that `return` until the Act 2 visit scenes are written.
+  A day scene `call`s it after lunch; `None` from the screen means the
+  afternoon was left unspent and the day continues. The Act 1 fork (§4.6) stays
+  hand-written dialogue because Hikari is asking the question there — that is
+  deliberate, not an oversight.
 
 ---
 
@@ -433,9 +454,18 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
 | `money_hint_shown` / `pamphlet_hint_shown` / `after_school_hint_shown` | first use of each | One-time tutorial cards |
 | `first_day_activity` | the Act 1 fork in `first_class` | Which shape of afternoon he picked (`walk_alone` / `walk_hikari` / `photo_club`); read immediately, never shown |
 | `first_run_started` | `after_school_run` | The first river run happened. The run is not a confidant slot yet, so this is the only record of it |
-| `current_act` | the story, at each act break | Which act's caps are in force (`act_confidant_cap`) |
-| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), and the maid cafe scene (aya) | How many of the seven visits each person has had; `destination_state()` and the hub read it, nothing else writes it yet |
-| `sister_affection`, `sim_affection`, `orson_affection`, `chef_affection`, `aya_affection`, `hana_affection` | **nothing yet** | Declared placeholders for a confidant's *relationship quality*; the story now writes them, though nothing reads them yet. Note this is not the visit count, which is `confidant_visits` |
+| `current_act` | `morning_call` (→ 2); future act breaks | Which act's caps are in force (`act_confidant_cap`) |
+| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the future `confidant_visit_*` stubs | How many of the seven visits each person has had; `destination_state()` and the hub read it |
+| `hikari_visits` | `after_school_run`, `after_school_run_declined` | Hikari's own visit count — feeds her WIRE progress ticks, separate from the confidant table |
+| `declined_first_run` | the Act 1 fork | He said no to the first river run; changes `second_morning`/`first_night_memory`/`second_school_day` dialogue |
+| `sister_affection`, `sim_affection`, `chef_affection`, `aya_affection` | `after_school_run*` and the first-visit scenes | Relationship quality, written by the story; **nothing reads them yet** |
+| `orson_affection`, `hana_affection` | **nothing yet** | Declared placeholders; written when those arcs are scripted |
+| `cellular_data_active` | `second_school_day` (Hamada Denki) | WIRE can sync off-Wi-Fi; gates `phone_map_is_unlocked("akihabara")` |
+| `wire_unlocked` | `wire_unlock()` in the visit scenes | Who is in the WIRE roster (`wire_order` = hikari, chef, sim, aya) |
+| `phone_map_unlocked` / `phone_map_visited` | `phone_map_visit()` | Which map pins exist and which have been seen |
+| `day_memory_*` | `first_night_memory` | The 4×4 day-recall board state |
+| `haiku_study_method` | `second_school_day` haiku menu | Which study approach he picked; read by nothing yet |
+| `place` (transient) | `free_afternoon` | The hub row picked this afternoon; not saved |
 
 ---
 
@@ -445,18 +475,21 @@ These exist in `game_concept.md` and in the character files, but there is **no
 scene for them yet**. They are listed here so nobody goes looking for a label
 that does not exist.
 
-- **Act 2 and Act 3**: the long middle and the endgame. The revelation (the
-  facility) and the three endings (Escape / Blue Pill / Failure) both live in
-  Act 3.
-- **The free-roam hub**: `screen location_hub` and its state marks exist (§5.7),
-  but no scene opens it. The Act 1 fork (§4.6) is hand-written dialogue instead,
-  and that is deliberate.
-- **The confidant locations beyond their first visit.** The ramen shop (Chef)
-  and the photography club (Sim) each have their **first** visit in the script
-  (§4.6); the bar (Orson), the reading circle (Hana) and the maid cafe (Aya) have
-  none. Every one of the five has a progression summary and seven written
-  interactions under `Dialogue/Locations/`, and none of those outlines is in the
-  script — including the six remaining visits for the two confidants who are.
+- **Act 3 and Act 4**: the glitch era and the endgame. The revelation (the
+  facility), the three endings (Escape / Blue Pill / Failure), and the
+  epilogue coda all live there. See `story_treatment.md` and `plan.md`.
+- **The day loop after day two.** `free_afternoon` and the `confidant_visit_*`
+  stubs exist (§5.7), but no scene calls the hub yet — the game stops at the
+  end of `second_school_day`. A repeating day (morning → lecture → hub →
+  night) is the missing skeleton.
+- **The confidant locations beyond their first visit.** The ramen shop (Chef),
+  photography club (Sim), and maid cafe (Aya) each have their **first** visit
+  in the script (§4.6, §4.7). The bar (Orson) and reading circle (Hana) have
+  none — their introductions are the two most valuable unwritten scenes.
+  Every one of the five has a progression summary and seven written
+  interactions under `documentation/Locations/`, and none of those outlines is
+  in the script — including the six remaining visits for the three confidants
+  who are.
 - **The seven-visit run with Hikari.** `after_school_run` (§4.6) is written as far
   as the first night and sets `first_run_started`. The run becomes a recurring
   after-school activity rather than a seven-visit chain, and the shape of the
@@ -467,16 +500,19 @@ that does not exist.
   nothing to shoot (§4.6). The seven-interaction outline assumes a "beginner's
   camera" by the third visit, so the camera still has to be acquired somewhere
   between the first visit and the third.
-- **The fortune teller, and the Akihabara / Harajuku mini-games.** The Level
-  files for Akihabara and Harajuku are **empty**, so neither has anything written.
-- **The candidate destinations** (`Dialogue/Levels/Levels overview.md`): Asakusa,
-  Odaiba, Harajuku, Akihabara, Yokohama-Chinatown, school, home and room, the
-  train, the station, and the airport.
-- **A class schedule and the attendance counter**: see §5.4.
+- **The fortune teller, and the city locations.** The Level stubs for
+  Akihabara, Harajuku, Asakusa, Odaiba and Yokohama-Chinatown exist but are
+  empty; the treatment already contains scenes for all of them.
+- **A class schedule, the attendance counter, and the exam period.** The
+  attendance *rule* is narrated in `student_relations`/`first_class` (§5.4)
+  but there is no `lates`/`absences` variable, no schedule, and no exam arc
+  yet. `documentation/exam_and_courses.md` holds the plan, including the
+  quiz mechanic in `game/quiz.rpy`.
 - **Real art** — anything still calling `placeholder_bg(...)` or
   `bg_or_placeholder(...)` prints its own name on screen until the asset arrives.
-  The two Act 1 rooms that are still placeholders are the **ramen shop**
-  (`bg_ramen.png`) and the **photography club room** (`bg_photo_club.png`); drop
-  either file into `images/backgrounds/` and the picture takes over by itself.
-  `screen photo_mode` also still references `images/ui/camera_frame.png`, which
-  does not exist, so calling it would fail.
+  The two Act 2 rooms that are still placeholders are the **ramen shop**
+  (`bg_ramen.png`, `bg_ramen_empty.png`) and the **photography club room**
+  (`bg_photo_club.png`); drop any of those files into `images/backgrounds/`
+  and the picture takes over by itself. `screen photo_mode` also still
+  references `images/ui/camera_frame.png`, which does not exist, so calling
+  it would fail.

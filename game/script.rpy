@@ -248,7 +248,7 @@ image bg_train_interior = Transform("images/backgrounds/bg_train_interior.png", 
 image bg_home_exterior_night = Transform("images/backgrounds/bg_home_exterior_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_home_exterior_day = Transform("images/backgrounds/bg_home_exterior_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 
-# The kitchen on the first morning, which is where Act Five happens. Real art, so
+# The kitchen on the first morning, which is where Act 2 begins. Real art, so
 # it gets no placeholder label.
 image bg_kitchen = Transform("images/backgrounds/bg_kitchen_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_kitchen_night = Transform("images/backgrounds/bg_kitchen_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
@@ -2114,7 +2114,7 @@ label end_airport:
 
 
 ################################################################################
-## ACT TWO: GETTING HOME
+## ACT ONE: GETTING HOME
 ################################################################################
 ##
 ## Two routes, one destination. He picks outside the terminal, the choice is
@@ -2466,7 +2466,7 @@ label train_board:
 
 
 ################################################################################
-## ACT THREE: HOME
+## ACT ONE: HOME
 ################################################################################
 ##
 ## Both routes land here, but not in the same state. travel_method decides how he
@@ -2570,7 +2570,6 @@ label home_arrival:
     # and nothing to time. Play it, let it run, change the scene when it is done.
     $ play_sfx("audio/SFX/stairs_climb.wav")
     scene bg_room_night with stair_fade
-    pause 3.0
     $ room_ambient(True)
 
     # The room, and the boxes that arrived before he did.
@@ -2627,7 +2626,7 @@ label home_arrival:
 
 
 ################################################################################
-## ACT THREE, FIRST BEAT: THE FIRST DREAM
+## ACT ONE, LAST BEAT: THE FIRST DREAM
 ################################################################################
 ##
 ## He falls asleep at the end of the first night and the day he just had comes
@@ -3161,10 +3160,14 @@ label dream_sequence:
 
 
 ################################################################################
-## ACT THREE, SECOND BEAT: THE FIRST MORNING
+## ACT TWO, FIRST BEAT: THE FIRST MORNING
 ################################################################################
-
+##
+## Act 2 begins here: the arrival is over, and from this morning onward the
+## days belong to him. `current_act` moves to 2 so the confidant caps in
+## locations.rpy start to apply.
 label morning_call:
+    $ current_act = 2
 
     # Waking up. The dream lets go of him slowly, the way a hand does once it has
     # decided you can stand on your own.
@@ -3248,9 +3251,9 @@ label morning_call:
             mc "Should I introduce myself, or wait until I'm less jet-lagged?"
             hikari "Today. Nobody remembers introductions anyway. It's a free practice run."
             $ remember("hikari", "asked about meeting the other students")
-        "I never said this properly. The emails — you made this less frightening.":
+        "I never said this properly. The emails you made this less frightening.":
             $ reward_attributes_once("answer_breakfast_emails", [("grace", "small")], show="auto")
-            mc "I never said this properly. The emails — you made this less frightening."
+            mc "I never said this properly. The emails you made this less frightening."
             hikari "You did thank me. Several times."
             hikari "But you're welcome."
             $ remember("hikari", "thanked her for the emails")
@@ -3297,7 +3300,7 @@ label morning_call:
 
 
 ################################################################################
-## ACT THREE, THIRD BEAT: LEAVING THE HOUSE
+## ACT TWO, SECOND BEAT: LEAVING THE HOUSE
 ################################################################################
 ##
 ## The genkan in daylight, and the last thing between the kitchen and the street:
@@ -3376,7 +3379,7 @@ label leaving_house:
 
 
 ################################################################################
-## ACT THREE, FOURTH BEAT: WALKING TO SCHOOL
+## ACT TWO, THIRD BEAT: WALKING TO SCHOOL
 ################################################################################
 ##
 ## Out of the house, and the first daylight he has seen in Japan that is not an
@@ -3476,7 +3479,7 @@ label school_morning:
 
 
 ################################################################################
-## ACT THREE, FIFTH BEAT: INSIDE THE GATE
+## ACT TWO, FOURTH BEAT: INSIDE THE GATE
 ################################################################################
 ##
 ## The reveal the whole morning has been walking towards. From the road it is a
@@ -3537,7 +3540,7 @@ label campus_grounds:
 
 
 ################################################################################
-## ACT THREE, SIXTH BEAT: THEIR DEPARTMENT
+## ACT TWO, FIFTH BEAT: THEIR DEPARTMENT
 ################################################################################
 ##
 ## Inside their building, and the first place in Japan that belongs to him rather
@@ -3585,7 +3588,7 @@ label department_tour:
 
 
 ################################################################################
-## ACT THREE, SEVENTH BEAT: STUDENT RELATIONS
+## ACT TWO, SIXTH BEAT: STUDENT RELATIONS
 ################################################################################
 ##
 ## The scene that explains the rules of the game to the player without once
@@ -3675,7 +3678,7 @@ label student_relations:
 
 
 ################################################################################
-## ACT THREE, EIGHTH BEAT: THE FIRST LECTURE
+## ACT TWO, SEVENTH BEAT: THE FIRST LECTURE
 ################################################################################
 ##
 ## The strict professor, and the first rule in Japan that he breaks without ever
@@ -3861,7 +3864,7 @@ label first_class:
 
 
 ################################################################################
-## ACT ONE, NINTH BEAT: THE FIRST FREE AFTERNOON
+## ACT TWO, EIGHTH BEAT: THE FIRST FREE AFTERNOON
 ################################################################################
 ##
 ## Three ways to spend it, and all three end the day at night, because the break
@@ -3907,7 +3910,7 @@ label after_school_walk_alone:
     "And then I smell it."
 
     # The chef's first visit. The dialogue follows the beat sheet in
-    # Dialogue/Locations/Ramen Shop - Chef/1st interaction.md: he points at a line
+    # documentation/Locations/Ramen Shop - Chef/1st interaction.md: he points at a line
     # he cannot read, gets a bowl he did not order, and answers in the one Japanese
     # word he owns. The shop pays nothing for being entered; the point is his.
     scene bg_ramen_shop with walk_fade
@@ -3984,10 +3987,21 @@ label after_school_walk_alone:
     "I say it half under my breath, in English, to nobody."
     "He hears the tone of it even if he does not have the words. He does not turn around."
     chef "うまい、だろ？"
-    "I catch one word of that. One. It is the word on the packet in the kitchen and on the sign two doors down from the house."
+    "One word, said to the pot, in a voice that has clearly said it ten thousand times."
+    mc "(No idea what that was. But the way he said it, it sounded like a verdict on the bowl.)"
     menu:
-        "Tell him in Japanese.":
-            mc "Umai. Arigatou gozaimasu."
+        "Ask what it means.":
+            mc "Sumimasen. What does that mean?"
+            chef "「うまい。」"
+            "He says it again, slower this time, and points at the bowl with the ladle."
+            mc "Umai?"
+            chef "「うん。うまい。」"
+            "He grunts yes and turns back to the pots. That is the lesson."
+            # The first word of the language, taught mid-bite by the man who
+            # never speaks it. No packet, no sign — he learns it here.
+            $ reward_attributes_once("chef_first_umai", [("grace", "small")], show="auto")
+        "Thank him properly.":
+            mc "Arigatou gozaimasu."
             # Meeting him in his language after he hears the reaction.
             $ reward_attributes_once("chef_first_umai", [("grace", "small")], show="auto")
         "Ask what gives it the smoky flavour.":
@@ -4346,15 +4360,10 @@ label after_school_run_declined:
 
 label after_school_photo_club:
 
-    # Sim, as his character file has him: relentlessly positive, generous with
-    # everything he has, and incapable of putting himself first. He does not
-    # complain about his day job, his rejections, or his years of trying, and he
-    # does not gossip about anybody in this room. What he says about other people
-    # is always to their credit, and what he says about himself is always smaller
-    # than the truth. The warmest thing he ever says lands on somebody else.
-    #
-    # He is not a student: he comes in from outside to guide the club, and the club
-    # is called Circle.
+    # Sim's rules (full version in game_structure.md §4.6 and his character
+    # file): never complains, never blames anyone, puts others first; what he
+    # says about himself is always smaller than the truth. He is not a student —
+    # he comes in from outside to guide the club, which is called Circle.
     #
     # Planned shape of the seven visits, for when it is written:
     #   1  the argument, and the fact he arrives with nothing to shoot
@@ -4388,7 +4397,7 @@ label after_school_photo_club:
     "Then one of them notices me, and the argument stops mid-sentence, and the whole room turns round at once, which is worse."
     sim "Ah! you must be the new one. Welcome, welcome. Come in, don't be shy. The doorway is the worst seat in the room."
     "He looks a little older than everyone else here."
-    sim "Everyone. Everyone - this is our first-timer."
+    sim "Everyone! Everyone! this is our first-timer."
     sim "「初めて参加のお方です！みなさん、どうぞよろしくお願いします！」"
     "The room says it back at me in one voice. Somebody waves. Somebody takes a bag off the chair beside him and puts it on the floor."
 
@@ -4552,7 +4561,7 @@ label after_school_photo_club:
 
 
 ################################################################################
-## ACT ONE, TENTH BEAT: THE END OF THE FIRST DAY
+## ACT TWO, NINTH BEAT: THE END OF THE FIRST DAY
 ################################################################################
 ##
 ## Every road out of the first afternoon arrives here. Whatever he chose, the day
@@ -4937,6 +4946,13 @@ label first_night_memory:
     stop music fadeout 2.0
     return
 
+
+## ACT TWO, TENTH BEAT: THE SECOND DAY
+################################################################################
+##
+## The first full day that belongs to him: lecture, the Hamada Denki errand,
+## then Akihabara free until the maid cafe. This is the shape every later day
+## repeats — the difference is that from here on the afternoon is the hub's.
 
 label second_morning:
     scene bg_room_day with Dissolve(1.5)
@@ -5383,4 +5399,62 @@ label second_school_day:
     "I arrived with a phone that could only reach the house. Now it can get me across the city, and I have a reason to look forward to opening it again."
     scene black with Dissolve(2.0)
     stop music fadeout 2.0
+    return
+
+
+################################################################################
+## ACT TWO: THE HUB
+################################################################################
+##
+## The free afternoon as a standing offer. A day scene calls `free_afternoon`
+## after lunch; the hub asks where the afternoon goes, and the answer jumps to
+## that place's visit label. `None` (Head Home) means the day was left unspent.
+##
+## The visit labels below are stubs on purpose: each one is where that person's
+## next scene plugs in, written from the matching file under
+## documentation/Locations/. A stub ends the afternoon quietly so an unfinished
+## place can never soft-lock the day. When a visit is scripted it should end
+## with `return`, which lands back in the day scene that called this.
+##
+## The gating (one visit per outing, no revisits until everyone has been met,
+## act caps) all lives in destination_state() in locations.rpy — this label
+## only routes.
+
+label free_afternoon:
+
+    $ place = renpy.call_screen("location_hub")
+
+    if place == "sim":
+        jump confidant_visit_sim
+    elif place == "orson":
+        jump confidant_visit_orson
+    elif place == "chef":
+        jump confidant_visit_chef
+    elif place == "aya":
+        jump confidant_visit_aya
+    elif place == "hana":
+        jump confidant_visit_hana
+
+    # None, or anything the hub should not have offered: the afternoon is his
+    # to spend elsewhere, so the day simply continues.
+    return
+
+label confidant_visit_sim:
+    # TODO Act 2: Sim visit 2+ — see documentation/Locations/Photography Club - Sim/
+    return
+
+label confidant_visit_orson:
+    # TODO Act 2: Orson visit 1 (introduction) — see documentation/Locations/Bar - Orson/
+    return
+
+label confidant_visit_chef:
+    # TODO Act 2: Chef visit 2+ — see documentation/Locations/Ramen Shop - Chef/
+    return
+
+label confidant_visit_aya:
+    # TODO Act 2: Aya visit 2+ — see documentation/Locations/Maid Cafe - Aya/
+    return
+
+label confidant_visit_hana:
+    # TODO Act 2: Hana visit 1 (introduction, the library errand) — see documentation/Locations/Reading Club - Hana/
     return

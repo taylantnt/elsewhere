@@ -49,8 +49,10 @@ default confidant_visits = {
 define confidant_visits_total = 7
 
 ## Which part of the story we are in. The story bumps this at an act break.
-## Act 1 is the first day, which is before the player has any freedom at all,
-## which is why the cap below starts at nothing.
+## Act 1 is the arrival (airport to first dream), which is before the player
+## has any freedom at all, which is why the cap below starts at nothing.
+## Act 2 is the long middle — the big act that holds every confidant arc.
+## Act 3 is the glitch era; the final visits land while the world breaks.
 default current_act = 1
 
 ## The most of a person's story each act allows. A place whose visits have
@@ -60,8 +62,8 @@ default current_act = 1
 ## single person — turn a number up and that act opens more of everyone.
 define act_confidant_cap = {
     1: 0,
-    2: 3,
-    3: 5,
+    2: 5,
+    3: 7,
     4: 7,
 }
 
@@ -72,9 +74,16 @@ init python:
         # If the table ever runs out of acts, the story is open.
         return act_confidant_cap.get(current_act, confidant_visits_total)
 
+    def all_confidants_met():
+        # The introduction gate: nobody's story can be revisited until every
+        # confidant has been met at least once. First visits are always open;
+        # this only holds back seconds and later.
+        return all(confidant_visits.get(c, 0) > 0 for c in confidant_order)
+
     def destination_state(place):
         # "ready"  - there is a visit waiting to be played here
         # "paused" - the act has not caught up; nothing new will happen yet
+        # "later"  - already visited, but not everyone has been met yet
         # "closed" - all seven visits are done; the story has finished
         if place not in confidant_visits:
             return "ready"
@@ -83,6 +92,8 @@ init python:
             return "closed"
         if seen >= confidant_cap():
             return "paused"
+        if seen > 0 and not all_confidants_met():
+            return "later"
         return "ready"
 
     def hub_state_color(state):
@@ -90,12 +101,18 @@ init python:
         # reads at a glance before any of the marks are read.
         if state == "ready":
             return "#e6e1d8"
+        if state == "later":
+            return "#8a8377"
         if state == "paused":
             return "#6f6a60"
         return "#413d36"
 
     def hub_bar_color(state):
-        return "#7a7266" if state == "paused" else "#2b2721"
+        if state == "paused":
+            return "#7a7266"
+        if state == "later":
+            return "#5c574d"
+        return "#2b2721"
 
 
 ## --- STYLES ---
@@ -177,7 +194,7 @@ screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one des
                 for place in hub_places:
                     $ place_state = destination_state(place)
                     $ place_name = destination_names.get(place, place)
-                    $ place_status = {"ready": "Visit available", "paused": "No new visit yet", "closed": "Story complete"}[place_state]
+                    $ place_status = {"ready": "Visit available", "paused": "No new visit yet", "later": "Come back another day", "closed": "Story complete"}[place_state]
                     button:
                         action Return(place)
                         sensitive (place_state == "ready")

@@ -8,11 +8,15 @@
 
 ## What This Is
 
-This document picks up where the game stops: the end of the first free
-afternoon. Everything from the prologue and Act 1 is built. What follows is a
-detailed narrative treatment of the remaining story, covering the full arc of
-every confidant, the escalation of the simulation mystery, the Tokyo locations
-the protagonist visits, and the three endings the game can arrive at.
+This document picks up where the game stops: the end of the second day, after
+the Akihabara afternoon and Aya's first visit to the maid cafe. Everything from
+the prologue through that second day is built — the airport, the first day, the
+first free afternoon, the first river run, the second morning, the haiku
+lecture, the Hamada Denki phone-plan errand, and the free exploration that ends
+in the cafe. What follows is a detailed narrative treatment of the remaining
+story, covering the full arc of every confidant, the escalation of the
+simulation mystery, the Tokyo locations the protagonist visits, and the three
+endings the game can arrive at.
 
 It is written to inspire, not to be copied. The dialogue is suggested tone, not
 final script. Take what works and rewrite the rest.
@@ -21,42 +25,50 @@ final script. Take what works and rewrite the rest.
 
 ## Act 2: The Long Middle
 
-Act 2 begins the morning after the first free afternoon. The protagonist wakes
-in his room, and the day is no longer being handed to him. Hikari still walks
-him to school, the professor still lectures, and the house still eats dinner at
-eight. But the afternoons are his now, and the city is open.
+Act 2 begins the morning after the first free afternoon — and that morning is
+already scripted. The protagonist wakes in his room, Hikari walks him toward
+school, the professor lectures on haiku, and Hikari takes him to Hamada Denki
+in Akihabara to sort out a cellular plan. That afternoon he explores the
+district alone and ends up inside the maid cafe, which is where Aya's arc
+starts. The hub-driven afternoons this treatment describes pick up after that
+second day.
 
-This is the act that holds everybody else stories rather than the protagonist
-own. He is the lens through which five people grow, change, and leave. The
-simulation does not care which order he visits them in, and neither does the
-story. Every confidant arc runs independently, capped by act progression so a
-player cannot finish one person entire story before the world has moved enough
-to let the next chapter of it mean something.
+This is the act that holds everybody else's stories rather than the
+protagonist's own. He is the lens through which five people grow, change, and
+leave. The simulation does not care which order he visits them in, and neither
+does the story. Every confidant arc runs independently, capped by act
+progression so a player cannot finish one person's entire story before the
+world has moved enough to let the next chapter of it mean something.
 
-The hub opens after the second morning lecture. Hikari hands him the phone and
-says the thing she has been saying since the first afternoon: it is his time.
-This time the phone has a list on it.
+The hub opens on the first free afternoon after the scripted second day — the
+day-loop scene that calls it is not written yet (see `plan.md`). The phone
+already has WIRE contacts on it — Hikari, the chef, Sim, and Aya — and the hub
+adds the list of places: the five confidant locations plus the two walks home.
 
 ### How New Characters Enter
 
-The game introduces its confidants the same way the first day introduced the
-chef and Sim: through the natural geography of a student life. Nobody is
+The game introduces its confidants the way the first two days introduced the
+chef, Sim, and Aya: through the natural geography of a student life. Nobody is
 announced. Nobody has a tutorial card. The protagonist walks into a place, and
 the person is already there, being themselves.
 
 **Orson** is found the way every student in Tokyo finds a bar eventually: by
 walking the wrong street at night. The protagonist gets lost a second time, or
 takes a detour after a late lecture, and finds a narrow door with a cloth over
-it and a small wolf painted on the sign. The bar is called Lupin Den. Inside, a
+it and a small wolf painted on the sign. The bar is called Lupin's Den. Inside, a
 man in a wolf mask polishes a glass and says nothing until the protagonist sits
 down. The introduction is the silence.
 
-**Hana** is found inside the university itself. The reading circle the clerk
-mentioned on the first day meets in a small room off the library corridor. The
-protagonist walks past it, or follows the sound of pages turning, and finds a
-room with four chairs and a girl shelving books who will not look at him. The
-side character the clerk mentioned is there too, reading quietly, and explains
-in one line who Hana is without Hana having to say a word.
+**Hana** is found through an errand, not by wandering. Exams are coming — the
+clerk's attendance rules have been circling since orientation — and the
+protagonist needs a quiet place to study and a department document he cannot
+find anywhere else. Hikari, who knows the building better than he does, tells
+him the library is where students go when they actually need to get something
+done: some people are there to read, some to study, and they share the same
+peaceful rooms. He takes the corridor she describes, finds a small room off it
+with four chairs and a shelf of returns, and there is a girl shelving books who
+will not look at him. A regular is there too, reading quietly, and explains in
+one line who Hana is without Hana having to say a word.
 
 **The Fortune Teller** is found the way fortune tellers are always found in Tokyo:
 at a festival stall, or on the steps of a temple, or on a street corner at
@@ -75,7 +87,8 @@ Miharu worries. Hikari is already leaving.
 listens, and the lecture topic always carries a thematic echo of what is
 happening in the confidant arcs.
 3. **Free afternoon** via the hub. One visit per day. The protagonist picks
-where to go, and the game takes him there.
+where to go, and the game takes him there. The list holds the five confidant
+places plus the two walks home.
 4. **Evening** at the house. Dinner at eight. The family talks. The protagonist
 carries what happened that afternoon home with him, and sometimes the house
 notices.
@@ -99,14 +112,17 @@ leave.
 ### The Ramen Chef — Seven Bowls
 
 The chef never speaks English. Hikari translates on visits 4 and 6. Every other
-visit is a conversation conducted in gestures, food, and the three Japanese
+visit is a conversation conducted in gestures, food, and the few Japanese
 words the protagonist slowly accumulates. The arc is about earning a place at a
 counter where nobody invited him, and then watching the counter empty.
 
 **Visit 1: The Wrong Bowl** *(already scripted)*
 He points blindly, gets something he did not order, and it is the best thing he
-has eaten in Japan. The chef watches him eat without comment. The first word the
-protagonist learns is not from the chef but from a packet in the kitchen: umai.
+has eaten in Japan. The chef watches him eat without comment, then says one
+word at the bowl: umai. If the protagonist asks what it means, the chef says it
+again, slower, and points at the bowl until he repeats it back. That is the
+lesson — the first word of the language he owns, taught mid-bite by the man
+who never speaks it.
 
 **Visit 2: Recognition**
 The chef looks up when the cloth door moves. That is the greeting. He puts down
@@ -166,10 +182,12 @@ the wall. Then Sim gets the call he has been waiting for his whole life, and the
 room he built dissolves the moment he succeeds.
 
 **Visit 1: The Door with the Tape** *(already scripted)*
-He arrives with a phone and no camera. Sim puts him in a chair, gives him the
-only subject that matters, and tells him to look at the light. The protagonist
-takes two photographs. Neither looks like the ones on the wall. Sim says that is
-exactly right.
+He arrives with a phone and no camera. Sim seats him in the circle, has him
+shoot with the phone, and gives him the only subject that matters: the light on
+the wall beside the window. He takes a photograph or two. Neither looks like
+the ones on the wall, and Sim says exactly that — a little crooked, perhaps,
+but the club can work with it. That is the Sim rule from the first hour: what
+he says about the work is always smaller than the truth.
 
 **Visit 2: The Name and the Basics**
 Sim remembers his name. That is the whole first minute. Then he shows him how to
@@ -222,7 +240,7 @@ meets, but the person who made it glad to be somewhere is gone.
 Orson is found, not introduced. The protagonist takes a wrong turn after a late
 evening lecture, or walks a street he has not walked before, and finds a narrow
 door with a cloth over it. A small wolf is painted on the sign. The bar is called
-Lupin Den. Inside, a man in a wolf mask polishes a glass and says nothing.
+Lupin's Den. Inside, a man in a wolf mask polishes a glass and says nothing.
 
 The mask never changes expression. That is the point: it is a wall, and he
 knows it. The bar is the one place in Tokyo where the protagonist speaks English
@@ -231,17 +249,19 @@ never rushes anyone.
 
 **Visit 1: The Silence**
 The protagonist sits down at the counter. Orson puts a glass of water in front of
-him without being asked. He does not introduce himself. He does not ask where the
-protagonist is from. He polishes a glass and lets the room come to him. The bar
-is narrow, dim, and warm. Three other customers sit along the counter, all in
-masks, none of them talking to each other. The protagonist drinks his water,
-feels the room settle around him, and leaves without saying anything either. The
-introduction is the silence.
+him without being asked and says nothing — or almost nothing. Two lines is all
+the night gives him: "You found us. Most people don't," and, on the way out,
+"The water's on the house. The conversation isn't. But you're welcome to it."
+Cracked but not explained. The bar is narrow, dim, and warm. Three other
+customers sit along the counter, all in masks, none of them talking to each
+other. There is a small wooden bowl by the till for notes to the Master — he
+does not use it, but he notices it exists, and that is the hook that brings him
+back.
 
 **Visit 2: The Mask Explained**
 Orson initiates. He asks where the protagonist is from, and listens to the answer
 the way a person listens to weather. Then he explains the masks. The rule of
-Lupin Den is that everyone wears one, and the reason is not secrecy. With a mask,
+Lupin's Den is that everyone wears one, and the reason is not secrecy. With a mask,
 you can be anyone. Even yourself, if you are lucky. He says it lightly, but the
 weight is there. The protagonist notices that the mask makes Orson easier to
 talk to, not harder, and does not understand why yet.
@@ -283,7 +303,7 @@ moving on, a till that no longer balances. He does not pretend it is fixable. He
 thanks the protagonist for coming as often as he did. Then he reaches up and
 takes the mask off. It is the first and only time. His face is ordinary. Tired.
 Kind. He gives the protagonist a worn wolf-paw badge, small enough to fit in a
-pocket. The next time the protagonist walks down that street, Lupin Den is a
+pocket. The next time the protagonist walks down that street, Lupin's Den is a
 generic coffee shop, bright and anonymous, full of strangers whose faces mean
 nothing.
 
@@ -297,7 +317,8 @@ straight face. She is also the woman who taught herself English because she
 wanted to go further than the cafe door, and who stops wearing the costume the
 moment she decides to leave.
 
-**Visit 1: The First Spell** *(already scripted)*
+**Visit 1: The First Spell** *(already scripted — it plays during the second
+day's Akihabara visit, and the script counts it as her first of seven)*
 The protagonist wanders into the maid cafe alone in Akihabara. Aya explains the
 rules, the seating charge, the time limit. She draws a cat on his omurice. She
 teaches him the moe moe kyun spell. He joins in, badly, and the room is warmer
@@ -355,13 +376,17 @@ same. The warmth is absent.
 Hana is the confidant who almost does not exist. She shelves books in the reading
 circle room, avoids eye contact, and flees the instant anyone tries to talk to
 her. Her arc is told through gestures, notes, and silences long before she
-speaks. The protagonist finds the reading circle on a free afternoon, walking
-past the library corridor. The door is open. Four chairs, a shelf of returns, and
-a girl who glances at him once and then looks away.
+speaks. The protagonist finds the reading circle on a free afternoon, on an
+errand: exams are coming, he needs somewhere quiet to study and a department
+document he cannot find, and Hikari sends him to the library — the place
+students go when they actually need to get something done. Some people there
+are reading, some are studying, and the circle shares the same quiet rooms.
+He takes the corridor she describes. The door is open. Four chairs, a shelf of
+returns, and a girl who glances at him once and then looks away.
 
-A side character, the one regular the clerk mentioned on the first day, is
-reading in the corner. He explains in one line: she is like a ghost. She is
-here every week. Nobody has heard her speak.
+A side character — one of the circle's own regulars — is reading in the corner.
+He explains in one line: she is like a ghost. She is here every week. Nobody
+has heard her speak.
 
 **Visit 1: The Ghost**
 The protagonist sits down with a book. Hana shelves returns on the other side of
@@ -415,8 +440,10 @@ and shelves and quiet. The side character turns a page.
 
 Hikari is not a seven-visit confidant. She is the host sister, the programmer
 who leaked into the simulation, and the one person who stays. Her arc runs
-parallel to the confidant arcs and is driven by sister_affection rather than
-visit counts.
+parallel to the confidant arcs and is driven by sister_affection. She is not
+one of the seven-visit chains: the game tracks her separately, with her own
+visit count (hikari_visits) for WIRE progress and sister_affection for the
+relationship itself.
 
 ### The Run Becomes Recurring
 
@@ -628,11 +655,13 @@ The festival smells like charcoal and summer.
 
 ---
 
-## The Escalating Mystery
+## Act 3: The Glitch
 
-The simulation leaks from the start. Hospital flashes, glitch effects, voices in
-the dream. But Act 2 is where the leaks stop being atmospheric and start being
-structural. The world is not just glitching. It is breaking down.
+Act 3 is where the leaks stop being atmospheric and start being structural.
+The world is not just glitching. It is breaking down. This is the act where
+broken things start appearing on purpose — repeated sentences, blurred faces,
+the dream bleeding into waking life — because the test is entering its hardest
+phase and the simulation is straining to hold the subject inside it.
 
 ### Stage 1: The World Repeats
 
@@ -683,9 +712,9 @@ talking about the whole world.
 
 ---
 
-## Act 3: The End
+## Act 4: The End
 
-Act 3 is short. It is the moment the coat comes off and the thriller underneath
+Act 4 is short. It is the moment the coat comes off and the thriller underneath
 is visible. Everything the protagonist has built, everyone he has gotten close
 to, all of it is measured against a single question: is any of it real?
 
@@ -731,6 +760,15 @@ layers: the river goes first, then the university, then the house, then the
 street, then the sky. Each layer is a goodbye to someone who is not there
 anymore. The last thing to go is Hikari voice, telling him which way the door is.
 
+There is a second version of this ending, and it is earned. The confidants were
+never just characters — they were constructs with a directive: help the subject
+if he asks for the way out. A confidant the protagonist maxed out (all seven
+visits) remembers what they were built for. If he treated them like people,
+they remember it too, and one of them can be there at the door — a voice on the
+other side, a hand on the lock, a final goodbye that is also a thank-you. An
+under-massed escape still works; it is just lonelier, and the layers peel away
+with no voices in them at all.
+
 He wakes up in a room he has never seen. White walls, a bed, wires at the
 wrists. A woman is sitting beside the bed. She looks like Hikari, but older, and
 tired, and real. She says: welcome back. It took longer than I thought it would.
@@ -746,7 +784,7 @@ worse than either.
 The simulation continues. The river runs. The university lectures. The house
 eats at eight. The protagonist keeps visiting the places that are left, but the
 people who made them matter are gone. The ramen shop is a shuttered door. The
-club room is just a room. Lupin Den is a coffee shop. The maid cafe is warm and
+club room is just a room. Lupin's Den is a coffee shop. The maid cafe is warm and
 full and no one there knows his name. The reading circle has a new volunteer
 who does not look up.
 
@@ -757,15 +795,43 @@ The screen holds.
 
 **The Failure**
 
-The protagonist never reaches the threshold. Hikari withdraws. The simulation
-detects that the subject has not formed sufficient emotional bonds to proceed,
-and the test ends on its own terms.
+The protagonist never reaches the threshold — or reaches it and is not
+assimilated enough to matter. The simulation detects that the subject has not
+formed sufficient emotional bonds to proceed, and the test ends on its own
+terms.
+
+What follows is not an ending so much as a wind-down. The people who were
+trying to keep him inside stop pretending. Moving around gets harder — the
+city narrows, the routes loop, the faces go flat. He keeps going anyway,
+because stopping is the only thing left that is his. Eventually the world
+itself gives up on him.
 
 The last thing the protagonist sees is the house. The lights are on. The family
 is at the table. Miharu has poured the tea. Tetsuo is saying the thing he always
 says. The amado closes the way it always closes.
 
-The screen goes white.
+Then it cuts to white — and for one moment the simulation's own voice comes
+through, clinical and bored: *this one was also a failed experiment.* A pause.
+*Bring in the next participant.*
+
+The screen goes white, and then the title screen.
+
+---
+
+## Epilogue
+
+However the story ends, there is one last coda: the characters' thoughts, played
+one final time. Not a scene — a montage of the people he met, each given a
+single line from inside their own head. The chef tasting the broth one more
+time. Sim raising a camera that is not there. Orson polishing a glass in an
+empty bar. Aya mid-spin, laughing at no one. Hana's pencil moving across a
+sketchbook. Hikari at the river, watching the water go one way and come back
+the same way.
+
+It is the game's thesis stated without dialogue: the simulation can remove a
+person. It cannot remove the memory of a person. Whether he escaped, stayed, or
+was discarded, they were real while he was there — and that is the only verdict
+that matters.
 
 ---
 

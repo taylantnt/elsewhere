@@ -1,4 +1,4 @@
-[The Reading Club meets in a narrow room above a stationery shop. Low wooden tables, mismatched chairs, one long window with the blinds half drawn. The air smells like paper and green tea. A handful of students are already seated, reading. Everyone is quiet. Somewhere near the back, a ceiling fan ticks.)
+[Errand first: exams are coming, and the protagonist needs a quiet place to study plus a department document he can't find. Hikari sends him to the library — "some people go there to read, some to study. They share the same quiet." He takes the corridor she describes and finds a small room off it: low wooden tables, mismatched chairs, one long window with the blinds half drawn. The air smells like paper and green tea. A handful of students are already seated, reading. Everyone is quiet. Somewhere near the back, a ceiling fan ticks.]
 
 [Narration / Player's Monologue]: I almost turned around at the door. It felt like walking into a library where everyone already knew the rules and I hadn't been given the manual.
 

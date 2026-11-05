@@ -5,7 +5,7 @@
 | Field | Detail |
 | :--- | :--- |
 | **Role** | Volunteer shelver at the Reading Club; secretly an artist |
-| **Location** | Reading Club (a quiet room, one hour of reading, optional sharing) |
+| **Location** | Reading Club — a small room off the university library corridor (a quiet room, one hour of reading, optional sharing) |
 | **Archetype** | The Quiet Observer / The Girl Made of Held Breath |
 | **Affection Variable** | `hana_affection` |
 | **Language** | Almost none. Her arc is told through gestures, notes and silences long before she speaks |

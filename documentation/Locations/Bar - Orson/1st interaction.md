@@ -1,24 +1,33 @@
-(Setting: A narrow, dimly lit bar with warm amber lights reflecting on polished wood. Soft jazz hums in the background. Patrons sit in quiet clusters; some wear partial animal masks, others in full suits. The smell of citrus peel and whiskey hangs in the air.)
-[Narration / Player’s Monologue]: I didn’t think the street would lead to a bar like this. From the outside, it looked like a narrow hallway with a glowing sign — “Lupin’s Den.”
-Inside… masks. Not just decorative, but worn. Foxes, bears, cats. A rabbit laughing at the end of the counter. And behind it all, the Master.
-A wolf.
-Not a snarling one — his mask had a gentle, fixed smile. Black fur, lacquered smooth, with gold trim along the jawline. His suit was sharp, gray with yellow accents, and a bow tie just slightly crooked. He polished a glass without looking up too much.
-I take a seat at the very end of the counter.  The only spot that would fit me without bumping shoulders. The stool wobbles.
-[Master]: “First time?”
-[Player’s choices]
-“Uh… yeah.”
-”…I guess so.”
-(Both options lead to a similar tone. Master nods slightly.)
-[Master]: “Hm. You don’t drink much, do you? You have that… lost tourist look.”
-[Narration]: I feel my cheeks heat. I don’t know if it’s embarrassment or the low heat in this place.
-[Master] (placing a small coaster in front of me): “Water’s fine. Or something light. You don’t have to keep up with them.” (He nods toward the rabbit, who’s laughing too loudly.)
-[Narration]: He moves calmly, like nothing can shake him. The mask, that wolf’s smile.. never changes. And maybe that’s the point.
-[Master] (after a quiet moment): “Some people like it because… with a mask, you can be anyone. Even yourself, if you’re lucky.”
-I don’t answer. I’m not sure if it’s meant for me.
-[Master]: “Just… don’t expect people to be the same without it.”
-[Master]: Call me Orson.
-He sets a small glass in front of me.  Pale gold liquid, ice clicking gently.
-[Master]: “On the house. Welcome to the Den.”
-[Narration]: I’m not sure if I should thank him… but I do. My voice is quieter than I expect.
-(Scene fades with the low hum of chatter, my gaze fixed on that smiling wolf mask.)
-[Scene fades.]
+[Setting: A narrow, dimly lit bar with warm amber lights reflecting on polished wood. Soft jazz hums low. Patrons sit in quiet clusters along the counter — a fox, a rabbit, a plain white face — all in partial masks, none of them talking to each other. The air smells of citrus peel and whiskey. From the outside it was a hallway with a glowing sign: "Lupin's Den."]
+
+[Narration / Player's Monologue]: I took a wrong turn after a late lecture and kept walking until the street gave up on me. The door had a cloth over it and a small wolf painted on the sign. Inside… masks. Not decorative — worn. And behind the counter, polishing a glass, a wolf.
+
+[The Master doesn't look up when I take the stool at the end of the counter. The only spot that fits without bumping shoulders. The stool wobbles.]
+
+[Master]: "…"
+
+[Narration]: That is the whole greeting. He goes back to the glass. Somewhere down the bar the rabbit laughs at nothing, too loudly, and nobody else reacts — like it happens every night.
+
+[After a while he sets a glass of water in front of me. I didn't order anything. I didn't order anything *from* anyone — there is no menu I can read.]
+
+[Player's choices]
+"…Thanks."
+(Say nothing. Drink the water.)
+
+[Narration]: Either way, he notices. The wolf mask tilts — barely — in what might be a nod. Then he says the first words he's offered all night, and they are not a question:
+
+[Master]: "You found us. Most people don't."
+
+[Narration]: Not "welcome." Not "what'll it be." Just that — like he's confirming something he already suspected. Then he goes back to work, and the silence settles back into place like it was never broken.
+
+[Two of the masked regulars finish their drinks and leave without a word. The third — the fox — catches my eye for half a second and looks away first, which somehow feels like the polite thing to do here.]
+
+[Before I leave, the Master says one more thing, still not looking up:]
+
+[Master]: "The water's on the house. The conversation isn't. But you're welcome to it."
+
+[Narration]: I don't know what that means. I don't think I'm supposed to. I leave a little lighter than I arrived and with one question I can't shake: what do people talk about in a place where nobody has to show their face?
+
+[Narration]: On the way out I notice a small wooden bowl on the counter with a card beside it — something about leaving a note for the Master. I don't use it. But I remember it exists. Like a door I could knock on next time.
+
+(Scene fades with the low hum of jazz and the clink of glass on wood.)

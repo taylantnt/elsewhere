@@ -665,22 +665,52 @@ These rules are mandatory unless the game designer explicitly changes this speci
 
 ---
 
-## 11. Future Design Decisions
+## 11. Progression Values — Working Baseline
 
-The following details remain intentionally open until the broader game design supports a decision:
+These are the values **as implemented** in `game/script.rpy`. They are the
+defaults to design against, not sacred numbers — revisit them when Act 2/3
+content shows where the pacing actually lands.
 
-- Final numeric range and progression thresholds
-- Final rank names
-- Attribute icons and visual styling
-- Exact point rewards for individual activities
-- Whether progress is always visible or partly hidden
-- Whether certain narrative branches require multiple attributes
-- How attributes interact with endings and major story outcomes
-- Whether any special scenes use attribute combinations rather than individual thresholds
+### Rank ladder (per attribute, cumulative totals)
 
-The coding assistant may recommend solutions, but must not treat provisional examples in this document as finalized requirements.
+| Rank | Total points needed | Name (current) |
+|------|--------------------:|----------------|
+| 1 | 0 | Rank 01 |
+| 2 | 2.0 | Rank 02 |
+| 3 | 5.0 | Rank 03 |
+| 4 | 9.5 | Rank 04 |
+| 5 | 15.0 | Rank 05 |
 
-The first act's award set itself is settled and listed in §5.5, but it is expected to be rebalanced as Acts 2 and 3 are written; the mechanics around it (§5.4 replay, §7.8 memory, §6.4 presentation) are the parts meant to stay fixed.
+The gaps widen on purpose (2 → 3 → 4.5 → 5.5), so early game moves fast and
+the top ranks mean something. Attributes clamp at 0–15.
+
+### Reward sizes
+
+| Name | Points | Use for |
+|------|-------:|---------|
+| `tiny` | 0.1 | A flicker of behaviour (airport first contacts) |
+| `micro` | 0.2 | A short, clear answer inside a conversation |
+| `micro_loss` | −0.2 | Soft trade-off cost |
+| `nudge` | 0.3 | A stronger reply that is not a turning point |
+| `small` | 0.5 | A real choice with a subject |
+| `medium` | 1.0 | A set-piece beat that closes a scene or a day |
+| `large` | 2.0 | Reserved for act-turning decisions |
+
+### Still genuinely open
+
+- **Rank names.** "Rank 01–05" is a placeholder ladder. When Act 2 gates start
+  mattering, pick real names — they appear on the gain card and the Attributes
+  page, so they should mean something (e.g. per-attribute names, or a shared
+  vocabulary like Observer → Fixture → Known → Indispensable → ???).
+- **Icons and visual styling** beyond the current orb set.
+- **Whether progress is always visible or partly hidden** in later acts.
+- **Attribute combinations** for major scenes (e.g. an escape route that wants
+  Insight *and* Nerve).
+- **How attributes interact with endings** — e.g. whether "assimilated enough"
+  for The Escape is measured in ranks, points, or confidant visits.
+
+The mechanics around rewards (§5.4 replay, §7.8 memory, §6.4 presentation)
+are the parts meant to stay fixed.
 
 ---
 

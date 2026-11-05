@@ -28,7 +28,7 @@ Hana (written note): "Thank you… for not giving up on me."
 
 [Nothing else. No signature. No smiley. Just those seven words, and the ghost of an eraser mark beneath the final line, like she'd written it more than once before getting it right.]
 
-[Narration]: I read it three times standing by the door. The room's empty now. The fan ticks. Somewhere below, the stationery shop's door chimes as someone comes in.]
+[Narration]: I read it three times standing by the door. The room's empty now. The fan ticks. Somewhere below, the library stacks whisper as someone reshelves a cart.]
 
 [I fold the note back exactly the way she'd folded it, along every crease, and put it in my pocket with the torn window drawing.]
 

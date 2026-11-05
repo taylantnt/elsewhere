@@ -339,9 +339,10 @@ Prompt: the chef says "うまい、だろ？" after hearing the protagonist enjo
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M26.01 | Tell him in Japanese. | Grace +0.5 | Says "Umai. Arigatou gozaimasu."; flag `chef_first_umai`. |
-| M26.02 | Ask what gives it the smoky flavour. | No rewards | Asks whether the flavour comes from the pork. |
-| M26.03 | Smile and keep eating. | No rewards | Nods and continues eating. |
+| M26.01 | Ask what it means. | Grace +0.5 | Asks what "umai" means; the chef teaches it; flag `chef_first_umai`. |
+| M26.02 | Thank him properly. | Grace +0.5 | Says "Arigatou gozaimasu."; same flag `chef_first_umai`. |
+| M26.03 | Ask what gives it the smoky flavour. | No rewards | Asks whether the flavour comes from the pork. |
+| M26.04 | Smile and keep eating. | No rewards | Nods and continues eating. |
 
 Finishing the bowl, paying for it, meeting the chef and unlocking WIRE do not
 award additional attribute points. The first chef visit is recorded separately.
