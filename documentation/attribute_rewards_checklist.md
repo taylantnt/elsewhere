@@ -368,9 +368,8 @@ Context: Hikari walks past the house and says she is going out again.
 |---|---|---|---|
 | M28.01 | Out where? | No rewards | Asks where she is going. |
 | M28.02 | Can I come? | Nerve +0.2 | Asks to join her; flag `answer_run_join`. |
-| M28.03 | I stay here. | No rewards | Sets `declined_first_run = True`; jumps to `after_school_run_declined`. WIRE still unlocks at the house; the run completion reward in E02 does not fire. |
 
-M28.01 and M28.02 lead to the run. M28.03 declines it. M28.02's small Nerve reward is separate from
+Both answers lead to the run. M28.02's small Nerve reward is separate from
 the completion reward in E02.
 
 ### M29. Resting Beside The River

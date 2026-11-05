@@ -1741,12 +1741,12 @@ label prologue:
     "I'm here on my university's exchange program."
     
     
-    "I should be excited. New university, host family, a year in Japan."
-    "Instead, everything feels slightly out of focus."
-    "I remember the application. The wait. The acceptance email."
+    "The seat in front of me is still reclined into my lap. A baby three rows back has been crying since we crossed the coast."
+    "New university. Host family. A year in Japan."
+    "I remember the application. The wait. The acceptance email on a Tuesday morning."
     "I was thrilled when it came through. My friends said I was brave."
     "I can't remember what made me choose Japan."
-    "There must have been a reason. I just can't get hold of it."
+    "A professor, a brochure, something I turned into a plan. I can feel the shape of the reason, but the reason itself won't come."
     "Maybe it's the flight. Or the nerves. Maybe this is what arriving somewhere alone feels like."
 
     
@@ -2381,21 +2381,21 @@ label ticket_machine:
             jump ticket_machine
 
         "Ask the attendant.":
+            $ reward_attributes_once("answer_ticket_ask", [("grace", "micro")], show="auto")
             "I catch the eye of a woman in a station uniform and hold the pamphlet up."
             mc "Sumimasen... 中野3丁目?"
             "She takes the pamphlet, reads it, and presses the button for me without a word."
-            "¥1,300. A ticket slides out."
+            $ spend_money(1300)
+            "¥1,300 Yen... A ticket slides out."
             mc "(That took her four seconds. It took me four minutes.)"
             mc "Arigatou gozaimasu."
             "She nods, already walking away."
-            $ reward_attributes_once("answer_ticket_ask", [("grace", "micro")], show="auto")
             jump train_platform
 
 
 label train_platform:
     # The only ticket that actually works, and not one he could ever have found
     # on his own. That is the whole point of the scene.
-    $ spend_money(1300)
     "I feed the ticket into the gate."
     "It beeps, the flaps swing open, and I walk through like it's nothing."
     mc "(So much easier with a ticket.)"
@@ -4000,14 +4000,13 @@ label after_school_walk_alone:
     "He says nothing else. I slurp, badly, and get broth on the counter, and he does not comment."
     "I am fairly sure that is the compliment."
 
-    # All three ways of ordering and both answers end in this same bowl, so the rest
-    # of the meal is not a choice and is not played out. It is summarised on black,
-    # and every route comes back through it to the same empty bowl, the same bill,
-    # and the same walk home.
-    scene black with Dissolve(2.0)
-    "Two men came in while I ate. I watched how they held their chopsticks and tried the same grip."
-    "Chopsticks in one hand, spoon in the other, head down over the bowl."
-    "I ended up finishing the whole bowl, soup and all. There was nothing left in it but the pattern on the bottom."
+    # The meal continues in the shop. No more choices, just the eating, and the
+    # room around it. Every route comes back through the same empty bowl, the
+    # same bill, and the same walk home.
+    "Two men come in while I eat. They sit at the other end of the counter without speaking, and the chef puts two bowls down without looking at either of them."
+    "I watch how they hold their chopsticks and try the same grip. It is not the grip I know."
+    "Chopsticks in one hand, spoon in the other, head down over the bowl. They eat the way this country eats, and I copy it badly, and neither of them looks up."
+    "I finish the whole bowl. Soup and all. There is nothing left in it but the pattern on the bottom, and I am surprised by how much I want there to be."
 
     scene bg_ramen_empty with Dissolve(2.0)
 
@@ -4134,11 +4133,6 @@ label after_school_run:
             hikari "..."
             hikari "Yes. You can come."
             $ reward_attributes_once("answer_run_join", [("nerve", "micro")], show="auto")
-        "I'll stay here.":
-            mc "I'll stay here. I'm done for the day."
-            hikari "Okay. I'll be back in an hour."
-            $ declined_first_run = True
-            jump after_school_run_declined
 
     hikari "Go and change into something you can move in."
     mc "Oh? You're serious."
@@ -5050,10 +5044,12 @@ label second_school_day:
     mc "I remembered what you said."
     professor "Good. Then remember this as well. Today we begin with haiku."
     "He writes three short lines on the board, then circles a single word."
-    professor "A haiku is often taught as five, seven, five. In Japanese, those are mora, not English syllables."
-    professor "For today's lesson, remember the kigo: the seasonal word. It places the poem in a time of year, even when the poem never names that season directly."
+    professor "Five, seven, five. You will have been taught that in school."
+    professor "In Japanese those are mora, not syllables, but the count is not the point."
+    "He taps the circled word with his chalk."
+    professor "This is the kigo. The seasonal word. It places the poem in a time of year without naming the season."
     "He reads an example aloud. A frog, an old pond, the sound of water."
-    "The room is still for a moment after he finishes."
+    "The room is still for a moment after he finishes. I did not expect three lines to do that."
     professor "The small detail is not decoration. It is the door into the whole poem."
     mc "(A season hidden inside one word. I write it in the margin.)"
     professor "You will see this again. Pay attention to what the word is doing, not only to how many syllables you can count."
