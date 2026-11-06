@@ -92,53 +92,93 @@ init python:
     def night_street(fadein=1.5):
         renpy.music.play("audio/SFX/night.mp3", channel="music", fadein=fadein)
 
-    # 5. Random menu music for new game / continue / load.
+    # 5. Random narrator stinger for the menu -> game handoff.
     #
-    # Leaving the menu into a new game, a save, or a continue should not arrive on
-    # whatever bed the player heard last. The menu bed is one of the two
-    # "elsewhere normal" tracks, picked at random the moment the player pressed
-    # the button, so every departure into the story gets its own bed.
+    # The two "elsewhere normal" files each hold the narrator saying ELSEWHERE!
+    # once; they are one-shot lines, so the choice between the two is made at
+    # random the moment the player leaves the menu. They get a channel of their
+    # own rather than the voice channel: Ren'Py's voice system stops whatever is
+    # on "voice" at the start of every interaction that has no voice line
+    # (voice_interact in 00voice.rpy), which killed the sting the instant a
+    # loaded game resumed into dialogue. The "stinger" channel rides the voice
+    # mixer, so it still follows the Voice volume slider, but nothing in the
+    # voice pipeline touches it. It also stays off the music channel, so the
+    # main menu theme keeps playing underneath instead of being replaced.
     import random
 
-    menu_music_tracks = [
+    renpy.music.register_channel("stinger", mixer="voice", loop=False)
+
+    menu_stingers = [
         "audio/VO/elsewhere-normal.mp3",
         "audio/VO/elsewhere-normal2.mp3",
     ]
 
-    def pick_menu_music():
-        return random.choice(menu_music_tracks)
+    def play_menu_stinger(fadein=0.3):
+        renpy.music.play(random.choice(menu_stingers), channel="stinger",
+                         loop=False, fadein=fadein)
 
-    def play_menu_music(fadein=2.0):
-        renpy.music.play(pick_menu_music(), channel="music", fadein=fadein)
+    # The sting is fired at the click that starts the load, not after it: the
+    # channel queue is global, so the queued one-shot survives renpy.load()
+    # replacing the context and plays out over the black load cinematic while
+    # the save is restored. Continue's click and a Load Game slot pick both
+    # reach renpy.load(), so both are covered here and in the actions below.
+    class MenuLoadSting(Action):
+        def __init__(self, inner):
+            self.inner = inner
+
+        def __call__(self):
+            play_menu_stinger()
+            self.inner()
+
+        def get_sensitive(self):
+            return self.inner.get_sensitive()
+
+        def get_selected(self):
+            get_selected = getattr(self.inner, "get_selected", None)
+            return get_selected() if get_selected else False
+
+    # phone_files uses FileAction(slot), which resolves to FileLoad on the load
+    # screen and FileSave on the save screen. Wrapping here means only real
+    # loads from the title screen get the sting - in-game loads and saves do
+    # not.
+    def MenuFileSlot(slot):
+        inner = FileAction(slot)
+        if isinstance(inner, FileLoad) and store.main_menu:
+            return MenuLoadSting(inner)
+        return inner
 
     # 6. Menu -> game handoff actions.
     #
     # The built-in Start and Continue actions jump straight out of the menu
     # context, which reads as a hard cut at the menu, and the load flow hands off
-    # without a menu bed of its own. These wrap the built-ins so the departure
-    # plays the random menu bed and the arrival fades through the handoff rather
-    # than cutting.
+    # without a beat of its own. These wrap the built-ins so the departure plays
+    # the random narrator stinger at the click and the arrival fades through
+    # the handoff rather than cutting.
+    # The main menu theme itself is left alone: `main_menu_music` keeps playing
+    # on the title screen, keeps playing under the stinger, and the story scenes
+    # take over from there.
+    #
+    # Note: Start(), Continue() and ShowMenu() only build Action objects - they
+    # do nothing until called, so each wrapper has to invoke the inner action.
     class MenuStart(Action):
         def __call__(self):
-            play_menu_music()
-            renpy.jump_out_of_context("start")
+            play_menu_stinger()
+            Start()()
 
         def get_sensitive(self):
             return True
 
     class MenuContinue(Action):
         def __call__(self):
-            play_menu_music()
-            config.main_menu_music = pick_menu_music()
-            Continue()
+            play_menu_stinger()
+            Continue()()
 
         def get_sensitive(self):
-            return True
+            return Continue().get_sensitive()
 
     class MenuLoad(Action):
         def __call__(self):
-            config.main_menu_music = pick_menu_music()
-            ShowMenu("load")
+            ShowMenu("load")()
 
         def get_sensitive(self):
             return True

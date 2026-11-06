@@ -120,12 +120,21 @@ which is the simulation removing people as the test measures his equilibrium.
       Hikari/father weighted increments; Aya first-visit increment; other
       confidants ready for future levels.
 - [x] 2026-11-06 — Menu handoff: new `MenuStart` / `MenuContinue` / `MenuLoad`
-      actions in `game/script.rpy` wrap the built-ins so new game / continue /
-      load play the random menu bed (`audio/VO/elsewhere-normal.mp3` or
-      `elsewhere-normal2.mp3`) and the arrival fades through `menu_handoff_fade`
-      (`Fade(1.4, 0.6, 1.4)`) instead of hard-cutting; `label start` now uses the
-      named handoff fade, and menu/game/end transitions are set to dissolve in
-      `game/options.rpy`.
+      actions in `game/script.rpy` wrap the built-ins (invoking the inner
+      action, since `Start()`/`Continue()`/`ShowMenu()` only build Action
+      objects) so new game / continue / load play the random one-shot narrator
+      stinger (`audio/VO/elsewhere-normal.mp3` or `elsewhere-normal2.mp3`,
+      looped off on a dedicated `stinger` channel - mixer `voice`, but immune
+      to `voice_interact` killing the `voice` channel each interaction - so
+      the menu theme keeps playing).
+      New game, continue, and load-slot picks all play it at the click;
+      `MenuFileSlot` wraps `FileAction` in `phone_files` so only title-screen
+      loads get it. The arrival fades through
+      `menu_handoff_fade` (`Fade(1.4, 0.6, 1.4)`) instead of hard-cutting;
+      `label start` now uses the named handoff fade, and menu/game/end
+      transitions are set to dissolve in `game/options.rpy`. The main menu theme
+      (`config.main_menu_music`) is left to keep playing on the title screen and
+      continue into the story.
 - [ ] Wire `free_afternoon` into a real day loop (needs a day-3+ scene:
       morning → lecture → hub → night). Visit labels
       (`confidant_visit_<place>`) are stubs until the Act 2 scenes are written.

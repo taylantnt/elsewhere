@@ -432,7 +432,7 @@ screen phone_files(title):
             for slot in range(1, gui.file_slot_cols * gui.file_slot_rows + 1):
                 button:
                     style "phone_save_button"
-                    action FileAction(slot)
+                    action MenuFileSlot(slot)
                     key "save_delete" action FileDelete(slot)
                     vbox:
                         spacing gui.scale(6)

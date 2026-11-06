@@ -32,7 +32,7 @@ define config.version = "0.1"
 ## the triple-quotes, and leave a blank line between paragraphs.
 
 define gui.about = _p("""
-elsewhere is a psychological thriller set in Tokyo. The protagonist is a foreign exchange student staying for a year with a host family.
+elsewhere is a psychological thriller set in Tokyo. The protagonist is a foreign exchange student staying with a host family.
 
 Development build. Script, art, and music are in progress.
 """)
