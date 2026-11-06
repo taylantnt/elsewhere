@@ -1,11 +1,12 @@
 # Attribute Rewards Checklist
 
-Current code snapshot: November 3, 2026.
+Current code snapshot: November 6, 2026.
 
-This is an editable checklist of all 44 story choice menus currently in
-`game/script.rpy`, including every answer with no attribute reward. The two
-non-dialogue rewards are listed separately. Unwritten future scenes and the
-developer rank-up shortcut are not story rewards.
+This is an editable checklist of all 46 story choice menus currently in
+`game/script.rpy` — M01–M45 plus the walk-alone still-full fork (M35A) —
+including every answer with no attribute reward. The five non-dialogue rewards
+(E01–E05) are listed separately. Unwritten future scenes and the developer
+rank-up shortcut are not story rewards.
 
 ## How To Edit
 
@@ -29,7 +30,8 @@ The reward fields below describe the current implementation, not suggestions.
 `No rewards` means no **attribute** reward; a choice can still affect money,
 items, character memories, arrival time or the story.
 
-Small = +0.5; medium = +1.0; large = +2.0. Rewards pay once per flag, with new
+Tiny = +0.1; micro = +0.2; nudge = +0.3; small = +0.5; medium = +1.0;
+large = +2.0; `micro_loss` = -0.2. Rewards pay once per flag, with new
 positive totals capped at 15.0 and losses stopping at 0.0 per attribute. Dialogue
 gates list their minimum point totals in Notes separately from rewards. Changing
 a reward does not change its requirement.
@@ -49,7 +51,7 @@ inside the resulting conversation is listed in its own section.
 | M01.01 | Ask the Security Guard | No rewards | Opens M02. |
 | M01.02 | Ask the Timid Man | No rewards | Opens M03. |
 | M01.03 | Ask the Cheerful Woman | No rewards | Opens M04. |
-| M01.04 | Ask the Information Desk | No rewards | M05 opens after all three initial NPCs have been approached. |
+| M01.04 | Ask the Information Desk | No rewards | The desk only helps after all three initial NPCs have been approached. |
 | M01.05 | Ask the Veteran Assistant | No rewards | Available with the pamphlet or after all three initial NPCs have been approached. His full advice needs the pamphlet. |
 | M01.06 | Check the Information Boards | No rewards | Cycles the board notices. |
 | M01.07 | Look at the Plants | No rewards | Cycles the plant observations. |
@@ -168,7 +170,7 @@ Context: people appear to walk through the gate without anyone checking.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M11.01 | Walk straight through. | Nerve +0.4 | Gate closes; then proceeds to the ticket machine; flag `answer_train_gate`. |
+| M11.01 | Walk straight through. | Nerve +0.3 | Gate closes; then proceeds to the ticket machine; flag `answer_train_gate`. |
 | M11.02 | Buy a ticket first. | No rewards | Proceeds directly to the ticket machine. |
 
 ### M12. Using The Ticket Machine
@@ -203,7 +205,7 @@ Prompt: "Sorry about the stairs. And the boxes. I should have brought them up ea
 |---|---|---|---|
 | M14.01 | You've already done a lot for me. | Grace +0.3 | Acknowledges her effort; flag `answer_boxes_reassure`. |
 | M14.02 | Which ones go upstairs? | No rewards | Asks whether to carry all the boxes or just the clothes. |
-| M14.03 | Can we leave the books until morning? | Grace -0.5 | Asks to postpone the heavier unpacking because of fatigue; flag `answer_boxes_postpone`. |
+| M14.03 | Can we leave the books until morning? | Grace -0.2 | Asks to postpone the heavier unpacking because of fatigue; flag `answer_boxes_postpone`. |
 
 ### M15. Breakfast With Hikari
 
@@ -212,7 +214,7 @@ Context: people in the department have been asking when the protagonist will arr
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M15.01 | What have you told them about me? | Nerve -0.3 | Hikari remembers the question; flag `answer_breakfast_questions`. |
+| M15.01 | What have you told them about me? | Nerve -0.2 | Hikari remembers the question; flag `answer_breakfast_questions`. |
 | M15.02 | Should I introduce myself today? | No rewards | Hikari remembers the question. |
 | M15.03 | Thank you for the emails. | Grace +0.5 | Explains that her emails made the move less frightening; flag `answer_breakfast_emails`; Hikari remembers. |
 
@@ -345,7 +347,8 @@ Prompt: the chef says "うまい、だろ？" after hearing the protagonist enjo
 | M26.04 | Smile and keep eating. | No rewards | Nods and continues eating. |
 
 Finishing the bowl, paying for it, meeting the chef and unlocking WIRE do not
-award additional attribute points. The first chef visit is recorded separately.
+award extra points beyond the route closer in E04 (Insight +0.5,
+`walk_first_found`). The first chef visit is recorded separately.
 
 ## Hikari's Run Route
 
@@ -439,13 +442,25 @@ Context: a volunteer is modelling and the theme is a natural smile.
 | M34.02 | Can I watch for a while first? | No rewards | Asks to observe before participating. |
 | M34.03 | Do you choose a new theme each week? | No rewards | Asks how session themes work. |
 
-Completing the session, recording Sim's first visit and unlocking WIRE do not
-award extra attribute points. `sim_circle_first` pays for M32.01 specifically,
-not for attending the club.
+Completing the session closes the route with the Grace award in E05
+(`photo_first_session`); `sim_circle_first` pays for M32.01 specifically, not
+for attending the club.
 
 ## First Evening And Night
 
 All three afternoon routes converge here.
+
+### M35A. The Still-Full Fork (Walk-Alone Route Only)
+
+Source: [`first_evening_dinner`](../game/script.rpy).
+
+Only the ramen route leaves the protagonist genuinely full. Everyone else reaches
+dinner hungry, so this fork does not appear for them.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M35A.01 | Be honest. Tell them you're still full from the ramen. | Grace -0.2 | Sets `declined_dinner = True` and `first_dinner_declined`; father explains the dinner-time rule; Hikari covers for him. Jumps straight to `end_of_first_day`, skipping M35. |
+| M35A.02 | Say you're hungry, and sit down to eat with them. | Grace +0.5 | Sets `first_dinner_covered`; he eats with the family anyway, then continues to M35. |
 
 ### M35. First Evening Dinner
 
@@ -624,7 +639,7 @@ These are not additional dialogue forks or attribute rewards:
 
 Use the row IDs to describe any special instructions, for example:
 
-- `M14.03: Grace -0.5. Keep the answer text.`
+- `M14.03: Grace -0.2. Keep the answer text.`
 - `M22.01: Keep both the Nerve gain and Grace loss.`
 - `M19.03: No rewards. Keep the 0.8 Insight point requirement.`
 

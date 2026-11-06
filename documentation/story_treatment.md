@@ -25,13 +25,14 @@ final script. Take what works and rewrite the rest.
 
 ## Act 2: The Long Middle
 
-Act 2 begins the morning after the first free afternoon — and that morning is
-already scripted. The protagonist wakes in his room, Hikari walks him toward
-school, the professor lectures on haiku, and Hikari takes him to Hamada Denki
-in Akihabara to sort out a cellular plan. That afternoon he explores the
-district alone and ends up inside the maid cafe, which is where Aya's arc
-starts. The hub-driven afternoons this treatment describes pick up after that
-second day.
+The scripted portion of Act 2 runs from the first morning in the house through
+the second day, and that material is already written. On the morning after the
+first free afternoon — the second morning — the protagonist wakes in his room,
+Hikari walks him toward school, the professor lectures on haiku, and Hikari
+takes him to Hamada Denki in Akihabara to sort out a cellular plan. That
+afternoon he explores the district alone and ends up inside the maid cafe,
+which is where Aya's arc starts. The hub-driven afternoons this treatment
+describes pick up after that second day.
 
 This is the act that holds everybody else's stories rather than the
 protagonist's own. He is the lens through which five people grow, change, and

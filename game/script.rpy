@@ -5158,7 +5158,7 @@ label second_school_day:
     "At five minutes to nine, my notebook is open and my pen is ready."
 
     scene bg_lecture_hall with walk_fade
-    mc "Professor sees me and nods. I take my seat."
+    "The professor sees me and nods. I take my seat."
     professor "You are early today."
     mc "I remembered what you said."
     professor "Good. Then remember this as well. Today we begin with haiku."
@@ -5366,7 +5366,8 @@ label second_school_day:
             maid "A fair question. I'll go through the prices and the rules before you decide. You can say no at any point."
 
     "She points to a standing menu beside the entrance. The prices are printed clearly, and through the open doorway I can see other customers at their tables."
-    "There's a seating charge, and the menu lists the time limit and any extra options separately. You only order what you want. I won't add anything without asking you first."
+    "There's a seating charge, and the menu lists the time limit and any extra options separately."
+    maid "You only order what you want. I won't add anything without asking you first."
     mc "(That is more practical than the mystery I had built up in my head.)"
     maid "No rush. I'll show you the menu, and you can still change your mind."
     mc "(Hikari's warning is still in my head. But Aya hasn't tugged at my sleeve or tried to hurry me. She seems friendly, and the place is bright and busy.)"

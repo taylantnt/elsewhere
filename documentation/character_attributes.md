@@ -1,7 +1,7 @@
 # Elsewhere — Character Attribute System
 **Document type:** Game Design Specification  
 **System:** Three-Pillar Character Progression  
-**Status:** Core design reference, revised November 3, 2026
+**Status:** Core design reference, revised November 6, 2026
 
 ## 1. Overview
 
@@ -312,8 +312,9 @@ A deferred assistant request is an explicit exception: leaving the desk does not
 ### 5.5 Implemented answer map
 
 The [attribute rewards checklist](./attribute_rewards_checklist.md) is the
-complete, current inventory of first-act dialogue and event rewards, including
-signed changes, once-only flags, and point-gate requirements. Keep it in sync
+complete, current inventory of dialogue and event rewards through the playable
+build, including signed changes, once-only flags, and point-gate requirements.
+Keep it in sync
 when editing this system rather than maintaining a second reward table here.
 Rewards use `reward_attributes_once`, so a choice cannot be farmed by revisiting
 its scene. The three afternoon routes remain mutually exclusive.
@@ -464,7 +465,7 @@ Attribute gates may use either rank or raw points. Use
 full rank would be an unnecessarily high barrier; keep rank-based checks for
 choices that explicitly need developed capability.
 
-The first university dialogue gates use 0.8 Insight, 1.0 Grace, and 0.5 Nerve.
+The first university dialogue gates use 0.8 Insight, 1.0 Grace, and 0.3 Nerve.
 These are reachable through deliberate choices before the relevant scenes,
 including on either travel route, without changing the rank ladder.
 
@@ -698,7 +699,7 @@ the top ranks mean something. Attributes clamp at 0–15.
 
 ### Still genuinely open
 
-- **Rank names.** "Rank 1–05" is a placeholder ladder. When Act 2 gates start
+- **Rank names.** "Rank 1–05" is a placeholder ladder. When later gates start
   mattering, pick real names — they appear on the gain card and the Attributes
   page, so they should mean something (e.g. per-attribute names, or a shared
   vocabulary like Observer → Fixture → Known → Indispensable → ???).

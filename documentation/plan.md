@@ -109,7 +109,7 @@ which is the simulation removing people as the test measures his equilibrium.
       (`confidant_visit_<place>`) are stubs until the Act 2 scenes are written.
 - [ ] Script Orson and Hana introductions (hub "ready" rows currently fall
       through to stubs).
-- [ ] Remaining 34 confidant visits (chef 2–7, sim 2–7, orson 1–7, aya 2–7,
+- [ ] Remaining 32 confidant visits (chef 2–7, sim 2–7, orson 1–7, aya 2–7,
       hana 1–7). Interaction docs are written for all of them.
 - [ ] Hikari's recurring run beats 2–7 (user intends to write these).
 - [ ] Act 3 glitch content (treatment "Escalating Mystery" stages 1–5).

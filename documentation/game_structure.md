@@ -91,14 +91,15 @@ but no day scene calls it yet, and the confidant visit labels are stubs.
 | Ask the Security Guard | `talk_security` | Two officers share the post; which one answers depends on `security_index` |
 | Ask the Timid Man | `talk_timid_man` | |
 | Ask the Cheerful Woman | `talk_cheerful_woman` | |
-| Ask the Information Desk | `talk_assistant` | Gives the pamphlet (`has_pamphlet`) |
+| Ask the Information Desk | `talk_assistant` | Gives the pamphlet (`has_pamphlet`) after the other three conversations |
 | Ask the Veteran Assistant | `talk_veteran_assistant` | **Gated**: needs the pamphlet or all three of the others |
 | Check the Information Boards | `check_boards` | Board text advances with `board_message_index` |
 | Look at the Plants | `look_plants` | The plants get stranger each look (`plant_index`) |
 
-- The veteran assistant is the one pre-existing story gate, and it is a
-  *knowledge* gate rather than an attribute gate: he will only help someone who
-  has already tried the other doors.
+- The Information Desk and the veteran assistant are *knowledge* gates rather
+  than attribute gates. The desk only helps once the security guard, the timid
+  man and the cheerful woman have all been approached; the veteran then needs
+  the pamphlet the desk gives him.
 
 ### 2.3 The travel decision (`label end_airport`, `label travel_choice`)
 - Leaving the terminal is the first major attribute decision: the train awards
@@ -127,7 +128,8 @@ plays, which dream he has, and how much money he has left.
 - The train is slow, cheap, and hard. It is the route that makes him *use the
   city* instead of being carried through it.
 - The gate slams (`gate.wav` + `gate_shake`) because he walks through it the
-  wrong way. Walking through earns **0.4 Nerve**; buying a ticket is neutral.
+  wrong way. Walking through earns **0.3 Nerve** (`nudge`); buying a ticket is
+  neutral.
 - The ticket machine is a reading puzzle — he matches the fare map against the
   pamphlet and gets it wrong anyway.
 - Asking the station attendant resolves the ticket obstacle and awards
@@ -155,9 +157,9 @@ dream and the night it ends:** `morning_call` sets `current_act = 2`, and
 - Hikari is asleep when he arrives, so the first meeting with her happens at
   breakfast. This is deliberate: he has been reading her emails for months and
   has never heard her voice.
-- The boxes fork: tell her the apologising is not necessary (Grace), ask her
-  straight out whether she is worried (Nerve), or watch how she carries hers
-  (Insight).
+- The boxes fork: acknowledge what she has already done (Grace), ask which boxes
+  go upstairs (neutral), or ask to leave the heavy books until morning (a small
+  Grace loss).
 
 ### 4.2 The first dream (`label dream_sequence`)
 - The first **memory-reconstruction mini-game** ("put the day back").
@@ -175,16 +177,18 @@ dream and the night it ends:** `morning_call` sets `current_act = 2`, and
 
 ### 4.3 Morning (`label morning_call`, `label leaving_house`)
 - At breakfast, Hikari mentions students asking about his arrival. He can ask
-  what they know, ask about introductions, or explain how her emails helped.
-  The last reply awards **0.5 Grace**; the other replies are neutral.
+  what they know (a **0.2 Nerve loss**), ask about introductions (neutral), or
+  explain how her emails helped (**0.5 Grace**).
 - `leaving_house` is the amado (the sliding shutter) and the two-door fork: ask
-  how she can hear a mood in a door (Insight), or admit he heard nothing (Nerve).
+  how she can hear a mood in a door, or admit he heard nothing. Both are neutral
+  and both are remembered.
 
 ### 4.4 The walk to school (`label school_morning`, `label campus_grounds`)
 - `school_morning` is the front-door list — the rules he memorised on the plane
-  and the ones he got wrong. Fork: ask what she did on her own first day (Grace),
-  admit the list was wrong, or ask where to check room changes. These are neutral.
-- In the courtyard, noticing buildings from different periods awards **0.5 Insight**.
+  and the ones he got wrong. Fork: ask what she did on her own first day, admit
+  the list was wrong, or ask where to check room changes. All three are neutral
+  and all three are remembered.
+- In the courtyard, noticing buildings from different periods awards **0.2 Insight**.
 
 ### 4.5 The university (`label department_tour`, `label student_relations`,
 `label first_class`)
@@ -193,7 +197,7 @@ dream and the night it ends:** `morning_call` sets `current_act = 2`, and
   cat, whose tape has gone yellow".
 - `student_relations` establishes the rules of the place and holds the **Grace
   gate**, which requires 1.0 Grace point. The professor's dialogue offers a
-  Nerve-gated option at 0.5 points. The clerk covers:
+  Nerve-gated option at 0.3 points. The clerk covers:
 
   | Rule | Detail |
   |------|--------|
@@ -218,13 +222,14 @@ dream and the night it ends:** `morning_call` sets `current_act = 2`, and
   out loud for the first time. All replies receive the attendance rule. The
   Nerve-gated reply requests review of the registration-related late mark.
   Afterwards Hikari acknowledges leaving without directions. Asking her to
-  warn him next time awards **0.5 Nerve** without requiring an existing rank.
-  It does not end the scene: she hands him the rest of the day and the fork opens
-  (§4.6).
+  warn him next time awards **0.5 Nerve** and costs **0.2 Grace**, without
+  requiring an existing rank. It does not end the scene: she hands him the rest
+  of the day and the fork opens (§4.6).
 
 ### 4.6 The first free afternoon (`label first_class` →
 `after_school_walk_alone` / `after_school_run` / `after_school_photo_club`)
-The first hour of the game that belongs to the player, and the boundary of Act 1.
+The first hour of the game that belongs to the player, and the first afternoon
+of Act 2.
 
 - **The fork is three things he would say, not a list of places.** Hikari asks
   whether he has plans, and the three answers are *"I want to learn the way
@@ -238,9 +243,9 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
   afternoon costs (one a day), that it is spent on a person or a place, and that
   the ones with something waiting will announce themselves — without naming a
   single location.
-- **All three routes end the same way**: a walk home, `scene black`, the music
-  down, `return`. Three different afternoons, one unchanged night. That is what
-  makes this the act break rather than the last bell.
+- **All three routes converge on the same night**: a walk home, then
+  `first_evening_dinner`, then `end_of_first_day`. Three different afternoons,
+  one unchanged evening. None of them returns to the hub.
 - **Only one afternoon route happens.** Within each route, selected answers
   award small gains. Ramen has Japanese recommendation and appreciation replies;
   the run has an empathetic silence choice plus **0.5 Nerve** for completion;
@@ -251,8 +256,10 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
   (`いらっしゃい` / `あいよ` / an unexpected broth / `どうぞ` / `うまい、だろ？`),
   spends 900 yen and sets `confidant_visits["chef"] = 1`.
   Three menus cover ordering, asking about the broth, and responding to the chef.
-  Recommendation earns Nerve; Japanese appreciation earns Grace. Other replies
-  earn nothing. The counter background returns before the chef's next line.
+  The recommendation earns Nerve, the broth question earns Insight, and the
+  Japanese appreciation earns Grace. Other replies earn nothing. The route then
+  closes with an Insight award for finding the shop. The counter background
+  returns before the chef's next line.
 - `after_school_run` — the sister's arc, not a numbered confidant chain. He walks
   home with Hikari, and she does not go into the house: she walks past it and
   changes her shoes, because the run is her daily thing and he has been handed the
@@ -276,7 +283,8 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
   and the scene draws its lines from `documentation/Locations/Photography Club - Sim/1st
   interaction.md`. Sets `confidant_visits["sim"] = 1` and logs a memory.
   Selected replies earn Nerve for joining, Insight for reframing, or Grace for
-  helping the model. Sitting through the meeting does not automatically pay.
+  helping the model; finishing the first session closes the route with a further
+  Grace award.
 - `first_evening_dinner` closes every route. On the walk-alone route only, he
   is genuinely still full from the ramen, so the table gets one extra choice
   before the usual natto menu: **be honest** ("I'm still full") or **cover it**
@@ -287,8 +295,9 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
   breakfast reads `declined_dinner` so father, mother and Hikari follow up on
   whichever happened.
 - **The first visit is the whole of each confidant's presence in the script.**
-  Nothing reads `confidant_visits` yet; the counter is written here so the hub has
-  something true to read when it is wired up (§5.7).
+  `confidant_visits` is written here and by the day-two maid-cafe visit; WIRE
+  reads it for contact progress, and `destination_state()` reads it for the hub
+  (§5.7).
 
 ### 4.7 The second day (`label first_night_memory`, `label second_morning`,
 `label second_school_day`)
@@ -332,10 +341,10 @@ is the index.
 - **Points are selective.** Small gains occur on concrete, thoughtful, observant,
   or courageous dialogue actions. Routine replies do not automatically pay.
   Larger events remain distinct from conversation rewards.
-- Points use tenths or halves. Common named sizes: `small` = 0.5, `medium` =
-  1.0 (first-reading puzzle success and first run), `large` = 2.0 (reserved for
-  future set pieces). Many dialogue rewards use smaller explicit amounts.
-  Signed changes are clamped between 0 and 15 points.
+- Points use tenths or halves. Common named sizes: `tiny` = 0.1, `micro` = 0.2,
+  `nudge` = 0.3, `small` = 0.5, `medium` = 1.0 (first-reading puzzle success),
+  `large` = 2.0 (reserved for future set pieces). Many dialogue rewards use
+  smaller explicit amounts. Signed changes are clamped between 0 and 15 points.
 - Presentation: a quiet **tick chip** in the top-right corner for an ordinary
   adjustment (`show="auto"`) and the full **gain card** for a rank change or a
   turning point.
@@ -346,25 +355,30 @@ is the index.
   empty and fill in colored segments as points accumulate; each ring resets when
   its rank advances.
 - Every award goes through `reward_attributes_once` with a unique
-  `answer_<scene>_<choice>` flag. A hub conversation also **latches its answer**
-  with `remember_choice`, so re-entering it replays the stored reply instead of
-  re-opening the menu — that latch, not the flag, is what stops the farming.
+  `answer_<scene>_<choice>` flag. A repeatable airport conversation also
+  **latches its answer** with `remember_choice`, so re-entering it replays the
+  stored reply instead of re-opening the menu — that latch, not the flag, is what
+  stops the farming.
 - **Important characters remember what he said.** `remember(who, note)` logs an
   answer against a character and shows a short `(Hikari will remember that)`
   notice at the top of the screen. Memory is not a reward; it is the record of
   what he did, and it is kept separately from what he is becoming.
-- Gates are by **rank**, never by raw points, and **ranks are 1-based** — the
-  first rank is 1, so `has_attribute(id, 2)` is the smallest gate that closes
-  anything. A gate of `1` is always a bug.
-- **The first day up to the walk to campus contains no locked answers.** The
-  first three gates are one per attribute, and all three are in the university:
+- The early gates use **raw points** through `has_attribute_points`: 0.8 Insight
+  at the poster wall, 1.0 Grace at student relations, and 0.3 Nerve in the
+  lecture hall. Rank gates remain available for later, larger doors, and
+  **ranks are 1-based** — the first rank is 1, so `has_attribute(id, 2)` is the
+  smallest rank gate that closes anything. A rank gate of `1` is always a bug.
+- **The first day up to the walk to campus contains no attribute-locked
+  answers.** The first three gates are one per attribute, and all three are in
+  the university:
   Insight at the poster wall, Grace at student relations, Nerve in the lecture hall.
 - See `character_attributes.md` §5.5 for the complete implemented reward map.
 
 ### 5.2 Language progression
 - Japanese starts plain and turns coloured as fluency rises. The `{jp}` tag and
   the `language_tag` helper handle it; at `japanese_fluency >= 5` the text is
-  `#87cefa`.
+  `#87cefa`. No scene currently raises `japanese_fluency`, so every line still
+  renders in the plain style.
 - Hiragana and katakana are used freely; Kanji only where the font group covers it.
 
 ### 5.3 Money and the Bag
@@ -424,8 +438,9 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   "Come back another day" — until *every* confidant has been met at least
   once. `all_confidants_met()` in `locations.rpy` is the check. This keeps the
   first week of Act 2 a tour of the city rather than a single friendship.
-- **One scene per outing.** Picking a place spends the day, and the answer is
-  latched with `remember_choice`, so the same visit cannot be farmed twice.
+- **One scene per outing.** Picking a place spends the day. The current
+  `free_afternoon` stub routes to the visit labels and returns; the
+  `remember_choice` latch belongs to the real day loop when it is written.
 - **Links never move the spine.** The plot happens whether the player visits
   anybody or not. A missed outing costs content, never progression. That is the
   whole reason this is not hard branching: the hub fans out, and every branch
@@ -439,9 +454,9 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   `script.rpy`) calls the screen and jumps to `confidant_visit_<place>`; those
   five labels are stubs that `return` until the Act 2 visit scenes are written.
   A day scene `call`s it after lunch; `None` from the screen means the
-  afternoon was left unspent and the day continues. The Act 1 fork (§4.6) stays
-  hand-written dialogue because Hikari is asking the question there — that is
-  deliberate, not an oversight.
+  afternoon was left unspent and the day continues. The first-afternoon fork
+  (§4.6) stays hand-written dialogue because Hikari is asking the question
+  there — that is deliberate, not an oversight.
 
 ### 5.8 Messages — texting, threads, and the buzz
 `game/messages.rpy`. WIRE is the contacts book; Messages is the conversation.
@@ -499,7 +514,7 @@ what makes them textable.
 | `player_name` | name entry | Every line of his own; the name the family uses |
 | `money` | `start`, `spend_money()` | The wallet |
 | `inventory` | `start`, `add_item()` | The Bag |
-| `japanese_fluency` | story | Colour and comprehension of Japanese |
+| `japanese_fluency` | initialised in `start` | Colour and comprehension of Japanese; no scene raises it yet |
 | `travel_method` | `travel_choice` | Taxi vs train downstream (`home_arrival`, `dream_sequence`) |
 | `boarded_shinkansen` | `train_platform` | Express vs local |
 | `arrived_late` | train route | Which `home_arrival` opening plays |
@@ -513,14 +528,14 @@ what makes them textable.
 | `memory_names` | `remember()` | How those people are named in the `(X will remember that)` notice |
 | `show_attribute_hud` | `airport_arrival` | Whether the three labeled attribute meters are on screen |
 | `money_hint_shown` / `pamphlet_hint_shown` / `after_school_hint_shown` | first use of each | One-time tutorial cards |
-| `first_day_activity` | the Act 1 fork in `first_class` | Which shape of afternoon he picked (`walk_alone` / `walk_hikari` / `photo_club`); read immediately, never shown |
+| `first_day_activity` | the first-afternoon fork in `first_class` | Which shape of afternoon he picked (`walk_alone` / `walk_hikari` / `photo_club`); read immediately, never shown |
 | `first_run_started` | `after_school_run` | The first river run happened. The run is not a confidant slot yet, so this is the only record of it |
 | `current_act` | `morning_call` (→ 2); future act breaks | Which act's caps are in force (`act_confidant_cap`) |
-| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the future `confidant_visit_*` stubs | How many of the seven visits each person has had; `destination_state()` and the hub read it |
+| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the future `confidant_visit_*` stubs | How many of the seven visits each person has had; `destination_state()` and WIRE read it |
 | `hikari_visits` | `after_school_run` | Hikari's own visit count — feeds her WIRE progress ticks, separate from the confidant table |
 | `declined_dinner` | `first_evening_dinner` (walk-alone route only) | He told the family he was still full from ramen; `second_morning` breakfast reads it so the two days agree |
-| `sister_affection`, `sim_affection`, `chef_affection`, `aya_affection` | `after_school_run*` and the first-visit scenes | Relationship quality, written by the story; **nothing reads them yet** |
-| `orson_affection`, `hana_affection` | **nothing yet** | Declared placeholders; written when those arcs are scripted |
+| `sister_affection`, `father_affection`, `sim_affection`, `chef_affection` | `after_school_run`/`end_of_first_day`, `first_evening_dinner`, `after_school_photo_club`, `after_school_walk_alone` | Relationship quality, written by the story; **nothing reads them yet** |
+| `aya_affection`, `orson_affection`, `hana_affection` | **nothing yet** | Declared placeholders; `aya_affection` is not incremented by the maid-cafe visit, and the other two wait for their arcs |
 | `cellular_data_active` | `second_school_day` (Hamada Denki) | WIRE can sync off-Wi-Fi; gates `phone_map_is_unlocked("akihabara")` |
 | `wire_unlocked` | `wire_unlock()` in the visit scenes | Who is in the WIRE roster (`wire_order` = hikari, chef, sim, aya) |
 | `message_threads` / `message_unread` | `send_message()` / `receive_message()` in `messages.rpy` | The actual texts, per contact; unread counts per thread |
@@ -544,8 +559,8 @@ that does not exist.
   epilogue coda all live there. See `story_treatment.md` and `plan.md`.
 - **The day loop after day two.** `free_afternoon` and the `confidant_visit_*`
   stubs exist (§5.7), but no scene calls the hub yet — the game stops at the
-  end of `second_school_day`. A repeating day (morning → lecture → hub →
-  night) is the missing skeleton.
+  end of `second_school_day` with a bare `return` to the main menu. A repeating
+  day (morning → lecture → hub → night) is the missing skeleton.
 - **The confidant locations beyond their first visit.** The ramen shop (Chef),
   photography club (Sim), and maid cafe (Aya) each have their **first** visit
   in the script (§4.6, §4.7). The bar (Orson) and reading circle (Hana) have
