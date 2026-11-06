@@ -232,9 +232,9 @@ The first hour of the game that belongs to the player, and the boundary of Act 1
   No destination is named in the menu. The player picks a shape of afternoon and
   the script does the geography, so the map is not spoiled by the choice that
   opens it. What he picks is stored in `first_day_activity` and never shown.
-- **The hint card comes after he has picked**, not before: `after_school_hint_shown`
-  runs once, once the game has already taken him somewhere, so the explanation of
-  what free afternoons are for arrives with something to look at. It says what an
+- **The hint card comes before he has picked**: `after_school_hint_shown`
+  runs once, just before the menu, so the explanation of what free afternoons
+  are for arrives while the choice is still his to make. It says what an
   afternoon costs (one a day), that it is spent on a person or a place, and that
   the ones with something waiting will announce themselves — without naming a
   single location.

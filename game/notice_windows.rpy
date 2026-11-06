@@ -189,7 +189,7 @@ screen hint_card(eyebrow, body):
     use standalone_notice_window(eyebrow, motion=(notice_window_out if hiding else notice_window_in)):
         text body style "guide_body" xsize gui.scale(648)
         use standalone_notice_footer(
-            "Shown once when a feature is introduced.",
+            "This notification is shown only once.",
             "Got It",
             SetScreenVariable("hiding", True),
             not hiding,

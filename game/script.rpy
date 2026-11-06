@@ -1305,7 +1305,7 @@ define hint_text_attribute = "Insight: observation and reasoning. Grace: thought
 # meant to be found, and the ones that matter will announce themselves with a
 # mark of their own. Called from the after-school fork, once, after the game has
 # already taken him somewhere.
-define hint_text_after_school = "Choose one activity each free afternoon: spend time with someone, visit a place, or head home. That choice leads into the rest of the day.\n\nSome activities develop attributes or relationships. Other activities wait for another opportunity; you do not need to visit everyone in one afternoon."
+define hint_text_after_school = "Choose one activity each free afternoon: spend time with someone, visit a place, or head home. That choice leads into the rest of the day.\n\nSome activities develop attributes or relationships. Other activities wait for another opportunity; you cannot visit more than one location in one afternoon."
 
 # The circles scale with rank. Two thin, colored wave rings travel outward from
 # each orb and fade, keeping the surface alive without pulsing the text.
@@ -3828,6 +3828,12 @@ label first_class:
     hikari "And I am not going to be the first."
     mc "(She has been handing me this day since the platform. Now she is handing it back.)"
 
+    # Said once, before he picks, so the explanation of the free afternoon
+    # arrives while the choice is still his to make.
+    if not store.after_school_hint_shown:
+        $ store.after_school_hint_shown = True
+        $ renpy.call_screen("hint_card", eyebrow="Free Afternoons", body=store.hint_text_after_school)
+
     # The first hour of the game that belongs to him, and the choice is deliberately
     # not a list of places. Hikari asks a question a person would ask, and the three
     # answers are three things he would actually say. Where each one leads is the
@@ -3853,12 +3859,6 @@ label first_class:
             mc "You know where it is."
             hikari "I pass it on the way to the library. You'll hear them before you see them."
             $ first_day_activity = "photo_club"
-
-    # Said once, and only after he has picked, so the explanation of the free
-    # afternoon arrives with something already happening underneath it.
-    if not store.after_school_hint_shown:
-        $ store.after_school_hint_shown = True
-        $ renpy.call_screen("hint_card", eyebrow="Free Afternoons", body=store.hint_text_after_school)
 
     if first_day_activity == "walk_alone":
         jump after_school_walk_alone
@@ -3935,7 +3935,7 @@ label after_school_walk_alone:
     "I put a thousand yen on the counter. He does not look at it."
     "He pushes it back with one finger and grunts at the empty space in front of the seat, which I take to mean afterwards."
 
-    voice "audio/VO/welcome.wav"
+    voice "audio/VO/ramen_welcome.mp3"
     chef "いらっしゃい。"
     mc "(I know that one. Every shop in this country says it when a person walks in. It means welcome, and it means get on with it.)"
 
@@ -3956,7 +3956,8 @@ label after_school_walk_alone:
             "He stops. He looks at me a second longer than he looked at the money, and then says something short to the pots."
             mc "(I might have said that wrong. He points at the second line and waits for my nod.)"
             $ reward_attributes_once("answer_ramen_recommendation", [("nerve", "small")], show="auto")
-
+    
+    voice "audio/VO/ramen_ok.mp3"
     chef "あいよ。"
     "He barks something at somebody. There is nobody else in the room. He is the kitchen and the waiter, and he is barking at himself."
 
@@ -4285,7 +4286,6 @@ label after_school_run:
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
-    $ hikari_run = False
 
     "The house is dark except for the kitchen, and the kitchen is the wrong window to be lit at this hour."
     mc "(It is properly dark. I do not know how long we were out there.)"
@@ -4294,7 +4294,7 @@ label after_school_run:
     hikari "Kitchen light. That's them being awake."
 
     scene bg_home_night with walk_fade
-
+    $ hikari_run = False
     "Mother and Father are at the table, and neither of them is doing anything, which is how I know they have been waiting."
     mother "You are both very late."
     father "It's a school night. You are expected home by eight. That's the rule."
@@ -4569,10 +4569,45 @@ init python:
                     "title": title,
                     "art": art,
                     "accent": accent,
+                    # Portraits crop toward the top of the frame so the card
+                    # shows a face and shoulders instead of a torso slice.
+                    "focus": 0.15 if art.startswith("images/characters/") else 0.5,
                 })
 
         return cards
 
+
+# A memory card is a photo card: the art cover-fills the whole face and a dark
+# scrim carries the caption. fit "cover" alone only scales the image up — it
+# never clips the overflow, which is what let portraits spill over the card
+# edges. The viewport below is the only container that actually clips, so the
+# cover-scaled image lives in an oversized fixed centered inside it, and the
+# scroll position pins the window to the middle of that frame.
+screen memory_card_art(art, focus):
+    viewport:
+        xysize (198, 118)
+        xpos 1
+        ypos 1
+        xinitial 0.5
+        yinitial 0.5
+        mousewheel False
+        draggable False
+        pagekeys False
+        scrollbars None
+        fixed:
+            xysize (262, 182)
+            add art:
+                xysize (206, 126)
+                fit "cover"
+                xalign 0.5
+                yalign focus
+
+transform memory_card_hover:
+    anchor (0.5, 0.5)
+    on hover:
+        easeout 0.10 zoom 1.045
+    on idle:
+        easeout 0.10 zoom 1.0
 
 screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False):
     modal True
@@ -4580,72 +4615,88 @@ screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False)
     default first_selection = None
     default previewing = preview
 
-    add Solid("#070b11")
-    add Solid("#101923") xysize (config.screen_width, 1) ypos 118
+    $ pairs_found = len(matched) // 2
+
+    add Solid("#05080d")
+    add Solid("#1a2634") xpos 198 ypos 104 xysize (884, 580)
+    add Solid("#0a131d") xpos 199 ypos 105 xysize (882, 578)
 
     vbox:
         xalign 0.5
-        ypos 20
-        spacing 5
+        ypos 28
+        spacing 6
 
         text "FIRST NIGHT / MEMORY":
             xalign 0.5
             size 11
-            kerning 3
-            color "#8193a5"
+            kerning 4
+            color "#7d93a6"
             outlines []
 
         text "KEEP THE DAY TOGETHER":
             xalign 0.5
-            size 28
+            size 30
+            bold True
             kerning 2
-            color "#c5e0e8"
+            color "#d7e8f0"
             outlines []
 
-        text "Study the revealed board, then find all eight pairs before the third mismatch.":
+        text ("Memorize the board. It turns over in six seconds." if previewing
+              else "Find all eight pairs. Three mismatches and the day fades."):
             xalign 0.5
-            size 15
-            color "#a7b5c1"
+            size 13
+            color "#8fa2b1"
             outlines []
 
     hbox:
         xalign 0.5
-        ypos 103
-        spacing 22
+        ypos 122
+        spacing 26
 
-        text "PAIRS [len(matched) // 2] / 8":
-            size 12
-            kerning 2
-            color "#7fc8bd"
-            outlines []
+        hbox:
+            spacing 6
+            text "MEMORIES":
+                size 10
+                kerning 2
+                color "#7d93a6"
+                outlines []
+                yalign 0.5
+            for n in range(8):
+                add Transform(Solid("#69c9b4" if n < pairs_found else "#223140"), xysize=(8, 8), rotate=45)
+            text "[pairs_found] / 8":
+                size 11
+                color "#c6d0d7"
+                outlines []
+                yalign 0.5
 
-        text "MISMATCHES":
-            size 12
-            kerning 2
-            color "#8193a5"
-            outlines []
-
-        for mark in range(3):
-            add Solid("#df8e8e" if mark < misses else "#27313b") xysize (28, 4) yalign 0.5
-
-        text "[misses] / 3":
-            size 12
-            color "#c6d0d7"
-            outlines []
+        hbox:
+            spacing 6
+            text "MISMATCHES":
+                size 10
+                kerning 2
+                color "#7d93a6"
+                outlines []
+                yalign 0.5
+            for mark in range(3):
+                add Transform(Solid("#d97b7b" if mark < misses else "#223140"), xysize=(8, 8), rotate=45)
 
     grid 4 4:
         xalign 0.5
-        ypos 139
-        spacing 11
+        ypos 152
+        spacing 10
 
         for i in range(len(cards)):
             $ face_up = previewing or i in matched or i == first_selection or (reveal_pair and i in reveal_pair)
+            $ highlighted = (not previewing) and (i == first_selection or (reveal_pair and i in reveal_pair))
+            $ accent = cards[i]["accent"]
 
             button:
-                xysize (222, 112)
-                background Solid("#111a24")
-                hover_background Solid("#1b2936")
+                xysize (200, 120)
+                background Solid("#0d1620")
+                hover_background Solid("#14202d")
+                insensitive_background Solid("#0b121a")
                 sensitive (not previewing and not reveal_pair and i not in matched and i != first_selection)
+                at memory_card_hover
 
                 if first_selection is None:
                     action [
@@ -4659,49 +4710,77 @@ screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False)
                     ]
 
                 fixed:
-                    xysize (222, 112)
+                    xysize (200, 120)
+
+                    if highlighted:
+                        add Solid(accent + "30") xpos -3 ypos -3 xysize (206, 126)
+
+                    add Solid("#0e1722")
+
+                    # One-pixel frame, drawn over the face plate.
+                    add Solid("#2a3a48") xysize (200, 1)
+                    add Solid("#2a3a48") xysize (200, 1) ypos 119
+                    add Solid("#2a3a48") xysize (1, 120)
+                    add Solid("#2a3a48") xysize (1, 120) xpos 199
 
                     if face_up:
-                        add Transform(cards[i]["art"], xysize=(222, 112), fit="cover")
-                        add Solid("#071018c8") ypos 77 xysize (222, 35)
-                        add Solid(cards[i]["accent"]) xysize (4, 112)
-
-                        text cards[i]["title"]:
-                            xpos 14
-                            ypos 84
-                            xmaximum 194
-                            size 13
-                            color "#f0f3f4"
-                            outlines [(1, "#071018", 0, 0)]
+                        use memory_card_art(cards[i]["art"], cards[i].get("focus", 0.5))
 
                         if i in matched:
-                            text "REMEMBERED":
-                                xpos 12
-                                ypos 8
-                                size 8
-                                kerning 1
-                                color "#d7f0e5"
-                                outlines [(1, "#071018", 0, 0)]
+                            add Solid("#04080ecc") xpos 1 ypos 1 xysize (198, 118)
+
+                        add Solid("#050a12b8") xpos 1 ypos 80 xysize (198, 39)
+                        add Solid("#050a1240") xpos 1 ypos 72 xysize (198, 8)
+
+                        add Solid(accent + "d9") xpos 1 ypos 1 xysize (3, 118)
+
+                        if i in matched:
+                            fixed:
+                                xpos 118
+                                ypos 5
+                                xysize (76, 18)
+                                add Solid("#0e2f24e0")
+                                text "REMEMBERED":
+                                    xalign 0.5
+                                    yalign 0.5
+                                    size 8
+                                    kerning 1
+                                    color "#a9ecd0"
+                                    outlines []
+
+                        text cards[i]["title"]:
+                            xpos 12
+                            ypos 84
+                            xmaximum 178
+                            ymaximum 34
+                            size 13
+                            color "#eef4f7"
+                            outlines [(1, "#050a12", 0, 0)]
                     else:
-                        add Solid("#17232e")
-                        add Solid("#2b3c49") xysize (222, 1)
-                        add Solid("#7fc8bd") xysize (3, 112)
+                        add Solid("#0d1620") xpos 1 ypos 1 xysize (198, 118)
 
-                        text "ELSEWHERE":
-                            xalign 0.5
-                            yalign 0.43
-                            size 15
-                            kerning 3
-                            color "#b9d1d8"
-                            outlines []
+                        add Solid(accent + "55") xpos 1 ypos 1 xysize (3, 118)
 
-                        text "DAY 01  /  MEMORY":
+                        fixed:
                             xalign 0.5
-                            yalign 0.73
-                            size 8
-                            kerning 2
-                            color "#647b8a"
-                            outlines []
+                            yalign 0.42
+                            xysize (200, 60)
+                            vbox:
+                                xalign 0.5
+                                spacing 7
+                                add Transform(Solid(accent + "aa"), xysize=(10, 10), rotate=45)
+                                text "ELSEWHERE":
+                                    xalign 0.5
+                                    size 14
+                                    kerning 3
+                                    color "#b9d1d8"
+                                    outlines []
+                                text "DAY 01  /  MEMORY":
+                                    xalign 0.5
+                                    size 8
+                                    kerning 2
+                                    color "#5d7180"
+                                    outlines []
 
     if previewing:
         timer 6.0 action SetScreenVariable("previewing", False)
@@ -4710,8 +4789,8 @@ screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False)
 
     hbox:
         xalign 0.5
-        ypos 638
-        spacing 12
+        ypos 676
+        spacing 14
 
         text ("MEMORIZE THE BOARD" if previewing else "MATCH THE MOMENTS"):
             size 10
@@ -5365,10 +5444,10 @@ label second_school_day:
     menu:
         "Try the spell with her.":
             $ reward_attributes_once("maid_cafe_join_spell", [("nerve", "micro")], show="auto")
-            aya "Moe..."
+            aya "Are you ready?"
             mc "(I am in a crowded cafe in Akihabara, making a heart with my hands over lunch. This is really happening.)"
             voice "audio/VO/moekyun.mp3"
-            aya "Moe...Kyun!"
+            aya "Moe moe...Kyun!"
             mc "Moe moe... kyun."
             aya "Perfect! Now it'll be extra delicious."
         "Smile and let her do the spell for both of us.":
