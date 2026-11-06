@@ -291,6 +291,7 @@ screen notice_name():
     use opening_layout("Your Name", opening_in):
         text "Enter the name other characters will use for you." style "opening_body" xalign 0.5 xsize gui.scale(680)
         fixed:
+            xalign 0.5
             ypos gui.scale(65)
             xysize (gui.scale(680), gui.scale(72))
             input:
