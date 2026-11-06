@@ -313,3 +313,90 @@ screen notice_name():
         )
     # Handle Enter before the input consumes it, including the blank-name case.
     key ["K_RETURN", "K_KP_ENTER"] action If(bool(player_name.strip()), Return(True), NullAction())
+
+# The end-of-build card. It is deliberately a title card rather than a dialog
+# box: the story has stopped, and the screen should feel like the lights coming
+# up in a theatre, not like another conversation.
+#
+# It is reached from `label end_of_build` at the bottom of script.rpy. When new
+# scenes are written, move the jump to `end_of_build` to the new last scene and
+# leave the label where it is. The card then stays the fallback for every build.
+transform end_card_in:
+    alpha 0.0
+    linear 1.0 alpha 1.0
+
+transform end_cursor:
+    alpha 0.15
+    block:
+        linear 0.9 alpha 1.0
+        linear 0.9 alpha 0.15
+        repeat
+
+screen end_of_build_card():
+    modal True
+    zorder 2000
+    key "game_menu" action NullAction()
+    key "rollback" action NullAction()
+
+    add Solid("#050505")
+    fixed:
+        xalign 0.5
+        yalign 0.5
+        xysize (gui.scale(860), gui.scale(560))
+        at end_card_in
+
+        add Solid("#0c0b0a") xysize (gui.scale(860), gui.scale(560))
+        add Solid("#c8a06a"):
+            xpos gui.scale(56)
+            ypos gui.scale(52)
+            xysize (gui.scale(64), gui.scale(2))
+
+        vbox:
+            xalign 0.5
+            yalign 0.5
+            spacing gui.scale(18)
+            xsize gui.scale(700)
+
+            text "ELSEWHERE" style "guide_category":
+                xalign 0.5
+                text_align 0.5
+                kerning gui.scale(5)
+                color "#c8a06a"
+
+            text "THANK YOU FOR PLAYING" style "guide_title":
+                xalign 0.5
+                xsize gui.scale(700)
+                text_align 0.5
+                size gui.scale(38)
+                kerning gui.scale(2)
+                color "#f3eee5"
+
+            add Solid("#3e3931") xalign 0.5 xysize (gui.scale(120), gui.scale(1))
+
+            text "You have reached the end of the current build." style "guide_body":
+                xalign 0.5
+                xsize gui.scale(620)
+                text_align 0.5
+                color "#ded8ce"
+
+            text "New days, conversations, and routes are being written now.\nYour save will be waiting when they arrive." style "guide_body":
+                xalign 0.5
+                xsize gui.scale(620)
+                text_align 0.5
+                color "#aaa297"
+                size gui.scale(16)
+                line_spacing gui.scale(5)
+
+            text "STAY TUNED" style "guide_category":
+                xalign 0.5
+                text_align 0.5
+                kerning gui.scale(5)
+                color "#c8a06a"
+
+            textbutton "Return to Title":
+                style "guide_button"
+                xalign 0.5
+                action Return()
+
+    # A small pulse in the bottom corner, like a cursor waiting on the next line.
+    text "■" xalign 0.97 yalign 0.95 size gui.scale(10) color "#c8a06a" at end_cursor

@@ -104,6 +104,21 @@ which is the simulation removing people as the test measures his equilibrium.
       for off-screen texts, `message_buzz.wav`), Messages page in the phone
       launcher (list + read-only thread), and the Akihabara/train-home
       exchanges rewritten as live chats.
+- [x] 2026-11-06 — Information Desk: empty-desk `BACK SOON` flow before the
+      security/timid/cheerful gate; assistant returns and the pamphlet branch
+      opens after all three are approached.
+- [x] 2026-11-06 — End-of-build card: `end_of_build` + `end_of_build_card`
+      in `notice_windows.rpy`; night-two dream now routes through `dream_router`
+      and lands there.
+- [x] 2026-11-06 — Post-train-night expansion: family dinner/kitchen beats,
+      food detail, station-writing lesson, quiz/library seed, weekend menu,
+      reflection, sleep, day-two dream placeholder.
+- [x] 2026-11-06 — Dream arrangement: board moved to `dream_archive.rpy`;
+      first dream now uses narrative-only flow through `dream_router`;
+      future activity keys parked in `dreams.rpy`.
+- [x] 2026-11-06 — Relationship trust: affection helpers/thresholds added;
+      Hikari/father weighted increments; Aya first-visit increment; other
+      confidants ready for future levels.
 - [ ] Wire `free_afternoon` into a real day loop (needs a day-3+ scene:
       morning → lecture → hub → night). Visit labels
       (`confidant_visit_<place>`) are stubs until the Act 2 scenes are written.

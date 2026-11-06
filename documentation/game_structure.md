@@ -91,11 +91,16 @@ but no day scene calls it yet, and the confidant visit labels are stubs.
 | Ask the Security Guard | `talk_security` | Two officers share the post; which one answers depends on `security_index` |
 | Ask the Timid Man | `talk_timid_man` | |
 | Ask the Cheerful Woman | `talk_cheerful_woman` | |
-| Ask the Information Desk | `talk_assistant` | Gives the pamphlet (`has_pamphlet`) after the other three conversations |
+| Check the Information Desk | `talk_assistant` | Empty with a BACK SOON sign until all three others are approached; the assistant returns, then gives the pamphlet |
 | Ask the Veteran Assistant | `talk_veteran_assistant` | **Gated**: needs the pamphlet or all three of the others |
 | Check the Information Boards | `check_boards` | Board text advances with `board_message_index` |
 | Look at the Plants | `look_plants` | The plants get stranger each look (`plant_index`) |
 
+- The Information Desk is a signpost, not a destination the player is meant to
+  find first. Before all three others are approached, it is an empty desk with a
+  `BACK SOON` sign; the protagonist can ask around the hub instead. Once the
+  guard, timid man and cheerful woman have all been approached, the assistant
+  returns and the pamphlet exchange can begin.
 - The Information Desk and the veteran assistant are *knowledge* gates rather
   than attribute gates. The desk only helps once the security guard, the timid
   man and the cheerful woman have all been approached; the veteran then needs
@@ -161,16 +166,17 @@ dream and the night it ends:** `morning_call` sets `current_act = 2`, and
   go upstairs (neutral), or ask to leave the heavy books until morning (a small
   Grace loss).
 
-### 4.2 The first dream (`label dream_sequence`)
-- The first **memory-reconstruction mini-game** ("put the day back").
+### 4.2 The first dream (`label dream_first_night`)
+- The first dream is the narrative horror interlude; the memory-ordering board is
+  archived separately and is no longer part of the story path.
 - A horror interlude built on `dream_static` and `hospital_flash`, with the audio
   slipping out of the world and the real room leaking through ("Keep the room at
   eighteen", "Six hours. He has been under six hours.").
 - The branch is real: a taxi player dreams the taxi (a meter with no end), a
   train player dreams the train (stations repeating, nobody's pages turning).
-- Travel-route cards must be put back in the right order. It **cannot be failed**;
-  a correct pick restores with `memory_restore.wav`, a wrong pick is annotated by
-  the narrator with `memory_deviation.wav`.
+- The day is now attempted through narrative rather than a board. The archived
+  board still exists as `dream_put_the_day_back`, but it is no longer called by
+  the main story.
 - Nothing in the dream is ever labelled as real. The doctor's and the assistant's
   lines are **blank narration** — no name box, no portrait — so the room has no
   face.
@@ -280,8 +286,9 @@ of Act 2.
   lands on the protagonist, not on himself. The circle is the school activity and
   the mentor is the visitor, which is what keeps his seven-visit farewell possible.
   The protagonist uses his phone to take and compare photographs.
-  Five menus cover the doorway, camera availability, observing the first image,
-  Sim's photography and the club's origins, and participating in the session.
+  Four menus cover the doorway, observing the first image, Sim's photography and
+  the club's origins, and participating in the session; the camera-availability
+  menu was retired when the scene became narration-only.
   and the scene draws its lines from `documentation/Locations/Photography Club - Sim/1st
   interaction.md`. Sets `confidant_visits["sim"] = 1` and logs a memory.
   Selected replies earn Nerve for joining, Insight for reframing, or Grace for
@@ -325,9 +332,13 @@ The first day that belongs to him, and the template for every day after it.
 - The scene ends on the train home. Leaving the cafe he texts Hikari through
   the new **Messages** app (`run_chat`, §5.8), and on the train her "did you
   find the station?" exchange — including the notebook-cat photo and a
-  three-way reply choice — plays out as real texts. The day loop (morning →
-  lecture → `free_afternoon` → night) is what Act 2 needs next;
-  `free_afternoon` is wired but uncalled (§5.7).
+  three-way reply choice — plays out as real texts.
+- The night that closes day two is now written: the family kitchen table, the
+  food detail, the dinner-boundary beats, Tetsuo's station-writing lesson, the
+  quiz/library seed, the weekend-plan menu, the solo reflection, and sleep.
+- That night routes through `dream_router` with `dream_key = "day_two_cellular_maid"`
+  and reaches the day-two dream placeholder in `game/dreams.rpy`, then jumps to
+  `end_of_build`.
 
 ---
 
@@ -397,8 +408,10 @@ is the index.
   script today; the rule is narrated. When a class schedule exists, this is where
   the counter and the exam-disqualification flag belong.
 
-### 5.5 The dream mini-game
-- The memory-ordering board in `dream_sequence`. The player has three readings;
+### 5.5 The dream mini-game (archived)
+- The memory-ordering board is implemented as `dream_put_the_day_back` in
+  `game/dream_archive.rpy`; it is no longer on the story's active path. The
+  player has three readings;
   an incorrect submitted order costs one reading and preserves the current board.
   Only solving it on the first reading awards Insight.
 - Glitches are intentional and intense (`dream_static`: flashing bands and washes);
@@ -517,10 +530,11 @@ what makes them textable.
 | `money` | `start`, `spend_money()` | The wallet |
 | `inventory` | `start`, `add_item()` | The Bag |
 | `japanese_fluency` | initialised in `start` | Colour and comprehension of Japanese; no scene raises it yet |
-| `travel_method` | `travel_choice` | Taxi vs train downstream (`home_arrival`, `dream_sequence`) |
+| `travel_method` | `travel_choice` | Taxi vs train downstream (`home_arrival`, `dream_router`) |
 | `boarded_shinkansen` | `train_platform` | Express vs local |
 | `arrived_late` | train route | Which `home_arrival` opening plays |
 | `has_pamphlet` | `talk_assistant` | Unlocks the veteran assistant; used by the ticket machine |
+| `assistant_returned` / `desk_checks` | `talk_assistant` | The assistant returns after the hub gate; the empty desk is visible before that |
 | `talked_to_security` / `talked_to_man1` / `talked_to_npc2` | airport hub | The veteran assistant's alternate unlock |
 | `security_index` / `board_message_index` / `plant_index` | airport hub | Which variant of a repeated interaction you get |
 | `character_attributes` | `add_attribute_points()` | The three attributes |
@@ -532,12 +546,16 @@ what makes them textable.
 | `money_hint_shown` / `pamphlet_hint_shown` / `after_school_hint_shown` | first use of each | One-time tutorial cards |
 | `first_day_activity` | the first-afternoon fork in `first_class` | Which shape of afternoon he picked (`walk_alone` / `walk_hikari` / `photo_club`); read immediately, never shown |
 | `first_run_started` | `after_school_run` | The first river run happened. The run is not a confidant slot yet, so this is the only record of it |
+| `dream_key` | `start`, first-night sleep, day-two night | Which dream the router selects: `first_night`, `day_two_cellular_maid`, `put_the_day_back`, a future activity key, or `generic` |
+| `quiz_announced` | `second_school_day` haiku lecture | The professor planted the short quiz; Hikari turns it into the library seed |
+| `library_errand_available` | day-two night / future library scene | The library errand is now seeded and available for the reading-club introduction |
+| `weekend_plan` | day-two night weekend menu | What he said he wants tomorrow: `library`, `wander`, or `river` |
 | `current_act` | `morning_call` (→ 2); future act breaks | Which act's caps are in force (`act_confidant_cap`) |
 | `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the future `confidant_visit_*` stubs | How many of the seven visits each person has had; `destination_state()` and WIRE read it |
 | `hikari_visits` | `after_school_run` | Hikari's own visit count — feeds her WIRE progress ticks, separate from the confidant table |
 | `declined_dinner` | `first_evening_dinner` (walk-alone route only) | He told the family he was still full from ramen; `second_morning` breakfast reads it so the two days agree |
-| `sister_affection`, `father_affection`, `sim_affection`, `chef_affection` | `after_school_run`/`end_of_first_day`, `first_evening_dinner`, `after_school_photo_club`, `after_school_walk_alone` | Relationship quality, written by the story; **nothing reads them yet** |
-| `aya_affection`, `orson_affection`, `hana_affection` | **nothing yet** | Declared placeholders; `aya_affection` is not incremented by the maid-cafe visit, and the other two wait for their arcs |
+| `sister_affection`, `father_affection`, `sim_affection`, `chef_affection`, `aya_affection`, `hana_affection` | The relevant first-visit/run/dinner/night beats; `add_affection()` in `script.rpy` | Relationship trust, written by the story and read through the affection helpers (`affection_level`, thresholds). Hikari and Tetsuo are the active relationship beats now; Aya’s maid-cafe first visit increments `aya_affection`. |
+| `sim_affection`, `orson_affection` | **nothing yet written** | Declared placeholders; they wait for their arcs. |
 | `cellular_data_active` | `second_school_day` (Hamada Denki) | WIRE can sync off-Wi-Fi; gates `phone_map_is_unlocked("akihabara")` |
 | `wire_unlocked` | `wire_unlock()` in the visit scenes | Who is in the WIRE roster (`wire_order` = hikari, chef, sim, aya) |
 | `message_threads` / `message_unread` | `send_message()` / `receive_message()` in `messages.rpy` | The actual texts, per contact; unread counts per thread |
@@ -560,9 +578,10 @@ that does not exist.
   facility), the three endings (Escape / Blue Pill / Failure), and the
   epilogue coda all live there. See `story_treatment.md` and `plan.md`.
 - **The day loop after day two.** `free_afternoon` and the `confidant_visit_*`
-  stubs exist (§5.7), but no scene calls the hub yet — the game stops at the
-  end of `second_school_day` with a bare `return` to the main menu. A repeating
-  day (morning → lecture → hub → night) is the missing skeleton.
+  stubs exist (§5.7). The playable story now stops after the day-two dream and
+  jumps to the end-of-build card (`end_of_build`), so the repeating day is not
+  missing the terminal path; it is simply still unwritten. A repeating day
+  (morning → lecture → hub → night) remains the missing skeleton.
 - **The confidant locations beyond their first visit.** The ramen shop (Chef),
   photography club (Sim), and maid cafe (Aya) each have their **first** visit
   in the script (§4.6, §4.7). The bar (Orson) and reading circle (Hana) have

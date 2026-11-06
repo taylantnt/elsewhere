@@ -2,11 +2,13 @@
 
 Current code snapshot: November 6, 2026.
 
-This is an editable checklist of all 46 story choice menus currently in
-`game/script.rpy` — M01–M45 plus the walk-alone still-full fork (M35A) —
-including every answer with no attribute reward. The five non-dialogue rewards
-(E01–E05) are listed separately. Unwritten future scenes and the developer
-rank-up shortcut are not story rewards.
+This is an editable checklist of the current story choice menus kept here —
+M01–M45 plus the walk-alone still-full fork (M35A), M46 and M47 for the new
+night/weekend menus, and the retired camera menu (M31) — including every
+answer with no attribute reward. The current live reward groups are E01–E05
+plus the archived E01 board; non-dialogue rewards are listed separately.
+Unwritten future scenes and the developer rank-up shortcut are not story
+rewards.
 
 ## How To Edit
 
@@ -403,12 +405,17 @@ Context: the room turns to look at the newcomer and Sim welcomes him.
 ### M31. Answering The Camera Question
 
 Source: [`after_school_photo_club`](../game/script.rpy#L4230), menu at line 4299.
+Context: the scene used to ask whether the protagonist had a camera. **Retired.**
 Prompt: "So. Do you have a camera?"
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M31.01 | My camera's at home. | No rewards | Explains he was not expecting to visit today. |
 | M31.02 | Only my phone today. | No rewards | Asks whether his phone is enough. |
+
+**Retired:** the camera question is now handled by dialogue rather than a
+choice. Keep the M31 IDs stable only for reference; no code should add a camera
+menu back without also adding its reward row.
 
 ### M32. Looking At The First Photograph
 
@@ -572,11 +579,34 @@ Source: [`second_school_day`](../game/script.rpy).
 | M45.01 | Try the spell with her. | Nerve +0.2 | Flag `maid_cafe_join_spell`. |
 | M45.02 | Smile and let her do the spell. | Grace +0.2 | Flag `maid_cafe_watch_spell`. |
 
+### M46. The Night-Table Question
+
+Source: [`second_school_day`](../game/script.rpy), night kitchen-table menu after the train ride.
+Context: Tetsuo asks what the new phone/plan actually cost or meant.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M46.01 | I checked the total before I signed. It was lower than I expected. | Insight +0.2 | Flag `night_table_total`; Tetsuo's regard increases by 2. |
+| M46.02 | I spent what I needed to. Nothing extra. | Grace +0.2 | Flag `night_table_plain`; Tetsuo's regard increases by 1. |
+| M46.03 | I'd rather not turn dinner into a bill. | Nerve +0.2 | Flag `night_table_boundary`; Tetsuo's regard increases by 1. |
+| M46.04 | [Nerve] I could tell you. Then you could tell me what the car cost. | Nerve +0.2 | Requires 1.2 Nerve points; flag `night_table_nerve`; Tetsuo's regard increases by 1. |
+
+### M47. The Weekend Plan
+
+Source: [`second_school_day`](../game/script.rpy), upstairs weekend-menu after the night reflection.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M47.01 | Study. If there's a quiz, I'm not guessing. | Insight +0.2 | Flag `night_weekend_study`; Hikari's trust increases by 1; sets `weekend_plan = "library"`. |
+| M47.02 | Walk until the neighborhood makes sense. No map, no destination. | Nerve +0.2 | Flag `night_weekend_wander`; Hikari's trust increases by 1; sets `weekend_plan = "wander"`. |
+| M47.03 | See the river again. If you'll have me. | Grace +0.2 | Flag `night_weekend_river`; Hikari's trust increases by 2; sets `weekend_plan = "river"`. |
+
 ## Rewards Outside Dialogue Choices
 
 ### E01. Put The Day Back: Memory Puzzle
 
-Source: [`dream_sequence`](../game/script.rpy#L2952), reward at line 3091.
+Source: [`game/dream_archive.rpy`](../../game/dream_archive.rpy), label `dream_put_the_day_back`; reward in that archived label.
+Status: **Archived**.
 The player places four true memories in order and submits REVIEW SEQUENCE.
 Three readings are available; only an incorrect reading reduces the counter.
 

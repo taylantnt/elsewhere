@@ -1,11 +1,15 @@
 # Exam Period & Course Load
 
-**Status:** design memo — nothing here is scripted yet.
+**Status:** design memo — partially scripted seed, full exam/quiz arc still future.
 **Why it exists:** Hana's introduction (and the Reading Club errand) hangs off
 exam season, and the lectures the protagonist attends should all teach
 something that can come back as an exam question. This file is the memo of
 what he actually sat through, so the quiz and the errand have material to draw
 on.
+
+The professor’s quiz announcement and Hikari’s library errand are now seeded in
+`second_school_day` (`quiz_announced`, `library_errand_available`); the full quiz
+scenes and the Hana reading-club introduction remain unwritten.
 
 ---
 

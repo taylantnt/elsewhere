@@ -318,6 +318,48 @@ default chef_affection = 0
 default aya_affection = 0
 default hana_affection = 0
 
+# Relationship values are trust, not a score. Hikari's rises when he actually
+# sees her instead of only accepting her help; Tetsuo's rises when he keeps a
+# promise, takes responsibility, or lets the family know where he is. The same
+# ladder is available to every confidant, but only the two family relationships
+# are used by the current build.
+#
+#   1  Known     at 1   — they have let him closer than a stranger
+#   2  Trusted   at 3   — they expect him to mean what he says
+#   3  Close     at 5   — they bring him the thing they would not say aloud
+#   4  Family    at 8   — the door is open without asking
+#
+# Levels are read through affection_level("hikari") / ("father"), so future
+# scenes can gate a confidence or an extra beat without inventing a second stat.
+init python:
+    affection_level_thresholds = [0, 1, 3, 5, 8]
+    affection_level_names = ["New", "Known", "Trusted", "Close", "Family"]
+
+    def affection_value(character):
+        return getattr(store, character + "_affection", 0)
+
+    def affection_level(character):
+        value = affection_value(character)
+        level = 0
+        for index, threshold in enumerate(affection_level_thresholds):
+            if value >= threshold:
+                level = index + 1
+        return level
+
+    def affection_at_least(character, level):
+        return affection_level(character) >= level
+
+    def add_affection(character, amount=1):
+        """Change a relationship by a deliberate amount.
+
+        This is not an attribute reward and does not pop a card. A relationship
+        is read by later scenes, not spent like currency.
+        """
+        attribute = character + "_affection"
+        if not hasattr(store, attribute):
+            raise Exception("Unknown affection id: %r" % (character,))
+        setattr(store, attribute, max(0, getattr(store, attribute) + amount))
+
 # True if he told the family he was still full from ramen and skipped dinner.
 # Only possible on the walk-alone route; the next morning's breakfast reads it.
 default declined_dinner = False
@@ -327,6 +369,8 @@ default talked_to_security = False
 default talked_to_man1 = False
 default talked_to_npc2 = False
 default has_pamphlet = False
+default assistant_returned = False
+default desk_checks = 0
 
 # Two officers share the post at the terminal doors, so this ticks over every
 # time he walks up. Even answers come from the man, odd ones from the woman.
@@ -377,6 +421,16 @@ default first_day_activity = ""
 # The haiku lesson is the first topic the player is asked to study deliberately.
 # Keep their chosen approach in save data so a later exam can acknowledge it.
 default haiku_study_method = ""
+
+# The professor plants the first quiz, and Hikari turns it into a place to go.
+# The library scene that introduces Hana hangs off this flag; the scene itself
+# is not written yet, so the seed can wait safely in save data.
+default quiz_announced = False
+default library_errand_available = False
+
+# What he says he wants from the first weekend. The day is not built yet, so
+# this is a promise to the future rather than a route switch.
+default weekend_plan = ""
 
 # True once the river run has happened once. The run is not a confidant slot in
 # locations.rpy yet, so this is the only thing that records it for now.
@@ -1810,7 +1864,7 @@ label airport_exploration:
             jump talk_timid_man
         "Ask the Cheerful Woman":
             jump talk_cheerful_woman
-        "Ask the Information Desk":
+        "Check the Information Desk":
             jump talk_assistant
         "Ask the Veteran Assistant" if has_pamphlet or (talked_to_security and talked_to_man1 and talked_to_npc2):
             jump talk_veteran_assistant
@@ -1979,9 +2033,24 @@ label answer_woman_echo:
 
 label talk_assistant:
     if not (talked_to_security and talked_to_man1 and talked_to_npc2):
-        assistant "いらっしゃいませ～。ようこそ。"
+        $ desk_checks += 1
+        "The information desk is empty."
+        "A laminated sign sits where the assistant should be: 「ただいま席を外しております」. Under it, someone has written BACK SOON in careful English."
+        if desk_checks == 1:
+            mc "(So she stepped away. That explains the empty desk, at least.)"
+            mc "(If I wait here, I'll be waiting on a sign. I should ask the people out here first.)"
+        else:
+            mc "(Still empty. I've been circling the same hall.)"
+            mc "(The guard, the man by the phones, the woman in the bright coat. One of them must know the way out.)"
+        "A staff member in a grey coat crosses behind the counter without stopping."
+        mc "(I'll check back once I've asked around.)"
         jump airport_exploration
-    
+
+    if not assistant_returned:
+        $ assistant_returned = True
+        "The desk is not empty now. The assistant is behind it, straightening a stack of pamphlets that was already straight."
+        mc "(There she is.)"
+
     assistant "いらっしゃいませ～。ようこそ。"
     mc "Hi! Um... Can you help me?"
     # The moment she realises she has to do this in English. She wears the second
@@ -2627,7 +2696,8 @@ label home_arrival:
     scene black with Dissolve(2.5)
     stop music fadeout 1.0
     pause 1.0
-    jump dream_sequence
+    $ dream_key = "first_night"
+    jump dream_router
 
 
 ################################################################################
@@ -2641,8 +2711,10 @@ label home_arrival:
 ## clinical register that cut into him on the plane, so the player has already
 ## been taught how to read them: this is what is actually happening to him.
 ##
-## The mini-game asks him to sort the real memories of today from the planted
-## ones. It is not possible to fail it. It is very possible to be told things he
+## The dream tries to sort the real memories of today from the planted ones, and
+## fails. The ordering board that used to sit here is archived in
+## dream_archive.rpy; the story now lets the dream talk over him instead. It is
+## not possible to fail the scene. It is very possible to be told things he
 ## should not know.
 
 # The whole picture stutters sideways and then recovers. Slow enough to read as
@@ -2724,56 +2796,6 @@ init python:
 
         return bars
 
-    def build_dream_cards(travel_method, boarded_shinkansen):
-        """Today, as four memories that happened and two that did not.
-
-        The true cards are written from the route the player actually took, so the
-        dream is *his* day rather than a generic one. The false ones are the room's
-        own furniture: a face with no name, and a corridor that keeps repeating.
-        """
-        if travel_method == "taxi":
-            real = [
-                "The plane doors opening, and the air on the other side of them",
-                "A driver who bowed before he opened the door for me",
-                "A meter climbing in hundreds, and never once in ones",
-                "A bell that rang louder than the whole street",
-            ]
-        elif boarded_shinkansen:
-            real = [
-                "The plane doors opening, and the air on the other side of them",
-                "A board on the platform that changed while I was reading it",
-                "The express, and the country going past sideways",
-                "A bell that rang louder than the whole street",
-            ]
-        else:
-            real = [
-                "The plane doors opening, and the air on the other side of them",
-                "A board on the platform that changed while I was reading it",
-                "A local train that stopped at every single station",
-                "A bell that rang louder than the whole street",
-            ]
-
-        fake = [
-            "A woman in white, calling a name that is almost mine",
-            "A corridor of doors, and behind every one of them my room",
-        ]
-
-        # `order` is the position in the day, not on the board. Both lists above
-        # are written in the order things happened, so the number is simply the
-        # index, and the label reads these back to know what "right" is. The
-        # planted ones have no position in the day, so they get no number.
-        cards = []
-        for i, text in enumerate(real):
-            cards.append({"id": "real%d" % i, "text": text, "real": True, "order": i})
-        for i, text in enumerate(fake):
-            cards.append({"id": "fake%d" % i, "text": text, "real": False, "order": None})
-
-        # Shuffled once per showing, so the same words do not land in the same
-        # squares twice in a row and the player cannot learn the board.
-        renpy.random.shuffle(cards)
-        return cards
-
-
 # The interference itself. Drawn on the overlay layer so it crosses the dialogue
 # as well as the picture: the voice he is hearing is not coming from the room he
 # thinks he is standing in.
@@ -2787,228 +2809,7 @@ screen dream_static():
         add b
 
 
-# How the board answers a touch.
-#
-# Every card gets this one, and it is a bare named transform rather than a call
-# with arguments: a screen rebuilds a displayable whenever its `at` changes, so an
-# animated transform built fresh on each render would restart forever instead of
-# settling.
-#
-# Cards lift a little under the cursor, so the board feels like something you are
-# handling rather than a form you are filling in.
-transform dream_card_hover:
-    zoom 1.0
-    on idle:
-        ease 0.16 zoom 1.0
-    on hover:
-        ease 0.16 zoom 1.018
-
-# The heading keeps slipping a few pixels, the way the rest of the dream does.
-transform dream_title_glitch:
-    subpixel True
-    block:
-        xoffset 0
-        pause 2.3
-        xoffset -3
-        pause 0.04
-        xoffset 2
-        pause 0.05
-        xoffset -1
-        pause 0.05
-        xoffset 0
-        repeat
-
-
-# The ordering game. The pile is on the right, the day he is rebuilding is on the
-# left, and the only thing the label ever hears about is a finished reading.
-#
-# Moving a card between the two is not a story event, so it does not go through
-# the label: the click is handled here and the board changes on the same frame.
-# That is what makes taking a card back out of the middle of the order feel like
-# moving something on a table instead of asking the game for permission. The label
-# owns only what a wrong reading costs, because the count of readings is his and
-# not the board's.
-#
-# Nothing here reveals which cards are his. The old board turned the true ones
-# green as they were touched, which handed the player the answer in the first few
-# clicks; the whole point of this version is that the board says nothing and the
-# order has to be kept in his head.
-screen dream_timeline(cards, start_placed, attempts):
-
-    modal True
-    zorder 100
-
-    add Solid("#04050a")
-
-    # Interference over the board itself, kept lighter than the full-screen
-    # version: it should feel like the picture is unwell, not make the words hard
-    # to read.
-    default bars = dream_static_bars(3, 0.08, False)
-    timer 0.12 repeat True action SetScreenVariable("bars", dream_static_bars(3, 0.08, False))
-
-    # The order being built. It is seeded from what the label handed in, so a
-    # reading that came back wrong returns to the board exactly as he left it
-    # rather than being wiped and started over.
-    default placed = list(start_placed)
-
-    $ card_by_id = {c["id"]: c for c in cards}
-    $ pile = [c for c in cards if c["id"] not in placed]
-    $ full = len(placed) >= 4
-
-    for b in bars:
-        add b
-
-    vbox:
-        xalign 0.5
-        ypos 24
-        spacing 5
-
-        text "MEMORY / RECONSTRUCTION" xalign 0.5:
-            size 11
-            kerning 3
-            color "#7f96a8"
-            outlines []
-
-        text "PUT THE DAY BACK" at dream_title_glitch:
-            xalign 0.5
-            size 30
-            kerning 2
-            color "#9bdcf5"
-            outlines []
-
-        text "Four memories happened today. Place them in the order they occurred.":
-            xalign 0.5
-            size 17
-            color "#aab7c1"
-            outlines []
-
-    # How many readings remain.
-    hbox:
-        xpos 1210
-        ypos 34
-        xanchor 1.0
-        spacing 7
-
-        text "READINGS" size 11 color "#7f96a8" kerning 2 outlines []
-
-        for i in range(3):
-            add Solid("#9bdcf5" if i < attempts else "#26313a") xysize (22, 4)
-
-        text "[attempts]/3" size 12 color "#bdcbd5" outlines []
-
-    add Solid("#0d131c") xpos 48 ypos 132 xysize (590, 478)
-    add Solid("#0d131c") xpos 652 ypos 132 xysize (580, 478)
-    add Solid("#263542") xpos 48 ypos 132 xysize (590, 1)
-    add Solid("#263542") xpos 652 ypos 132 xysize (580, 1)
-
-    # --- the order he is rebuilding ----------------------------------------
-    vbox:
-        xpos 70
-        ypos 150
-        spacing 12
-
-        hbox:
-            spacing 16
-            text "YOUR SEQUENCE" size 14 kerning 2 color "#9bdcf5" outlines []
-            text "[len(placed)] / 4 PLACED" size 11 kerning 1 color "#7f96a8" outlines []
-
-        for i in range(4):
-
-            if i < len(placed):
-
-                $ cid = placed[i]
-                $ slot_text = card_by_id[cid]["text"]
-
-                # Clicking a placed card takes it back out. Everything under it
-                # moves up, because the order is the list itself and the list
-                # simply got shorter.
-                button:
-                    xysize (560, 86)
-                    at dream_card_hover
-                    background Solid("#18232d")
-                    hover_background Solid("#202f3b")
-                    action [
-                        Play("sfx", "audio/SFX/type_click.wav"),
-                        SetScreenVariable("placed", placed[:i] + placed[i + 1:]),
-                    ]
-
-                    fixed:
-                        xysize (560, 86)
-                        add Solid("#9bdcf520", xysize=(54, 86))
-                        add Solid("#263b4a") xysize (2, 86)
-                        text "0[i + 1]" xpos 0 xsize 54 text_align 0.5 yalign 0.5 size 18 color "#9bdcf5" outlines []
-                        text slot_text xpos 72 yalign 0.5 xmaximum 424 size 16 line_spacing 3 color "#e5edf2" outlines []
-                        text "REMOVE" xpos 482 yalign 0.5 size 9 kerning 1 color "#738493" outlines []
-
-            else:
-
-                fixed:
-                    xysize (560, 86)
-                    add Solid("#161d27", xysize=(560, 86))
-                    add Solid("#111922", xysize=(556, 82)) xoffset 2 yoffset 2
-                    text "0[i + 1]" xpos 2 xsize 52 text_align 0.5 yalign 0.5 size 18 color "#536475" outlines []
-                    text "SELECT A MEMORY FOR THIS POSITION" xpos 74 yalign 0.5 size 10 kerning 1 color "#465563" outlines []
-
-    # --- the pile ----------------------------------------------------------
-    vbox:
-        xpos 700
-        ypos 150
-        spacing 8
-
-        text "AVAILABLE MEMORIES" size 14 kerning 2 color "#9bdcf5" outlines []
-
-        for c in pile:
-
-            button:
-                xysize (510, 66)
-                at dream_card_hover
-                background Solid("#151e27")
-                hover_background Solid("#263642")
-                insensitive_background Solid("#0b1016")
-                sensitive (not full)
-                action [
-                    Play("sfx", "audio/SFX/memory_restore.wav"),
-                    SetScreenVariable("placed", placed + [c["id"]]),
-                ]
-
-                text c["text"]:
-                    xalign 0.5
-                    yalign 0.5
-                    xmaximum 470
-                    text_align 0.5
-                    size 15
-                    line_spacing 3
-                    color "#e5edf2"
-                    outlines []
-
-    text "Select a placed memory to remove it. The sequence is checked only when you submit it.":
-        xalign 0.5
-        ypos 610
-        size 12
-        color "#788895"
-        outlines []
-
-    # --- the reading -------------------------------------------------------
-    button:
-        xpos 640
-        xanchor 0.5
-        ypos 644
-        xysize (380, 46)
-        background Solid("#163744" if full else "#141c24")
-        hover_background Solid("#1e5061")
-        sensitive full
-        action Return(list(placed))
-
-        text "REVIEW SEQUENCE":
-            xalign 0.5
-            yalign 0.5
-            size 14
-            kerning 2
-            outlines []
-            color ("#b8e9f4" if full else "#647481")
-
-
-label dream_sequence:
+label dream_first_night:
 
     # He is asleep. The house is quiet and the dark behind his eyes is not.
     stop music fadeout 2.0
@@ -3079,75 +2880,23 @@ label dream_sequence:
     mc "No. Wait."
     mc "I know what today was. I was there for all of it."
     "Everything I did today is lying on the floor of my head, mixed up with things I have never seen."
-    "I don't know why it matters that I put it back in the right order."
-    "It matters."
+    "I try to put the airport first. It becomes the house. I try to put the house first. It becomes the road."
+    "The harder I hold on, the faster they move."
+    "Four of them are mine. I know that much: the airport, the ride, the street, the bell."
+    "The others are not. A woman in white, calling a name that is almost mine. A corridor of doors, and behind every one of them my room."
+    "I do not know why it matters that I keep them apart. It matters."
 
-    window hide
+    # The room talks over the dream while he is still trying to hold it. The
+    # board that used to sit here is archived in dream_archive.rpy.
+    show hospital_flash onlayer overlay at truecenter:
+        alpha 0.0
+        linear 0.08 alpha 0.65
+        linear 0.08 alpha 0.0
+    "He is trying to hold the day together."
+    "Let him. The order is not what we need yet."
 
-    # The game. Four of the cards are the day he actually had, in the order he
-    # had it, and two are the room's own furniture. He has to put the four true
-    # ones back in sequence, and he is given three readings of it.
-    #
-    # A wrong reading costs a reading and nothing else. What he has worked out
-    # comes back to the board with him, because taking the whole thing apart
-    # again would hand him the answer instead of making him find it.
-    $ dream_cards = build_dream_cards(travel_method, boarded_shinkansen)
-    $ dream_order = [c["id"] for c in sorted([c for c in dream_cards if c["real"]], key=lambda c: c["order"])]
-    $ dream_placed = []
-    $ dream_attempts = 3
-    $ dream_solved = False
-
-    while dream_attempts > 0 and not dream_solved:
-
-        call screen dream_timeline(dream_cards, dream_placed, dream_attempts)
-        $ dream_placed = _return
-
-        if dream_placed == dream_order:
-
-            $ dream_solved = True
-
-        else:
-
-            $ dream_attempts -= 1
-
-            # The same white light as before, and the room talking over him while
-            # he is still looking at the board.
-            show hospital_flash onlayer overlay at truecenter:
-                alpha 0.0
-                linear 0.08 alpha 0.65
-                linear 0.08 alpha 0.0
-
-            mc "No. That is not it either."
-
-            if dream_attempts == 2:
-                "Out of sequence. He is holding all the pieces and none of the order."
-                "Leave him to it. Do not help him."
-            elif dream_attempts == 1:
-                "Still out. He is arranging the day the way he wants it, not the way it was recorded."
-                "One reading left. After that we take the board off him."
-            else:
-                show screen dream_static
-                "That is three. He is not going to find it tonight."
-                "Close the sequence. He keeps the day. He does not keep the order."
-                hide screen dream_static
-
-    window hide
-
-    if dream_solved:
-        "Four of them. All four are mine, and they are back where they go."
-        "The airport, the ride, the street, the bell. That was today."
-        "That is all of it. That is everything that happened."
-    else:
-        "I could not make them sit still. Every time I put one down, another one moved."
-        "But the four that were mine were in that pile. I know them when I see them."
-        "The airport. The ride. The street. The bell."
-        "Whatever else was in there was never mine."
-
-    # The reward is not for finishing. It is for finishing first, which is the
-    # only reason the readings are counted at all. Insight, because holding a day
-    # in the right order is the same muscle as reading a room.
-    if dream_solved and dream_attempts == 3:
-        $ reward_attributes_once("dream_day_order", [("insight", "medium")], show="card")
+    "The pieces slow down. Not because I have fixed them. Because something else has decided to let me look."
+    "The woman in white turns toward me. I cannot see her face."
 
     # And the last thing the dream does is answer him, which a dream should not be
     # able to do.
@@ -3155,14 +2904,14 @@ label dream_sequence:
         alpha 0.0
         linear 0.12 alpha 0.7
         linear 0.12 alpha 0.0
-    "Consolidation complete. Bring him up slowly."
+    "Consolidation is not taking. He keeps putting the day back in the wrong order."
+    "Then stop helping him. Let him wake up with it."
 
     stop music fadeout 3.0
     scene black with Dissolve(1.5)
     pause 1.5
 
     jump morning_call
-
 
 ################################################################################
 ## ACT TWO, FIRST BEAT: THE FIRST MORNING
@@ -3186,7 +2935,7 @@ label morning_call:
     mc "(What was that?)"
     mc "(It felt like the dream knew me. That's what I can't shake.)"
     "I try to hold onto it and it comes apart like wet paper."
-    "It takes me three seconds to remember where I am."
+    "Then the room assembles itself around me. Low ceiling. Boxes. A window with the wrong light."
     "Japan. The house. The room with the boxes in it."
     mc "My first morning."
 
@@ -4172,7 +3921,7 @@ label after_school_run:
 
     "She is outside at the bottom of the steps with her arms crossed and her weight on one foot."
     "Same person, different clothes. Shorts, and a top that has been rained on a hundred times."
-    mc "(She looks like somebody else. I decide not to say so.)"
+    mc "(She looks like somebody else. I have enough sense not to say it.)"
     hikari "Why did that take so long?"
     mc "Four minutes."
     hikari "Exactly. Nobody changes in four minutes."
@@ -4252,7 +4001,7 @@ label after_school_run:
     # Small, not medium: the three first-afternoon routes should close at a
     # similar weight. Walk and photo use the same size on their forced beat.
     $ reward_attributes_once("run_first_river", [("nerve", "small")], show="card")
-    $ sister_affection += 1
+    $ add_affection("hikari", 1)
     $ remember("hikari", "ran the river path with her on the first afternoon")
 
     # She is the one who put WIRE on the phone in the first place, so she is the
@@ -4377,16 +4126,11 @@ label after_school_photo_club:
     sim "Some come to build a portfolio. Some for the practice."
     sim "Some because they wanted somewhere to be on a Tuesday and this room was open."
     sim "Everybody gives what they have and takes what they need. It works both ways. Nobody pays, and nobody has to be any good."
-    mc "(That is the second time in one day that somebody has explained a thing in this country by telling me what it gives other people.)"
+    mc "(Two rooms in one day, and both of them told me who they were for before they told me anything else.)"
 
     sim "So. Do you have a camera?"
 
-    menu:
-        "My camera's at home.":
-            mc "My camera's at home. I wasn't expecting to come here today."
-        "Only my phone today.":
-            mc "Only my phone today. Will that be okay?"
-
+    mc "Not with me. Only my phone."
     "I look at my hands, which are empty, and he follows my eyes down to them."
     sim "Then we'll use your phone."
     sim "Phone cameras are better than most beginners realise."
@@ -4495,7 +4239,7 @@ label after_school_photo_club:
     scene bg_home_night with walk_fade
 
     "Hikari is on the stairs, sitting on the third step with her chin on her knees."
-    "It is a thing I have not seen anyone do outside of films."
+    "She has made a seat out of it. She does not look uncomfortable in it at all."
     hikari "You're late."
     mc "I know."
     hikari "I've been sitting here since eight. Dad's been pretending to read the same page."
@@ -4841,7 +4585,9 @@ label first_evening_dinner:
             "Say you're hungry, and sit down to eat with them.":
                 mc "I'm starving, actually. What is natto?"
                 $ reward_attributes_once("first_dinner_covered", [("grace", "small")], show="auto")
-                $ father_affection += 1
+                # He chose the table over the easier exit. That is the thing
+                # Tetsuo was actually asking for.
+                $ add_affection("father", 2)
                 $ remember("father", "ate dinner with the family even though he was still full")
                 $ remember("hikari", "he covered for being too full to explain")
 
@@ -4853,7 +4599,8 @@ label first_evening_dinner:
             hikari "You still make that face."
             father "I do not."
             mother "You do."
-            $ father_affection += 1
+            # Honesty at the table, offered without making it a performance.
+            $ add_affection("father", 1)
             $ reward_attributes_once("first_dinner_natto", [("nerve", "micro")], show="auto")
             $ remember("father", "was honest about trying natto")
         "How long did it take to get used to the neighborhood?":
@@ -4863,7 +4610,8 @@ label first_evening_dinner:
             father "That place has eight floors."
             mc "I'm starting to understand the problem."
             father "You'll learn the streets. It takes time."
-            $ father_affection += 1
+            # He asked about Tetsuo's life instead of only his own.
+            $ add_affection("father", 1)
             $ reward_attributes_once("first_dinner_neighborhood", [("insight", "micro")], show="auto")
             $ remember("father", "talked about learning the neighborhood")
         "I'm sorry I kept you waiting. I should have called.":
@@ -4871,7 +4619,9 @@ label first_evening_dinner:
             father "You didn't have a working connection. Next time, ask someone to call."
             mc "I will."
             mother "That's all we wanted to hear."
-            $ father_affection += 1
+            # Taking responsibility without being asked is worth more than a
+            # polite apology after the fact.
+            $ add_affection("father", 2)
             $ reward_attributes_once("first_dinner_apology", [("grace", "micro")], show="auto")
             $ remember("father", "apologized for keeping the family waiting")
 
@@ -4948,17 +4698,19 @@ label end_of_first_day:
         "Thank her for helping me figure it out.":
             mc "Thanks for helping me figure it out. I don't know how any of this works yet."
             hikari "That's why I'm explaining it."
-            $ sister_affection += 1
+            $ add_affection("hikari", 1)
             $ reward_attributes_once("first_night_hikari_thanks", [("grace", "micro")], show="auto")
         "Tell her she makes the house easier to understand.":
             mc "You make this house easier to understand."
             hikari "Don't tell anyone. I have a reputation."
-            $ sister_affection += 1
+            # He noticed what she does for the house, not only what she does
+            # for him. That lands harder than being thanked.
+            $ add_affection("hikari", 2)
             $ reward_attributes_once("first_night_hikari_observation", [("insight", "micro")], show="auto")
         "Promise you'll be ready when she comes to get you.":
             mc "I'll be ready when you come get me."
             hikari "You'd better be. I'm not waiting outside your door."
-            $ sister_affection += 1
+            $ add_affection("hikari", 1)
             $ reward_attributes_once("first_night_hikari_promise", [("nerve", "micro")], show="auto")
     hide sister_standing with dissolve
 
@@ -5168,10 +4920,13 @@ label second_school_day:
     "He taps the circled word with his chalk."
     professor "This is the kigo. The seasonal word. It places the poem in a time of year without naming the season."
     "He reads an example aloud. A frog, an old pond, the sound of water."
-    "The room is still for a moment after he finishes. I did not expect three lines to do that."
+    "For a moment the room belongs to the poem. Then the chalk goes back to the board."
     professor "The small detail is not decoration. It is the door into the whole poem."
     mc "(A season hidden inside one word. I write it in the margin.)"
     professor "You will see this again. Pay attention to what the word is doing, not only to how many syllables you can count."
+    professor "Next week, a short quiz. Three questions. The kigo will be one of them."
+    $ quiz_announced = True
+    mc "(Three questions. I have four days to make sure one of them is not a guess.)"
 
     menu:
         "Take careful notes on the kigo.":
@@ -5387,7 +5142,7 @@ label second_school_day:
     aya "The idea is that we're not only serving food. We make the visit playful. You can call us by our maid names, and we'll call you Master or Princess if you prefer."
     mc "And the magic spell?"
     aya "That's one of the little performances. Before some dishes, we do a short 'deliciousness' spell together. You can join in, or just watch. Nobody will make you do it."
-    mc "(Somehow, being told I can refuse makes me more willing to try.)"
+    mc "(She says it like it is a real option. I look at the menu again, and this time I read it properly.)"
     "Aya checks that I understand the seating charge and points out the order section of the menu."
     "The time limit is printed beside it, along with the prices for optional photos and special sets."
     aya "If you want anything, just call me over. If you're not sure what something is, ask. I can explain it in English."
@@ -5398,7 +5153,7 @@ label second_school_day:
             $ reward_attributes_once("maid_cafe_understand_options", [("insight", "micro")], show="auto")
             mc "Could you explain the extra options?"
             aya "Of course. Some sets include a drink or dessert, and some include a photo with a maid. Each one has its own price, so you can choose separately."
-            mc "(The menu is a lot easier to read when someone explains the categories.)"
+            mc "(Drink, dessert, photo. Three separate things, three separate prices. I can work with that.)"
         "Tell her the whole place is a little overwhelming.":
             $ reward_attributes_once("maid_cafe_admit_nerves", [("nerve", "micro")], show="auto")
             mc "I think I'm a little overwhelmed."
@@ -5446,7 +5201,7 @@ label second_school_day:
         "Try the spell with her.":
             $ reward_attributes_once("maid_cafe_join_spell", [("nerve", "micro")], show="auto")
             aya "Are you ready?"
-            mc "(I am in a crowded cafe in Akihabara, making a heart with my hands over lunch. This is really happening.)"
+            mc "(I am in a crowded cafe in Akihabara, making a heart with my hands over lunch. The room does not stop for it. Neither do I.)"
             voice "audio/VO/moekyun.mp3"
             aya "Moe moe...Kyun!"
             mc "Moe moe... kyun."
@@ -5458,7 +5213,7 @@ label second_school_day:
             "Aya makes the heart shape over the plate and chants the spell with a flourish."
             voice "audio/VO/moekyun.mp3"
             aya "Moe...Kyun!"
-            mc "(I still feel a little silly, but I don't feel like I'm being tested.)"
+            mc "(For a second the whole room is in on it. Then the next table orders, and the moment moves on.)"
     "The omurice is better than I expected. Aya checks in once, then gives me room to eat while the room's noise settles into something almost comfortable."
     aya "Did you enjoy it, Master?"
     mc "Yeah. More than I expected."
@@ -5476,6 +5231,9 @@ label second_school_day:
     "I open the scanner on my phone and hold it over the code. Aya's name appears on the screen."
     mc "(A new contact, from a place I only walked into because I was curious.)"
     $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 1)
+    # Aya joins the cast with the same first-visit regard the chef and Sim get.
+    # The number is a relationship level, not a reward; later cafe scenes read it.
+    $ aya_affection += 1
     $ wire_unlock("aya")
     mc "There. You're in my contacts."
     aya "And now you have a reason to come back!"
@@ -5504,8 +5262,8 @@ label second_school_day:
                       "The cafe will still be there next time."]},
         ]},
     ])
-    mc "(I went in. I ordered lunch. I did the spell. That is going in.)"
-    "A group of students passes me, comparing keychains from a capsule machine. The city no longer feels like one enormous place I have to understand all at once."
+    mc "(I went in. I ordered lunch. I did the spell. The last one is going in the notebook.)"
+    "A group of students passes me, comparing keychains from a capsule machine. I let them go by, then check the station sign."
     "I find the station using the map. This time I check the sign before choosing an entrance."
     scene bg_train_interior with walk_fade
     stop music fadeout 0.8
@@ -5539,9 +5297,208 @@ label second_school_day:
     ])
     "The city slips past the window. Hamada Denki, the arcade signs, and the cafe's pink lights settle into separate memories instead of one long blur."
     "I arrived with a phone that could only reach the house. Now it can get me across the city, and I have a reason to look forward to opening it again."
-    scene black with Dissolve(2.0)
+
+    # The day does not end on the train. It ends at the kitchen table, where the
+    # family gets to ask what the new phone and the new city actually cost him,
+    # and then upstairs, where the first weekend is waiting.
+    scene bg_station with walk_fade
+    stop music fadeout 1.0
+    $ night_street()
+
+    "The station is emptying out. The last of the office crowd goes down the stairs ahead of me, and the lights over the ticket gate make everything look newly washed."
+    "I know the turn out of the station now. I do not have to stop and check the map."
+    mc "(That is one thing I can do here. It is not a small thing.)"
+
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+
+    "The kitchen window is lit. Not the porch light. The kitchen."
+    mc "(They waited up.)"
+
+    scene bg_home_night with walk_fade
+    "The front door is unlocked. I slide it shut behind me and put my shoes on the rack, beside Hikari's."
+    "For a second the house smells like dinner and laundry and something older underneath, the way a house smells when people have been in it for years."
+
+    scene bg_kitchen_night with walk_fade
+    $ room_ambient(True)
+
+    "Mother is at the table with a cup of tea she has finished. Father has the newspaper open at the same page he was pretending to read this morning."
+    mother "There you are."
+    father "You're back."
+    hikari "Told you."
+    mc "You were all waiting?"
+    hikari "Dad checked the clock four times."
+    father "I checked it once."
+    mother "Four times."
+    father "..."
+    "He turns the page. It is the same page."
+
+    mother "Sit. There's rice left, and the soup is still hot."
+    "She sets a bowl in front of me. The rice is cold at the edges and warm in the middle. The miso has tofu and wakame in it, and a small dish of pickled cucumber sits beside the bowl."
+    father "Rice first. Then the fish. The soup between."
+    hikari "He means there's no wrong way to eat it."
+    father "There is a right way."
+    hikari "There is his way."
+    mc "(I pick up the chopsticks and start with the rice.)"
+
+    father "So. What did today cost you?"
+    hikari "Dad."
+    father "It is a fair question. He bought a phone plan."
+    mc "It's not a trap?"
+    father "It is a question."
+    "He says it without looking up from the newspaper. Mother keeps her tea between both hands and watches us over the rim."
+
+    menu:
+        "I checked the total before I signed. It was less than I expected.":
+            mc "I checked the total before I signed. It came in lower than I expected."
+            father "Good. Then you read the numbers, not the sign on the wall."
+            $ reward_attributes_once("night_table_total", [("insight", "micro")], show="auto")
+            $ add_affection("father", 2)
+        "I spent what I needed to. Nothing extra.":
+            mc "I spent what I needed to. No handset, no extras, no insurance I didn't ask for."
+            father "Then you did it properly."
+            $ reward_attributes_once("night_table_plain", [("grace", "micro")], show="auto")
+            $ add_affection("father", 1)
+        "I'd rather not turn dinner into a bill.":
+            mc "I'd rather not turn dinner into a bill."
+            "The newspaper comes down an inch."
+            father "..."
+            father "That is fair too. You are allowed to keep some things for yourself."
+            mother "That was a good answer."
+            hikari "He's learning."
+            $ reward_attributes_once("night_table_boundary", [("nerve", "micro")], show="auto")
+            $ add_affection("father", 1)
+        "[tag_nerve] I could tell you. Then you could tell me what the car cost." if has_attribute_points("nerve", 1.2):
+            mc "I could tell you. Then you could tell me what the car cost."
+            "Hikari's chopsticks stop halfway to her mouth."
+            father "..."
+            father "The car is paid for."
+            mc "So is the phone plan."
+            father "..."
+            "Something moves at the corner of his mouth. It is gone before I can be sure."
+            hikari "Oh no. He's got a sense of humor."
+            mother "Don't encourage him."
+            $ reward_attributes_once("night_table_nerve", [("nerve", "micro")], show="auto")
+            $ add_affection("father", 1)
+
+    father "The plan is a tool. Keep it in your pocket when you walk. Look up."
+    hikari "Don't mind him. He says that to me every time I leave the house."
+    father "Because you don't look up."
+    hikari "See?"
+    mc "(It is the same conversation they have every morning. It is starting to sound less like an argument and more like a door being held open.)"
+
+    hikari "He went to a maid cafe."
+    mc "Hikari."
+    father "..."
+    mother "Did you enjoy it?"
+    mc "I did. More than I expected."
+    father "Then you paid for something you enjoyed. That is not a waste."
+    hikari "Dad."
+    father "What? I am being supportive."
+    mother "You are being supportive at the table."
+    "I look down at my rice. It is the first time all day that I have not known where to put my face."
+    father "Next time, tell us where you are going. Not so we can stop you. So we know where to start looking."
+    mc "I will."
+    hikari "Don't mind him. He's been practicing that sentence all evening."
+    father "I have not."
+    mother "You have."
+
+    # The first writing lesson the family gives him is the two characters for
+    # his own station. It is practical, small, and exactly how Tetsuo says he
+    # cares: by making sure the boy can read his way home.
+    father "The station. You can say it. Can you read it?"
+    mc "..."
+    father "Then learn it."
+    "He takes the receipt from beside his cup and writes two characters on the back. 中野."
+    father "Nakano. Middle field. The first one means middle. The second one means field."
+    mc "(I have seen those two shapes on the address he sent me. I did not know they were a place.)"
+    father "Say it."
+    mc "Nakano."
+    father "Again."
+    mc "Nakano."
+    "He puts the receipt on the table between us. It is a map now, or the beginning of one."
+    if affection_at_least("father", 2):
+        "Under the characters, he draws two lines and a small box. The station, the corner, the house."
+        father "In case you get lost."
+        hikari "He's been practicing being helpful. It still looks like a rule."
+        father "It is a map."
+        mc "(It is a map. It is also the most he has given me since I arrived.)"
+
+    mc "The professor said there's a quiz next week. Three questions. The kigo is one of them."
+    father "Then study."
+    hikari "There's a reading room on the third floor. East wing. The one with the long tables."
+    hikari "I pass it on the way to my class. It's quiet. Too quiet, if you ask me."
+    mc "You're giving me a destination."
+    hikari "I'm giving you a quiet room. What you do there is your business."
+    hikari "There's a reading club that meets there. They don't recruit. They just read."
+    $ library_errand_available = True
+    mc "(A quiet room, a quiz, and a club that does not recruit. It sounds like the beginning of a plan.)"
+
+    "Mother takes the empty bowls. Father folds the newspaper, which has not moved all evening."
+    father "It's Friday. The weekend starts tomorrow."
+    hikari "Two days. No school."
+    father "Then use them."
+    hikari "Don't mind him."
+    mc "I'm starting to think that's your answer for everything."
+    hikari "It's a good answer."
+
+    scene bg_room_night with stair_fade
+    $ room_ambient(True)
+
+    "Hikari walks me up. The stairs creak under both of us, and this time she does not apologise for it."
+    hikari "So. Two days. What are you going to do tomorrow?"
+    mc "I haven't decided."
+    hikari "Then decide. That's the whole point of a day off."
+
+    menu:
+        "Study. If there's a quiz, I'm not guessing.":
+            mc "Study. If there's a quiz, I'm not guessing."
+            hikari "The reading room, then. I'll draw you the route in the morning."
+            hikari "Don't tell Dad I said this, but he's right about the library. It's the one place in that building where nobody will ask you to explain yourself."
+            $ weekend_plan = "library"
+            $ reward_attributes_once("night_weekend_study", [("insight", "micro")], show="auto")
+            $ add_affection("hikari", 1)
+        "Walk until the neighborhood makes sense.":
+            mc "Walk until the neighborhood makes sense. No map, no destination."
+            hikari "You'll get lost."
+            mc "Probably."
+            hikari "Take the phone anyway. Getting lost on purpose is one thing. Getting lost at night is another."
+            $ weekend_plan = "wander"
+            $ reward_attributes_once("night_weekend_wander", [("nerve", "micro")], show="auto")
+            $ add_affection("hikari", 1)
+        "See the river again. If you'll have me.":
+            mc "See the river again. If you'll have me."
+            hikari "..."
+            hikari "You'll regret that."
+            mc "I regretted it the first time."
+            hikari "Good. Then you know what you're agreeing to."
+            $ weekend_plan = "river"
+            $ reward_attributes_once("night_weekend_river", [("grace", "micro")], show="auto")
+            $ add_affection("hikari", 2)
+
+    if affection_at_least("hikari", 2):
+        hikari "Hey. Today. At the cafe. You didn't have to go in."
+        mc "I know."
+        hikari "I'm glad you did."
+        "She says it to the doorframe, not to me."
+    else:
+        hikari "Get some sleep. Tomorrow is yours."
+
+    "She pulls the door shut behind her. Her footsteps go down the stairs, pause at the bottom, and then the kitchen light clicks off."
+    "I stand in the middle of my room with the receipt in my hand."
+
+    "Two days ago I landed with a phone that could only reach the house. Tonight I came home on a train I found by myself."
+    "That is not a life yet. It is a route. Routes can be repeated."
+    "I put the receipt on the desk beside the phone. 中野. Two characters I could not have read this morning."
+    "Then I turn off the lamp."
+
+    window hide
+    scene black with Dissolve(2.5)
     stop music fadeout 2.0
-    return
+    pause 1.0
+
+    $ dream_key = "day_two_cellular_maid"
+    jump dream_router
 
 
 ################################################################################
@@ -5601,4 +5558,22 @@ label confidant_visit_aya:
 
 label confidant_visit_hana:
     # TODO Act 2: Hana visit 1 (introduction, the library errand) — see documentation/Locations/Reading Club - Hana/
+    return
+
+
+################################################################################
+## END OF THE CURRENT BUILD
+################################################################################
+##
+## Append new scenes ABOVE this label and make the new last scene jump here.
+## The label itself should never need to move: it is the fallback that catches
+## every build, so the player always gets a deliberate ending instead of a bare
+## return to the title screen.
+
+label end_of_build:
+
+    stop music fadeout 2.0
+    stop ambient fadeout 2.0
+    scene black with Dissolve(1.5)
+    call screen end_of_build_card
     return

@@ -504,6 +504,28 @@ A protagonist may have high Grace while maintaining a poor relationship with a p
 
 Keep general character attributes distinct from individual relationship values and relationship milestones.
 
+### 7.6.1 Relationship Trust Levels
+
+Relationship values are written separately from the three attributes. The
+current build uses `sister_affection` for Hikari and `father_affection` for
+Tetsuo, plus per-confidant placeholders for Sim, Orson, Chef, Aya and Hana. Those
+values are **trust**, not points to spend.
+
+The helper implementation in `game/script.rpy` reads them through
+`affection_level()`, with thresholds:
+
+| Level | Begins at | Meaning |
+|---|---:|---|
+| 1 | 1 | Known enough that the person has let the protagonist closer than a stranger. |
+| 2 | 3 | Trusted enough that the person expects the protagonist to mean what he says. |
+| 3 | 5 | Close enough that the person brings the thing they would not say aloud. |
+| 4 | 8 | Family enough that the door is open without asking. |
+
+Hikari’s affection should rise from better answers and real observations; Tetsuo’s
+from kept promises, responsibility, and practical care. Aya’s first maid-cafe
+visit now increments her relationship value. Future confidant content can use the
+same helper rather than adding a second affection system.
+
 ### 7.7 Mystery and discovery
 
 Insight and Nerve should be especially useful in the mystery elements of Elsewhere.
@@ -724,3 +746,17 @@ The protagonist grows by learning to understand the world, learning to connect w
 These three attributes form the foundation of Elsewhere's personal-development system.
 
 Every implementation should preserve that purpose: the system exists to create meaningful choices, reflect the player's development, and connect everyday university life with the deeper mysteries of Elsewhere.
+
+---
+
+## 12.1 Final Balance Verdict — 2026-11-06
+
+**Verdict: no balance tuning is required at this stage of the current build.**
+
+- The first gates remain deliberately small: **0.8 Insight**, **1.0 Grace**, and **0.3 Nerve**.
+- The new night-table unhinged response adds a second Nerve gate at **1.2** rather than replacing or raising the early gate, so the first three doors still lead there first.
+- The taxi’s Nerve bonus and the family/night/weekend rewards stay within the existing small-reward scale; the new night and weekend answers use `micro` (0.2) and relationship increments rather than attribute inflation.
+- The archived day-one board removes the 1.0 Insight set-piece reward from the active path, but the day-one memory board still pays **0.3 Insight** when solved and the active story otherwise carries its intended pacing.
+- A player should still be able to reach **Rank 2** in at least one attribute through deliberate play by the end of day two; no single route is wallowing, and the player is never forced onto one attribute’s treadmill.
+
+The next balance pass should wait for Act 2 confidant scenes and Act 3/4 choices, not for this batch.
