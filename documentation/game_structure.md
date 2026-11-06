@@ -33,7 +33,7 @@ revelation and the endings.
 
 | Act | Title | What it covers | Ends on |
 |-----|-------|----------------|---------|
-| 1 | The Arrival | The plane, Narita terminal, the travel decision, the journey home, the house, the first dream | Falling asleep on the first night |
+| 1 | The Arrival | The plane, Narita terminal, the travel decision, the journey home, the house, the first dream | The end of the first dream, where `morning_call` begins Act 2 |
 | 2 | The Long Middle | The first day, the second day, the free-roam hub, the seven-visit confidant stories | *not written* — ends when the glitches turn structural |
 | 3 | The Glitch | The simulation leaks stop being atmospheric and start breaking the world (treatment "Escalating Mystery" stages 1–5) | *not written* |
 | 4 | The End | Hikari's revelation at the river, the three endings, the epilogue coda | *not written* |
