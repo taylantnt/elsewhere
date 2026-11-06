@@ -194,10 +194,11 @@ dream and the night it ends:** `morning_call` sets `current_act = 2`, and
 `label first_class`)
 - `department_tour` is the poster wall, and it holds the **first door in the game
   that can actually be shut** — gated on 0.8 Insight points, behind "the lost
-  cat, whose tape has gone yellow".
+  cat, whose tape has gone yellow". The gated reply pays 0.2 Insight.
 - `student_relations` establishes the rules of the place and holds the **Grace
-  gate**, which requires 1.0 Grace point. The professor's dialogue offers a
-  Nerve-gated option at 0.3 points. The clerk covers:
+  gate**, which requires 1.0 Grace point; the gated reply pays 0.2 Grace. The
+  professor's dialogue offers a Nerve-gated option at 0.3 points. The clerk
+  covers:
 
   | Rule | Detail |
   |------|--------|
@@ -220,8 +221,9 @@ dream and the night it ends:** `morning_call` sets `current_act = 2`, and
   addressed, because she was not late. The professor's lecture (a shrinking
   population, "it is arithmetic") is the thematic spine of the whole game stated
   out loud for the first time. All replies receive the attendance rule. The
-  Nerve-gated reply requests review of the registration-related late mark.
-  Afterwards Hikari acknowledges leaving without directions. Asking her to
+  Nerve-gated reply requests review of the registration-related late mark, and
+  costs 0.2 Grace. Afterwards Hikari acknowledges leaving without directions.
+  Asking her to
   warn him next time awards **0.5 Nerve** and costs **0.2 Grace**, without
   requiring an existing rank. It does not end the scene: she hands him the rest
   of the day and the fork opens (§4.6).
