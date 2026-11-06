@@ -280,9 +280,9 @@ screen phone_links():
         xfill True
         spacing gui.scale(2)
         if main_menu:
-            use phone_row(_("New Game"), Start())
-            use phone_row(_("Continue"), Continue())
-            use phone_row(_("Load Game"), ShowMenu("load"))
+            use phone_row(_("New Game"), MenuStart())
+            use phone_row(_("Continue"), MenuContinue())
+            use phone_row(_("Load Game"), MenuLoad())
             use phone_row(_("Settings"), ShowMenu("preferences"))
         else:
             use phone_row(_("Resume"), Return())

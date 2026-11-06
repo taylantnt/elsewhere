@@ -119,6 +119,13 @@ which is the simulation removing people as the test measures his equilibrium.
 - [x] 2026-11-06 — Relationship trust: affection helpers/thresholds added;
       Hikari/father weighted increments; Aya first-visit increment; other
       confidants ready for future levels.
+- [x] 2026-11-06 — Menu handoff: new `MenuStart` / `MenuContinue` / `MenuLoad`
+      actions in `game/script.rpy` wrap the built-ins so new game / continue /
+      load play the random menu bed (`audio/VO/elsewhere-normal.mp3` or
+      `elsewhere-normal2.mp3`) and the arrival fades through `menu_handoff_fade`
+      (`Fade(1.4, 0.6, 1.4)`) instead of hard-cutting; `label start` now uses the
+      named handoff fade, and menu/game/end transitions are set to dissolve in
+      `game/options.rpy`.
 - [ ] Wire `free_afternoon` into a real day loop (needs a day-3+ scene:
       morning → lecture → hub → night). Visit labels
       (`confidant_visit_<place>`) are stubs until the Act 2 scenes are written.

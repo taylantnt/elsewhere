@@ -32,7 +32,7 @@ define config.version = "0.1"
 ## the triple-quotes, and leave a blank line between paragraphs.
 
 define gui.about = _p("""
-elsewhere is a psychological thriller set in Tokyo. The protagonist is a foreign exchange student staying with a host family.
+elsewhere is a psychological thriller set in Tokyo. The protagonist is a foreign exchange student staying for a year with a host family.
 
 Development build. Script, art, and music are in progress.
 """)
@@ -93,9 +93,12 @@ define config.intra_transition = dissolve
 define config.after_load_transition = Fade(0.0, 0.0, 1.4)
 
 
-## Used when entering the main menu after the game has ended.
+## Used when leaving the main menu into a new game, when returning to the main
+## menu after the game, and when the game ends. All of them fade rather than cut.
 
-define config.end_game_transition = None
+define config.main_game_transition = dissolve
+define config.game_main_transition = dissolve
+define config.end_game_transition = dissolve
 
 
 ## A variable to set the transition used when the game starts

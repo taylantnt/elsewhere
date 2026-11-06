@@ -540,8 +540,8 @@ screen navigation():
             text _("TITLE SCREEN"):
                 style "menu_nav_section"
 
-            textbutton _("New Story") action Start()
-            textbutton _("Continue") action Continue()
+            textbutton _("New Story") action MenuStart()
+            textbutton _("Continue") action MenuContinue()
 
         else:
 
@@ -559,7 +559,7 @@ screen navigation():
 
             textbutton _("Attributes") action ShowMenu("attributes")
 
-        textbutton _("Load Game") action ShowMenu("load")
+        textbutton _("Load Game") action MenuLoad()
 
         textbutton _("Settings") action ShowMenu("preferences")
 

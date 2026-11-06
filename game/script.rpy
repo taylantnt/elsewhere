@@ -92,6 +92,57 @@ init python:
     def night_street(fadein=1.5):
         renpy.music.play("audio/SFX/night.mp3", channel="music", fadein=fadein)
 
+    # 5. Random menu music for new game / continue / load.
+    #
+    # Leaving the menu into a new game, a save, or a continue should not arrive on
+    # whatever bed the player heard last. The menu bed is one of the two
+    # "elsewhere normal" tracks, picked at random the moment the player pressed
+    # the button, so every departure into the story gets its own bed.
+    import random
+
+    menu_music_tracks = [
+        "audio/VO/elsewhere-normal.mp3",
+        "audio/VO/elsewhere-normal2.mp3",
+    ]
+
+    def pick_menu_music():
+        return random.choice(menu_music_tracks)
+
+    def play_menu_music(fadein=2.0):
+        renpy.music.play(pick_menu_music(), channel="music", fadein=fadein)
+
+    # 6. Menu -> game handoff actions.
+    #
+    # The built-in Start and Continue actions jump straight out of the menu
+    # context, which reads as a hard cut at the menu, and the load flow hands off
+    # without a menu bed of its own. These wrap the built-ins so the departure
+    # plays the random menu bed and the arrival fades through the handoff rather
+    # than cutting.
+    class MenuStart(Action):
+        def __call__(self):
+            play_menu_music()
+            renpy.jump_out_of_context("start")
+
+        def get_sensitive(self):
+            return True
+
+    class MenuContinue(Action):
+        def __call__(self):
+            play_menu_music()
+            config.main_menu_music = pick_menu_music()
+            Continue()
+
+        def get_sensitive(self):
+            return True
+
+    class MenuLoad(Action):
+        def __call__(self):
+            config.main_menu_music = pick_menu_music()
+            ShowMenu("load")
+
+        def get_sensitive(self):
+            return True
+
     def language_tag(tag, argument, contents):
         fluency = store.japanese_fluency
         if fluency >= 5:
@@ -225,6 +276,12 @@ define stair_fade = Fade(1.6, 0.6, 1.6)
 # quarter of a second and gone before you feel it. Same side-to-side shake, but
 # slower per swing and held for over a second, so the impact has time to land.
 define gate_shake = Move((22, 0), (-22, 0), .18, bounce=True, repeat=True, delay=1.1)
+
+# The menu -> game handoff: fade out of the menu, hold at black for a beat, and
+# fade into the game. The built-in menu actions jump out of the menu context
+# without a transition in hand, which reads as a hard cut at the menu; this is the
+# one fade that belongs to leaving the menu and arriving in the story.
+define menu_handoff_fade = Fade(1.4, 0.6, 1.4)
 
 # airport.png is only 626x417, so it is scaled up and centre-cropped to fill the
 # 1280x720 screen rather than stretched out of shape. It has real art, so it gets
@@ -1735,7 +1792,7 @@ screen attribute_hud():
 
 # --- START LABEL ---
 label start:
-    scene black with Fade(1.4, 0.0, 0.0)
+    scene black with menu_handoff_fade
 
     # Before the story, the two notices. Neither can be clicked past: each page
     # fades itself in and out and then returns on its own timer, so a new player
