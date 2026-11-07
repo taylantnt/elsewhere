@@ -321,13 +321,30 @@ screen quick_menu():
 ##
 ## attribute_hud rides along with it. It is the three orbs in the corner that fill
 ## as he grows, and it is registered here rather than in script.rpy so that every
-## always-on overlay the game has is declared in one place. Like the quick menu it
-## is hidden by Ren'Py itself while a game menu is open, and the screen carries its
-## own switch (`show_attribute_hud`) so it can stay off through the disclaimer
-## cards at the start of the game.
+## always-on overlay the game has is declared in one place. story_day_hud is the
+## date chip in the opposite corner. Like the quick menu they are hidden by
+## Ren'Py itself while a game menu is open, and both carry their own switch
+## (`show_attribute_hud`) so they can stay off through the disclaimer cards at
+## the start of the game.
 init python:
     config.overlay_screens.append("quick_menu")
     config.overlay_screens.append("attribute_hud")
+    config.overlay_screens.append("story_day_hud")
+    config.overlay_screens.append("debug_skip")
+
+init python:
+    # Debug shortcut: pressing 0 in-game jumps to the start of the newest
+    # story content (Hikari's room visit on the night of day two), so the
+    # Saturday-to-Monday sequence can be tested without replaying two days.
+    def debug_jump_ending():
+        # The room visit is the end of Day 3 (Friday). Keep the calendar and
+        # the confidant caps in the same place as the story before jumping.
+        store.current_act = 2
+        set_story_day(3)
+        renpy.jump("night_room_visit")
+
+screen debug_skip():
+    key "K_0" action Function(debug_jump_ending)
 
 default quick_menu = True
 

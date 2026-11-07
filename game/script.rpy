@@ -326,6 +326,7 @@ define menu_handoff_fade = Fade(1.4, 0.6, 1.4)
 # airport.png is only 626x417, so it is scaled up and centre-cropped to fill the
 # 1280x720 screen rather than stretched out of shape. It has real art, so it gets
 # no placeholder label.
+image bg_airplane = Transform("images/backgrounds/bg_airplane.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_airport = Transform("images/backgrounds/bg_airport.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_station = Transform("images/backgrounds/bg_station.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_platform = Transform("images/backgrounds/bg_platform.png", xysize=(config.screen_width, config.screen_height), fit="cover")
@@ -338,6 +339,7 @@ image bg_maidcafe_omurice = Transform("images/backgrounds/bg_omurice.png", xysiz
 # the morning he wakes up to. They are the same rooms either way, so they are named
 # by time of day rather than by room. Pick whichever matches the hour of the scene.
 image bg_home_night = Transform("images/backgrounds/bg_home_inside_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_nightfood = Transform("images/backgrounds/bg_nightfood.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_home_day = Transform("images/backgrounds/bg_home_inside_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_room_night = Transform("images/backgrounds/bg_room_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_room_day = Transform("images/backgrounds/bg_room_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
@@ -372,6 +374,7 @@ image bg_campus_interior = Transform("images/backgrounds/bg_campus.png", xysize=
 image bg_department_hall = bg_or_placeholder("bg_department_hall", "#3a3630", "OUR DEPARTMENT\nSECOND FLOOR")
 image bg_student_relations = Transform("images/backgrounds/bg_student_relations.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_lecture_hall = Transform("images/backgrounds/bg_lecture_hall.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_library = Transform("images/backgrounds/bg_library.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 
 # The two rooms the first free afternoon can end in. The ramen shop has art now
 # (it lives at images/backgrounds/bg_ramen_shop.png, which is why the scene name
@@ -382,7 +385,7 @@ image bg_ramen = bg_or_placeholder("bg_ramen", "#2b2118", "RAMEN\nLATE")
 # The same counter a few minutes later, with the bowl finished. Every route through
 # the shop ends on this shot, right before he pays.
 image bg_ramen_empty = bg_or_placeholder("bg_ramen_empty", "#2b2118", "EMPTY BOWL\nLATE")
-image bg_photo_club = bg_or_placeholder("bg_photo_club", "#2f3230", "PHOTOGRAPHY CLUB\nCIRCLE - CLUB ROOM")
+image bg_photo_club = bg_or_placeholder("bg_photo_club", "#2f3230", "PHOTOGRAPHY CLUB\nCIRCLE / CLUB ROOM")
 
 # The river path Hikari runs. Real art, so no placeholder label.
 image bg_river = bg_or_placeholder("bg_river_dusk", "#1a2230", "RIVER PATH\nEVENING")
@@ -393,6 +396,9 @@ image bg_river_night = Transform("images/backgrounds/bg_river_night.png", xysize
 # The art is already low and warm, so nothing darkens it; the dialogue is what
 # moves the light down.
 image bg_alley = bg_or_placeholder("bg_alley", "#2a2320", "SIDE STREET\nDUSK")
+image bg_lupins_den = Transform("images/backgrounds/bg_bar.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_nakanostation_night = Transform("images/backgrounds/bg_nakanostation_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+
 
 image bg_train = Solid("#1C1B18")
 # The hospital is not a place he visits; it is a single white frame that cuts into
@@ -418,16 +424,17 @@ default hana_affection = 0
 # Relationship values are trust, not a score. Hikari's rises when he actually
 # sees her instead of only accepting her help; Tetsuo's rises when he keeps a
 # promise, takes responsibility, or lets the family know where he is. The same
-# ladder is available to every confidant, but only the two family relationships
-# are used by the current build.
+# ladder is available to every confidant. The current build reads the sister
+# and father levels for extra beats; the confidant values are written on their
+# first visits and wait for their own later scenes.
 #
 #   1  Known     at 1   — they have let him closer than a stranger
 #   2  Trusted   at 3   — they expect him to mean what he says
 #   3  Close     at 5   — they bring him the thing they would not say aloud
 #   4  Family    at 8   — the door is open without asking
 #
-# Levels are read through affection_level("hikari") / ("father"), so future
-# scenes can gate a confidence or an extra beat without inventing a second stat.
+# Levels are read through affection_level(character), so a scene can gate a
+# confidence or an extra beat without inventing a second stat.
 init python:
     affection_level_thresholds = [0, 1, 3, 5, 8]
     affection_level_names = ["New", "Known", "Trusted", "Close", "Family"]
@@ -520,14 +527,24 @@ default first_day_activity = ""
 default haiku_study_method = ""
 
 # The professor plants the first quiz, and Hikari turns it into a place to go.
-# The library scene that introduces Hana hangs off this flag; the scene itself
-# is not written yet, so the seed can wait safely in save data.
+# The Saturday library scene reads `library_errand_available` and clears it
+# once he has the haiku study sheets.
 default quiz_announced = False
 default library_errand_available = False
 
-# What he says he wants from the first weekend. The day is not built yet, so
-# this is a promise to the future rather than a route switch.
-default weekend_plan = ""
+# The practice quiz and the real haiku quiz each keep their score and their
+# per-question results. The score drives the scene's closing narration; the
+# individual flags keep later dialogue from claiming he got a question right
+# when he did not.
+default sunday_quiz_score = 0
+default sunday_q1_correct = False
+default sunday_q2_correct = False
+default sunday_q3_correct = False
+default monday_quiz_score = 0
+default monday_q1_correct = False
+default monday_q2_correct = False
+default monday_q3_correct = False
+
 
 # True once the river run has happened once. The run is not a confidant slot in
 # locations.rpy yet, so this is the only thing that records it for now.
@@ -597,7 +614,10 @@ default memory_names = {
     "clerk": "the clerk",
     "professor": "the professor",
     "father": "Tetsuo",
+    "chef": "Chef",
     "sim": "Sim",
+    "hana": "Hana",
+    "orson": "Orson",
 }
 
 # The orb cluster in the corner. It stays off until the story proper begins, so
@@ -635,7 +655,7 @@ init python:
             # the "picked up" toast so the toast is not talking over the card.
             if item == "pamphlet" and not store.pamphlet_hint_shown:
                 store.pamphlet_hint_shown = True
-                renpy.call_screen("hint_card", eyebrow="Your Bag", body=store.hint_text_bag)
+                renpy.call_screen("hint_card", eyebrow="Inventory", body=store.hint_text_bag)
             renpy.notify(_("Picked up: %s") % item_name(item))
 
     def remove_item(item):
@@ -1211,6 +1231,11 @@ define security2 = Character("Security", callback=type_sound, image="security2")
 # The driver who takes him home if he picks the taxi.
 define taxi_driver = Character("Taxi Driver", callback=type_sound, image="taxi_driver")
 
+# The wolf behind Lupin's Den bar. He is "the Master" to everyone which includes
+# the player — his name is something the story has not earned yet, so the name
+# box stays a title until a later visit says otherwise.
+define bar_master = Character("The Master", color="#a9a9a9", callback=type_sound, image="orson")
+
 # The host family. Only the parents are awake on the night he arrives, so they are
 # named by role here and introduce themselves properly at the door. Hikari is
 # already asleep, so she has no lines in this scene.
@@ -1229,6 +1254,10 @@ define veteran = Character("Veteran Assistant", callback=type_sound, image="vete
 define professor = Character("Professor", color="#c9c4b0", callback=type_sound, image="professor")
 define clerk = Character("Student Relations", color="#b8c6bd", callback=type_sound, image="clerk")
 define yamada = Character("Yamada", color="#b6d2e8", callback=type_sound, image="yamada")
+
+# The regular who explains how the reading room works. A name in the box, no
+# portrait: she is furniture with a voice, and the scene is about Hana anyway.
+define quiet_student = Character("Student", color="#9aa48f", callback=type_sound)
 
 # --- PORTRAITS ---
 # The picture in the left gutter belongs to whoever is talking. Two things are
@@ -1325,6 +1354,8 @@ image side Maid = At(Transform("images/characters/maid.png", xysize=(256, 384), 
 # on disk, so unlike the three below they need no placeholder.
 image side chef = At(Transform("images/characters/chef.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side sim = At(Transform("images/characters/sim.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side hana = At(Transform("images/characters/hana.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side orson = At(Transform("images/characters/orson.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
 # These three are drawn but not yet delivered. Drop the named file into
 # images/characters/ and the picture replaces the label here with no other change:
@@ -1367,7 +1398,7 @@ init python:
     for _standing_tag in (
         "assistant", "veteran", "security", "security2", "mother", "father",
         "sister", "taxi_driver", "professor", "yamada", "chef", "sim",
-        "clerk", "timid_man", "cheerful_woman",
+        "hana", "orson", "clerk", "timid_man", "cheerful_woman",
     ):
         renpy.image(_standing_tag + "_standing", At("side " + _standing_tag, standing))
     del _standing_tag
@@ -1441,15 +1472,15 @@ define notice_text_accept = "Some choices affect more than the current conversat
 
 # The one-time hints. They are all drawn by the same card, so the only thing each
 # caller supplies is the wording, and none of them ever runs twice.
-define hint_text_money = "Open Bag from the bottom menu to check your cash.\n\nTravel, meals and purchases cost money. Check your balance before you spend."
+define hint_text_money = "You can check your cash in Inventory app using the Phone.\n\nTravel, meals and purchases cost money. Check your balance before you spend."
 
-define hint_text_bag = "Open Bag from the bottom menu to see the items you carry.\n\nSelect an item to read its description. If it can be used, its action appears below the description."
+define hint_text_bag = "You can check your items using inventory app on your phone.\n\nSelect an item to read its description. If it can be used, its action appears below the description."
 
 # The first point he ever earns. It names the three pillars and says where they
 # come from, and deliberately says nothing about where they lead: the locked
 # answer and the person who remembers are better met as surprises than explained
 # here. Everything past this sentence is left for the player to find.
-define hint_text_attribute = "Insight: observation and reasoning. Grace: thoughtful communication. Nerve: acting despite uncertainty.\n\nSome replies raise an attribute; some trade-offs lower one. Signed changes appear below their circle. Rank-ups open a separate screen. Open Attributes to check progress. Not every reply changes your attributes."
+define hint_text_attribute = "Insight: observation and reasoning. Grace: thoughtful communication. Nerve: acting despite uncertainty.\n\nSome replies raise an attribute; some trade-offs lower one. Signed changes appear below their circle. Rank-ups open a separate screen. Open Attributes app on your phone to check progress. Not every reply changes your attributes."
 
 # The first afternoon he is allowed to spend. It names the thing he has just been
 # handed and says what it is for, without listing where he can go: the places are
@@ -1887,7 +1918,7 @@ label prologue:
     # the only thing the player actually sees change. That is the point: the room
     # goes quiet, holds, and then begins.
     stop music fadeout 2.0
-    scene black with Fade(2.0, 1.0, 0.0)
+    scene bg_airplane with Fade(2.0, 1.0, 0.0)
     #DISABLED FOR NOW# play music "audio/Music/dream sequence 1 (short loop).wav" fadein 2.0#
     play music "audio/SFX/airplane.mp3" fadein 2.0
     
@@ -1901,8 +1932,11 @@ label prologue:
     "New university. Host family. A year in Japan."
     "I remember the application. The wait. The acceptance email on a Tuesday morning."
     "I was thrilled when it came through. My friends said I was brave."
+    "I remember packing a bag. I don't remember the day I decided to leave home."
+    "The last ordinary day before the flight is a room I can describe without being in it."
     "I can't remember what made me choose Japan."
     "A professor, a brochure, something I turned into a plan. I can feel the shape of the reason, but the reason itself won't come."
+    "Everything before the airport feels like it happened to someone I used to know. Maybe that's what leaving home does."
     "Maybe it's the flight. Or the nerves. Maybe this is what arriving somewhere alone feels like."
 
     
@@ -1912,20 +1946,25 @@ label prologue:
     "I'll need to find a part-time job. I can't expect other people to handle it for me."
     
     # Foreshadowing glitch - the first crack in the simulation
-    show hospital_flash onlayer overlay at truecenter:
-        alpha 0.0
-        linear 0.1 alpha 0.3
-        linear 0.1 alpha 0.0
+    # show hospital_flash onlayer overlay at truecenter:
+    #    alpha 0.0
+    #    linear 0.08 alpha 0.6
+     #   linear 0.08 alpha 0.0#
     
-    "...signal holding. Bring him in."
+    "..." with gate_shake
+    "ugh..."
+    "my head.."
     
     "I should focus on what's ahead."
     "A door, and a family I have only ever seen in photographs."
     
-    stop music fadeout 1.0
+    stop music fadeout 3.0
     jump airport_arrival
 
 label airport_arrival:
+    # The calendar starts here: arrival is Day 1, Wednesday, April 8.
+    $ set_story_day(1)
+
     # The terminal: a calm track riding over the murmur of the crowd. The ambience
     # is on its own channel so it layers underneath the music, and both loop until
     # he leaves the building (see label end_airport).
@@ -2256,6 +2295,9 @@ label check_boards:
     $ board_line = board_messages[board_message_index]
     "The board flickers, then scrolls to the next notice."
     "[board_line]"
+    # Seeing the last notice means he has read the whole board.
+    if board_message_index == len(board_messages) - 1:
+        $ reward_attributes_once("information_seeker", [("grace", "tiny")], show="auto")
     $ board_message_index = (board_message_index + 1) % len(board_messages)
     jump airport_exploration
 
@@ -2263,6 +2305,9 @@ label look_plants:
     # The first plant is a nice plant. The tenth is a cry for help.
     $ plant_line = plant_dialogues[min(plant_index, len(plant_dialogues) - 1)]
     "[plant_line]"
+    # Sticking around until the tenth plant earns a little nerve.
+    if plant_index == len(plant_dialogues) - 1:
+        $ reward_attributes_once("plant_determination", [("nerve", "tiny")], show="auto")
     $ plant_index += 1
     jump airport_exploration
 
@@ -2929,13 +2974,14 @@ label dream_first_night:
     "Only the announcements are arriving before anyone speaks them, and the hall is empty."
     "I walk it end to end. Both times I come out at the same gate."
 
-    # The first slip. Same white light, same clinical voice that cut into him on
-    # the plane, so this is the room he is actually lying in.
+    # The first slip. A single frame of white, and a line that sounds less like
+    # the dream than like the game failing to load it.
     show hospital_flash onlayer overlay at truecenter:
         alpha 0.0
         linear 0.1 alpha 0.45
         linear 0.1 alpha 0.0
-    "Keep the pod at eighteen."
+    $ renpy.say(None, "scene reload failed.", interact=False)
+    pause 0.35
 
     show screen dream_static
     pause 0.6
@@ -2961,16 +3007,10 @@ label dream_first_night:
     scene bg_home_exterior_night at glitch_jitter with Dissolve(0.35)
     "Then the street. Narrow. Bicycles against the wall. One light on behind the curtains."
     "The bell is still ringing. It has been ringing underneath everything else this whole time."
-    hide screen dream_static
 
-    # A second slip, harder than the first, and this time the room answers a
-    # question he has not asked yet.
-    show hospital_flash onlayer overlay at truecenter:
-        alpha 0.0
-        linear 0.08 alpha 0.6
-        linear 0.08 alpha 0.0
-    "Six hours. He has been under six hours."
-    "Let him finish the day."
+    "The street does not let me leave. The bell is still ringing after the door has already closed."
+    "The light behind the curtains goes out before I reach it. The bicycles are still against the wall."
+    "It is only a dream, I tell myself. Dreams do not keep order anyway."
 
     scene black with Dissolve(0.6)
     "And then the pieces of today come loose and scatter."
@@ -2983,26 +3023,11 @@ label dream_first_night:
     "The others are not. A woman in white, calling a name that is almost mine. A corridor of doors, and behind every one of them my room."
     "I do not know why it matters that I keep them apart. It matters."
 
-    # The room talks over the dream while he is still trying to hold it. The
-    # board that used to sit here is archived in dream_archive.rpy.
-    show hospital_flash onlayer overlay at truecenter:
-        alpha 0.0
-        linear 0.08 alpha 0.65
-        linear 0.08 alpha 0.0
-    "He is trying to hold the day together."
-    "Let him. The order is not what we need yet."
-
-    "The pieces slow down. Not because I have fixed them. Because something else has decided to let me look."
+    "The pieces slow down. Not because I have fixed them. Because the dream is done hiding them."
     "The woman in white turns toward me. I cannot see her face."
 
-    # And the last thing the dream does is answer him, which a dream should not be
-    # able to do.
-    show hospital_flash onlayer overlay at truecenter:
-        alpha 0.0
-        linear 0.12 alpha 0.7
-        linear 0.12 alpha 0.0
-    "Consolidation is not taking. He keeps putting the day back in the wrong order."
-    "Then stop helping him. Let him wake up with it."
+    "The dream does not answer me. It simply stops repeating the day."
+    "The bell stops. The woman in white is already gone."
 
     stop music fadeout 3.0
     scene black with Dissolve(1.5)
@@ -3019,6 +3044,8 @@ label dream_first_night:
 ## locations.rpy start to apply.
 label morning_call:
     $ current_act = 2
+    # Day 2: Thursday, April 9. The first school day.
+    $ set_story_day(2)
 
     # Waking up. The dream lets go of him slowly, the way a hand does once it has
     # decided you can stand on your own.
@@ -3225,6 +3252,14 @@ label leaving_house:
     mc "It isn't raining."
     hikari "Take the umbrella."
     mc "(Two people in this house have told me to take an umbrella. I take the umbrella.)"
+
+    hikari "Your phone."
+    mc "What about it?"
+    hikari "I put WIRE on it before you landed. You'll need it this week."
+    mc "When did you"
+    hikari "Before you landed. It's what sisters do."
+    "I open it before I can ask the follow-up. Her name is the only contact on the list."
+    $ wire_unlock("hikari")
 
     jump school_morning
 
@@ -4098,31 +4133,25 @@ label after_school_run:
     # Small, not medium: the three first-afternoon routes should close at a
     # similar weight. Walk and photo use the same size on their forced beat.
     $ reward_attributes_once("run_first_river", [("nerve", "small")], show="card")
-    $ add_affection("hikari", 1)
+    $ add_affection("sister", 1)
     $ remember("hikari", "ran the river path with her on the first afternoon")
 
-    # She is the one who put WIRE on the phone in the first place, so she is the
-    # one who explains what it is for. She does it the way she does everything:
-    # quickly, while looking at something else.
+    # WIRE is already hers from the morning; the run is where she uses it for the
+    # thing she will not say in the kitchen. She does it the way she does
+    # everything: quickly, while looking at something else.
     hikari "Give me your phone."
     mc "Why."
     hikari "Because I'm not explaining it twice."
     "She takes it out of my hand, which is turning into how the two of us do things."
-    hikari "You still have WIRE on there. I put it on before you landed."
+    hikari "You still haven't opened WIRE."
     mc "I know. I never opened it."
     hikari "Open it."
-    "I open it. It is a list, and her name is not on it."
-    hikari "Add me."
-    mc "..."
-    hikari "Add me, so I can tell you things I'm not going to say in that kitchen."
-    mc "(She says that at exactly the speed she says everything else, and she does not look at me while she says it.)"
-    "I add her. She watches my thumb do the whole thing, which means she could have done it in half a second."
-    hikari "Good."
-    mc "Is that it?"
-    hikari "That's it."
-    mc "(It is not it.)"
-    $ wire_unlock("hikari")
-    # The thing she would not say in the kitchen. It is sent before his phone
+    "I open it. It is a list with one name on it, and the name is hers."
+    hikari "That's the point of it."
+    mc "(That is not it.)"
+    "She does not look at me while she says the next part, which is how I know it matters."
+    hikari "There's a message in there for when you get signal. Read it when you have one. Not here."
+    # The thing she would not say in the kitchen. It is queued before his phone
     # has data, so it reaches him at Hamada Denki with everything else.
     $ queue_message("hikari", "Thanks for coming out with me. You kept up better than you think. Don't tell anyone I said that.", day="yesterday")
 
@@ -4138,6 +4167,7 @@ label after_school_run:
     hikari "Ah."
     mc "Ah?"
     hikari "Kitchen light. That's them being awake."
+    hikari "Meet you at the kitchen, I want to change these sweaty clothes first."
 
     scene bg_home_night with walk_fade
     $ hikari_run = False
@@ -4737,7 +4767,6 @@ label first_evening_dinner:
 label end_of_first_day:
 
     scene bg_room_night with stair_fade
-    $ room_ambient(True)
 
     "Upstairs, the door shuts behind me and the house goes quiet."
     "The quiet a house makes when everyone has agreed to stop talking about something."
@@ -4763,18 +4792,18 @@ label end_of_first_day:
 
     "I sit on the edge of the bed and check WIRE once more."
     if first_day_activity == "walk_alone":
-        mc "(The chef's hours are here. The rest of the app still has nothing to show me.)"
+        mc "(Hikari's name was already there from the morning. The chef's hours are here too.)"
     elif first_day_activity == "walk_hikari":
-        mc "(Hikari's name is here. I can see the profile, but not send anything.)"
+        mc "(It is just Hikari's name. I can see the profile, but not send anything.)"
     else:
-        mc "(Sim's invitation is saved. The group is still waiting for a connection.)"
+        mc "(Hikari is there from the morning. Sim's invitation is saved too.)"
 
-    "The contact record is on the phone. The rest of WIRE is still out of reach."
+    "The contact records are on the phone. The rest of WIRE is still out of reach."
     "A knock comes at the door, and Hikari opens it before I can answer."
     show sister_standing with dissolve
     hikari "You're still up."
     if first_day_activity == "walk_alone":
-        mc "The chef's contact is there. I can't check if his hours change before I walk over."
+        mc "Your name was already there this morning. The chef's contact is there too."
     elif first_day_activity == "walk_hikari":
         mc "Your profile is there. I can't message you when I'm away from Wi-Fi."
     else:
@@ -4795,19 +4824,19 @@ label end_of_first_day:
         "Thank her for helping me figure it out.":
             mc "Thanks for helping me figure it out. I don't know how any of this works yet."
             hikari "That's why I'm explaining it."
-            $ add_affection("hikari", 1)
+            $ add_affection("sister", 1)
             $ reward_attributes_once("first_night_hikari_thanks", [("grace", "micro")], show="auto")
         "Tell her she makes the house easier to understand.":
             mc "You make this house easier to understand."
             hikari "Don't tell anyone. I have a reputation."
             # He noticed what she does for the house, not only what she does
             # for him. That lands harder than being thanked.
-            $ add_affection("hikari", 2)
+            $ add_affection("sister", 2)
             $ reward_attributes_once("first_night_hikari_observation", [("insight", "micro")], show="auto")
         "Promise you'll be ready when she comes to get you.":
             mc "I'll be ready when you come get me."
             hikari "You'd better be. I'm not waiting outside your door."
-            $ add_affection("hikari", 1)
+            $ add_affection("sister", 1)
             $ reward_attributes_once("first_night_hikari_promise", [("nerve", "micro")], show="auto")
     hide sister_standing with dissolve
 
@@ -4859,6 +4888,9 @@ label first_night_memory:
 ## repeats — the difference is that from here on the afternoon is the hub's.
 
 label second_morning:
+    # Day 3: Friday, April 10. The second school day.
+    $ set_story_day(3)
+
     # Anything queued while the phone had no signal lands here, with the buzz.
     $ flush_pending_messages()
     scene bg_room_day with Dissolve(1.5)
@@ -4894,7 +4926,7 @@ label second_morning:
             mc "I got lost and found a ramen shop. The chef gave me his WIRE contact."
             father "You got lost and made a contact. That is one way to do it."
     elif first_day_activity == "walk_hikari":
-        mc "Hikari showed me the river path. I added her on WIRE."
+        mc "Hikari showed me the river path. Her WIRE profile was already waiting."
         hikari "He kept up for most of it."
         mc "That is not what happened."
     else:
@@ -5020,10 +5052,10 @@ label second_school_day:
     "For a moment the room belongs to the poem. Then the chalk goes back to the board."
     professor "The small detail is not decoration. It is the door into the whole poem."
     mc "(A season hidden inside one word. I write it in the margin.)"
-    professor "You will see this again. Pay attention to what the word is doing, not only to how many syllables you can count."
+    professor "You will see this again. Pay attention to what the word is doing, not only to how many mora you can count."
     professor "Next week, a short quiz. Three questions. The kigo will be one of them."
     $ quiz_announced = True
-    mc "(Three questions. I have four days to make sure one of them is not a guess.)"
+    mc "(Three questions. I have the weekend to make sure one of them is not a guess.)"
 
     menu:
         "Take careful notes on the kigo.":
@@ -5147,7 +5179,7 @@ label second_school_day:
     else:
         hikari "There. Now you can see what Circle has been posting."
         mc "I can send them the pictures I took, once I pick the right one."
-    call first_connection_messages
+    call first_connection_messages from _call_first_connection_messages
     hikari "Your map has Akihabara saved now. Use it if you want to get back to the station, and message me if you need anything."
     mc "I'll try the map before I try guessing."
     hikari "Good. Guessing is how you end up on the wrong side of a very large electronics store."
@@ -5394,12 +5426,12 @@ label second_school_day:
     ])
     "The city slips past the window. Hamada Denki, the arcade signs, and the cafe's pink lights settle into separate memories instead of one long blur."
     "I arrived with a phone that could only reach the house. Now it can get me across the city, and I have a reason to look forward to opening it again."
+    stop music fadeout 3.0
 
     # The day does not end on the train. It ends at the kitchen table, where the
     # family gets to ask what the new phone and the new city actually cost him,
     # and then upstairs, where the first weekend is waiting.
-    scene bg_station with walk_fade
-    stop music fadeout 1.0
+    scene bg_nakanostation_night with walk_fade
     $ night_street()
 
     "The station is emptying out. The last of the office crowd goes down the stairs ahead of me, and the lights over the ticket gate make everything look newly washed."
@@ -5407,7 +5439,6 @@ label second_school_day:
     mc "(That is one thing I can do here. It is not a small thing.)"
 
     scene bg_home_exterior_night with walk_fade
-    $ night_street()
 
     "The kitchen window is lit. Not the porch light. The kitchen."
     mc "(They waited up.)"
@@ -5429,8 +5460,10 @@ label second_school_day:
     mother "Four times."
     father "..."
     "He turns the page. It is the same page."
-
     mother "Sit. There's rice left, and the soup is still hot."
+
+    scene bg_nightfood with walk_fade
+
     "She sets a bowl in front of me. The rice is cold at the edges and warm in the middle. The miso has tofu and wakame in it, and a small dish of pickled cucumber sits beside the bowl."
     father "Rice first. Then the fish. The soup between."
     hikari "He means there's no wrong way to eat it."
@@ -5543,50 +5576,75 @@ label second_school_day:
     $ room_ambient(True)
 
     "Hikari walks me up. The stairs creak under both of us, and this time she does not apologise for it."
+    "I carry the receipt up and set it on the desk. She watches me do it."
     hikari "So. Two days. What are you going to do tomorrow?"
     mc "I haven't decided."
     hikari "Then decide. That's the whole point of a day off."
 
-    menu:
-        "Study. If there's a quiz, I'm not guessing.":
-            mc "Study. If there's a quiz, I'm not guessing."
-            hikari "The reading room, then. I'll draw you the route in the morning."
-            hikari "Don't tell Dad I said this, but he's right about the library. It's the one place in that building where nobody will ask you to explain yourself."
-            $ weekend_plan = "library"
-            $ reward_attributes_once("night_weekend_study", [("insight", "micro")], show="auto")
-            $ add_affection("hikari", 1)
-        "Walk until the neighborhood makes sense.":
-            mc "Walk until the neighborhood makes sense. No map, no destination."
-            hikari "You'll get lost."
-            mc "Probably."
-            hikari "Take the phone anyway. Getting lost on purpose is one thing. Getting lost at night is another."
-            $ weekend_plan = "wander"
-            $ reward_attributes_once("night_weekend_wander", [("nerve", "micro")], show="auto")
-            $ add_affection("hikari", 1)
-        "See the river again. If you'll have me.":
-            mc "See the river again. If you'll have me."
-            hikari "..."
-            hikari "You'll regret that."
-            mc "I regretted it the first time."
-            hikari "Good. Then you know what you're agreeing to."
-            $ weekend_plan = "river"
-            $ reward_attributes_once("night_weekend_river", [("grace", "micro")], show="auto")
-            $ add_affection("hikari", 2)
+    hikari "You've decided. You just haven't said it out loud."
+    mc "The reading room. If the quiz is real, I can't afford to guess."
+    hikari "Then it's settled. Library first thing. Before the crowds, before the excuses."
+    $ reward_attributes_once("night_weekend_study", [("insight", "micro")], show="auto")
+    $ add_affection("sister", 1)
 
-    if affection_at_least("hikari", 2):
+    if affection_at_least("sister", 2):
         hikari "Hey. Today. At the cafe. You didn't have to go in."
         mc "I know."
         hikari "I'm glad you did."
         "She says it to the doorframe, not to me."
     else:
-        hikari "Get some sleep. Tomorrow is yours."
+        hikari "Get some sleep. The library isn't going anywhere."
 
-    "She pulls the door shut behind her. Her footsteps go down the stairs, pause at the bottom, and then the kitchen light clicks off."
-    "I stand in the middle of my room with the receipt in my hand."
+    jump night_room_visit
+
+
+label night_room_visit:
+    # She doesn't go downstairs. She leans in the doorframe a moment longer,
+    # then comes in and sits on the edge of my desk — a thing she has never done
+    # before — because there is one more thing she has clearly been saving.
+    hikari "One more thing. The quiz is next week, and after that it's midterms. Three weeks. Maybe four."
+    mc "I can handle three weeks."
+    hikari "You can barely handle a school day. But yes. You can."
+    "She picks up the receipt from the desk, the one with 中野 on the back, turns it over, and sets it down again."
+    hikari "The library is where people actually get things done. Not the classroom. The classroom is where they tell you what to think about."
+    hikari "The library is where you find out if you agree."
+    hikari "Third floor. East wing. Past the vending machines, left at the noticeboard with the corner taped back on. The door has no sign."
+    mc "How do I know which door has no sign when half of them don't?"
+    hikari "Because you've walked past it both days you've been on campus and never once looked up."
+    mc "(She has. She notices things. It is unsettling how good she is at it.)"
+    hikari "Tomorrow. Don't sleep through it. Don't wander off. And if you get lost,"
+    mc "Ask literally anyone."
+    hikari "Ask the person reading. They're always the ones who know where things are."
+
+    menu:
+        "\"I'll be at the library first thing.\"":
+            mc "I'll be at the library first thing."
+            hikari "Good. Go to bed, then."
+            $ remember("hikari", "promised to study at the library before anything else")
+            $ reward_attributes_once("night_room_library_promise", [("insight", "micro")], show="auto")
+            $ add_affection("sister", 1)
+        "\"What do I actually need to study?\"":
+            mc "What do I actually need to study?"
+            hikari "The haiku handout. The history notes. Everything the professors said that sounded like it mattered."
+            hikari "If you only have an hour, do the handout. If you have three, do everything and then some."
+            $ remember("hikari", "asked her what to study before the quiz")
+            $ reward_attributes_once("night_room_study_plan", [("grace", "micro")], show="auto")
+            $ add_affection("sister", 1)
+        "\"You're going to quiz me, aren't you.\"":
+            mc "You're going to quiz me, aren't you."
+            hikari "..."
+            hikari "Maybe."
+            mc "(She is. I know she is. She has been waiting all evening to do this.)"
+            $ remember("hikari", "teased her about quizzing him before the exams")
+            $ reward_attributes_once("night_room_tease", [("grace", "micro")], show="auto")
+            $ add_affection("sister", 1)
+
+    "She pulls the door shut behind her this time. Her footsteps go down the stairs, pause at the bottom, and then the kitchen light clicks off."
+    "I stand in the middle of my room, looking at the receipt on the desk."
 
     "Two days ago I landed with a phone that could only reach the house. Tonight I came home on a train I found by myself."
     "That is not a life yet. It is a route. Routes can be repeated."
-    "I put the receipt on the desk beside the phone. 中野. Two characters I could not have read this morning."
+    "I set the receipt beside the phone. 中野. Two characters I could not have read this morning."
     "Then I turn off the lamp."
 
     window hide
@@ -5642,7 +5700,7 @@ label confidant_visit_sim:
     return
 
 label confidant_visit_orson:
-    # TODO Act 2: Orson visit 1 (introduction) — see documentation/Locations/Bar - Orson/
+    # TODO Act 2: Orson visit 2+ — see documentation/Locations/Bar - Orson/ (visit 1 was lupins_den_first)
     return
 
 label confidant_visit_chef:
@@ -5654,8 +5712,720 @@ label confidant_visit_aya:
     return
 
 label confidant_visit_hana:
-    # TODO Act 2: Hana visit 1 (introduction, the library errand) — see documentation/Locations/Reading Club - Hana/
+    # TODO Act 2: Hana visit 2+ — see documentation/Locations/Reading Club - Hana/
     return
+
+
+################################################################################
+## THE WEEKEND: LIBRARY, HANA, AND LUPIN'S DEN
+################################################################################
+##
+## The day after the day-two dream. Friday's exam talk sends him to the library
+## on his one free day; the errand is real (the haiku handout), but the room he
+## ends up studying in is the reading club's, which is where Hana's first
+## interaction lives. On the way home he takes a wrong turn and finds Orson's
+## bar. Both introductions are written from the matching files under
+## documentation/Locations/ and both set their first-visit tracking.
+
+label saturday_off:
+    # Day 4: Saturday, April 11. The library, Hana, and Lupin's Den.
+    $ set_story_day(4)
+
+    # Overnight texts land here if the line is live.
+    $ flush_pending_messages()
+
+    scene bg_room_day with Dissolve(1.5)
+    $ room_ambient(False)
+
+    "I wake before the rest of the house, which is new. The house is quiet on Saturdays in a different way."
+    "No train, no clock ticking in anybody's head."
+    mc "(The dream was the phone plan again. Contracts with a visit count already filled in.)"
+    "I lie there a minute anyway. Some part of me is still checking the dream for hidden rooms."
+
+    scene bg_kitchen with walk_fade
+    "The kitchen smells like miso and grilled fish."
+    "A normal Saturday breakfast, which is its own small event in this house."
+    mother "You're up early. Good. Eat something before you disappear."
+    mc "I'm going to the library. Hikari gave me the route."
+    mother "The library. Good. A library is a building that keeps its promises."
+    father "Eat first. Breakfast can wait ten minutes. You cannot."
+    hikari "He's already dressed. He's been dressed since before I came down."
+    mc "(She is not wrong. I have been awake for twenty minutes and already regretting getting up.)"
+
+    "I eat standing up, which earns me a look from Father that I decide not to understand."
+    mother "There's sukiyaki tonight, if you behave. Your father has been planning it since Thursday."
+    father "I have not."
+    hikari "He has. He asked the butcher."
+    hikari "Route check. Third floor, east wing, past the vending machines,"
+    hikari "left at the noticeboard with the taped corner. Door with no sign."
+    mc "You sound like a recording."
+    hikari "I am a recording. Play me when you get lost."
+    hikari "And take your phone. Not for the map, for me."
+    mc "For you?"
+    hikari "So I can find you. If you're not back by dinner, I'm telling Dad you ran away."
+    "She says it flat, which is how you can tell she means it."
+
+    scene bg_school_gate with walk_fade
+    "Saturday campus is a different building. Fewer people, older light,"
+    "the kind of quiet that has weight to it."
+    "Friday's plan held: the library, the studying, the handout."
+    jump library_search
+
+
+label library_search:
+    # The directions are exact, which is the problem: exact directions fail in
+    # exactly one way, and I have found it.
+    scene bg_campus_interior with walk_fade
+
+    "The library is bigger than it looks from outside, which is the first lesson of this building."
+    mc "(Hikari said third floor, east wing. Third floor, east wing."
+    mc "I have repeated it enough times that it should be a street address by now.)"
+
+    "The third floor is mostly empty on a Saturday. I count the doors as I go:"
+    "seminar rooms, a stairwell, a storage closet with a padlock older than I am."
+    "No noticeboard with a taped corner. No vending machines. 'East wing' might be a rumor."
+    "I try the floor plan by the stairs. The library is one building inside the building,"
+    "and I keep missing the door that leads into it."
+    "Around me, students read like it is a job they applied for."
+
+    menu:
+        "Ask the student reading by the window.":
+            mc "Excuse me, which way is the reading room?"
+            "The girl looks up. She is about my age, has a pencil behind her ear,"
+            "and has clearly been on the same page for a while."
+            quiet_student "...Third floor, but you're already here. You're looking for the room with the low tables."
+            mc "The one with no sign?"
+            quiet_student "That one. Quietest room in the building. People go there to read, some to study."
+            quiet_student "They share the same quiet."
+            mc "(That is almost word for word what Hikari said. She must have sat in that room herself once.)"
+        "Follow the smell of green tea.":
+            "I follow the smell. Green tea and old paper, either the library or a very specific kind of trap."
+            "The corridor narrows. The ceiling fan ticks somewhere overhead. The smell gets stronger."
+            "A door stands open a crack, and through it I can see low tables and the tops of bent heads."
+        "Check the floor directory by the stairs.":
+            "The directory is a hand-drawn map someone taped to the wall,"
+            "corrected in three different handwriting styles."
+            "It says: EAST WING, then QUIET ROOMS, then a door drawn with no label at all."
+            "Somebody has added a red-pen arrow and the characters 「ここ」."
+            mc "(Even the map admits it doesn't have a name.)"
+
+    "Whichever way I turn, it is the same door. Low wooden tables, mismatched chairs,"
+    "one long window with the blinds half drawn."
+    "The air smells like paper and green tea. A handful of students are already seated, reading."
+    "Somewhere near the back, a ceiling fan ticks."
+    "I almost turn around at the threshold. It feels like walking into a place where everyone already"
+    "knows the rules and I wasn't given the manual."
+    jump reading_club_first
+
+
+label reading_club_first:
+    scene bg_library with walk_fade
+
+    "The rules turn out to be two rules, delivered by a student at the nearest table,"
+    "who has decided I am harmless enough to explain things to."
+    quiet_student "First time? Don't worry, it's not a club-club. No forms, no speeches."
+    quiet_student "Just pick any book off the shelves and sit down. We read for an hour."
+    quiet_student "Sometimes people share a thought when the hour ends. Sometimes nobody says anything at all."
+    quiet_student "Both are fine."
+
+    menu:
+        "\"Can I read in Japanese... even if I'm slow?\"":
+            mc "Can I read in Japanese... even if I'm slow?"
+            quiet_student "Slow is allowed. This is the one room in the city where nobody will rush you."
+        "\"I don't really know what to pick.\"":
+            mc "I don't really know what to pick."
+            quiet_student "Then pick the shortest one. Nobody's grading you. That's the whole point of this place."
+
+    "I came for documents, which feels like cheating at a place like this."
+    "The course reserve is two shelves over: a thin packet of past lecture handouts,"
+    "and on top of it a stapled set of haiku study sheets, kigo lists, example poems, the works."
+    mc "(Hikari was right. People do come here to actually get something done.)"
+    "I take the haiku sheets to a table by the window. The student who explained the rules sits two tables down"
+    "and goes back to her book like I am furniture."
+    $ reward_attributes_once("library_errand_docs", [("insight", "micro")], show="auto")
+    $ library_errand_available = False
+
+    "And then I see her."
+    "A girl is shelving returns at the far wall. Dark hair, plain clothes,"
+    "moving so carefully she barely makes a sound."
+    "She slots a book into place, then looks up, and for one split second, our eyes meet."
+    "The moment I register her, she looks away. A book slips in her hands."
+    "She catches it, tucks her chin down, and walks quickly out of the room through the side door,"
+    "like the air between us had turned to glass."
+    "Gone. Just like that."
+    "I take two steps toward the side door before I talk myself out of it."
+    "Whatever she is, she didn't ask to be followed."
+    mc "Who's that?"
+    quiet_student "Oh... Hana? She volunteers here. Shelves the returns, straightens everything, never stays long."
+    quiet_student "Her badge says it, she wrote it herself, I think. Nobody's ever heard her say it out loud."
+    quiet_student "Doesn't really... talk. Every time someone tries, she runs off. But she's always around."
+    quiet_student "Every single week."
+    mc "Has she ever said anything to anyone?"
+    quiet_student "Not to me."
+    "She says it with a small, unbothered laugh, the way you laugh about weather."
+    mc "(I write it down anyway. Hana. That's her name now, whether she wants it to be or not.)"
+
+    "The hour ends the way it said it would, without anyone announcing it. Pages close. Chairs scrape."
+    "People gather their things."
+    "And then she passes my table."
+    "The girl from the far wall, Hana, walks the aisle between the desks with a book hugged to her chest,"
+    "and for one unguarded second she is simply *there*:"
+    "same height as the shelves she moves between, breathing like everyone else."
+    "She sets a slim, older volume on the desk beside my elbow. Square to the edge. Deliberate."
+    "Then she is gone through the side door before anyone can look up."
+    "I look toward the door. There is no one there."
+    "The ceiling fan ticks. Somewhere, a page turns."
+    "I don't know her. I don't know why she left a book on my desk."
+    "I only know she didn't want me to see her do it."
+    "I leave it where it is. Whatever it is, it isn't mine to take."
+    "I slide the haiku sheets into my bag. Then I pack up slowly, like the room might object."
+
+    $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 1)
+    $ hana_affection += 1
+    $ remember("hana", "watched her flee the reading room on his first visit")
+    $ wire_unlock("hana")
+    $ reward_attributes_once("reading_club_first", [("grace", "micro")], show="auto")
+
+    scene bg_campus_interior with walk_fade
+    "Outside, the light has gone the color of weak tea."
+    "Saturday is ending the way Saturdays do, all at once."
+    "My phone buzzes in my pocket. Hikari."
+    $ run_chat("hikari", [
+        {"them": "You alive?", "options": [
+            {"label": "\"Alive. Just left the library.\"",
+             "send": "Alive. Just left the library.",
+             "them": ["Of course you are.", "That's where you said you'd be."]},
+            {"label": "\"Define alive.\"",
+             "send": "Define alive.",
+             "them": ["That is not an answer.", "Are you on your way back?"]},
+        ]},
+        {"them": "(photo)", "img": "images/backgrounds/bg_nightfood.png"},
+        {"them": "Sukiyaki tonight. Mom's already arguing with Dad about the broth.", "options": [
+            {"label": "\"It looks incredible.\"",
+             "send": "It looks incredible.",
+             "them": ["It will taste better than it looks. She's been practicing all week."]},
+            {"label": "\"Teach me to make it.\"",
+             "send": "Teach me to make it.",
+             "them": ["You'll be on potato duty. It's the only job with no way to fail."]},
+        ]},
+        {"them": "Don't take the long way home. The trains stop running at eleven and Dad will notice if you're late.", "options": [
+            {"label": "\"I'm heading back now.\"",
+             "send": "I'm heading back now.",
+             "them": ["Good.", "See you at dinner."]},
+            {"label": "\"What could possibly go wrong.\"",
+             "send": "What could possibly go wrong.",
+             "them": ["Everything.", "I am not joking. Come straight home."]},
+        ]},
+    ])
+    mc "(She has never once said 'come straight home' without meaning it literally and completely.)"
+
+    # She said come straight home. I take a different route instead, which is not
+    # technically disobeying anything, and the neighborhood obliges by getting
+    # worse at being a neighborhood with every turn.
+    "The map puts me on a street I've never seen, and every turn after that is a guess."
+    "Fewer students, more shutters, the kind of street that only exists after the shops that serve them"
+    "have gone home."
+    scene bg_alley with walk_fade
+    "I pass a doorway with a cloth over it and a small wolf painted on the sign."
+    "The paint is faded but deliberate, the kind of sign made by someone who cares about it."
+    mc "(A bar, maybe. Or a shrine. Or a noticeboard with ambitions.)"
+    "Inside is warm in a way the street is not, amber light on polished wood, low jazz,"
+    "the smell of citrus peel and whiskey."
+    jump lupins_den_first
+
+
+label lupins_den_first:
+    scene bg_lupins_den with walk_fade
+
+    "It is a narrow room. Patrons sit in quiet clusters along the counter, a fox, a rabbit,"
+    "a plain white face, all in partial masks, none of them talking to each other."
+    "The air smells of citrus peel and whiskey. Somewhere a glass is set down too gently,"
+    "like it costs something to make noise here."
+    "Behind the counter, a wolf in a half-mask is polishing a glass."
+    "He does not look up when I take the stool at the end of the counter."
+    "The only spot that fits without bumping shoulders. The stool wobbles."
+    bar_master "..."
+    "That is the whole greeting. He goes back to the glass."
+    "Somewhere down the bar the rabbit laughs at nothing, too loudly, and nobody else reacts,"
+    "like it happens every night."
+    "After a while he sets a glass of water in front of me. I didn't order anything."
+    "I didn't order anything from anyone, there is no menu I can read."
+
+    menu:
+        "\"...Thanks.\"":
+            mc "...Thanks."
+            "The wolf mask tilts, barely, in what might be a nod."
+            bar_master "You found us. Most people don't."
+            $ reward_attributes_once("lupins_den_thanks", [("grace", "micro")], show="auto")
+        "(Say nothing. Drink the water.)":
+            "I pick up the glass and drink. He notices anyway, the wolf mask tilts, barely,"
+            "in what might be a nod."
+            bar_master "You found us. Most people don't."
+
+    "Two of the masked regulars finish their drinks and leave without a word."
+    "The third, the fox, catches my eye for half a second and looks away first,"
+    "which somehow feels like the polite thing to do here."
+    "Before I leave, the wolf says one more thing, still not looking up,"
+    bar_master "The water's on the house. The conversation isn't. But you're welcome to it."
+    "I don't know what that means. I don't think I'm supposed to."
+    "On the counter, a small wooden bowl with a card beside it,"
+    "something about leaving a note for the Master. I don't use it. But I remember it exists."
+    "Like a door I could knock on next time."
+    "I leave a little lighter than I arrived, and with one question I can't shake:"
+    "what do people talk about in a place where nobody has to show their face?"
+
+    $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 1)
+    $ orson_affection += 1
+    $ remember("orson", "found Lupin's Den on a wrong turn home from the library")
+    $ wire_unlock("orson")
+    $ reward_attributes_once("lupins_den_first", [("nerve", "micro")], show="auto")
+
+    scene bg_alley with walk_fade
+    "The street outside is the same street, but I am seeing it differently now,"
+    "like the bar added a layer to it that wasn't there before."
+    jump home_sukiyaki
+
+
+label home_sukiyaki:
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+
+    "The kitchen window is lit. Not the porch light. The kitchen."
+    mc "(They waited up.)"
+
+    scene bg_nightfood with walk_fade
+    "Inside, the table is set for four, and in the middle of it a pot is still steaming, sukiyaki,"
+    "the sweet-soy broth gone glossy, beef slices fanned on a plate,"
+    "mountains of vegetables waiting their turn."
+    mother "You're home. Sit. The beef goes in last, that's the part everyone gets wrong."
+    mother "For anyone who's never had it, thin beef, sweet soy, vegetables that hold their shape."
+    mother "You cook it at the table so everybody gets some."
+    mother "It's what you make when the people you want to feed are the ones coming home."
+    mc "(Nobody says it directly. Nobody has to.)"
+    mc "Hikari sent me a picture."
+    mother "She sends pictures of everything. It's her way of saying she was thinking about you while you were"
+    mother "out."
+    hikari "It is not."
+    mother "It is exactly that."
+    father "You took the long way."
+    mc "I got a little lost."
+    hikari "He told me the second I walked in. He always knows."
+    father "The long way and the lost way are the same way until you find it."
+    hikari "He found a bar."
+    "The room goes quiet for exactly one breath."
+    father "..."
+    mother "A bar. Did you eat there?"
+    mc "They gave me water. It was... nice, actually."
+    hikari "Define nice."
+    mc "Like the room had already decided I was allowed to be there."
+    "Mother laughs, the real one, the one that gets away before she can stop it."
+    mother "Then you should go back. Some doors only open once."
+    hikari "He's not going back. He's going to eat sukiyaki before it gets cold."
+    "I sit down. The beef goes into the pot one slice at a time, and for a moment nobody says anything,"
+    "and the steam does the talking for all of us."
+    "That is enough. That is more than enough."
+
+    scene bg_room_night with stair_fade
+    $ room_ambient(True)
+    "Upstairs, the house winds down the way it always does, father's newspaper, mother's tea things,"
+    "Hikari's footsteps on the stairs that creak under her anyway."
+    "I lie in the dark and try to remember the girl's face at the library. It doesn't stay."
+    "She didn't want it to."
+    "Tomorrow the quiz study continues. Tonight there is sukiyaki and sleep,"
+    "and both of them were earned."
+
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    jump sunday_morning
+
+
+################################################################################
+## SUNDAY: THE QUIET DAY
+################################################################################
+##
+## The second off day. No school, no errand — just Hikari collecting on the
+## "Maybe." she left hanging Friday night, a WIRE app that finally has enough
+## names to be interesting, and a family that notices everything.
+
+label sunday_morning:
+    # Day 5: Sunday, April 12. The practice quiz at home.
+    $ set_story_day(5)
+
+    $ flush_pending_messages()
+
+    scene bg_room_day with Dissolve(1.5)
+    $ room_ambient(False)
+
+    "Sunday arrives the way Sundays do, late, and without apology."
+    "I wake to the smell of miso soup and the sound of father reading the sports page out loud,"
+    "which is somehow worse than the newspaper staying folded."
+    mc "(Saturday is already a story I tell myself. Library, a girl made of held breath,"
+    mc "a bar full of masks, sukiyaki. It took one day to become the best day I've had here.)"
+
+    scene bg_kitchen with walk_fade
+    mother "You're up. Good. There's rice if you want it."
+    father "The city can wait until Monday. So can you, apparently."
+    hikari "Dad."
+    mother "Hikari's been waiting for you since seven. There's something on the table."
+    "On the table: the haiku handout from Saturday, a pencil,"
+    "and a look on Hikari's face that I have learned to recognize."
+    "It means she has been thinking about something since breakfast."
+
+    hikari "So. Before Monday eats your whole week, I'm quizzing you. Right now. No take-backs."
+    mc "You're serious."
+    hikari "I gave you the route on Friday. Today I'm checking the work."
+    mc "(The politeness era is over.)"
+    hikari "Three questions. The handout. If you get them wrong I'll pretend it was a warm-up."
+
+    scene bg_home_day with walk_fade
+    "We move to the low table in the front room. Father retreats to his newspaper with the specific"
+    "dignity of a man who has decided this is not his problem."
+    "I open the handout. Kigo lists, example poems, the works,"
+    "the same stapled sheets I carried home Saturday and haven't opened since."
+    hikari "Question one. What is a kigo?"
+    $ sunday_quiz_score = 0
+    $ sunday_q1_correct = False
+    $ sunday_q2_correct = False
+    $ sunday_q3_correct = False
+    menu:
+        "\"The seasonal word that carries the whole poem.\"":
+            mc "The seasonal word that carries the whole poem."
+            hikari "Correct. It does more than name the season, it tells you what the season feels like from the inside."
+            $ sunday_q1_correct = True
+            $ sunday_quiz_score += 1
+            $ reward_attributes_once("sunday_quiz_q1", [("insight", "micro")], show="auto")
+        "\"A counting rule for syllables.\"":
+            mc "A counting rule for syllables."
+            hikari "That's the five-seven-five. Different thing. The count is the skeleton; the kigo is the weather."
+        "\"The poet's pen name.\"":
+            mc "The poet's pen name."
+            hikari "No. Though if it were, I'd respect it, pen names are just masks for writers."
+
+    hikari "Question two. Five-seven-five counts what, exactly?"
+    menu:
+        "\"Mora, on, not syllables.\"":
+            mc "Mora, on, not syllables."
+            hikari "Right. Japanese counts sounds, not English syllables."
+            hikari "The professor said the count isn't the point, but it is the door."
+            $ sunday_q2_correct = True
+            $ sunday_quiz_score += 1
+            $ reward_attributes_once("sunday_quiz_q2", [("insight", "micro")], show="auto")
+        "\"Words.\"":
+            mc "Words."
+            hikari "No, sounds. Five sounds, seven sounds, five sounds. You'd be amazed how many words that is."
+        "\"Characters.\"":
+            mc "Characters."
+            hikari "Closer, but no. It's not how long the line looks, it's how many beats are in it."
+
+    hikari "Last one. This is the trick question, so think before you answer."
+    hikari "The clerk said three absences means what, exactly?"
+    menu:
+        "\"You can't sit the final exam. You still attend, you just get no mark.\"":
+            mc "You can't sit the final exam. You still attend, you just get no mark."
+            hikari "..."
+            hikari "You were listening in student relations."
+            hikari "Correct. Attendance is a currency here, and three absences is broke."
+            $ sunday_q3_correct = True
+            $ sunday_quiz_score += 1
+            $ reward_attributes_once("sunday_quiz_q3", [("insight", "micro")], show="auto")
+        "\"You fail the class.\"":
+            mc "You fail the class."
+            hikari "No. Colder than that, you don't fail, you just... don't count."
+            hikari "The seat stays warm and the mark stays blank."
+        "\"Nothing. It's a suggestion.\"":
+            mc "Nothing. It's a suggestion."
+            hikari "If it were a suggestion, the clerk wouldn't have said it twice."
+
+    if sunday_quiz_score == 3:
+        hikari "Huh."
+        hikari "Maybe you'll survive midterms after all. Don't let it go to your head,"
+        hikari "the real quiz has a professor watching."
+        $ remember("hikari", "passed her Sunday practice quiz without help")
+        $ add_affection("sister", 2)
+    elif sunday_quiz_score == 2:
+        if not sunday_q3_correct:
+            hikari "Two out of three. The attendance one almost got you,"
+            hikari "that one's the one people forget until it costs them."
+            $ remember("hikari", "nearly forgot the three-absences rule on her quiz")
+        elif not sunday_q1_correct:
+            hikari "Two out of three. You lost the kigo, which is the one I would have bet on you getting."
+            hikari "The seasonal word is the door into the whole poem. Remember that."
+            $ remember("hikari", "missed the kigo definition on her quiz")
+        else:
+            hikari "Two out of three. You can name the season, but the count still trips you."
+            hikari "Sounds, not words. The professor will not let that one slide twice."
+            $ remember("hikari", "lost the counting question on her quiz")
+        $ add_affection("sister", 1)
+    else:
+        hikari "We're doing this again before midterms. Same table, same handout, and this time you read before I ask."
+        $ remember("hikari", "struggled through her Sunday practice quiz")
+        $ add_affection("sister", 1)
+
+    "She collects the handout, squares it against the table edge,"
+    "and slides it back across the table to me, like it was always mine."
+    mc "(It was always hers. I was just the exam.)"
+
+    # The afternoon belongs to him. WIRE has been growing all week; now it has
+    # Hikari, whoever he met on day one, Aya, and the two people he met yesterday.
+    scene bg_room_day with walk_fade
+    "The afternoon stretches out in the particular way Sunday afternoons do, too much room,"
+    "not enough reason to leave it."
+    "I open WIRE on the phone."
+    $ renpy.call_screen("wire_app")
+    if first_day_activity == "walk_alone":
+        "Five names now. Hikari at the top, where she has always been. Chef and Aya from before."
+        "And at the bottom, two new ones."
+    elif first_day_activity == "photo_club":
+        "Five names now. Hikari at the top, where she has always been. Sim and Aya from before."
+        "And at the bottom, two new ones."
+    else:
+        "Four names now. Hikari at the top, where she has always been. Aya from before."
+        "And at the bottom, two new ones."
+    "Hana: one tick out of seven. Orson: one tick out of seven."
+    mc "(Two people I met yesterday are already rows in my phone. The app counts things faster than I do.)"
+    "I open Hana's profile. The note says she shelves returns and never quite says anything. Underneath:"
+    "one memory, that she fled a room I was sitting in."
+    mc "(I didn't say anything to her. I didn't do anything. The app still counted it, because I was there."
+    mc "I think that's the whole point of the thing.)"
+    "Orson's note is drier: Lupin's Den, the water's on the house."
+    "One memory, a wrong turn home from the library."
+    mc "(A bar I walked into by accident is now a contact."
+    mc "I don't know whether to be flattered or concerned.)"
+    "I put the phone down. The house is quiet in the way it gets when everyone's doing their own separate"
+    "Sunday."
+
+    scene bg_kitchen_night with walk_fade
+    "Dinner is earlier than usual, which Mother insists is a Sunday rule she just invented."
+    mother "Eat. Tomorrow is a school day and I can already see the tired in your posture."
+    father "It's one day. He survived the airport."
+    hikari "The airport was four days ago."
+    father "..."
+    "Nobody argues with that. I eat."
+
+    scene bg_room_night with stair_fade
+    $ room_ambient(True)
+    "Upstairs, my room is exactly where I left it, except the receipt is still on the desk,"
+    "and so is the haiku handout, which I don't remember putting there."
+    "I must have carried it up without deciding to."
+    mc "(I tell myself it's for the quiz. It's not for the quiz."
+    mc "It's because Saturday's library is still in my chest somewhere,"
+    mc "and the handout is the closest thing to it I have.)"
+    "I read the kigo list until the words stop meaning anything and start meaning everything,"
+    "which is how I know it's time to sleep."
+    "Tomorrow is Monday. The quiz is tomorrow. Midterms after that."
+    "The house makes its night sounds, the fridge, the pipes, Hikari's door,"
+    if first_day_activity == "walk_hikari":
+        "and I lie in the dark with four names in my phone and one book I didn't take."
+    else:
+        "and I lie in the dark with five names in my phone and one book I didn't take."
+
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    jump monday_morning
+
+
+################################################################################
+## MONDAY: THE QUIZ DAY
+################################################################################
+##
+## The first full school day after the weekend. The haiku lecture runs the
+## exam-preview material from Saturday's handout, and the quiz lands at the
+## end of it — three questions, menu-style, scored into `monday_quiz_score`.
+
+label monday_morning:
+    # Day 6: Monday, April 13. The haiku quiz and the last built scene.
+    $ set_story_day(6)
+
+    $ flush_pending_messages()
+
+    scene bg_room_day with Dissolve(1.5)
+    $ room_ambient(False)
+    "Monday morning has a shape to it now. Alarm, shower, the good shirt,"
+    "the one without the tag still in the collar."
+    "Downstairs, the kitchen is doing its weekday version: quicker, louder, already behind schedule."
+    scene bg_kitchen with walk_fade
+    mother "Eat. You have a quiz today, yes?"
+    mc "Yes. He announced it on Friday. Three questions."
+    mother "Then eat like it matters."
+    father "It does matter."
+    if sunday_quiz_score == 3:
+        hikari "He got three out of three on my quiz yesterday."
+    elif sunday_quiz_score == 2:
+        hikari "He got two out of three on my quiz yesterday. The one he missed, he won't miss again."
+    else:
+        hikari "He sat my practice quiz yesterday. It was not pretty."
+    father "Your quiz."
+    hikari "Same material."
+    mc "(She's not wrong. That's the annoying part.)"
+
+    scene bg_school_gate with walk_fade
+    "The gate knows me now. The security guard on the morning shift nods once,"
+    "which I have decided is the closest thing this university has to a welcome."
+    scene bg_campus_interior with walk_fade
+    "The lecture hall fills the way it did Friday, latecomers folding themselves into the back,"
+    "the professor already at the podium like the bell is a suggestion."
+    jump monday_lecture
+
+
+label monday_lecture:
+    scene bg_lecture_hall with walk_fade
+
+    "The professor does not do a warm-up. He does not do attendance."
+    "He starts mid-sentence, the way a man starts when he has already said the important part in his"
+    "head."
+    professor "Today we finish the unit. Kigo, the seasonal word, is not decoration. It is the poem's climate."
+    professor "A haiku without one is just three lines that happen to be short."
+    "He writes on the board: old pond. Stillness. Then, in a different hand: frog."
+    professor "The pond is a place. The frog is a season, spring, the first warmth,"
+    professor "the moment the water is warm enough to matter."
+    professor "Which word is the kigo?"
+    "A pause. Thirty students not breathing."
+    professor "It is not a trick question. It is the easiest question I have."
+    $ monday_quiz_score = 0
+    $ monday_q1_correct = False
+    $ monday_q2_correct = False
+    $ monday_q3_correct = False
+    menu:
+        "frog":
+            mc "Frog."
+            professor "Correct. The pond tells you where. The frog tells you when."
+            $ monday_q1_correct = True
+            $ monday_quiz_score += 1
+            $ reward_attributes_once("monday_quiz_q1", [("insight", "micro")], show="auto")
+        "old pond":
+            mc "Old pond."
+            professor "That is the setting. The kigo is what the setting is *doing*, and a pond does nothing. A frog jumps."
+            "A few students write it down anyway, which tells me they knew."
+        "stillness":
+            mc "Stillness."
+            professor "An atmosphere, not a season. Close, but the kigo has a calendar. Stillness does not."
+
+    professor "Second. Five-seven-five counts what?"
+    menu:
+        "Mora, on, not syllables.":
+            mc "Mora, on, not syllables."
+            professor "Correct. Japanese counts mora. English counts syllables. They are not the same ruler."
+            $ monday_q2_correct = True
+            $ monday_quiz_score += 1
+            $ reward_attributes_once("monday_quiz_q2", [("insight", "micro")], show="auto")
+        "Words.":
+            mc "Words."
+            professor "No. Three words can be fifteen sounds or five. Count the sounds, not the words."
+        "Characters.":
+            mc "Characters."
+            professor "That is a property of the writing system, not the poem. The poem counts beats, on."
+
+    professor "Last one. Attendance. Three absences means what, exactly?"
+    menu:
+        "You can't sit the final exam, you still attend, you just get no mark.":
+            mc "You can't sit the final exam, you still attend, you just get no mark."
+            professor "Correct. Precisely. The rule is arithmetic, like everything else in this course."
+            $ monday_q3_correct = True
+            $ monday_quiz_score += 1
+            $ reward_attributes_once("monday_quiz_q3", [("insight", "micro")], show="auto")
+        "You fail the class.":
+            mc "You fail the class."
+            professor "No. Colder than failing, you attend, you sit, you simply have no mark to show for it."
+        "Nothing. It's a suggestion.":
+            mc "Nothing. It's a suggestion."
+            professor "The clerk says it twice for a reason."
+
+    professor "That is the quiz. Three questions, and you have all heard them before,"
+    professor "the only new thing today is that they count."
+    "He collects nothing. There is no paper. The quiz was the questions themselves,"
+    "and the score is whatever the department decides it is."
+    "The bell does not ring so much as give up."
+    scene bg_campus_interior with walk_fade
+
+    if monday_quiz_score == 3:
+        mc "(Three for three. Hikari's quiz was real training."
+        mc "I should tell her, no, she'll find out, she always does.)"
+        $ remember("professor", "answered all three quiz questions correctly")
+    elif monday_quiz_score == 2:
+        if not monday_q1_correct:
+            mc "(Two out of three. The kigo question was the trick, the pond was right there and still wrong.)"
+        elif not monday_q2_correct:
+            mc "(Two out of three. I counted something, but I counted it in English.)"
+        else:
+            mc "(Two out of three. The attendance rule. The clerk says it twice and I still let it slide.)"
+    else:
+        mc "(One or fewer. The handout clearly needs a second reading.)"
+        if sunday_quiz_score <= 1:
+            mc "Hikari's 'read before I ask' was not a suggestion."
+        else:
+            mc "Hikari is going to have something to say about this."
+
+    "Hikari has afternoon seminar. I have nothing until dinner,"
+    "which is the first unstructured hour this week that isn't an errand."
+    "I could go back to the library. I could find the reading room again and see if the girl with the"
+    "badge is there. I could do neither and just walk."
+    menu:
+        "Walk the campus until it stops feeling like a map.":
+            "I take the long way around the pond, the real pond, not the one in the poem,"
+            "and let the Saturday leg muscles do the work."
+            "The reading room's corridor passes on my left. The door has no sign, exactly like she said."
+            "I don't go in. Whatever she left on that desk was for a Saturday. Today is Monday."
+            mc "(I'm learning the shape of this place. That's what the afternoons are for.)"
+        "Go back to the library and finish the handout properly.":
+            "I go back to the third floor, east wing, and find the door without needing the smell of green tea"
+            "this time."
+            "The room is emptier than Saturday. The low tables, the blinds, the fan, all exactly as described."
+            "I read the kigo list until the words stop being a list and start being a weather report."
+            mc "(Somewhere in this building is a girl made of held breath. Today she is not here."
+            mc "The room is just a room, and that is fine, it means she has a life somewhere that isn't this one.)"
+        "Check the phone. Hikari is asking how the quiz went.":
+            $ run_chat("hikari", [
+                {"them": "How'd the quiz go?", "options": [
+                    {"label": "\"Three for three. Your training worked.\"",
+                     "send": "Three for three. Your training worked.",
+                     "them": ["Good. That's the easy one out of the way.", "Don't let it go to your head. Midterms are longer."]},
+                    {"label": "\"The pond was a trick.\"",
+                     "send": "The pond was a trick.",
+                     "them": ["It wasn't a trick. The pond is the setting. The frog is the kigo.", "Read the handout again tonight."]},
+                    {"label": "\"I blacked out.\"",
+                     "send": "I blacked out.",
+                     "them": ["Then you should be home studying, not texting me.", "I'm telling Dad you ran away."]},
+                ]},
+            ])
+            mc "(She knows. She always knows. The only question is whether she says it first or makes me say it.)"
+
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    "The house is lit the way it is on school nights, kitchen bright, living room warm,"
+    "one window upstairs already dark."
+    scene bg_kitchen_night with walk_fade
+    "Mother has miso soup and rice ready. Father has the newspaper folded to the sports page,"
+    "which means he is pretending not to listen."
+    mother "How was the quiz?"
+    mc "Three questions. I think I got them."
+    mother "Then eat like you got them."
+    if sunday_q3_correct:
+        hikari "He got the attendance one right on my quiz yesterday."
+    else:
+        hikari "I put the attendance question on my quiz yesterday. He knows it now."
+    father "Your quiz had an attendance question?"
+    hikari "It was a good question."
+    "The soup is hot. The rice is warm. Outside, the city does its Monday thing, trains, neon,"
+    "the particular hum of a week starting."
+    "I eat. I answer questions about my day that aren't questions."
+    "I let the house hold me the way it does on nights like this."
+
+    scene bg_room_night with stair_fade
+    $ room_ambient(True)
+    "Upstairs, the room is mine again, the receipt on the desk, the phone face-down,"
+    "the handout still open to the kigo list."
+    mc "(Monday is a school day. Tuesday will be too."
+    mc "The quiz is behind me, midterms after that, and somewhere in the middle of it all is a girl who"
+    mc "leaves books on desks and a bartender who gives water away for free.)"
+    "I close the handout. Tomorrow I will open it again."
+    "The week has started. Whatever it turns into, it started."
+
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    jump end_of_build
 
 
 ################################################################################

@@ -25,22 +25,23 @@ same act; a single afternoon in which everything is, is a new one.
 The break between Act 1 and Act 2 is the first dream and the night it ends.
 Act 1 is the arrival — the plane, the terminal, the journey, the house, and
 the first dream. Act 2 begins the next morning and is deliberately one big
-act: it holds the first day, the second day, the hub, and every confidant
-arc. Act 3 is the glitch era, when the leaks turn structural. Act 4 is the
-revelation and the endings.
+act: it holds the opening school days, the first weekend, the hub, and every
+confidant arc. Act 3 is the glitch era, when the leaks turn structural. Act 4
+is the revelation and the endings.
 
 ### 1.2 The acts
 
 | Act | Title | What it covers | Ends on |
 |-----|-------|----------------|---------|
 | 1 | The Arrival | The plane, Narita terminal, the travel decision, the journey home, the house, the first dream | The end of the first dream, where `morning_call` begins Act 2 |
-| 2 | The Long Middle | The first day, the second day, the free-roam hub, the seven-visit confidant stories | *not written* — ends when the glitches turn structural |
+| 2 | The Long Middle | The opening school days, the first weekend, the free-roam hub, the seven-visit confidant stories | *not written* — ends when the glitches turn structural |
 | 3 | The Glitch | The simulation leaks stop being atmospheric and start breaking the world (treatment "Escalating Mystery" stages 1–5) | *not written* |
 | 4 | The End | Hikari's revelation at the river, the three endings, the epilogue coda | *not written* |
 
-The prologue content and the first day are built end to end. Days 1 and 2 are
-scripted; the hub (`label free_afternoon` + `screen location_hub`) is wired
-but no day scene calls it yet, and the confidant visit labels are stubs.
+The prologue content and the first two school days are built end to end, and
+the script now continues through the first weekend to Monday's quiz. The hub
+(`label free_afternoon` + `screen location_hub`) is wired but no day scene
+calls it yet, and the confidant visit labels are stubs.
 
 > The older numbering (Act 1 = the airport, Act 2 = the journey, Act 3 = the
 > first day) is retired, and so is the intermediate numbering that made the
@@ -72,7 +73,11 @@ but no day scene calls it yet, and the confidant visit labels are stubs.
 - Starting state: `money = 30000`, `inventory = ["phone"]`, `japanese_fluency = 0`.
 - `prologue` is the plane. He talks over the engine, establishes the thirty
   thousand yen and the fact that it is nowhere near enough, and the very first
-  hospital flash cuts in under the line "Test initiating...".
+  hospital flash cuts in under the line "...signal holding. Bring him in."
+- The monologue leaves the application and acceptance concrete, but not the
+  reason for Japan or the departure: he remembers packing a bag, not the day he
+  decided to leave home, and the last ordinary day before the flight feels detached.
+  These gaps stay framed as jet lag and nerves until the dream reinterprets them.
 - **No attribute HUD until he is actually standing in the world** — the cluster
   appears at the top of `airport_arrival`, not during the notices.
 
@@ -188,6 +193,9 @@ dream and the night it ends:** `morning_call` sets `current_act = 2`, and
 - `leaving_house` is the amado (the sliding shutter) and the two-door fork: ask
   how she can hear a mood in a door, or admit he heard nothing. Both are neutral
   and both are remembered.
+- The genkan beat ends with Hikari admitting she put WIRE on his phone before he
+  landed (`wire_unlock("hikari")`). The river run later uses the app for her
+  private message instead of adding her.
 
 ### 4.4 The walk to school (`label school_morning`, `label campus_grounds`)
 - `school_morning` is the front-door list — the rules he memorised on the plane
@@ -303,10 +311,14 @@ of Act 2.
   the dinner-time rule; covering pays Grace and his regard. `second_morning`
   breakfast reads `declined_dinner` so father, mother and Hikari follow up on
   whichever happened.
-- **The first visit is the whole of each confidant's presence in the script.**
-  `confidant_visits` is written here and by the day-two maid-cafe visit; WIRE
-  reads it for contact progress, and `destination_state()` reads it for the hub
-  (§5.7).
+- **Every confidant's current script presence is their first visit.**
+  `confidant_visits` is written by the first-visit scenes — Chef on the
+  walk-alone route, Sim on the photography route, Aya at the day-two maid cafe
+  (§4.7), and Hana and Orson on Saturday (§4.8). WIRE reads it for contact
+  progress, and `destination_state()` reads it for the hub (§5.7). The same
+  scenes write the affection values: `chef_affection`, `sim_affection`,
+  `aya_affection`, `hana_affection`, and `orson_affection` all have a written
+  first increment.
 
 ### 4.7 The second day (`label first_night_memory`, `label second_morning`,
 `label second_school_day`)
@@ -335,10 +347,77 @@ The first day that belongs to him, and the template for every day after it.
   three-way reply choice — plays out as real texts.
 - The night that closes day two is now written: the family kitchen table, the
   food detail, the dinner-boundary beats, Tetsuo's station-writing lesson, the
-  quiz/library seed, the weekend-plan menu, the solo reflection, and sleep.
+  quiz/library seed, Hikari steering him to the library, the solo reflection,
+  and sleep.
+- After that, `label night_room_visit` runs as part of the normal night
+  sequence (the debug key `0` jumps straight to it): Hikari comes into his room
+  instead of leaving and lays out the
+  exam timeline — quiz next week, midterms in three or four. She gives the
+  exact library directions (third floor, east wing, past the vending machines,
+  left at the noticeboard with the taped corner, door with no sign) and a
+  three-option menu for how he takes it; each reply is remembered and pays a
+  small once-only reward.
 - That night routes through `dream_router` with `dream_key = "day_two_cellular_maid"`
-  and reaches the day-two dream placeholder in `game/dreams.rpy`, then jumps to
-  `end_of_build`.
+  and reaches the day-two dream placeholder in `game/dreams.rpy`, which now
+  jumps to `saturday_off` (§4.8) rather than straight to `end_of_build`.
+
+### 4.8 The weekend (`label saturday_off` → `home_sukiyaki` → `sunday_morning`)
+
+The day after the dream — the off day the exam talk pointed at. Written as one
+continuous Saturday: morning, library, the walk home, and the night meal.
+
+- `saturday_off` — wake-up, a normal breakfast (sukiyaki is only mentioned as
+  *tonight's* plan — father has supposedly been planning it since Thursday),
+  Hikari's route-check reprise and her "I'm telling Dad you ran away" threat.
+  Friday's plan is already settled — Hikari steered him to the library — so
+  Saturday opens on that errand.
+- `library_search` — he cannot find the door Hikari described. A three-option
+  menu (ask the student by the window / follow the green-tea smell / check the
+  floor directory) — all three converge on the same unlabeled door.
+- `reading_club_first` — the errand pays off: the haiku study sheets from the
+  course reserve (`library_errand_available` clears, Insight micro). Then
+  **Hana's first interaction**, written from
+  `documentation/Locations/Reading Club - Hana/1st interaction.md`: the two
+  rules, the pick-a-book menu, the girl shelving returns, the eye contact, the
+  flee, the almost-follow, the badge, the book she places on his desk as the
+  hour ends, and the haiku sheets he takes home. Sets Hana's visit count to at
+  least 1, increments `hana_affection`, logs a memory, unlocks her WIRE
+  contact, and pays a Grace micro.
+- Messages interlude — `run_chat("hikari", ...)` on the way out: "You alive?",
+  the sukiyaki photo beat, and the "come straight home" energy.
+- He takes the long way anyway and finds **Lupin's Den** — Orson's first
+  interaction, written from `documentation/Locations/Bar - Orson/1st
+  interaction.md`: the masked regulars, the un-ordered water, the two-choice
+  beat, "You found us. Most people don't.", the wooden note bowl. Sets Orson's
+  visit count to at least 1, increments `orson_affection`, logs a memory,
+  unlocks his WIRE contact, and pays a Nerve micro.
+- `home_sukiyaki` — the night meal: Mother explains sukiyaki properly ("what
+  you make when the people you want to feed are the ones coming home"), the
+  family clocks that he found a bar, and the night ends upstairs with him
+  thinking about the girl at the library.
+
+### 4.9 Sunday and Monday (`label sunday_morning` → `monday_morning` → `monday_lecture` → `end_of_build`)
+
+The two days after the Saturday sequence. `home_sukiyaki` jumps to
+`sunday_morning` instead of `end_of_build`.
+
+- `sunday_morning` — the quiet day. Hikari collects on the Friday-night study
+  plan with a three-question practice quiz off the haiku handout (menu-style,
+  not `quiz.rpy`): kigo definition, what 5-7-5 counts, and the three-absences
+  rule as the trick question. `sunday_quiz_score` drives her reaction and a
+  sister affection bump; `sunday_q1_correct`–`sunday_q3_correct` let her name
+  the actual miss, and each correct answer pays an Insight micro. The
+  afternoon is a WIRE beat — four or five contacts depending on the first-day
+  route, with Hana and Orson each showing one tick and one memory. Dinner,
+  night, straight into Monday (no dream).
+- `monday_morning` / `monday_lecture` — the first full school day. The haiku
+  lecture runs the exam-preview material (old pond / frog as the kigo example)
+  and the real quiz lands as three menu questions scored into
+  `monday_quiz_score`, with `monday_q1_correct`–`monday_q3_correct` recording
+  the misses. The afternoon is a three-option fork: walk the campus (passes
+  the unsigned reading-room door without going in), retake the handout at the
+  library, or answer Hikari's incoming `run_chat` question about the quiz.
+  Then home, dinner, night, `end_of_build`.
 
 ---
 
@@ -446,8 +525,9 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   dial. It says how much of anybody's story the current act allows, and a place
   that has caught up with it is **paused**: the person is still there and still
   talking, but nothing new about them happens until the story moves on. This is
-  what stops a player from spending the whole game on one person, and it needs no
-  scheduling system to enforce.
+  what stops a player from spending the whole game on one person. Weekly opening
+  hours are a separate system (§5.9): the act cap is story progress, the hours
+  are whether the door is open today.
 - **Introductions come before revisits.** A place with zero visits is always
   available (within the act cap). A place already visited shows **later** —
   "Come back another day" — until *every* confidant has been met at least
@@ -463,8 +543,9 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   settle an ending flag.
 - **The hub** (`screen location_hub`) shares the standalone notice window.
   Each row spells out its state: Visit available, No new visit yet,
-  Come back another day, or Story complete. Only available rows are clickable.
-  The destination list scrolls; Head Home remains available in the fixed footer.
+  Come back another day, Closed today, or Story complete. Only available rows
+  are clickable. The destination list scrolls; Head Home remains available in
+  the fixed footer. The eyebrow carries the current in-game date.
 - **The hub is wired but not yet reached.** `label free_afternoon` (end of
   `script.rpy`) calls the screen and jumps to `confidant_visit_<place>`; those
   five labels are stubs that `return` until the Act 2 visit scenes are written.
@@ -520,6 +601,39 @@ what makes them textable.
 - First use: the Akihabara walk home and the train ride home from the maid
   cafe (§4.7).
 
+### 5.9 Calendar and opening hours
+`game/calendar.rpy`. The story has one canonical day counter, one visible date,
+and one place to say which weekdays a destination is open.
+
+- **The anchor is fixed.** Day 1 is Wednesday, April 8; Day 2 is Thursday,
+  April 9; and the built story runs through Monday, April 13 (Day 6). Every day
+  label pins its absolute day at the top with `set_story_day()`, so a branch or
+  a rollback cannot leave the calendar a day behind. The full date table lives
+  in `documentation/calendar.md`.
+- **The player can see it.** `screen story_day_hud` is the top-left date chip,
+  with the full weekday/date and `DAY N · WEEK N`. It rides the same switch as
+  the attribute HUD (`show_attribute_hud`) and is hidden by standalone windows.
+- **The phone has a Calendar app.** `phone_app_calendar_contents` draws a month
+  grid, highlights today, marks days whose story beat has been reached, and
+  shows the selected day's date and confidant opening hours. Browsing ahead
+  does not reveal future beats. It is locked until the first contact is in WIRE;
+  before that it shows `NOT UNLOCKED YET.` and `Your first connection opens the
+  calendar.`
+- **Weekly hours are data, not prose.** `destination_schedules` holds
+  `open_days` or `closed_days` per place, plus the short `hours` line and the
+  `closed_note` reason. Known canon: Ramen Shop is closed Wednesday (Chef's
+  WIRE note) and Photography Club only meets Thursday (Sim's first text).
+  Hana's reading room is Monday–Saturday; Aya and Orson have no written
+  closure. `destination_is_open(place, weekday)` is the read-only check.
+- **The hub combines hours with story state.** `destination_state()` returns
+  `closed_today` before the act-cap pause, so a ready place can still be shut.
+  Story completion still wins: a finished seven-visit arc reads Story complete
+  rather than Closed today. The row mark for a closed day is `×`.
+- **Scripted scenes ignore the schedule.** The first visit to every confidant
+  is written on a specific day and must play even if that place would be shut
+  in the hub. Opening hours only govern the free-afternoon hub after the
+  introductions.
+
 ---
 
 ## 6. State Written by the Story
@@ -548,16 +662,19 @@ what makes them textable.
 | `first_run_started` | `after_school_run` | The first river run happened. The run is not a confidant slot yet, so this is the only record of it |
 | `dream_key` | `start`, first-night sleep, day-two night | Which dream the router selects: `first_night`, `day_two_cellular_maid`, `put_the_day_back`, a future activity key, or `generic` |
 | `quiz_announced` | `second_school_day` haiku lecture | The professor planted the short quiz; Hikari turns it into the library seed |
-| `library_errand_available` | day-two night / future library scene | The library errand is now seeded and available for the reading-club introduction |
-| `weekend_plan` | day-two night weekend menu | What he said he wants tomorrow: `library`, `wander`, or `river` |
+| `library_errand_available` | day-two night seed, cleared in `reading_club_first` | The library errand is seeded Friday night and consumed by the Saturday scene |
+| `sunday_quiz_score` / `sunday_q1_correct`–`sunday_q3_correct` | `sunday_morning` practice quiz | Hikari's closing reaction branches on the score and names the actual missed question |
+| `monday_quiz_score` / `monday_q1_correct`–`monday_q3_correct` | `monday_lecture` quiz | The score drives the closing narration; the flags identify which question he missed |
 | `current_act` | `morning_call` (→ 2); future act breaks | Which act's caps are in force (`act_confidant_cap`) |
-| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the future `confidant_visit_*` stubs | How many of the seven visits each person has had; `destination_state()` and WIRE read it |
+| `story_day` | `set_story_day()` at the top of each day label (`airport_arrival` = 1, `morning_call` = 2, `second_morning` = 3, `saturday_off` = 4, `sunday_morning` = 5, `monday_morning` = 6) | The canonical date; the HUD, phone Calendar and weekly hours all read it |
+| `phone_calendar_selected` | the phone Calendar date grid | Which date the calendar's detail pane is showing; `None` means today (or the first of a browsed month) |
+| `phone_calendar_month_offset` | the phone Calendar arrows | How many months the grid is from the current story month |
+| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the Saturday scenes (`hana`, `orson`) | How many of the seven visits each person has had; `destination_state()` and WIRE read it |
 | `hikari_visits` | `after_school_run` | Hikari's own visit count — feeds her WIRE progress ticks, separate from the confidant table |
 | `declined_dinner` | `first_evening_dinner` (walk-alone route only) | He told the family he was still full from ramen; `second_morning` breakfast reads it so the two days agree |
-| `sister_affection`, `father_affection`, `sim_affection`, `chef_affection`, `aya_affection`, `hana_affection` | The relevant first-visit/run/dinner/night beats; `add_affection()` in `script.rpy` | Relationship trust, written by the story and read through the affection helpers (`affection_level`, thresholds). Hikari and Tetsuo are the active relationship beats now; Aya’s maid-cafe first visit increments `aya_affection`. |
-| `sim_affection`, `orson_affection` | **nothing yet written** | Declared placeholders; they wait for their arcs. |
+| `sister_affection`, `father_affection`, `sim_affection`, `chef_affection`, `aya_affection`, `hana_affection`, `orson_affection` | The relevant first-visit/run/dinner/night beats; `add_affection()` in `script.rpy` | Relationship trust, written by the story and read through the affection helpers (`affection_level`, thresholds). Every confidant has a first-visit increment; Hikari and Tetsuo also gain from selected family/run beats. |
 | `cellular_data_active` | `second_school_day` (Hamada Denki) | WIRE can sync off-Wi-Fi; gates `phone_map_is_unlocked("akihabara")` |
-| `wire_unlocked` | `wire_unlock()` in the visit scenes | Who is in the WIRE roster (`wire_order` = hikari, chef, sim, aya) |
+| `wire_unlocked` | `wire_unlock()` — Hikari in `leaving_house`, others in their first-visit scenes | Who is in the WIRE roster (`wire_order` = hikari, chef, sim, aya, hana, orson) |
 | `message_threads` / `message_unread` | `send_message()` / `receive_message()` in `messages.rpy` | The actual texts, per contact; unread counts per thread |
 | `pending_messages` | `queue_message()` | Texts that arrive while the phone is out of reach; `flush_pending_messages()` delivers them at day turns if `cellular_data_active` |
 | `phone_apps_messages_contact` | the Messages app | Which thread is open inside the phone UI |
@@ -577,19 +694,18 @@ that does not exist.
 - **Act 3 and Act 4**: the glitch era and the endgame. The revelation (the
   facility), the three endings (Escape / Blue Pill / Failure), and the
   epilogue coda all live there. See `story_treatment.md` and `plan.md`.
-- **The day loop after day two.** `free_afternoon` and the `confidant_visit_*`
-  stubs exist (§5.7). The playable story now stops after the day-two dream and
-  jumps to the end-of-build card (`end_of_build`), so the repeating day is not
-  missing the terminal path; it is simply still unwritten. A repeating day
-  (morning → lecture → hub → night) remains the missing skeleton.
-- **The confidant locations beyond their first visit.** The ramen shop (Chef),
-  photography club (Sim), and maid cafe (Aya) each have their **first** visit
-  in the script (§4.6, §4.7). The bar (Orson) and reading circle (Hana) have
-  none — their introductions are the two most valuable unwritten scenes.
-  Every one of the five has a progression summary and seven written
-  interactions under `documentation/Locations/`, and none of those outlines is
-  in the script — including the six remaining visits for the three confidants
-  who are.
+- **The day loop after the current build.** `free_afternoon` and the
+  `confidant_visit_*` stubs exist (§5.7). The playable story now runs through
+  Monday (§4.9) and lands on the end-of-build card (`end_of_build`), so the
+  repeating day is not missing the terminal path; it is simply still
+  unwritten. A repeating day (morning → lecture → hub → night) remains the
+  missing skeleton.
+- **The confidant locations beyond their first visit.** All five confidants
+  now have their **first** visit in the script (§4.6, §4.7, §4.8): Chef, Sim
+  and Aya on their first afternoons, Hana and Orson on the Saturday. Every one
+  of the five has a progression summary and seven written interactions under
+  `documentation/Locations/`, and none of the remaining visits is in the
+  script — visits 2–7 for all five.
 - **The seven-visit run with Hikari.** `after_school_run` (§4.6) is written as far
   as the first night and sets `first_run_started`. The run becomes a recurring
   after-school activity rather than a seven-visit chain, and the shape of the
@@ -603,11 +719,15 @@ that does not exist.
 - **The fortune teller, and the city locations.** The Level stubs for
   Akihabara, Harajuku, Asakusa, Odaiba and Yokohama-Chinatown exist but are
   empty; the treatment already contains scenes for all of them.
-- **A class schedule, the attendance counter, and the exam period.** The
-  attendance *rule* is narrated in `student_relations`/`first_class` (§5.4)
-  but there is no `lates`/`absences` variable, no schedule, and no exam arc
-  yet. `documentation/exam_and_courses.md` holds the plan, including the
-  quiz mechanic in `game/quiz.rpy`.
+- **A class schedule, the attendance counter, and the rest of the exam
+  period.** The attendance *rule* is narrated in
+  `student_relations`/`first_class` (§5.4), and the first quiz arc is
+  scripted — Hikari's Sunday practice and the professor's Monday quiz in
+  `script.rpy` — but there is still no `lates`/`absences` variable, no
+  general-purpose class-schedule system, and no later exam sequence.
+  `documentation/exam_and_courses.md` holds the plan, including the reusable
+  quiz screen in `game/quiz.rpy`. Weekly *location* hours are separate and are
+  implemented in `game/calendar.rpy` (§5.9).
 - **Real art** — anything still calling `placeholder_bg(...)` or
   `bg_or_placeholder(...)` prints its own name on screen until the asset arrives.
   The two Act 2 rooms that are still placeholders are the **ramen shop**

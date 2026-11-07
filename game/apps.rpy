@@ -10,6 +10,7 @@ init python:
 
     phone_apps_catalog = [
         ("messages", "Messages", False),
+        ("calendar", "Calendar", False),
         ("journal", "Journal", False),
         ("camera", "Camera", True),
         ("inventory", "Inventory", False),
@@ -162,6 +163,8 @@ label _phone_apps_open:
     $ phone_apps_more_open = False
     $ phone_apps_more_return_page = None
     $ phone_apps_help_device = "keyboard"
+    $ phone_calendar_selected = None
+    $ phone_calendar_month_offset = 0
     $ phone_apps_started_at = time.monotonic()
     $ phone_apps_closing = False
     $ phone_apps_close_offset = 0
@@ -182,22 +185,23 @@ screen phone_app_icon(app_id, size=48, disabled=False):
 
 screen phone_app_tile(app_id, label, disabled, action):
     button:
-        xysize (gui.scale(74), gui.scale(112))
+        xysize (gui.scale(74), gui.scale(94))
         background None
         hover_background Solid("#ffffff0b")
         action action
+        sensitive disabled
 
         fixed:
-            xysize (gui.scale(74), gui.scale(112))
+            xysize (gui.scale(74), gui.scale(94))
             fixed:
                 xalign 0.5
-                ypos gui.scale(6)
-                xysize (gui.scale(60), gui.scale(60))
-                use phone_app_icon(app_id, 60, disabled)
+                ypos gui.scale(3)
+                xysize (gui.scale(54), gui.scale(54))
+                use phone_app_icon(app_id, 54, disabled)
 
             text label:
                 xalign 0.5
-                ypos gui.scale(73)
+                ypos gui.scale(61)
                 xmaximum gui.scale(72)
                 textalign 0.5
                 size gui.scale(11)
@@ -1079,6 +1083,7 @@ screen phone_apps():
             None: "Phone",
             "messages": "Messages",
             "messages_thread": "Messages",
+            "calendar": "Calendar",
             "wire": "WIRE",
             "settings": "Settings",
             "camera": "Camera",
@@ -1143,7 +1148,7 @@ screen phone_apps():
                             color "#71808b"
                             outlines []
 
-                        grid 3 3:
+                        grid 3 4:
                             xalign 0.5
                             spacing gui.scale(5)
 
@@ -1151,7 +1156,7 @@ screen phone_apps():
                                 use phone_app_tile(
                                     app_id,
                                     app_name,
-                                    disabled,
+                                    disabled or (app_id == "calendar" and not phone_calendar_unlocked()),
                                     [SetVariable("phone_apps_page", app_id), With(Dissolve(0.16))],
                                 )
 
@@ -1201,6 +1206,11 @@ screen phone_apps():
                     use phone_app_stats_contents
                 elif phone_apps_page == "journal":
                     use phone_app_journal_contents
+                elif phone_apps_page == "calendar":
+                    if phone_calendar_unlocked():
+                        use phone_app_calendar_contents
+                    else:
+                        use phone_app_calendar_contents_locked
                 elif phone_apps_page == "backup":
                     use phone_app_backup_contents(
                         phone_apps_backup_mode,

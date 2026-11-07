@@ -8,31 +8,36 @@
 
 ## What This Is
 
-This document picks up where the game stops: the end of the second day, after
-the Akihabara afternoon and Aya's first visit to the maid cafe. Everything from
-the prologue through that second day is built — the airport, the first day, the
+This document picks up after the current build's stopping point: Monday evening,
+with the first quiz behind him and the weekend introductions made. Everything
+from the prologue through that Monday is built — the airport, the first day, the
 first free afternoon, the first river run, the second morning, the haiku
-lecture, the Hamada Denki phone-plan errand, and the free exploration that ends
-in the cafe. What follows is a detailed narrative treatment of the remaining
-story, covering the full arc of every confidant, the escalation of the
+lecture, the Hamada Denki phone-plan errand, the maid cafe, Hikari's room visit,
+the Saturday library and Lupin's Den introductions, the Sunday practice quiz,
+and the Monday quiz. What follows is a detailed narrative treatment of the
+remaining story, covering the full arc of every confidant, the escalation of the
 simulation mystery, the Tokyo locations the protagonist visits, and the three
 endings the game can arrive at.
 
 It is written to inspire, not to be copied. The dialogue is suggested tone, not
 final script. Take what works and rewrite the rest.
 
+Dates in this treatment follow `documentation/calendar.md`. The built story
+ends on Monday, April 13 (Day 6); the continuation begins on Tuesday,
+April 14 (Day 7).
+
 ---
 
 ## Act 2: The Long Middle
 
 The scripted portion of Act 2 runs from the first morning in the house through
-the second day, and that material is already written. On the morning after the
-first free afternoon — the second morning — the protagonist wakes in his room,
-Hikari walks him toward school, the professor lectures on haiku, and Hikari
-takes him to Hamada Denki in Akihabara to sort out a cellular plan. That
-afternoon he explores the district alone and ends up inside the maid cafe,
-which is where Aya's arc starts. The hub-driven afternoons this treatment
-describes pick up after that second day.
+the Monday of the first quiz. On the morning after the first free afternoon —
+the second morning — the protagonist wakes in his room, Hikari walks him toward
+school, the professor lectures on haiku, and Hikari takes him to Hamada Denki in
+Akihabara to sort out a cellular plan. That afternoon he explores the district
+alone and ends up inside the maid cafe, which is where Aya's arc starts. The
+script then runs through the first weekend and Monday's quiz. The hub-driven
+afternoons this treatment describes pick up after that Monday.
 
 This is the act that holds everybody else's stories rather than the
 protagonist's own. He is the lens through which five people grow, change, and
@@ -41,17 +46,18 @@ does the story. Every confidant arc runs independently, capped by act
 progression so a player cannot finish one person's entire story before the
 world has moved enough to let the next chapter of it mean something.
 
-The hub opens on the first free afternoon after the scripted second day — the
-day-loop scene that calls it is not written yet (see `plan.md`). The phone
-already has WIRE contacts on it — Hikari, the chef, Sim, and Aya — and the hub
+The hub opens on the first free afternoon after the current build's Monday —
+the day-loop scene that calls it is not written yet (see `plan.md`). The phone
+already has WIRE contacts on it — Hikari, the chef, Sim, and Aya by the end of
+day two, with Hana and Orson added by the Saturday introductions — and the hub
 adds the list of places: the five confidant locations plus the two walks home.
 
 ### How New Characters Enter
 
-The game introduces its confidants the way the first two days introduced the
-chef, Sim, and Aya: through the natural geography of a student life. Nobody is
-announced. Nobody has a tutorial card. The protagonist walks into a place, and
-the person is already there, being themselves.
+The game introduces its confidants the way the opening days introduce the chef,
+Sim, Aya, Hana, and Orson: through the natural geography of a student life.
+Nobody is announced. Nobody has a tutorial card. The protagonist walks into a
+place, and the person is already there, being themselves.
 
 **Orson** is found the way every student in Tokyo finds a bar eventually: by
 walking the wrong street at night. The protagonist gets lost a second time, or

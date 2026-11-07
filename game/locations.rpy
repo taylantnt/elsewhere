@@ -81,20 +81,34 @@ init python:
         return all(confidant_visits.get(c, 0) > 0 for c in confidant_order)
 
     def destination_state(place):
-        # "ready"  - there is a visit waiting to be played here
-        # "paused" - the act has not caught up; nothing new will happen yet
-        # "later"  - already visited, but not everyone has been met yet
-        # "closed" - all seven visits are done; the story has finished
+        # "ready"        - there is a visit waiting to be played here
+        # "paused"       - the act has not caught up; nothing new will happen yet
+        # "later"        - already visited, but not everyone has been met yet
+        # "closed_today" - the place keeps weekly hours and is shut today
+        # "closed"       - all seven visits are done; the story has finished
         if place not in confidant_visits:
             return "ready"
         seen = confidant_visits[place]
         if seen >= confidant_visits_total:
             return "closed"
+        if not destination_is_open(place):
+            return "closed_today"
         if seen >= confidant_cap():
             return "paused"
         if seen > 0 and not all_confidants_met():
             return "later"
         return "ready"
+
+    def destination_state_label(place, state):
+        if state == "ready":
+            return "Visit available"
+        if state == "paused":
+            return "No new visit yet"
+        if state == "later":
+            return "Come back another day"
+        if state == "closed_today":
+            return destination_schedule_note(place)
+        return "Story complete"
 
     def hub_state_color(state):
         # The name on the row dims as the row has less to offer, so the list
@@ -103,12 +117,12 @@ init python:
             return "#e6e1d8"
         if state == "later":
             return "#8a8377"
-        if state == "paused":
+        if state == "paused" or state == "closed_today":
             return "#6f6a60"
         return "#413d36"
 
     def hub_bar_color(state):
-        if state == "paused":
+        if state == "paused" or state == "closed_today":
             return "#7a7266"
         if state == "later":
             return "#5c574d"
@@ -143,7 +157,8 @@ style hub_button is default:
 ##
 ## The mark beside a row. The pause is drawn as two solid blocks rather than
 ## typed, because no font in the project can be relied on to carry a pause
-## glyph and a missing one prints as an empty box.
+## glyph and a missing one prints as an empty box. A closed-today mark uses the
+## DejaVu multiplication sign instead, which is available in that font.
 
 screen hub_mark(state):
 
@@ -153,6 +168,13 @@ screen hub_mark(state):
 
         if state == "ready":
             text "( ! )" style "hub_mark_text" color gui.accent_color xalign 0.5 yalign 0.5
+        elif state == "closed_today":
+            text "×":
+                style "hub_mark_text"
+                font "DejaVuSans.ttf"
+                color hub_bar_color(state)
+                xalign 0.5
+                yalign 0.5
         else:
             hbox:
                 xalign 0.5
@@ -182,7 +204,7 @@ screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one des
     $ hub_places = places if places is not None else confidant_order
 
     add Solid("#000000") at notice_backdrop_in
-    use standalone_notice_window(heading, "DESTINATIONS", notice_window_in):
+    use standalone_notice_window(heading, "DESTINATIONS  ·  " + story_date_category(), notice_window_in):
         text blurb style "guide_body" xsize gui.scale(648)
         viewport:
             ypos gui.scale(54)
@@ -194,7 +216,7 @@ screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one des
                 for place in hub_places:
                     $ place_state = destination_state(place)
                     $ place_name = destination_names.get(place, place)
-                    $ place_status = {"ready": "Visit available", "paused": "No new visit yet", "later": "Come back another day", "closed": "Story complete"}[place_state]
+                    $ place_status = destination_state_label(place, place_state)
                     button:
                         action Return(place)
                         sensitive (place_state == "ready")

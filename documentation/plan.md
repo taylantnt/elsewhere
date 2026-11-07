@@ -111,7 +111,7 @@ which is the simulation removing people as the test measures his equilibrium.
       in `notice_windows.rpy`; night-two dream now routes through `dream_router`
       and lands there.
 - [x] 2026-11-06 — Post-train-night expansion: family dinner/kitchen beats,
-      food detail, station-writing lesson, quiz/library seed, weekend menu,
+      food detail, station-writing lesson, quiz/library seed, weekend library steer,
       reflection, sleep, day-two dream placeholder.
 - [x] 2026-11-06 — Dream arrangement: board moved to `dream_archive.rpy`;
       first dream now uses narrative-only flow through `dream_router`;
@@ -135,13 +135,34 @@ which is the simulation removing people as the test measures his equilibrium.
       transitions are set to dissolve in `game/options.rpy`. The main menu theme
       (`config.main_menu_music`) is left to keep playing on the title screen and
       continue into the story.
+- [x] 2026-11-06 — Orson and Hana introductions scripted as the Saturday
+      sequence (`saturday_off` → `library_search` → `reading_club_first` →
+      `lupins_den_first` → `home_sukiyaki`), reached from the day-two dream;
+      night scene extended with Hikari's room visit and exam talk. Debug key
+      `0` jumps to `night_room_visit`.
+- [x] 2026-11-06 — Sunday quiet day (`sunday_morning`: Hikari's practice
+      quiz, WIRE profiles beat) and Monday school day (`monday_lecture`:
+      real quiz as menu questions, afternoon fork) appended after the
+      Saturday sequence.
+- [x] 2026-11-07 — Continuity pass over Friday→Monday: branch-safe quiz
+      reactions (`sunday_q*_correct`, `monday_q*_correct`), mora terminology,
+      WIRE contact counts, quiz-day date language, Sunday handout continuity,
+      and the explicit `night_room_visit` jump. Docs synced to the
+      Saturday→Monday ending boundary.
+- [x] 2026-11-07 — Visible calendar and weekly location hours
+      (`game/calendar.rpy`): Day 1 anchored to Wednesday, April 8; date chip
+      top-left; phone Calendar app with month grid, reached story beats, and
+      confidant hours; `destination_state()` now returns `closed_today`;
+      Ramen Shop closed Wednesday, Photography Club Thursday-only, Reading
+      Club Monday–Saturday. Canonical date table in `documentation/calendar.md`.
+- [x] 2026-11-08 — Calendar app lock follows the first WIRE contact: the
+      phone tile is insensitive until `wire_unlocked` has an entry, and the
+      Calendar screen shows its not-yet-unlocked wording. Docs synced.
 - [ ] Wire `free_afternoon` into a real day loop (needs a day-3+ scene:
       morning → lecture → hub → night). Visit labels
       (`confidant_visit_<place>`) are stubs until the Act 2 scenes are written.
-- [ ] Script Orson and Hana introductions (hub "ready" rows currently fall
-      through to stubs).
-- [ ] Remaining 32 confidant visits (chef 2–7, sim 2–7, orson 1–7, aya 2–7,
-      hana 1–7). Interaction docs are written for all of them.
+- [ ] Script confidant visits 2–7 (chef 2–7, sim 2–7, orson 2–7, aya 2–7,
+      hana 2–7). Interaction docs are written for all of them.
 - [ ] Hikari's recurring run beats 2–7 (user intends to write these).
 - [ ] Act 3 glitch content (treatment "Escalating Mystery" stages 1–5).
 - [ ] Act 4 revelation + endings + epilogue.
@@ -150,8 +171,9 @@ which is the simulation removing people as the test measures his equilibrium.
       (treatment has full scenes; `Levels/` stubs created).
 - [ ] Cultural-shock vignettes (onsen, 2 AM FamilyMart, karaoke, rush-hour
       train, matsuri) — treatment has them, unscripted.
-- [ ] Exam period arc (see `exam_and_courses.md`): seed exam date, quiz
-      mechanic exists (`game/quiz.rpy`), Hana's library errand hangs off it.
+- [ ] Exam period arc beyond the first Monday quiz (see
+      `exam_and_courses.md`): later exams and `run_quiz` sets, with results
+      echoing into Act 3.
 - [ ] Attendance counter (`lates`/`absences`) — rule is narrated only (§5.4
       of game_structure.md).
 - [ ] Class schedule + literature tie-ins (see `exam_and_courses.md`).
@@ -160,8 +182,8 @@ which is the simulation removing people as the test measures his equilibrium.
 
 - [ ] `bg_department_hall`, `bg_ramen`, `bg_ramen_empty`, `bg_photo_club`
       placeholders → real art (drop file in `images/backgrounds/`).
-- [ ] Portraits still missing: `hana.png` (needed before her scenes),
-      orson, fortune teller, side characters.
+- [ ] Portraits still missing: fortune teller, side characters. Hana's and
+      Orson's portraits are in place for their Saturday scenes.
 - [ ] `images/ui/camera_frame.png` referenced by `screen photo_mode`.
 - [ ] `images/messages/notebook_page.png` is a generated placeholder for the
       notebook-cat photo texted on the train — replace with real art when
