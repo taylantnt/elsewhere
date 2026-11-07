@@ -189,7 +189,7 @@ screen phone_app_tile(app_id, label, disabled, action):
         background None
         hover_background Solid("#ffffff0b")
         action action
-        sensitive disabled
+        sensitive (app_id != "calendar" or phone_calendar_unlocked())
 
         fixed:
             xysize (gui.scale(74), gui.scale(94))
