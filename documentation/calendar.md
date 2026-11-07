@@ -51,9 +51,14 @@ story labels.
   app. Before that, the Calendar screen shows `NOT UNLOCKED YET.` with
   `Your first connection opens the calendar.` This mirrors the empty/contact-led
   wording the other phone apps use before they have something to show.
+- **The first-connection gate now covers the contact-led apps.** Messages,
+  Maps, WIRE, and Calendar all wait for the first WIRE contact. Before the first
+  confidant, those tiles are insensitive with grayed-out icons; after the first
+  confidant, they become interactive. Maps are treated as contact-led in this
+  build and open after the first connection.
 - **The HUD date chip** is on screen from the airport, before any confidant has
-  been met. The calendar itself, like the rest of the phone content, waits for
-  the first connection.
+  been met. The HUD is always on; the contact-led phone content waits for the
+  first connection.
 - **Location hub.** `screen location_hub` uses the same date in its eyebrow and
   shows `Closed today` style rows for places that keep weekly hours. A closed
   row cannot be picked.

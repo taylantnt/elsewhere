@@ -177,7 +177,8 @@ screen phone_app_icon(app_id, size=48, disabled=False):
     fixed:
         xysize (gui.scale(size), gui.scale(size))
         if app_id == "wire":
-            add Transform("images/ui/apps/wire_app.png", xysize=(gui.scale(size), gui.scale(size)), fit="contain")
+            $ wire_icon_path = "images/ui/apps/wire_app_disabled.png" if disabled else "images/ui/apps/wire_app.png"
+            add Transform(wire_icon_path, xysize=(gui.scale(size), gui.scale(size)), fit="contain")
         else:
             $ icon_suffix = "_disabled" if disabled else ""
             add Transform("images/ui/apps/%s%s.png" % (app_id, icon_suffix), xysize=(gui.scale(size), gui.scale(size)), fit="contain")
@@ -189,7 +190,7 @@ screen phone_app_tile(app_id, label, disabled, action):
         background None
         hover_background Solid("#ffffff0b")
         action action
-        sensitive (app_id != "calendar" or phone_calendar_unlocked())
+        sensitive disabled
 
         fixed:
             xysize (gui.scale(74), gui.scale(94))
@@ -1156,7 +1157,7 @@ screen phone_apps():
                                 use phone_app_tile(
                                     app_id,
                                     app_name,
-                                    disabled or (app_id == "calendar" and not phone_calendar_unlocked()),
+                                    disabled or (app_id in ("messages", "maps", "wire", "calendar") and not phone_app_unlocked(app_id)),
                                     [SetVariable("phone_apps_page", app_id), With(Dissolve(0.16))],
                                 )
 
@@ -1207,7 +1208,7 @@ screen phone_apps():
                 elif phone_apps_page == "journal":
                     use phone_app_journal_contents
                 elif phone_apps_page == "calendar":
-                    if phone_calendar_unlocked():
+                    if phone_app_unlocked("calendar"):
                         use phone_app_calendar_contents
                     else:
                         use phone_app_calendar_contents_locked

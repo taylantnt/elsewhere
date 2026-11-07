@@ -249,9 +249,12 @@ init python:
     def phone_calendar_has_event(date_value):
         return phone_calendar_event(date_value) is not None
 
-    def phone_calendar_unlocked():
-        # The calendar follows the first connection, the same way WIRE does.
-        return len(store.wire_unlocked) > 0
+    def phone_app_unlocked(app_id):
+        # The contact-led phone content waits for the first connection, just
+        # like the calendar. Maps share the first-connection gate in this build.
+        if app_id in ("messages", "maps", "wire", "calendar"):
+            return len(store.wire_unlocked) > 0
+        return True
 
 
 ## --- THE DATE CHIP ---

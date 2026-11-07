@@ -619,6 +619,9 @@ and one place to say which weekdays a destination is open.
   does not reveal future beats. It is locked until the first contact is in WIRE;
   before that it shows `NOT UNLOCKED YET.` and `Your first connection opens the
   calendar.`
+- **The first-connection gate now covers the contact-led apps.** Messages,
+  Maps, WIRE, and Calendar all wait for the first WIRE contact; before it they
+  are insensitive with grayed-out icons, and after it they become interactive.
 - **Weekly hours are data, not prose.** `destination_schedules` holds
   `open_days` or `closed_days` per place, plus the short `hours` line and the
   `closed_note` reason. Known canon: Ramen Shop is closed Wednesday (Chef's

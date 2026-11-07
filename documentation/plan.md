@@ -158,6 +158,9 @@ which is the simulation removing people as the test measures his equilibrium.
 - [x] 2026-11-08 — Calendar app lock follows the first WIRE contact: the
       phone tile is insensitive until `wire_unlocked` has an entry, and the
       Calendar screen shows its not-yet-unlocked wording. Docs synced.
+- [x] 2026-11-08 — Contact-led phone gate extended: Messages, Maps, WIRE, and
+      Calendar share the first-connection lock with grayed-out icons; WIRE now
+      uses a disabled icon variant. Docs synced.
 - [ ] Wire `free_afternoon` into a real day loop (needs a day-3+ scene:
       morning → lecture → hub → night). Visit labels
       (`confidant_visit_<place>`) are stubs until the Act 2 scenes are written.
