@@ -161,6 +161,12 @@ which is the simulation removing people as the test measures his equilibrium.
 - [x] 2026-11-08 — Contact-led phone gate extended: Messages, Maps, WIRE, and
       Calendar share the first-connection lock with grayed-out icons; WIRE now
       uses a disabled icon variant. Docs synced.
+- [x] 2026-11-08 — Modern phone app icon redesign and tile centering: all ten
+      phone app icons (Messages, Calendar, Journal, Camera, Inventory, WIRE,
+      Stats, Maps, Backup, Settings) rebuilt as rounded-square gradient tiles
+      with centered white glyphs in one design language; grayed-out `_disabled`
+      variants generated for every app including WIRE; launcher tiles now center
+      the icon + label through a centered vbox. Lint passes; docs synced.
 - [ ] Wire `free_afternoon` into a real day loop (needs a day-3+ scene:
       morning → lecture → hub → night). Visit labels
       (`confidant_visit_<place>`) are stubs until the Act 2 scenes are written.

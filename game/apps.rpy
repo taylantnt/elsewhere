@@ -190,24 +190,24 @@ screen phone_app_tile(app_id, label, disabled, action):
         background None
         hover_background Solid("#ffffff0b")
         action action
-        sensitive disabled
+        sensitive (app_id not in ("messages", "maps", "wire", "calendar") or phone_app_unlocked(app_id))
 
         fixed:
             xysize (gui.scale(74), gui.scale(94))
-            fixed:
+            vbox:
                 xalign 0.5
-                ypos gui.scale(3)
-                xysize (gui.scale(54), gui.scale(54))
+                yalign 0.5
+                spacing gui.scale(6)
+
                 use phone_app_icon(app_id, 54, disabled)
 
-            text label:
-                xalign 0.5
-                ypos gui.scale(61)
-                xmaximum gui.scale(72)
-                textalign 0.5
-                size gui.scale(11)
-                color ("#a5afb6" if disabled else "#e4e9ec")
-                outlines []
+                text label:
+                    xalign 0.5
+                    xmaximum gui.scale(72)
+                    textalign 0.5
+                    size gui.scale(11)
+                    color ("#a5afb6" if disabled else "#e4e9ec")
+                    outlines []
 
 
 screen phone_app_wire_contents(selected_contact):

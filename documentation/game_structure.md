@@ -622,6 +622,11 @@ and one place to say which weekdays a destination is open.
 - **The first-connection gate now covers the contact-led apps.** Messages,
   Maps, WIRE, and Calendar all wait for the first WIRE contact; before it they
   are insensitive with grayed-out icons, and after it they become interactive.
+- **The phone icons are one design language.** The launcher tiles draw the same
+  rounded-square gradient tiles with a centered white glyph, and every app has a
+  grayed-out `_disabled` variant used by the first-connection lock and the
+  always-off camera. The tile body centers the icon and label through a
+  centered vbox, so icons no longer drift inside their tile.
 - **Weekly hours are data, not prose.** `destination_schedules` holds
   `open_days` or `closed_days` per place, plus the short `hours` line and the
   `closed_note` reason. Known canon: Ramen Shop is closed Wednesday (Chef's

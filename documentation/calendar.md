@@ -56,6 +56,8 @@ story labels.
   confidant, those tiles are insensitive with grayed-out icons; after the first
   confidant, they become interactive. Maps are treated as contact-led in this
   build and open after the first connection.
+- **The app icons are consistent.** Every phone app icon is the same rounded-square
+  design with a centered white glyph; the contact-led ones go gray when locked.
 - **The HUD date chip** is on screen from the airport, before any confidant has
   been met. The HUD is always on; the contact-led phone content waits for the
   first connection.
