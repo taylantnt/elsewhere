@@ -616,6 +616,7 @@ default memory_names = {
     "father": "Tetsuo",
     "chef": "Chef",
     "sim": "Sim",
+    "aya": "Aya",
     "hana": "Hana",
     "orson": "Orson",
 }
@@ -1946,7 +1947,7 @@ label prologue:
     "I'll need to find a part-time job. I can't expect other people to handle it for me."
     
     # Foreshadowing glitch - the first crack in the simulation
-    # show hospital_flash onlayer overlay at truecenter:
+    # show hospital_flash onlayer overlay at truecenter: (disabled)
     #    alpha 0.0
     #    linear 0.08 alpha 0.6
      #   linear 0.08 alpha 0.0#
@@ -4454,6 +4455,9 @@ init python:
 # edges. The viewport below is the only container that actually clips, so the
 # cover-scaled image lives in an oversized fixed centered inside it, and the
 # scroll position pins the window to the middle of that frame.
+#
+# The face itself is added inline here with an `at memory_card_face_in` so the
+# flip-in animation can run on show; the per-card focus crops the portrait.
 screen memory_card_art(art, focus):
     viewport:
         xysize (198, 118)
@@ -4479,6 +4483,19 @@ transform memory_card_hover:
         easeout 0.10 zoom 1.045
     on idle:
         easeout 0.10 zoom 1.0
+
+
+transform memory_card_face_in:
+    on show:
+        alpha 0.0
+        zoom 0.88
+        easeout 0.28 alpha 1.0 zoom 1.0
+
+
+transform memory_card_back_in:
+    on show:
+        alpha 0.0
+        easeout 0.30 alpha 1.0
 
 screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False):
     modal True
@@ -4586,7 +4603,7 @@ screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False)
                     if highlighted:
                         add Solid(accent + "30") xpos -3 ypos -3 xysize (206, 126)
 
-                    add Solid("#0e1722")
+                    add Solid("#0e1722") at memory_card_back_in
 
                     # One-pixel frame, drawn over the face plate.
                     add Solid("#2a3a48") xysize (200, 1)
@@ -4595,7 +4612,14 @@ screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False)
                     add Solid("#2a3a48") xysize (1, 120) xpos 199
 
                     if face_up:
-                        use memory_card_art(cards[i]["art"], cards[i].get("focus", 0.5))
+                        fixed:
+                            xysize (262, 182)
+                            add cards[i]["art"]:
+                                xysize (206, 126)
+                                fit "cover"
+                                xalign 0.5
+                                yalign cards[i].get("focus", 0.5)
+                            at memory_card_face_in
 
                         if i in matched:
                             add Solid("#04080ecc") xpos 1 ypos 1 xysize (198, 118)
@@ -4866,8 +4890,10 @@ label first_night_memory:
 
         if day_memory_cards[selected_pair[0]]["pair"] == day_memory_cards[selected_pair[1]]["pair"]:
             $ day_memory_matched.extend(selected_pair)
+            $ renpy.sound.play("audio/SFX/memory_restore.wav", channel="sfx")
         else:
             $ day_memory_misses += 1
+            $ renpy.sound.play("audio/SFX/memory_deviation.wav", channel="sfx")
             call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, selected_pair, False)
 
     if len(day_memory_matched) == len(day_memory_cards):
@@ -5693,22 +5719,6 @@ label free_afternoon:
 
     # None, or anything the hub should not have offered: the afternoon is his
     # to spend elsewhere, so the day simply continues.
-    return
-
-label confidant_visit_sim:
-    # TODO Act 2: Sim visit 2+ — see documentation/Locations/Photography Club - Sim/
-    return
-
-label confidant_visit_orson:
-    # TODO Act 2: Orson visit 2+ — see documentation/Locations/Bar - Orson/ (visit 1 was lupins_den_first)
-    return
-
-label confidant_visit_chef:
-    # TODO Act 2: Chef visit 2+ — see documentation/Locations/Ramen Shop - Chef/
-    return
-
-label confidant_visit_aya:
-    # TODO Act 2: Aya visit 2+ — see documentation/Locations/Maid Cafe - Aya/
     return
 
 label confidant_visit_hana:
