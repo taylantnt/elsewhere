@@ -4449,255 +4449,465 @@ init python:
         return cards
 
 
-# A memory card is a photo card: the art cover-fills the whole face and a dark
-# scrim carries the caption. fit "cover" alone only scales the image up — it
-# never clips the overflow, which is what let portraits spill over the card
-# edges. The viewport below is the only container that actually clips, so the
-# cover-scaled image lives in an oversized fixed centered inside it, and the
-# scroll position pins the window to the middle of that frame.
+# ---------------------------------------------------------------------------
+# THE FIRST-NIGHT MEMORY SPREAD
 #
-# The face itself is added inline here with an `at memory_card_face_in` so the
-# flip-in animation can run on show; the per-card focus crops the portrait.
-screen memory_card_art(art, focus):
-    viewport:
-        xysize (198, 118)
-        xpos 1
-        ypos 1
-        xinitial 0.5
-        yinitial 0.5
-        mousewheel False
-        draggable False
-        pagekeys False
-        scrollbars None
-        fixed:
-            xysize (262, 182)
-            add art:
-                xysize (206, 126)
-                fit "cover"
-                xalign 0.5
-                yalign focus
+# The old board was a 4x4 grid of landscape photo tiles. This is the same
+# game, rebuilt as a tarot spread: sixteen portrait cards on a velvet table,
+# parchment frames, an engraved back, and the day's own photographs as faces.
+#
+# The screen is driven entirely by the caller. `matched`, `misses` and
+# `reveal_pair` are passed in each turn; the only local state is which card is
+# waiting for its twin. The opening preview is a separate call to this screen:
+# it deals the spread, holds the faces for six seconds, turns them over, and
+# returns. The play screen that follows has no entrance animation, so the deal
+# and the turn-over happen exactly once.
+# ---------------------------------------------------------------------------
+
+image memory_table = "images/ui/memory/memory_table.png"
+image memory_card_back = "images/ui/memory/memory_card_back.png"
+image memory_card_base = "images/ui/memory/memory_card_base.png"
+image memory_card_frame = "images/ui/memory/memory_card_frame.png"
+image memory_glow_gold = "images/ui/memory/memory_glow_gold.png"
+image memory_glow_red = "images/ui/memory/memory_glow_red.png"
+image memory_spark = "images/ui/memory/memory_spark.png"
+image memory_win_rays = "images/ui/memory/memory_win_rays.png"
+image memory_lose_vignette = "images/ui/memory/memory_lose_vignette.png"
+
+
+transform memory_card_rest:
+    xoffset 0
+
+
+transform memory_card_deal(delay=0.0):
+    anchor (0.5, 0.5)
+    pos (0.5, 0.5)
+    alpha 0.0
+    yoffset 26
+    zoom 0.90
+    pause delay
+    easeout 0.44 alpha 1.0 yoffset 0 zoom 1.0
+
+
+transform memory_card_back_in(delay=0.0):
+    alpha 0.0
+    pause delay
+    easeout 0.30 alpha 1.0
+
 
 transform memory_card_hover:
     anchor (0.5, 0.5)
+    pos (0.5, 0.5)
     on hover:
-        easeout 0.10 zoom 1.045
+        easeout 0.12 zoom 1.045 yoffset -3
     on idle:
-        easeout 0.10 zoom 1.0
+        easeout 0.16 zoom 1.0 yoffset 0
 
 
 transform memory_card_face_in:
+    anchor (0.5, 0.5)
+    pos (0.5, 0.5)
     on show:
         alpha 0.0
-        zoom 0.88
-        easeout 0.28 alpha 1.0 zoom 1.0
+        zoom 0.94
+        easeout 0.22 alpha 1.0 zoom 1.0
 
 
-transform memory_card_back_in:
+transform memory_card_miss_shake:
     on show:
-        alpha 0.0
-        easeout 0.30 alpha 1.0
+        xoffset 0
+        linear 0.045 xoffset -7
+        linear 0.055 xoffset 6
+        linear 0.055 xoffset -4
+        linear 0.055 xoffset 3
+        linear 0.06 xoffset 0
 
-screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False):
+
+transform memory_match_spark:
+    alpha 0.0
+    zoom 0.2
+    easeout 0.18 alpha 1.0 zoom 1.0
+    easeout 0.45 alpha 0.0 zoom 1.8
+
+
+transform memory_preview_drain:
+    xanchor 0.0
+    xpos 0
+    xzoom 1.0
+    linear 6.0 xzoom 0.0
+
+
+transform memory_banner_in:
+    alpha 0.0
+    yoffset 8
+    easeout 0.18 alpha 1.0 yoffset 0
+
+
+transform memory_pulse:
+    alpha 0.55
+    easeout 0.75 alpha 1.0
+    easeout 0.75 alpha 0.55
+    repeat
+
+
+transform memory_rays_in:
+    alpha 0.0
+    rotate 0
+    easeout 1.2 alpha 0.95
+    linear 20.0 rotate 60
+
+
+transform memory_lose_shake:
+    xoffset 0
+    linear 0.05 xoffset -5
+    linear 0.07 xoffset 5
+    linear 0.07 xoffset -3
+    linear 0.07 xoffset 3
+    linear 0.07 xoffset 0
+
+
+screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False, reveal_kind=None):
     modal True
     zorder 100
     default first_selection = None
     default previewing = preview
 
     $ pairs_found = len(matched) // 2
+    $ board_w = 8 * 128 + 7 * 12
 
-    add Solid("#05080d")
-    add Solid("#1a2634") xpos 198 ypos 104 xysize (884, 580)
-    add Solid("#0a131d") xpos 199 ypos 105 xysize (882, 578)
+    # The timers live before every conditional child so their position in the
+    # screen tree never changes. The preview holds the faces for six seconds,
+    # then turns them over and returns; the reveal returns after its beat.
+    if preview:
+        timer 6.0 action SetScreenVariable("previewing", False)
+        timer 6.75 action Return(True)
+    elif reveal_kind:
+        timer (1.05 if reveal_kind == "match" else 1.35) action Return(True)
 
+    add "memory_table"
+
+    # ---------------------------------------------------------------- title --
     vbox:
         xalign 0.5
-        ypos 28
-        spacing 6
+        ypos 18
+        spacing 2
 
-        text "FIRST NIGHT / MEMORY":
+        text "FIRST NIGHT  ·  MEMORY":
             xalign 0.5
-            size 11
-            kerning 4
-            color "#7d93a6"
-            outlines []
+            size 10
+            kerning 5
+            color "#b99b5c"
+            outlines [(1, "#050a07", 0, 0)]
 
         text "KEEP THE DAY TOGETHER":
             xalign 0.5
-            size 30
-            bold True
-            kerning 2
-            color "#d7e8f0"
-            outlines []
+            size 36
+            font "fonts/KiwiMaru-Medium.ttf"
+            kerning 3
+            color "#efe4c8"
+            outlines [(2, "#0a0f0c", 0, 0)]
 
-        text ("Memorize the board. It turns over in six seconds." if previewing
-              else "Find all eight pairs. Three mismatches and the day fades."):
+        fixed:
             xalign 0.5
-            size 13
-            color "#8fa2b1"
-            outlines []
+            xysize (360, 12)
+            add Solid("#7a5f27") xpos 0 ypos 5 xysize (142, 1)
+            add Solid("#7a5f27") xpos 218 ypos 5 xysize (142, 1)
+            add Transform(Solid("#e3c887"), xysize=(7, 7), rotate=45) xpos 177 ypos 2
 
+        text ("Memorize the spread. It turns over in six seconds." if preview
+              else "Find all eight pairs. Three wrong turns and the day fades."):
+            xalign 0.5
+            size 12
+            color "#a9b7a4"
+            outlines [(1, "#050a07", 0, 0)]
+
+    # ------------------------------------------------------------------ hud --
     hbox:
         xalign 0.5
-        ypos 122
-        spacing 26
+        ypos 120
+        spacing 28
 
         hbox:
-            spacing 6
+            spacing 7
             text "MEMORIES":
-                size 10
-                kerning 2
-                color "#7d93a6"
-                outlines []
+                size 9
+                kerning 3
+                color "#9b8a63"
                 yalign 0.5
             for n in range(8):
-                add Transform(Solid("#69c9b4" if n < pairs_found else "#223140"), xysize=(8, 8), rotate=45)
+                add Transform(Solid("#d9b96a" if n < pairs_found else "#2a3328"), xysize=(7, 7), rotate=45) yalign 0.5
             text "[pairs_found] / 8":
-                size 11
-                color "#c6d0d7"
-                outlines []
+                size 10
+                color "#e7dcc0"
                 yalign 0.5
+
+        add Solid("#4a3d22") xysize (1, 16) yalign 0.5
 
         hbox:
-            spacing 6
+            spacing 7
             text "MISMATCHES":
-                size 10
-                kerning 2
-                color "#7d93a6"
-                outlines []
+                size 9
+                kerning 3
+                color "#9b8a63"
                 yalign 0.5
             for mark in range(3):
-                add Transform(Solid("#d97b7b" if mark < misses else "#223140"), xysize=(8, 8), rotate=45)
+                add Transform(Solid("#b8503f" if mark < misses else "#2a3328"), xysize=(8, 8), rotate=45) yalign 0.5
 
-    grid 4 4:
+    # ---------------------------------------------------------------- board --
+    grid 8 2:
         xalign 0.5
-        ypos 152
-        spacing 10
+        ypos 158
+        xspacing 12
+        yspacing 14
 
         for i in range(len(cards)):
             $ face_up = previewing or i in matched or i == first_selection or (reveal_pair and i in reveal_pair)
-            $ highlighted = (not previewing) and (i == first_selection or (reveal_pair and i in reveal_pair))
-            $ accent = cards[i]["accent"]
+            $ is_reveal = bool(reveal_pair and i in reveal_pair)
+            $ is_match = bool(is_reveal and reveal_kind == "match")
+            $ is_miss = bool(is_reveal and reveal_kind == "miss")
+            $ delay = (i % 8) * 0.028 + (i // 8) * 0.10
+            $ fresh_face = bool((i == first_selection) or is_reveal)
+            $ card_ats = [memory_card_deal(delay)] if preview else [memory_card_rest]
+            $ back_ats = [memory_card_back_in(delay)] if (preview and not previewing) else [memory_card_rest]
+            if is_miss:
+                $ card_ats.append(memory_card_miss_shake)
 
             button:
-                xysize (200, 120)
-                background Solid("#0d1620")
-                hover_background Solid("#14202d")
-                insensitive_background Solid("#0b121a")
-                sensitive (not previewing and not reveal_pair and i not in matched and i != first_selection)
+                xysize (128, 192)
+                background None
+                hover_background None
+                sensitive (not preview and not reveal_pair and i not in matched and i != first_selection)
                 at memory_card_hover
-
-                if first_selection is None:
-                    action [
-                        Play("sfx", "audio/SFX/type_click.wav"),
-                        SetScreenVariable("first_selection", i),
-                    ]
-                else:
-                    action [
-                        Play("sfx", "audio/SFX/type_click.wav"),
-                        Return((first_selection, i)),
-                    ]
+                action [
+                    Play("sfx", "audio/SFX/type_click.wav"),
+                    SetScreenVariable("first_selection", i) if first_selection is None else Return((first_selection, i)),
+                ]
 
                 fixed:
-                    xysize (200, 120)
+                    xysize (128, 192)
+                    at card_ats
 
-                    if highlighted:
-                        add Solid(accent + "30") xpos -3 ypos -3 xysize (206, 126)
+                    if i in matched and not is_reveal:
+                        add "memory_glow_gold":
+                            xpos -18
+                            ypos -18
+                            xysize (164, 228)
+                            alpha 0.55
+                    elif is_match:
+                        add "memory_glow_gold":
+                            xpos -18
+                            ypos -18
+                            xysize (164, 228)
+                            at memory_match_spark
+                    elif is_miss:
+                        add "memory_glow_red":
+                            xpos -18
+                            ypos -18
+                            xysize (164, 228)
+                    elif i == first_selection:
+                        add "memory_glow_gold":
+                            xpos -18
+                            ypos -18
+                            xysize (164, 228)
 
-                    add Solid("#0e1722") at memory_card_back_in
-
-                    # One-pixel frame, drawn over the face plate.
-                    add Solid("#2a3a48") xysize (200, 1)
-                    add Solid("#2a3a48") xysize (200, 1) ypos 119
-                    add Solid("#2a3a48") xysize (1, 120)
-                    add Solid("#2a3a48") xysize (1, 120) xpos 199
+                    add "memory_card_base":
+                        xysize (128, 192)
 
                     if face_up:
                         fixed:
-                            xysize (262, 182)
-                            add cards[i]["art"]:
-                                xysize (206, 126)
-                                fit "cover"
-                                xalign 0.5
-                                yalign cards[i].get("focus", 0.5)
-                            at memory_card_face_in
+                            xysize (128, 192)
+                            at (memory_card_face_in if fresh_face else memory_card_rest)
 
-                        if i in matched:
-                            add Solid("#04080ecc") xpos 1 ypos 1 xysize (198, 118)
+                            # The viewport is the only thing that clips. The
+                            # inner fixed is larger than the window so the
+                            # photograph can be cropped toward a face.
+                            viewport:
+                                xysize (110, 131)
+                                xpos 9
+                                ypos 9
+                                xinitial 0.5
+                                yinitial cards[i].get("focus", 0.5)
+                                mousewheel False
+                                draggable False
+                                pagekeys False
+                                scrollbars None
+                                fixed:
+                                    xysize (150, 178)
+                                    add cards[i]["art"]:
+                                        xysize (120, 146)
+                                        fit "cover"
+                                        xalign 0.5
+                                        yalign cards[i].get("focus", 0.5)
 
-                        add Solid("#050a12b8") xpos 1 ypos 80 xysize (198, 39)
-                        add Solid("#050a1240") xpos 1 ypos 72 xysize (198, 8)
+                            add "memory_card_frame":
+                                xysize (128, 192)
 
-                        add Solid(accent + "d9") xpos 1 ypos 1 xysize (3, 118)
+                            if i in matched:
+                                add Solid("#c9a24a16"):
+                                    xpos 9
+                                    ypos 9
+                                    xysize (110, 131)
 
-                        if i in matched:
                             fixed:
-                                xpos 118
-                                ypos 5
-                                xysize (76, 18)
-                                add Solid("#0e2f24e0")
-                                text "REMEMBERED":
+                                xpos 9
+                                ypos 141
+                                xysize (110, 41)
+                                text cards[i]["title"]:
                                     xalign 0.5
                                     yalign 0.5
-                                    size 8
-                                    kerning 1
-                                    color "#a9ecd0"
-                                    outlines []
+                                    xsize 110
+                                    text_align 0.5
+                                    size 10
+                                    line_spacing 0
+                                    font "fonts/KiwiMaru-Medium.ttf"
+                                    color "#e7dcc0"
+                                    outlines [(1, "#060b08", 0, 0)]
 
-                        text cards[i]["title"]:
-                            xpos 12
-                            ypos 84
-                            xmaximum 178
-                            ymaximum 34
-                            size 13
-                            color "#eef4f7"
-                            outlines [(1, "#050a12", 0, 0)]
+                            if i in matched:
+                                add "memory_spark":
+                                    xpos 104
+                                    ypos 8
+                                    xysize (16, 16)
+                                    alpha 0.9
+
+                            if is_match:
+                                add "memory_spark":
+                                    xalign 0.5
+                                    yalign 0.5
+                                    xysize (52, 52)
+                                    at memory_match_spark
                     else:
-                        add Solid("#0d1620") xpos 1 ypos 1 xysize (198, 118)
+                        add "memory_card_back":
+                            xysize (128, 192)
+                            at back_ats
 
-                        add Solid(accent + "55") xpos 1 ypos 1 xysize (3, 118)
+    # -------------------------------------------------------- footer / time --
+    if preview:
+        fixed:
+            xalign 0.5
+            ypos 568
+            xysize (board_w, 4)
 
-                        fixed:
-                            xalign 0.5
-                            yalign 0.42
-                            xysize (200, 60)
-                            vbox:
-                                xalign 0.5
-                                spacing 7
-                                add Transform(Solid(accent + "aa"), xysize=(10, 10), rotate=45)
-                                text "ELSEWHERE":
-                                    xalign 0.5
-                                    size 14
-                                    kerning 3
-                                    color "#b9d1d8"
-                                    outlines []
-                                text "DAY 01  /  MEMORY":
-                                    xalign 0.5
-                                    size 8
-                                    kerning 2
-                                    color "#5d7180"
-                                    outlines []
+            add Solid("#241f12") xysize (board_w, 2) ypos 1
+            add Solid("#d9b96a") xysize (board_w, 2) ypos 1 at memory_preview_drain
+            add Transform(Solid("#e3c887"), xysize=(6, 6), rotate=45) xpos -7 ypos -1
+            add Transform(Solid("#e3c887"), xysize=(6, 6), rotate=45) xpos board_w ypos -1
 
-    if previewing:
-        timer 6.0 action SetScreenVariable("previewing", False)
-    elif reveal_pair:
-        timer 0.85 action Return(None)
+        text ("MEMORIZE THE SPREAD" if previewing else "THE DAY TURNS OVER"):
+            xalign 0.5
+            ypos 580
+            size 9
+            kerning 4
+            color "#b99b5c"
+            at memory_pulse
 
-    hbox:
-        xalign 0.5
-        ypos 676
-        spacing 14
+    elif reveal_kind:
+        fixed:
+            xalign 0.5
+            ypos 574
+            xysize (320, 30)
+            at memory_banner_in
 
-        text ("MEMORIZE THE BOARD" if previewing else "MATCH THE MOMENTS"):
-            size 10
-            kerning 2
-            color "#7b8b98"
-            outlines []
+            add Solid("#0a120dcc")
+            add Solid("#c9a24a" if reveal_kind == "match" else "#8e3434") xysize (320, 1)
+            add Solid("#c9a24a" if reveal_kind == "match" else "#8e3434") xysize (320, 1) ypos 29
 
-        text ("The cards will turn over in a few seconds." if previewing else "The day is already starting to blur."):
-            size 12
-            color "#a7b5c1"
-            outlines []
+            text ("REMEMBERED" if reveal_kind == "match" else "THE DAY SLIPS"):
+                xalign 0.5
+                yalign 0.5
+                size 12
+                kerning 5
+                color ("#f0d79a" if reveal_kind == "match" else "#e0796a")
 
+    else:
+        hbox:
+            xalign 0.5
+            ypos 580
+            spacing 10
+
+            text "MATCH THE MOMENTS":
+                size 9
+                kerning 3
+                color "#b99b5c"
+
+            text "·":
+                size 10
+                color "#6b6046"
+
+            text "Click a card, then its twin. The day is already starting to blur.":
+                size 11
+                color "#a9b7a4"
+
+
+screen memory_result(won):
+    modal True
+    zorder 120
+
+    add "memory_table"
+    add Solid("#05080688")
+
+    if won:
+        add "memory_win_rays":
+            xalign 0.5
+            yalign 0.42
+            xysize (1500, 1500)
+            at memory_rays_in
+
+        vbox:
+            xalign 0.5
+            yalign 0.40
+            spacing 6
+            at memory_banner_in
+
+            text "THE DAY HOLDS":
+                xalign 0.5
+                size 42
+                font "fonts/KiwiMaru-Medium.ttf"
+                kerning 4
+                color "#f4e6bd"
+                outlines [(2, "#0a0f0c", 0, 0)]
+
+            fixed:
+                xalign 0.5
+                xysize (300, 12)
+                add Solid("#7a5f27") xpos 0 ypos 5 xysize (116, 1)
+                add Solid("#7a5f27") xpos 184 ypos 5 xysize (116, 1)
+                add Transform(Solid("#e3c887"), xysize=(7, 7), rotate=45) xpos 147 ypos 2
+
+            text "Every moment found its place.":
+                xalign 0.5
+                size 13
+                color "#c9d4bd"
+
+        for k in range(8):
+            add "memory_spark":
+                xpos (640 + (k - 3.5) * 120)
+                ypos (250 + (k % 3) * 120)
+                xysize (18, 18)
+                alpha 0.8
+    else:
+        add "memory_lose_vignette"
+
+        vbox:
+            xalign 0.5
+            yalign 0.42
+            spacing 6
+            at memory_lose_shake
+
+            text "THE DAY FADES":
+                xalign 0.5
+                size 38
+                font "fonts/KiwiMaru-Medium.ttf"
+                kerning 4
+                color "#e0a49a"
+                outlines [(2, "#0a0f0c", 0, 0)]
+
+            text "Three moments slipped out of reach.":
+                xalign 0.5
+                size 13
+                color "#b9a9a0"
+
+    timer 2.6 action Return(True)
 
 label first_evening_dinner:
 
@@ -4881,22 +5091,29 @@ label first_night_memory:
     $ renpy.random.shuffle(day_memory_cards)
     $ day_memory_matched = []
     $ day_memory_misses = 0
-    $ day_memory_preview = True
+
+    # The preview is its own screen call. It deals the spread, holds all faces
+    # up for six seconds, then returns so the play screen starts clean.
+    call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, None, True)
 
     while len(day_memory_matched) < len(day_memory_cards) and day_memory_misses < 3:
-        call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, None, day_memory_preview)
-        $ day_memory_preview = False
+        call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, None, False)
         $ selected_pair = _return
+        $ day_memory_is_match = day_memory_cards[selected_pair[0]]["pair"] == day_memory_cards[selected_pair[1]]["pair"]
 
-        if day_memory_cards[selected_pair[0]]["pair"] == day_memory_cards[selected_pair[1]]["pair"]:
+        if day_memory_is_match:
             $ day_memory_matched.extend(selected_pair)
             $ renpy.sound.play("audio/SFX/memory_restore.wav", channel="sfx")
+            call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, selected_pair, False, "match")
         else:
             $ day_memory_misses += 1
             $ renpy.sound.play("audio/SFX/memory_deviation.wav", channel="sfx")
-            call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, selected_pair, False)
+            call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, selected_pair, False, "miss")
 
-    if len(day_memory_matched) == len(day_memory_cards):
+    $ day_memory_won = len(day_memory_matched) == len(day_memory_cards)
+    call screen memory_result(day_memory_won)
+
+    if day_memory_won:
         "The last two pictures settle into place. For a moment, the whole day makes sense in order."
         $ reward_attributes_once("first_night_memory_pairs", [("insight", "nudge")], show="auto")
     else:
