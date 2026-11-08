@@ -5721,10 +5721,6 @@ label free_afternoon:
     # to spend elsewhere, so the day simply continues.
     return
 
-label confidant_visit_hana:
-    # TODO Act 2: Hana visit 2+ — see documentation/Locations/Reading Club - Hana/
-    return
-
 
 ################################################################################
 ## THE WEEKEND: LIBRARY, HANA, AND LUPIN'S DEN
