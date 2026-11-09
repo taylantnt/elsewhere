@@ -30,7 +30,31 @@ Hikari's arc is not a numbered 1–7 chain like the location characters. It is a
 | Warmth | 0–2 | She plays the host sister perfectly: warm, teasing, helpful. She translates for the protagonist at the Ramen Shop. |
 | Unease | 3–4 | She starts noticing things — a repeated face, a sentence she has said before, a memory that does not line up. She tests the protagonist with small questions. |
 | Small truths | 5–6 | She begins to sneak the protagonist information: a name, a date, a detail that could not exist inside the world. She never calls it a simulation. |
-| The Threshold | 7+ | She reveals what she is. She offers to guide the protagonist toward reality — *and expects to be refused, or to be hated for it.* |
+| The Threshold | 7+ | She is ready to reveal what she is. The reveal itself belongs to Act 3/4; the seventh river run ends on the question that opens it. |
+
+## The River Run (Act 2)
+
+The parallel arc's Act 2 spine is the recurring river run. The first run is the
+Day 2 afternoon fork (`after_school_run` in `script.rpy`); visits 2–7 live in
+`game/hikari.rpy` and are routed by `confidant_visit_hikari` from the hub's
+"Walk home with Hikari" row. `hikari_visits` counts the runs and feeds the WIRE
+progress meter; `sister_affection` carries the relationship. The seven beats:
+
+| Run | Label | Beat | What it costs her |
+| :--- | :--- | :--- | :--- |
+| 1 | `after_school_run` | He cannot keep up; she invites him anyway. | She lets someone see the thing she does for herself. |
+| 2 | `hikari_visit_02` | The route from memory. | She admits she needs the run, not just likes it. |
+| 3 | `hikari_visit_03` | He keeps up for ten minutes. | He sees her face when she is not performing. |
+| 4 | `hikari_visit_04` | The night neither of them says anything. | She admits she does not know where the performance ends. |
+| 5 | `hikari_visit_05` | The rain, the amado, the street question. | She says the first true thing about the house. |
+| 6 | `hikari_visit_06` | The part of the river she keeps for herself. | She admits it is not the house she is running from. |
+| 7 | `hikari_visit_07` | The last run; she asks if they have done this before. | She asks him to remember the promise. |
+
+The seventh run sets `hikari_run_finished = True`. The run chain does not
+resolve the Threshold; it ends on the question. After visit 7 the hub row falls
+back to the ordinary walk home (`afternoon_walk_hikari`), so she remains
+available without the run repeating. Only the second run is reachable in the
+current Day 7 build; visits 3–7 are wired for later hub days.
 
 ## How Her Arc Ends
 Her arc is the engine of the endgame, so it does not "close" — it forks:

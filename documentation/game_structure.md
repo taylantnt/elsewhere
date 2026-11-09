@@ -282,10 +282,10 @@ of Act 2.
   home with Hikari, and she does not go into the house: she walks past it and
   changes her shoes, because the run is her daily thing and he has been handed the
   one evening she has not accounted for. Three menus: the walk home, the moment
-  she invites him, and the drink they share afterwards. Sets `first_run_started`,
-  awards the Nerve, and logs a memory against Hikari. Written as far as the first
-  night; the seven beats it opens are listed above the label and **are not
-  written** (§7).
+  she invites him, and the drink they share afterwards. Sets `first_run_started`
+  and `hikari_visits = 1`, awards the Nerve, and logs a memory against Hikari.
+  The other six runs are written in `game/hikari.rpy` and routed through
+  `confidant_visit_hikari` (§5.7); visit 2 is reachable from the Day 7 hub.
 - `after_school_photo_club` — **Sim is not a student.** He is the photographer who
   comes into the university twice a week to guide **Circle**, the photography club,
   and he frames it as something he is *allowed* to do rather than something he does
@@ -439,18 +439,23 @@ ends on `jump tuesday_morning` instead of falling into the end-of-build card.
 - `free_afternoon` → `tuesday_lecture`'s caller — the hub. `free_afternoon`
   now passes the full row list — `confidant_order` plus `walk_hikari` and
   `walk_alone` — to `screen location_hub`, records the pick in
-  `last_afternoon_place`, and routes `walk_hikari` / `walk_alone` to the new
-  `afternoon_walk_*` labels. The evening reads the picked row (or Head Home)
-  when it comes back home.
+  `last_afternoon_place`, and routes `walk_hikari` through
+  `confidant_visit_hikari` (the next river run, or the ordinary walk once the
+  chain is done) and `walk_alone` to `afternoon_walk_alone`. The evening reads
+  the picked row (or Head Home) when it comes back home, and the Hikari branch
+  uses `last_afternoon_was_run` to tell a run from the ordinary walk.
 - Evening / night — dinner, the study desk, and the first quiet night of the
   week. Three night options, one per attribute at micro: reading the kigo list
   aloud (Insight), asking about Hikari's seminar (Grace), admitting fear of the
   midterm (Nerve). The night ends on the dream beat and into `end_of_build`.
 
-The two walks are new generic scenes rather than new confidant arcs: they are
-always open rows, they pay once per answered question, and each pays one
-attribute per option at micro size. `walk_hikari` is Grace / Insight / Nerve,
-`walk_alone` is Insight / Grace / Nerve — the same three-attribute spread.
+The two walks are generic scenes rather than confidant arcs: they are always
+open rows, they pay once per answered question, and each pays one attribute per
+option at micro size. `walk_hikari` is Grace / Insight / Nerve, `walk_alone` is
+Insight / Grace / Nerve — the same three-attribute spread. On a day when
+Hikari's run chain has a run waiting, `walk_hikari` plays that run instead
+(§5.7); the generic walk is the fallback for a skipped first run or a finished
+chain.
 
 ---
 
@@ -590,6 +595,28 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   (`tuesday_morning` → `tuesday_lecture` → `free_afternoon`); every later
   hub day is this shape with different content.
 
+#### Hikari's run chain (inside the hub)
+
+Hikari is the one hub row that is not a confidant chain. The row is
+`walk_hikari`, and `free_afternoon` sends it to `confidant_visit_hikari`
+(`game/hikari.rpy`) instead of straight to a walk label. That dispatcher reads
+`hikari_visits`:
+
+- `0` — the first run was skipped on Day 2, so the row falls back to the
+  ordinary walk home (`afternoon_walk_hikari`);
+- `1`–`6` — the next run (`hikari_visit_02` … `hikari_visit_07`);
+- `7` — the run chain is complete and the row falls back to the ordinary walk.
+
+Every run sets `last_afternoon_was_run = True` while it plays; `free_afternoon`
+clears it before every row, and `afternoon_walk_hikari` clears it when the
+fallback walk is taken. The Day 7 dinner reads it to distinguish "the river
+path" from "the long way home." Visit 7 sets `hikari_run_finished = True` for
+the Act 3/4 threshold. The run chain is tracked by `hikari_visits`, not
+`confidant_visits`, so it does not affect the confidant caps or the "all
+confidants met" gate; WIRE reads `hikari_visits` through its contact entry.
+Only visit 2 is reachable in the current Day 7 build; visits 3–7 are written
+and waiting for later hub days.
+
 ### 5.8 Messages — texting, threads, and the buzz
 `game/messages.rpy`. WIRE is the contacts book; Messages is the conversation.
 Threads are keyed by the same contact ids, so unlocking somebody in WIRE is
@@ -703,7 +730,10 @@ and one place to say which weekdays a destination is open.
 | `show_attribute_hud` | `airport_arrival` | Whether the three labeled attribute meters are on screen |
 | `money_hint_shown` / `pamphlet_hint_shown` / `after_school_hint_shown` | first use of each | One-time tutorial cards |
 | `first_day_activity` | the first-afternoon fork in `first_class` | Which shape of afternoon he picked (`walk_alone` / `walk_hikari` / `photo_club`); read immediately, never shown |
-| `first_run_started` | `after_school_run` | The first river run happened. The run is not a confidant slot yet, so this is the only record of it |
+| `first_run_started` | `after_school_run` | The first river run happened. Kept alongside `hikari_visits` for old saves and for scenes that only need the boolean |
+| `hikari_visits` | `after_school_run` (first run) and `hikari_visit_02`–`07` (the rest) | Hikari's own run count — feeds her WIRE progress ticks and routes `confidant_visit_hikari`; separate from the confidant table |
+| `hikari_run_finished` | `hikari_visit_07` | True once the seventh river run has happened; the run arc is complete and the Act 3/4 threshold is next |
+| `last_afternoon_was_run` | `free_afternoon` (cleared), `hikari_visit_02`–`07` (set) | True when the hub row became a river run; the Day 7 dinner uses it to tell a run from the ordinary walk |
 | `dream_key` | `start`, first-night sleep, day-two night | Which dream the router selects: `first_night`, `day_two_cellular_maid`, `put_the_day_back`, a future activity key, or `generic` |
 | `quiz_announced` | `second_school_day` haiku lecture | The professor planted the short quiz; Hikari turns it into the library seed |
 | `library_errand_available` | day-two night seed, cleared in `reading_club_first` | The library errand is seeded Friday night and consumed by the Saturday scene |
@@ -714,7 +744,6 @@ and one place to say which weekdays a destination is open.
 | `phone_calendar_selected` | the phone Calendar date grid | Which date the calendar's detail pane is showing; `None` means today (or the first of a browsed month) |
 | `phone_calendar_month_offset` | the phone Calendar arrows | How many months the grid is from the current story month |
 | `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the Saturday scenes (`hana`, `orson`) | How many of the seven visits each person has had (Chef's runs to eight — `confidant_visit_totals` — so his eighth can be the closed shop); `destination_state()` and WIRE read it |
-| `hikari_visits` | `after_school_run` | Hikari's own visit count — feeds her WIRE progress ticks, separate from the confidant table |
 | `declined_dinner` | `first_evening_dinner` (walk-alone route only) | He told the family he was still full from ramen; `second_morning` breakfast reads it so the two days agree |
 | `sister_affection`, `father_affection`, `sim_affection`, `chef_affection`, `aya_affection`, `hana_affection`, `orson_affection` | The relevant first-visit/run/dinner/night beats; `add_affection()` in `script.rpy` | Relationship trust, written by the story and read through the affection helpers (`affection_level`, thresholds). Every confidant has a first-visit increment; Hikari and Tetsuo also gain from selected family/run beats. |
 | `cellular_data_active` | `second_school_day` (Hamada Denki) | WIRE can sync off-Wi-Fi; gates `phone_map_is_unlocked("akihabara")` |
@@ -750,12 +779,11 @@ that does not exist.
   of the five has a progression summary and seven written interactions under
   `documentation/Locations/`, and none of the remaining visits is in the
   script — visits 2–7 for all five.
-- **The seven-visit run with Hikari.** `after_school_run` (§4.6) is written as far
-  as the first night and sets `first_run_started`. The run becomes a recurring
-  after-school activity rather than a seven-visit chain, and the shape of the
-  seven beats is written as comments above the first one. **Nothing else in the
-  documentation describes the run.** It is new content, not something waiting to
-  be wired up, and the user has said they intend to write it themselves.
+- **The later hub days that reach Hikari's remaining runs.** Visits 3–7 are
+  written in `game/hikari.rpy` and wired through `confidant_visit_hikari`, but
+  the current build ends on Day 7, so only visit 2 is reachable. The repeating
+  day loop that would carry the player through the rest of Act 2 is the missing
+  piece, not the run scenes themselves.
 - **The photography club's camera.** The first visit is built around arriving with
   nothing to shoot (§4.6). The seven-interaction outline assumes a "beginner's
   camera" by the third visit, so the camera still has to be acquired somewhere

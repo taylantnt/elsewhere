@@ -68,6 +68,14 @@ which is the simulation removing people as the test measures his equilibrium.
 
 ### Code
 
+- [x] 2026-11-09 — Hikari's recurring run chain written: visits 2–7 live in
+      `game/hikari.rpy`, routed by `confidant_visit_hikari` from the hub's
+      `walk_hikari` row. Each run has two 3-option menus, one attribute per
+      option at micro; close rewards rotate Grace / Insight / Nerve and the
+      final run closes at Insight small (0.5). Visit 7 sets
+      `hikari_run_finished = True`; `last_afternoon_was_run` lets the Day 7
+      dinner tell a run from the ordinary walk. Only visit 2 is reachable in
+      the current build; 3–7 are wired for later hub days. Lint passes.
 - [x] 2026-11-09 — Day 7 (Tuesday, April 14) written end to end:
       `tuesday_morning` (breakfast fork) → `tuesday_lecture` (haiku) →
       `free_afternoon` (first hub day) → dinner/night → dream → `end_of_build`;
@@ -186,7 +194,8 @@ which is the simulation removing people as the test measures his equilibrium.
       current build remains open).
 - [ ] Script confidant visits 2–7 (chef 2–7, sim 2–7, orson 2–7, aya 2–7,
       hana 2–7). Interaction docs are written for all of them.
-- [ ] Hikari's recurring run beats 2–7 (user intends to write these).
+- [x] Hikari's recurring run beats 2–7 (written in `game/hikari.rpy`; only
+      visit 2 is reachable in the current Day 7 build).
 - [ ] Act 3 glitch content (treatment "Escalating Mystery" stages 1–5).
 - [ ] Act 4 revelation + endings + epilogue.
 - [ ] Fortune teller encounters (3, one per chapter — see treatment).

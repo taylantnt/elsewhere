@@ -113,7 +113,7 @@ Days are `Monday = 0` through `Sunday = 6`.
 | `hana` | Reading Club | Open **Monday to Saturday** | Campus reading room; closed Sunday. |
 | `aya` | Maid Cafe | Open daily | No written closure. |
 | `orson` | Lupin's Den | Open daily | No written closure. |
-| `walk_hikari` | Walk home with Hikari | Always available | Not a scheduled place. |
+| `walk_hikari` | Walk home with Hikari | Always available | Not a scheduled place; plays the next river run when one is waiting, otherwise the ordinary walk. |
 | `walk_alone` | Walk home alone | Always available | Not a scheduled place. |
 
 Each entry has three fields:

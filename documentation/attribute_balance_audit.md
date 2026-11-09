@@ -540,3 +540,17 @@ The new Day 7 content (breakfast, lecture, night study, hub walks) follows the
 same one-attribute-per-choice-at-micro pattern, and the checklist now carries
 M55–M60 plus the confidant visit reward tables. See
 `documentation/character_attributes.md` §12.2 for the new final balance verdict.
+
+## Follow-up — 2026-11-09 (Hikari run chain)
+
+The six new river-run visits (`hikari_visit_02`–`07` in `game/hikari.rpy`)
+follow the same rule as the rest of the pass: each of the twelve menus has one
+option per attribute at micro size. The forced close rewards rotate Grace (v2),
+Insight (v3), Nerve (v4), Grace (v5), Insight (v6), and Insight small (v7). The
+final small close is deliberate: the recognition beat is the arc's turn, and
+the larger size marks it as the last run. Across the six visits the forced
+totals are Grace 0.4, Insight 0.9, Nerve 0.2; with the first run's Nerve small
+the chain totals Grace 0.4, Insight 0.9, Nerve 0.7. The run route stays
+Insight-forward without adding to Grace, which was the highest ceiling on every
+route in §4. The menus are M61–M66 in `attribute_rewards_checklist.md`; the
+progression summary is under `documentation/Locations/Night run - Hikari/`.

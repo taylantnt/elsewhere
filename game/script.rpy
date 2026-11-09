@@ -556,6 +556,10 @@ default first_run_started = False
 # wire.rpy rather than from confidant_visits, which does not have a slot for her.
 default hikari_visits = 0
 
+# True once the seventh river run has happened. The run arc is complete; the
+# threshold it points at is Act 3/4 material, not another hub visit.
+default hikari_run_finished = False
+
 # --- CHARACTER ATTRIBUTES ---
 # The three-pillar progression system. Values live in save data, while the
 # definitions and thresholds live in one place below so scene code only has to
@@ -5948,11 +5952,11 @@ label night_room_visit:
 ## after lunch; the hub asks where the afternoon goes, and the answer jumps to
 ## that place's visit label. `None` (Head Home) means the day was left unspent.
 ##
-## The visit labels below are stubs on purpose: each one is where that person's
-## next scene plugs in, written from the matching file under
-## documentation/Locations/. A stub ends the afternoon quietly so an unfinished
-## place can never soft-lock the day. When a visit is scripted it should end
-## with `return`, which lands back in the day scene that called this.
+## Each visit label lives in its own file (`chef.rpy`, `sim.rpy`, and so on)
+## and ends with `return`, which lands back in the day scene that called this.
+## Hikari's row is the exception: `walk_hikari` routes through
+## `confidant_visit_hikari`, which plays the next river run or falls back to the
+## ordinary walk home once the seven runs are done.
 ##
 ## The gating (one visit per outing, no revisits until everyone has been met,
 ## act caps) all lives in destination_state() in locations.rpy — this label
@@ -5964,8 +5968,10 @@ label free_afternoon:
     $ flush_pending_messages()
     $ place = renpy.call_screen("location_hub", places=confidant_order + ["walk_hikari", "walk_alone"])
 
-    # The evening reads this to remember where the afternoon went.
+    # The evening reads this to remember where the afternoon went. The run flag
+    # is cleared first so a previous Hikari run cannot leak into another row.
     $ last_afternoon_place = place
+    $ last_afternoon_was_run = False
 
     if place == "sim":
         jump confidant_visit_sim
@@ -5978,7 +5984,7 @@ label free_afternoon:
     elif place == "hana":
         jump confidant_visit_hana
     elif place == "walk_hikari":
-        jump afternoon_walk_hikari
+        jump confidant_visit_hikari
     elif place == "walk_alone":
         jump afternoon_walk_alone
 
@@ -6895,10 +6901,17 @@ label tuesday_lecture:
     elif last_afternoon_place == "sim":
         mc "The photography club. Sim made us photograph the same wall until it stopped being a wall."
     elif last_afternoon_place == "walk_hikari":
-        mc "I walked home with Hikari. We took the long way."
-        hikari "You took the long way. I followed."
-        mc "That's not how I remember it."
-        hikari "That's because you were busy being right."
+        if last_afternoon_was_run:
+            mc "The river path. She ran the whole way and barely looked at the water."
+            hikari "You noticed that."
+            mc "I notice things."
+            hikari "That's my line."
+            mc "(She says it without looking up from her bowl. It is the closest she has come to admitting I know her.)"
+        else:
+            mc "I walked home with Hikari. We took the long way."
+            hikari "You took the long way. I followed."
+            mc "That's not how I remember it."
+            hikari "That's because you were busy being right."
     elif last_afternoon_place == "walk_alone":
         mc "Nowhere. I walked until the light changed, and then I walked home."
         father "Nowhere is a place. Just not a destination."
@@ -6996,6 +7009,7 @@ label tuesday_lecture:
 ## be taken again, but the first time is the one that teaches him something.
 
 label afternoon_walk_hikari:
+    $ last_afternoon_was_run = False
     scene bg_campus_interior with walk_fade
     "Hikari is at the gate when I get there. She does not ask why I came. She just turns and starts walking, the way she does when she has decided something."
     hikari "You're slow."

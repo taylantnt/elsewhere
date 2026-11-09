@@ -749,6 +749,164 @@ the two walks.
 | M60.01 | Pick any destination in the hub. | No rewards | The day's own choices are M24–M34 / M35 / M36 / M41–M45; the hub row itself is bookkeeping only. |
 | M60.02 | Head Home. | No rewards | The afternoon is left unspent; the day continues without an outing reward. |
 
+### M61. Hikari's River Run 2 — The Route
+
+Source: [`hikari_visit_02`](../game/hikari.rpy).
+
+Context: she runs the route from memory, naming the vending machines. He notices
+she does not look at the river for long.
+
+First menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M61.01 | How long have you been running this route? | Insight +0.2 | Pays via flag `hikari_visit_02_how`; she cannot remember learning it. |
+| M61.02 | You know every crack in this path. | Grace +0.2 | Pays via flag `hikari_visit_02_cracks`; she answers without pride. |
+| M61.03 | What are you training for? | Nerve +0.2 | Pays via flag `hikari_visit_02_training`; the run is the part where she is not in the house. |
+
+Second menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M61.04 | What would you do if you couldn't run? | Insight +0.2 | Pays via flag `hikari_visit_02_cant`; she has never had to find out. |
+| M61.05 | You don't have to tell me. | Grace +0.2 | Pays via flag `hikari_visit_02_donttell`; that is why she tells him. |
+| M61.06 | Then let's run somewhere you don't know. | Nerve +0.2 | Pays via flag `hikari_visit_02_elsewhere`; she says not tonight, but ask again. |
+
+Close: **Grace +0.2** (`hikari_visit_02_close`) — she admits she needs the run,
+not just likes it.
+
+### M62. Hikari's River Run 3 — The Evening He Keeps Up
+
+Source: [`hikari_visit_03`](../game/hikari.rpy).
+
+Context: she changed at school and takes him straight to the river. He matches
+her pace for ten minutes; she is surprised enough to say so.
+
+First menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M62.01 | Why does that surprise you? | Insight +0.2 | Pays via flag `hikari_visit_03_why`; nobody keeps up, and she did not let them. |
+| M62.02 | I'm glad you let me. | Grace +0.2 | Pays via flag `hikari_visit_03_glad`; the first smile that does not cost her. |
+| M62.03 | Then don't slow down on my account. | Nerve +0.2 | Pays via flag `hikari_visit_03_slowdown`; she speeds up, and he keeps up. |
+
+Second menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M62.04 | What other thing? | Insight +0.2 | Pays via flag `hikari_visit_03_other`; the part where they are still there in the morning. |
+| M62.05 | You don't have to do anything. | Grace +0.2 | Pays via flag `hikari_visit_03_nothing`; she has to not run away. |
+| M62.06 | I'm not going anywhere. | Nerve +0.2 | Pays via flag `hikari_visit_03_anywhere`; she asks him not to promise, just to be here. |
+
+Close: **Insight +0.2** (`hikari_visit_03_close`) — he sees the face she makes
+when she is not performing.
+
+### M63. Hikari's River Run 4 — The Night Neither Of Them Says Anything
+
+Source: [`hikari_visit_04`](../game/hikari.rpy).
+
+Context: they walk home, change without a word, and run in silence. On the
+second bridge she admits she does not know where the performance ends.
+
+First menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M63.01 | Say something. | Nerve +0.2 | Pays via flag `hikari_visit_04_say`; she says not yet. |
+| M63.02 | Leave the silence alone. | Grace +0.2 | Pays via flag `hikari_visit_04_silence`; she thanks him without looking at him. |
+| M63.03 | Listen to the river. | Insight +0.2 | Pays via flag `hikari_visit_04_river`; the water sounds like it is counting something. |
+
+Second menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M63.04 | Then keep me. | Nerve +0.2 | Pays via flag `hikari_visit_04_keep`; she laughs, surprised out of her. |
+| M63.05 | You don't have to perform with me. | Grace +0.2 | Pays via flag `hikari_visit_04_perform`; she does not know where the performance ends. |
+| M63.06 | What would you do if you didn't have to be anything? | Insight +0.2 | Pays via flag `hikari_visit_04_anything`; she would stay right here and not go home. |
+
+Close: **Nerve +0.2** (`hikari_visit_04_close`) — she thanks him for not filling
+the silence.
+
+### M64. Hikari's River Run 5 — The Rain
+
+Source: [`hikari_visit_05`](../game/hikari.rpy).
+
+Context: the bridge in the rain, the amado, and the first true thing she says
+about the house. She asks whether the street looks right to him.
+
+First menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M64.01 | What changed? | Insight +0.2 | Pays via flag `hikari_visit_05_changed`; nothing changed, she started hearing it. |
+| M64.02 | It sounds like a good memory. | Grace +0.2 | Pays via flag `hikari_visit_05_memory`; good memories do not make her feel like she is missing something. |
+| M64.03 | Do you want to get out of the rain? | Nerve +0.2 | Pays via flag `hikari_visit_05_rain`; she wants to stand in it until it stops. |
+
+Second menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M64.04 | It looks like a street. | Insight +0.2 | Pays via flag `hikari_visit_05_street`; she sounds like someone confirming a suspicion. |
+| M64.05 | It looks like home. | Grace +0.2 | Pays via flag `hikari_visit_05_home`; she does not know if it is true. |
+| M64.06 | No. Something's off. | Nerve +0.2 | Pays via flag `hikari_visit_05_off`; she says he feels it too. |
+
+Close: **Grace +0.2** (`hikari_visit_05_close`) — she takes his hand and does not
+let go until the gate.
+
+### M65. Hikari's River Run 6 — The Part Of The River She Keeps
+
+Source: [`hikari_visit_06`](../game/hikari.rpy).
+
+Context: she takes him to a part of the river he has never seen, where a
+vending machine with no cable still hums. She says she comes here when the
+house feels too small.
+
+First menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M65.01 | Why here? | Insight +0.2 | Pays via flag `hikari_visit_06_why`; it does not belong to anyone. |
+| M65.02 | It's beautiful. | Grace +0.2 | Pays via flag `hikari_visit_06_beautiful`; she had only thought of it as far. |
+| M65.03 | What makes the house feel small? | Nerve +0.2 | Pays via flag `hikari_visit_06_small`; she does not answer directly. |
+
+Second menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M65.04 | You checked? | Insight +0.2 | Pays via flag `hikari_visit_06_checked`; no cable, no outlet, it just hums. |
+| M65.05 | Then we don't need it to work. | Grace +0.2 | Pays via flag `hikari_visit_06_work`; she smiles a small, real smile. |
+| M65.06 | Take me further. | Nerve +0.2 | Pays via flag `hikari_visit_06_further`; she knows what is out there, and that is why not tonight. |
+
+Close: **Insight +0.2** (`hikari_visit_06_close`) — she says it is not the
+house; it is the thing she is running from.
+
+### M66. Hikari's River Run 7 — The Last Run
+
+Source: [`hikari_visit_07`](../game/hikari.rpy).
+
+Context: she is faster than she has ever been. At the second bridge she asks
+whether they have done this before, then asks him to remember a promise.
+
+First menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M66.01 | Yes. | Nerve +0.2 | Pays via flag `hikari_visit_07_yes`; he does not know what it means. |
+| M66.02 | What do you mean? | Insight +0.2 | Pays via flag `hikari_visit_07_mean`; she feels like she is the only one who remembers the first time. |
+| M66.03 | I don't know. But I'm here. | Grace +0.2 | Pays via flag `hikari_visit_07_here`; she calls it the best answer anyone has given her. |
+
+Second menu:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M66.04 | Then stop running. | Grace +0.2 | Pays via flag `hikari_visit_07_stop`; she has been running since before she can remember. |
+| M66.05 | Then we run the other way. | Nerve +0.2 | Pays via flag `hikari_visit_07_otherway`; he says yes without knowing where it goes. |
+| M66.06 | What are you afraid of? | Insight +0.2 | Pays via flag `hikari_visit_07_afraid`; she already knows how this ends. |
+
+Close: **Insight +0.5** (`hikari_visit_07_close`, `small`) — the recognition
+beat is the arc's turn, and the larger close marks it as the last run. The run
+sets `hikari_run_finished = True`.
+
 ## Confidant Visit Rewards
 
 The five confidant chains are told in visits. Chef and Hana are the two
@@ -812,6 +970,24 @@ across Insight, Grace and Nerve instead of paying Grace twice in a row.
 | 5 | Thanks that helps (Grace), still feels hard (Nerve) | Grace micro |
 | 6 | Keep showing up (Nerve), still scared (Grace) | Insight micro |
 | 7 | Miss this place (Grace), carry it with me (Nerve) | Nerve micro |
+
+### Hikari — the River Run (visits 2–7)
+
+The first run is `after_school_run` (M27–M29); the other six are in
+`game/hikari.rpy`. Hikari is not one of the five confidant chains — the run is
+tracked by `hikari_visits` — but the reward shape is the same: every menu pays
+one attribute per option at micro size, and the close rewards rotate Grace /
+Insight / Nerve. The final run closes at **Insight small (0.5)** because the
+recognition beat is the arc's turn.
+
+| Visit | Answered choices (reward) | Close reward |
+|---|---|---|
+| 2 | Route history (Insight), cracks (Grace), training (Nerve); can't run (Insight), don't tell me (Grace), somewhere new (Nerve) | Grace micro |
+| 3 | Why surprise (Insight), glad you let me (Grace), don't slow down (Nerve); other thing (Insight), nothing to do (Grace), not going anywhere (Nerve) | Insight micro |
+| 4 | Say something (Nerve), leave the silence (Grace), listen to the river (Insight); keep me (Nerve), perform (Grace), not be anything (Insight) | Nerve micro |
+| 5 | What changed (Insight), good memory (Grace), get out of the rain (Nerve); looks like a street (Insight), looks like home (Grace), something's off (Nerve) | Grace micro |
+| 6 | Why here (Insight), beautiful (Grace), house small (Nerve); checked (Insight), doesn't need to work (Grace), further (Nerve) | Insight micro |
+| 7 | Yes (Nerve), what do you mean (Insight), I'm here (Grace); stop running (Grace), run the other way (Nerve), afraid (Insight) | Insight small |
 
 ## Rewards Outside Dialogue Choices
 

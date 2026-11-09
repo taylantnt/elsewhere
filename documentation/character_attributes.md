@@ -787,5 +787,18 @@ The next balance pass should wait for Act 2 confidant scenes and Act 3/4 choices
   through deliberate play; no attribute is starved and no single route is
   wallowing.
 
-The next balance pass should wait for the Act 3/4 choices, the Hikari run beats
-and the remaining weekends, not for this batch.
+The next balance pass should wait for the Act 3/4 choices and the remaining
+weekends, not for this batch.
+
+**Hikari run-chain follow-up (2026-11-09).** The six new river-run visits
+(`hikari_visit_02`–`07`) use the same rule: every menu pays one attribute per
+answered choice at micro size, so a player who answers all twelve menus earns
+exactly 2.4 points spread across whichever attributes they choose. The forced
+close rewards rotate Grace (v2), Insight (v3), Nerve (v4), Grace (v5), Insight
+(v6), and Insight small (v7); the final small close is the arc's recognition
+beat and the larger size marks it as the last run. Across the six visits the
+forced rewards are Grace 0.4, Insight 0.9, Nerve 0.2; adding the first run's
+Nerve small gives Grace 0.4, Insight 0.9, Nerve 0.7. That keeps Grace — already
+the highest ceiling on every route — from inflating further, and gives the run
+route its Insight-forward identity. The menus are listed as M61–M66 in
+`attribute_rewards_checklist.md`.

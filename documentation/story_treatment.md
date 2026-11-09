@@ -459,30 +459,48 @@ relationship itself.
 
 ### The Run Becomes Recurring
 
-The first river run is already scripted. It becomes a recurring after-school
-activity, not a numbered chain. The seven beats the game planned are:
+The first river run is written in `after_school_run` in `script.rpy`; the other
+six are written in `game/hikari.rpy`. The run is a recurring after-school
+activity, not a numbered confidant chain. It is tracked by `hikari_visits` (for
+routing and WIRE progress) and `sister_affection` (for the relationship), and
+the hub's "Walk home with Hikari" row sends the player to the next run through
+`confidant_visit_hikari`. After the seventh run the row falls back to the
+ordinary walk home, `afternoon_walk_hikari`, so the place never runs out of
+something to do. The seventh run sets `hikari_run_finished = True` for the
+Act 3/4 threshold; it does not begin that threshold itself.
 
-1. **The first run** *(already scripted)* — how badly it goes, and that she
-invites him anyway.
-2. **The route** — she knows every vending machine, every crack in the path.
-She runs it the way the chef makes ramen: from memory, without thinking.
-3. **The evening he keeps up** — he matches her pace for ten minutes, and she
-is surprised enough to say so. What it costs her is that he sees her face when
-she is not performing.
-4. **The night neither of them says anything** — they run, they stop, they
-drink from the vending machine, and they walk home in silence. It is the most
-honest either of them has been.
-5. **The rain** — the bridge in the rain, and the first true thing she says
-about the house. She says her father closes the amado the same way every night,
-and she used to think that was normal, and now she is not sure what normal means.
-6. **The night she asks him to run somewhere that is not home** — she takes
-him to a part of the river he has never seen, and she says she comes here when
-the house feels too small. He asks what makes the house feel small. She does not
-answer.
-7. **The last run** — she is faster than she has ever been, and he cannot keep
-up. She stops at the bridge and looks at the water. She says: do not you ever
-feel like we have done this before? He does not know what to say. She does not
-expect him to.
+The seven beats the game planned are now all written:
+
+1. **The first run** — *written in `after_school_run`* — how badly it goes, and
+that she invites him anyway.
+2. **The route** — *written as `hikari_visit_02`* — she knows every vending
+machine, every crack in the path. She runs it the way the chef makes ramen:
+from memory, without thinking. She admits she needs it, not just likes it.
+3. **The evening he keeps up** — *written as `hikari_visit_03`* — he matches her
+pace for ten minutes, and she is surprised enough to say so. What it costs her
+is that he sees her face when she is not performing.
+4. **The night neither of them says anything** — *written as
+`hikari_visit_04`* — they run, they stop, they drink from the vending machine,
+and they walk home in silence. It is the most honest either of them has been.
+5. **The rain** — *written as `hikari_visit_05`* — the bridge in the rain, and
+the first true thing she says about the house. She says her father closes the
+amado the same way every night, and she used to think that was normal, and now
+she is not sure what normal means. She asks whether the street looks right to
+him.
+6. **The night she asks him to run somewhere that is not home** — *written as
+`hikari_visit_06`* — she takes him to a part of the river he has never seen, and
+she says she comes here when the house feels too small. The scene turns on her
+correction: it is not the house; it is the thing she is running from.
+7. **The last run** — *written as `hikari_visit_07`* — she is faster than she
+has ever been, and he cannot keep up. She stops at the bridge and looks at the
+water. She says: don't you ever feel like we've done this before? He does not
+know what to say. She does not expect him to. She asks him to remember a
+promise: if she ever asks him to run somewhere that isn't home, say yes.
+
+Only the second run is reachable in the current Day 7 build. The first run is
+the Day 2 afternoon fork; the hub's Hikari row plays the second run on Day 7.
+Visits 3–7 are wired and waiting for later hub days, and the ordinary walk home
+remains available after the seventh.
 
 ### The Unease Grows
 
@@ -492,7 +510,8 @@ coming back to her from someone else. A memory that does not line up with what
 the protagonist remembers. She tests him with small questions: does this street
 look right to you? Did I tell you about the bakery before, or after, the first
 run? She is not asking because she is curious. She is asking because she is
-afraid.
+afraid. The written run chain folds the first of these tests into
+`hikari_visit_05`; the rest are Act 3/4 material.
 
 ### The Small Truths
 
@@ -508,7 +527,10 @@ break.
 The final stage of her arc is the fork. She reveals what she is: a fragment of a
 programmer who leaked into the code. She offers to guide the protagonist toward
 reality, and she expects to be refused, or to be hated for it. Her warmth does
-not change when she says it. That is what makes it land.
+not change when she says it. That is what makes it land. `hikari_visit_07` ends
+on the question that opens this stage — *don't you ever feel like we've done
+this before?* — and on her request that he remember the promise. The reveal
+itself belongs to Act 3/4.
 
 ---
 

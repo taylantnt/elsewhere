@@ -50,6 +50,10 @@ default confidant_visits = {
 ## reads it on the way into dinner so the evening can carry the afternoon home.
 default last_afternoon_place = None
 
+## True when the picked row became one of Hikari's river runs rather than the
+## ordinary walk home. The evening uses it to tell the two apart.
+default last_afternoon_was_run = False
+
 ## Seven visits and the story is over: the person leaves, and the row has
 ## nothing left to give. `confidant_visit_totals` names the exceptions: Chef's
 ## and Hana's stories each run one visit longer, so the player can return to a
