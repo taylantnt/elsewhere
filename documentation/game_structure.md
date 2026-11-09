@@ -732,6 +732,27 @@ full before the new day's scene.
   includes `day_transition_screen`, so the date chip, attribute HUD and quick
   menu stay hidden behind the transition.
 
+### 5.11 The nightmare rhythm
+
+`game/dreams.rpy` (`label dream_router`). Nightmares are sparse by design; the
+day progression does not depend on them.
+
+- **Night one** (`label dream_first_night`) is the mandatory horror interlude and
+  the origin beat of the dream logic. The act break (§4) ends inside it.
+- **Night two** (`label night_room_visit` → `dream_key = "day_two_cellular_maid"`)
+  is the reactive nightmare, the consequence of the phone-plan beat rather than a
+  repeat of night one; it routes through the same router.
+- **Nights three and later are quiet.** On the built path they fade to black from
+  the night scene without routing through a nightmare, and the final night of the
+  build ends on the Tuesday night beat without a dream at all.
+- The router's fallback (`dream_generic`) is the seam for future activity-reactive
+  keys; no built night forces one, so a nightmare only ever plays when the story
+  has earned one.
+
+Because the day transition (§5.10) is wired into every morning label that opens a
+new day, the full-screen day progression now plays after **every** night — quiet
+or nightmare — so the calendar move is never lost to a missing dream.
+
 ---
 
 ## 6. State Written by the Story

@@ -76,6 +76,12 @@ which is the simulation removing people as the test measures his equilibrium.
       glow/vignette/grain/rail assets under `images/ui/day_transition/`,
       riser/settle/tick audio, input gated until the card lands, HUD hidden
       behind the modal. Docs synced. Lint passes.
+- [x] 2026-11-10 — Nightmare rhythm locked: only night one
+      (`dream_first_night`) and night two (`dream_day_two_cellular_maid`) carry
+      nightmares on the built path; nights three onward are quiet by design, and
+      the full-screen day transition still plays after every one of them. Added
+      design note §5.11 (The nightmare rhythm). User preference: sparse nightmares
+      are better, not every night.
 - [x] 2026-11-09 — Hikari's recurring run chain written: visits 2–7 live in
       `game/hikari.rpy`, routed by `confidant_visit_hikari` from the hub's
       `walk_hikari` row. Each run has two 3-option menus, one attribute per
