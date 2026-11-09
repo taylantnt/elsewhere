@@ -1,8 +1,9 @@
 # Exam Period & Course Load
 
 **Status:** design memo — the first quiz arc is scripted (Hikari's Sunday
-practice and the professor's Monday quiz); later exam-period scenes remain
-future.
+practice and the professor's Monday quiz); the first hub day (Tuesday) now
+runs the midterm briefing and the haiku lecture continuation; later
+exam-period scenes remain future.
 **Why it exists:** Hana's introduction (and the Reading Club errand) hangs off
 exam season, and the lectures the protagonist attends should all teach
 something that can come back as an exam question. This file is the memo of
@@ -32,6 +33,7 @@ the miss.
 | Saturday, April 11 (Day 4) | Library errand: the haiku study sheets from the course reserve; Hana's introduction. |
 | Sunday, April 12 (Day 5) | Hikari's three-question practice quiz off the handout. |
 | Monday, April 13 (Day 6) | The professor's three-question quiz at the end of the haiku lecture; the result colors the afternoon and evening. |
+| Tuesday, April 14 (Day 7) | First hub afternoon: the midterm briefing and the haiku lecture continuation, then the free afternoon, dinner, and night study. |
 | Act 2, late | The wider exam period — later exams, optional `run_quiz` sets, results echoing in later dialogue. |
 | Act 3 | No classes — the world is breaking. (Deliberate contrast.) |
 

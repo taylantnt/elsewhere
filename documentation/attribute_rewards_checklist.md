@@ -905,8 +905,8 @@ These are not additional dialogue forks or attribute rewards:
 
 Use the row IDs to describe any special instructions, for example:
 
-- `M14.03: Grace -0.2. Keep the answer text.`
-- `M22.01: Keep both the Nerve gain and Grace loss.`
+- `M14.03: Nerve +0.2. Keep the answer text.`
+- `M22.01: Nerve +0.5. Keep the answer text; the Grace loss is gone.`
 - `M19.03: No rewards. Keep the 0.8 Insight point requirement.`
 
 Unless you say otherwise, bare attribute names mean +0.5, dialogue wording and
