@@ -7090,6 +7090,148 @@ label afternoon_walk_alone:
     return
 
 ################################################################################
+## THE CONTINUATION: DAYS EIGHT TO TWELVE AND THE MURAKAMI ELECTIVE
+################################################################################
+
+label wednesday_morning:
+    $ set_story_day(8)
+    call day_transition
+
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    scene bg_room_night with stair_fade
+    $ room_ambient(True)
+    "I wake before the alarm. I know what day it is without looking at the phone."
+    "Three days since the library. Two since the quiz. The midterm is four weeks out, maybe five, and the calendar in my head has started counting down like a fuse."
+    mc "(It is a fuse. I do not know who keeps it, or why I do, but it is a fuse.)"
+    "The class is on the history of haiku. Not the dates. The shape."
+    "The professor says the thing I have been circling without knowing: that a poem about a frog is a poem about the whole world if the whole world is small enough to notice."
+    hikari "He says that like he has said it before. He has said it before. He says everything like that."
+    mc "You think Basho knew? About the frog. I mean. You think he was writing about anything else?"
+    hikari "I think he was writing about the river. And that the river was the whole country, and the country was the whole quiet."
+    menu:
+        "Write the poem down before the bell.":
+            mc "I write it down. The frog. The river. The quiet."
+            $ reward_attributes_once("midterm_haiku_write", [("grace", "micro")], show="auto")
+        "Just listen. The listening is the lesson.":
+            mc "I just listen. The listening is the lesson."
+            $ reward_attributes_once("midterm_haiku_listen", [("insight", "micro")], show="auto")
+    "The night is ordinary. That is the point. The ordinary is what the fuse is made of."
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    jump thursday_morning
+
+
+label thursday_morning:
+    $ set_story_day(9)
+    call day_transition
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    scene bg_lecture_hall with walk_fade
+    play music "audio/Music/classroom.mp3" fadein 1.0
+    "The hall is the same hall. Forty seats, the same window, the same chalkboard of dates."
+    professor "The midterm. You know the shape. The syllable. The season. The pause."
+    "I take the seat by the window. Hikari is already there, notebook open, pen out, sitting exactly where she would have sat if she had been here since breakfast."
+    menu:
+        "The frog was the whole world.":
+            mc "The frog was the whole world."
+            $ reward_attributes_once("midterm_q1_frog", [("insight", "micro")], show="auto")
+        "The river was the whole world.":
+            mc "The river was the whole world."
+            $ reward_attributes_once("midterm_q1_river", [("grace", "micro")], show="auto")
+    "The night is the night of the long fuse. I sleep badly. I do not know if I slept at all."
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    jump friday_morning
+
+
+label friday_morning:
+    $ set_story_day(10)
+    call day_transition
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    scene bg_room_night with stair_fade
+    $ room_ambient(True)
+    "The night of the long fuse is over. The fuse was shorter than I thought."
+    "I wake on Friday. The room is the room. The receipt is on the desk. The phone is face-down. The week is not over, but the part that was a countdown is."
+    "And that is when the notice arrives."
+
+    # The elective: the Japanese course, taught by Murakami.
+    professor "You passed the midterm."
+    mc "I passed."
+    professor "You passed the frog. Or the river. It does not matter which one you chose. The choosing was the lesson."
+    menu:
+        "Take the Japanese course. The elective with Murakami.":
+            mc "Then I will take the Japanese course. The elective. With you."
+            professor "Good. The language is not a subject. It is a country you walk into. I will be your teacher for it."
+            $ japanese_fluency = min(5, japanese_fluency + 1)
+        "I need a weekend first.":
+            mc "I need a weekend first."
+            professor "Take it when you take it. The door is not going anywhere. Neither is the quiet."
+            $ japanese_fluency = min(5, japanese_fluency + 1)
+
+    # First Murakami lesson: the sound of the name.
+    "His first lesson is not about grammar. It is about the sound of the name."
+    "He says the word for the river the way you would say a prayer. Or the way you would say a secret."
+    "The room is quiet in a way that has a texture. The professor does not fill it. He does not need to."
+    "The night after the first lesson is not a night of the fuse. It is a night of small sounds. The kettle. The refrigerator. The rain that is not rain."
+
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    jump saturday_recovery
+
+
+label saturday_recovery:
+    $ set_story_day(11)
+    call day_transition
+
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    "Saturday. The house is quiet in a different way. The kitchen is not lit. The living room is not lit. The whole building is holding its breath."
+    "Murakami comes to the door. He does not knock. He never knocks. He stands where he is and talks through the door."
+    professor "The elective is not a class. It is a way of walking. Bring the frog."
+    mc "The frog."
+    professor "The frog. And the river. And the quiet."
+    "The lesson is at the kitchen table. The professor's Japanese is better than anyone in the building, and it is still not enough to make the room feel like it was built for him. He knows that too."
+    "The night is the first night of the language. The first night of the country. I sleep differently. I do not know how yet, but I sleep differently."
+
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    jump sunday_practice
+
+
+label sunday_practice:
+    $ set_story_day(12)
+    call day_transition
+
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    scene bg_room_night with stair_fade
+    $ room_ambient(True)
+    "Sunday. The last day of the first week of the elective. The last day of the first week of anything."
+    "Murakami's lesson today is about the pause. Not the pause in the poem. The pause in the mouth. The silence between two words that means more than the words."
+    "The professor asks me to say the word for the river. In Japanese. I say it. It comes out wrong. He does not correct me. He writes the right one on the board and leaves the wrong one there on purpose."
+    mc "The wrong one is still mine."
+    professor "It is. That is the first thing the language teaches. That the mistake is the door."
+    "The night is the night of the third lesson. I have a word for the river now. I have a word for the frog. I have a word for the quiet."
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
+    jump end_of_build
+
+
+################################################################################
 ## END OF THE CURRENT BUILD
 ################################################################################
 ##
