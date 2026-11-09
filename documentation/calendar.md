@@ -99,6 +99,13 @@ define story_calendar_events = {
 An event only appears once the player has reached that day, so adding a future
 entry does not spoil it.
 
+After `set_story_day()` (or the advance), every current day label also calls
+`call day_transition` before its first scene beat, so the calendar move is
+performed by the full-screen day progression (`game/day_transition.rpy`) rather
+than by a silent counter bump. The transition is modal and holds until the player
+presses a key or clicks, so the day label's first scene beat only runs once the
+card has been dismissed.
+
 ---
 
 ## 4. Weekly Opening Rules

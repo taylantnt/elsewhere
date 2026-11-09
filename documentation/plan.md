@@ -68,6 +68,14 @@ which is the simulation removing people as the test measures his equilibrium.
 
 ### Code
 
+- [x] 2026-11-09 — Day transition written: full-screen day-progression card
+      (`game/day_transition.rpy`) wired into every day label that follows a
+      night (`morning_call`, `second_morning`, `saturday_off`,
+      `sunday_morning`, `monday_morning`, `tuesday_morning`) via
+      `call day_transition`. Modal screen, four-slot strip with eased slide,
+      glow/vignette/grain/rail assets under `images/ui/day_transition/`,
+      riser/settle/tick audio, input gated until the card lands, HUD hidden
+      behind the modal. Docs synced. Lint passes.
 - [x] 2026-11-09 — Hikari's recurring run chain written: visits 2–7 live in
       `game/hikari.rpy`, routed by `confidant_visit_hikari` from the hub's
       `walk_hikari` row. Each run has two 3-option menus, one attribute per

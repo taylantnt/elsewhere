@@ -151,6 +151,19 @@ label hikari_visit_02:
     $ queue_message("hikari", "The route is not the point. The point is that I know it without looking. Don't ask me why that bothers me.", day="yesterday")
     $ reward_attributes_once("hikari_visit_02_close", [("grace", "micro")], show="card")
 
+    # The first job, as Hikari steers it. Not a push. A fact she has already
+    # placed. The convenience store next to the ramen shop is hiring; the
+    # tissue handing out is today's campaign. He does not need good Japanese.
+    hikari "You keep saying you need a job."
+    mc "I meant it. I meant it the way I meant the ramen plan."
+    hikari "Then I'm not going to stop you from meaning it."
+    mc "You make it sound like you already know which one I'd choose."
+    hikari "I know the one I would choose. There's a convenience store next to the ramen shop that's hiring."
+    mc "The ramen shop is closed on Wednesdays."
+    hikari "This one is open. They're handing out tissues today - little white packets with the shop's mark on them, one per street. Real campaign. Small. Stupid. Perfect."
+    mc "A job that is handing out tissues."
+    hikari "A job that is being a person in public. You don't need good Japanese. The customers are mostly foreign like you, and the rest are just tired. The pay is good. And the city pays you for standing. That's the part nobody puts on the flyer."
+
     scene bg_home_exterior_night with walk_fade
     $ night_street()
     "At the house gate she stops with her key in her hand."

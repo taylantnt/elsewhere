@@ -3059,6 +3059,7 @@ label morning_call:
     $ current_act = 2
     # Day 2: Thursday, April 9. The first school day.
     $ set_story_day(2)
+    call day_transition
 
     # Waking up. The dream lets go of him slowly, the way a hand does once it has
     # decided you can stand on your own.
@@ -5175,6 +5176,7 @@ label first_night_memory:
 label second_morning:
     # Day 3: Friday, April 10. The second school day.
     $ set_story_day(3)
+    call day_transition
 
     # Anything queued while the phone had no signal lands here, with the buzz.
     $ flush_pending_messages()
@@ -6007,6 +6009,7 @@ label free_afternoon:
 label saturday_off:
     # Day 4: Saturday, April 11. The library, Hana, and Lupin's Den.
     $ set_story_day(4)
+    call day_transition
 
     # Overnight texts land here if the line is live.
     $ flush_pending_messages()
@@ -6330,6 +6333,7 @@ label home_sukiyaki:
 label sunday_morning:
     # Day 5: Sunday, April 12. The practice quiz at home.
     $ set_story_day(5)
+    call day_transition
 
     $ flush_pending_messages()
 
@@ -6516,6 +6520,7 @@ label sunday_morning:
 label monday_morning:
     # Day 6: Monday, April 13. The haiku quiz and the last built scene.
     $ set_story_day(6)
+    call day_transition
 
     $ flush_pending_messages()
 
@@ -6726,6 +6731,7 @@ label monday_lecture:
 label tuesday_morning:
     # Day 7: Tuesday, April 14. The first hub afternoon.
     $ set_story_day(7)
+    call day_transition
     $ last_afternoon_place = None
 
     $ flush_pending_messages()
@@ -7041,6 +7047,15 @@ label afternoon_walk_hikari:
             hikari "Don't make it a thing."
             mc "(Too late. It is already a thing.)"
             $ reward_attributes_once("hub_walk_hikari_glad", [("nerve", "micro")], show="auto")
+
+    # The first job, as Hikari steers it. This is the fallback path (the run
+    # never happened), so the steer has to stand on its own here too: no route
+    # behind it, just the fact she has already placed.
+    hikari "You keep saying you need a job."
+    mc "I meant it. I meant it the way I meant the ramen plan."
+    hikari "Then I'm not going to stop you from meaning it. There's a convenience store next to the ramen shop that's hiring. They're handing out tissues today - little white packets with the shop's mark on them, one per street. Real campaign. Small. Stupid. Perfect."
+    mc "A job that is handing out tissues."
+    hikari "A job that is being a person in public. You don't need good Japanese. The customers are mostly foreign like you, and the rest are just tired. The pay is good. And the city pays you for standing. That's the part nobody puts on the flyer."
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()

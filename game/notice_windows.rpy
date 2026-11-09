@@ -11,6 +11,7 @@ init -1 python:
         return any(renpy.get_screen(name) is not None for name in (
             "hint_card", "notice_page", "notice_confirm", "notice_name",
             "location_hub", "attribute_gain_card", "airport_phone",
+            "day_transition_screen",
         ))
 
     def cinematic_departure():
@@ -224,6 +225,7 @@ style opening_button_text is guide_button_text:
     color "#eeeeee"
     hover_color "#ffffff"
     insensitive_color "#555555"
+    text_align 0.5
 
 style opening_input is guide_input:
     size gui.scale(32)
@@ -253,6 +255,7 @@ screen opening_layout(title, motion, category="BEFORE YOU BEGIN"):
 
 screen opening_footer(meta, caption=None, action=None, enabled=True):
     fixed:
+        xalign 0.5
         ypos gui.scale(208)
         xysize (gui.scale(680), gui.scale(76))
         text meta style "opening_meta" xalign 0.5 xsize gui.scale(680) text_align 0.5
@@ -261,6 +264,11 @@ screen opening_footer(meta, caption=None, action=None, enabled=True):
                 style "opening_button"
                 xalign 0.5
                 ypos gui.scale(28)
+                background Solid("#191919")
+                hover_background Solid("#252525")
+                insensitive_background None
+                text_style "opening_button_text"
+                text_xalign 0.5
                 action action
                 sensitive enabled
 
@@ -270,7 +278,7 @@ screen notice_page(eyebrow, body, page):
     add Solid("#000000")
     use opening_layout(eyebrow, notice_page_motion):
         text body style "opening_body" xalign 0.5 xsize gui.scale(680)
-        use opening_footer("%s  Continues automatically" % page)
+        use opening_footer("%s  Advances automatically" % page)
     timer notice_page_duration action Return()
 
 screen notice_confirm(question):

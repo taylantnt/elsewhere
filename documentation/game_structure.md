@@ -705,6 +705,33 @@ and one place to say which weekdays a destination is open.
   in the hub. Opening hours only govern the free-afternoon hub after the
   introductions.
 
+### 5.10 The day transition (`label day_transition`, `screen day_transition_screen`)
+
+`game/day_transition.rpy`. The day counter is now a performance, not just a
+number: every day label that opens a new day calls `call day_transition` right
+after `set_story_day()`, so the move from the old day into the new one plays in
+full before the new day's scene.
+
+- **The strip.** The screen holds four card slots on a hairline rail. The day
+  that just ended is centred and bright; the new day slides in from the side and
+  settles, while the cards before/after shrink and fade. `day_transition_cards`
+  builds the slots from `story_day - 1` and `story_day`, so the transition never
+  carries its own day counter.
+- **The move.** The card slide is a 0.95 s eased move (`ease`, Ren'Py's smooth
+  in-out warper) plus a settle overshoot; the screen fades in over the black
+  backdrop; the rail, glow, rays, vignette and grain all have their own timings.
+- **Audio.** Riser (`attribute_rise.wav`) under the slide, settle hit
+  (`attribute_settle.wav`) on landing, small tick (`type_click.wav`) for the
+  lock-in; the music fades out (`stop music fadeout`) during the card.
+- **The gate.** `screen day_transition_screen` is modal and sits at zorder 2000.
+  Game menu, rollback, skip and fast-skip key actions are blocked; the
+  `dismiss` key (plus a broad extra-key list so "press any key" holds) returns
+  only once `ready` flips at 2.20 s. The full page therefore holds until the
+  player presses a key or clicks, and never advances on its own.
+- **HUD layering.** `standalone_window_active()` in `notice_windows.rpy` now
+  includes `day_transition_screen`, so the date chip, attribute HUD and quick
+  menu stay hidden behind the transition.
+
 ---
 
 ## 6. State Written by the Story
