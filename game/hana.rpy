@@ -87,7 +87,7 @@ label hana_visit_02:
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 2)
     $ remember("hana", "learned her name from her badge and saw she left a star in the book")
     $ queue_message("hana", "The book... the one with the star. I hope you liked it. Please come back.", day="yesterday")
-    $ reward_attributes_once("hana_visit_02_close", [("grace", "small")], show="card")
+    $ reward_attributes_once("hana_visit_02_close", [("grace", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
     stop music fadeout 2.0
@@ -146,7 +146,7 @@ label hana_visit_03:
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 3)
     $ remember("hana", "heard her first word attempt and found a rain window drawing she dropped")
     $ queue_message("hana", "I... I tried to say something. I couldn't. The words wouldn't come. I'm sorry.", day="yesterday")
-    $ reward_attributes_once("hana_visit_03_close", [("grace", "small")], show="card")
+    $ reward_attributes_once("hana_visit_03_close", [("insight", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
     stop music fadeout 2.0
@@ -199,7 +199,7 @@ label hana_visit_04:
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 4)
     $ remember("hana", "she brought an art book and he responded with a matching one; they read back-to-back")
     $ queue_message("hana", "You... you saw. The art book. You picked one too. That means... that means you understand.", day="yesterday")
-    $ reward_attributes_once("hana_visit_04_close", [("grace", "small")], show="card")
+    $ reward_attributes_once("hana_visit_04_close", [("nerve", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
     stop music fadeout 2.0
@@ -255,7 +255,7 @@ label hana_visit_05:
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 5)
     $ remember("hana", "she sat at his table and left a note thanking him for not giving up")
     $ queue_message("hana", "The note... I was scared to leave it. But I wanted you to know. Thank you for staying.", day="yesterday")
-    $ reward_attributes_once("hana_visit_05_close", [("grace", "small")], show="card")
+    $ reward_attributes_once("hana_visit_05_close", [("grace", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
     stop music fadeout 2.0
@@ -314,7 +314,7 @@ label hana_visit_06:
         "\"These are incredible. Do you know that?\"":
             mc "These are incredible. Do you know that? You have real talent."
             hana "It's just... doodling. But... thank you. Nobody's ever said that to me before."
-            $ reward_attributes_once("hana_visit_06_incredible", [("grace", "small")], show="auto")
+            $ reward_attributes_once("hana_visit_06_incredible", [("grace", "micro")], show="auto")
 
     hana "You're the first person who's stayed. Everyone else gave up after a week. You just... kept showing up. And you never once asked me to be normal."
 
@@ -329,7 +329,7 @@ label hana_visit_06:
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 6)
     $ remember("hana", "she confessed her loneliness and showed him her sketchbook full of Tokyo drawings")
     $ queue_message("hana", "I showed you. The drawings. Everything. I was so scared. But you didn't look away. Thank you.", day="yesterday")
-    $ reward_attributes_once("hana_visit_06_close", [("grace", "small")], show="card")
+    $ reward_attributes_once("hana_visit_06_close", [("insight", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
     stop music fadeout 2.0
@@ -397,7 +397,7 @@ label hana_visit_07:
             $ reward_attributes_once("hana_visit_07_forget", [("grace", "micro")], show="auto")
         "\"This means a lot to me.\"":
             mc "This means a lot to me. Thank you, Hana."
-            $ reward_attributes_once("hana_visit_07_means", [("grace", "small")], show="auto")
+            $ reward_attributes_once("hana_visit_07_means", [("nerve", "micro")], show="auto")
 
     hana "No — not like that. For you... so you don't forget me. Like... like you carried my dream, when I couldn't. You kept showing up. Every week. Nobody's ever kept showing up."
 
@@ -416,7 +416,7 @@ label hana_visit_07:
     $ remember("hana", "she told her parents the truth and gave him a handmade art charm before leaving")
     $ wire_contacts["hana"]["name"] = "Hana"
     $ queue_message("hana", "I did it. I told them. They were angry, then they listened, then they understood. I'm going to art school. Thank you for believing in me when I couldn't.", day="yesterday")
-    $ reward_attributes_once("hana_visit_07_close", [("grace", "small")], show="card")
+    $ reward_attributes_once("hana_visit_07_close", [("nerve", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
     stop music fadeout 3.0
@@ -454,7 +454,7 @@ label hana_visit_closed:
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 8)
     $ remember("hana", "found the reading club without her; she left to pursue art")
     $ queue_message("hana", "The room is still there. The books are still there. But I'm not, and that's the point. Thank you for everything.", day="yesterday")
-    $ reward_attributes_once("hana_visit_closed_close", [("grace", "small")], show="card")
+    $ reward_attributes_once("hana_visit_closed_close", [("grace", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
     stop music fadeout 3.0

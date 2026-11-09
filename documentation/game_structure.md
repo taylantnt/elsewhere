@@ -34,14 +34,16 @@ is the revelation and the endings.
 | Act | Title | What it covers | Ends on |
 |-----|-------|----------------|---------|
 | 1 | The Arrival | The plane, Narita terminal, the travel decision, the journey home, the house, the first dream | The end of the first dream, where `morning_call` begins Act 2 |
-| 2 | The Long Middle | The opening school days, the first weekend, the free-roam hub, the seven-visit confidant stories | *not written* — ends when the glitches turn structural |
+| 2 | The Long Middle | The opening school days, the first weekend, the free-roam hub, the seven-visit confidant stories | **In progress** — days 1–7 built, the hub reached, and the first visits of every arc written; ends when the glitches turn structural |
 | 3 | The Glitch | The simulation leaks stop being atmospheric and start breaking the world (treatment "Escalating Mystery" stages 1–5) | *not written* |
 | 4 | The End | Hikari's revelation at the river, the three endings, the epilogue coda | *not written* |
 
 The prologue content and the first two school days are built end to end, and
-the script now continues through the first weekend to Monday's quiz. The hub
-(`label free_afternoon` + `screen location_hub`) is wired but no day scene
-calls it yet, and the confidant visit labels are stubs.
+the script now continues through the first weekend to Monday's quiz, then into
+Tuesday's first hub afternoon (`tuesday_morning` → the lecture →
+`free_afternoon` → dinner → night). The hub (`label free_afternoon` +
+`screen location_hub`) is wired and now reached: the first hub day is Day 7, and
+the confidant visit labels are written scenes, not stubs.
 
 > The older numbering (Act 1 = the airport, Act 2 = the journey, Act 3 = the
 > first day) is retired, and so is the intermediate numbering that made the
@@ -419,6 +421,37 @@ The two days after the Saturday sequence. `home_sukiyaki` jumps to
   library, or answer Hikari's incoming `run_chat` question about the quiz.
   Then home, dinner, night, `end_of_build`.
 
+### 4.10 The first hub day (`label tuesday_morning` → `label tuesday_lecture` →
+### `label free_afternoon` → evening → night → `end_of_build`)
+
+Tuesday, April 14 (Day 7) is the first day the story hands the afternoon to
+the hub, and it is the first real hub day of the story. `monday_morning` now
+ends on `jump tuesday_morning` instead of falling into the end-of-build card.
+
+- `tuesday_morning` — breakfast with the family, the midterm briefing, Hikari's
+  walk to the gate. Three breakfast options, one per attribute at Insight micro,
+  Grace micro, and Nerve micro. The morning ends at the gate; `tuesday_lecture`
+  follows.
+- `tuesday_lecture` — the haiku lecture on the interval `間` and the load-bearing
+  pause. Three options, one per attribute at micro: the pause is load-bearing
+  (Insight), asking whether a poem can have too much space (Nerve), sliding the
+  handout to the student behind (Grace).
+- `free_afternoon` → `tuesday_lecture`'s caller — the hub. `free_afternoon`
+  now passes the full row list — `confidant_order` plus `walk_hikari` and
+  `walk_alone` — to `screen location_hub`, records the pick in
+  `last_afternoon_place`, and routes `walk_hikari` / `walk_alone` to the new
+  `afternoon_walk_*` labels. The evening reads the picked row (or Head Home)
+  when it comes back home.
+- Evening / night — dinner, the study desk, and the first quiet night of the
+  week. Three night options, one per attribute at micro: reading the kigo list
+  aloud (Insight), asking about Hikari's seminar (Grace), admitting fear of the
+  midterm (Nerve). The night ends on the dream beat and into `end_of_build`.
+
+The two walks are new generic scenes rather than new confidant arcs: they are
+always open rows, they pay once per answered question, and each pays one
+attribute per option at micro size. `walk_hikari` is Grace / Insight / Nerve,
+`walk_alone` is Insight / Grace / Nerve — the same three-attribute spread.
+
 ---
 
 ## 5. Systems
@@ -546,13 +579,16 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   Come back another day, Closed today, or Story complete. Only available rows
   are clickable. The destination list scrolls; Head Home remains available in
   the fixed footer. The eyebrow carries the current in-game date.
-- **The hub is wired but not yet reached.** `label free_afternoon` (end of
-  `script.rpy`) calls the screen and jumps to `confidant_visit_<place>`; those
-  five labels are stubs that `return` until the Act 2 visit scenes are written.
-  A day scene `call`s it after lunch; `None` from the screen means the
+- **The hub is wired and reached.** `label free_afternoon` (end of
+  `script.rpy`) calls the screen and jumps to `confidant_visit_<place>`; the
+  five confidant visit labels are written scenes, and the two walks
+  (`afternoon_walk_hikari`, `afternoon_walk_alone`) are new generic rows. A
+  day scene `call`s it after lunch; `None` from the screen means the
   afternoon was left unspent and the day continues. The first-afternoon fork
   (§4.6) stays hand-written dialogue because Hikari is asking the question
-  there — that is deliberate, not an oversight.
+  there — that is deliberate, not an oversight. The first hub day is Day 7
+  (`tuesday_morning` → `tuesday_lecture` → `free_afternoon`); every later
+  hub day is this shape with different content.
 
 ### 5.8 Messages — texting, threads, and the buzz
 `game/messages.rpy`. WIRE is the contacts book; Messages is the conversation.
@@ -606,7 +642,7 @@ what makes them textable.
 and one place to say which weekdays a destination is open.
 
 - **The anchor is fixed.** Day 1 is Wednesday, April 8; Day 2 is Thursday,
-  April 9; and the built story runs through Monday, April 13 (Day 6). Every day
+  April 9; and the built story runs through Tuesday, April 14 (Day 7). Every day
   label pins its absolute day at the top with `set_story_day()`, so a branch or
   a rollback cannot leave the calendar a day behind. The full date table lives
   in `documentation/calendar.md`.
@@ -677,7 +713,7 @@ and one place to say which weekdays a destination is open.
 | `story_day` | `set_story_day()` at the top of each day label (`airport_arrival` = 1, `morning_call` = 2, `second_morning` = 3, `saturday_off` = 4, `sunday_morning` = 5, `monday_morning` = 6) | The canonical date; the HUD, phone Calendar and weekly hours all read it |
 | `phone_calendar_selected` | the phone Calendar date grid | Which date the calendar's detail pane is showing; `None` means today (or the first of a browsed month) |
 | `phone_calendar_month_offset` | the phone Calendar arrows | How many months the grid is from the current story month |
-| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the Saturday scenes (`hana`, `orson`) | How many of the seven visits each person has had; `destination_state()` and WIRE read it |
+| `confidant_visits` | `after_school_walk_alone` (chef), `after_school_photo_club` (sim), the maid cafe scene (aya), and the Saturday scenes (`hana`, `orson`) | How many of the seven visits each person has had (Chef's runs to eight — `confidant_visit_totals` — so his eighth can be the closed shop); `destination_state()` and WIRE read it |
 | `hikari_visits` | `after_school_run` | Hikari's own visit count — feeds her WIRE progress ticks, separate from the confidant table |
 | `declined_dinner` | `first_evening_dinner` (walk-alone route only) | He told the family he was still full from ramen; `second_morning` breakfast reads it so the two days agree |
 | `sister_affection`, `father_affection`, `sim_affection`, `chef_affection`, `aya_affection`, `hana_affection`, `orson_affection` | The relevant first-visit/run/dinner/night beats; `add_affection()` in `script.rpy` | Relationship trust, written by the story and read through the affection helpers (`affection_level`, thresholds). Every confidant has a first-visit increment; Hikari and Tetsuo also gain from selected family/run beats. |
@@ -703,11 +739,11 @@ that does not exist.
   facility), the three endings (Escape / Blue Pill / Failure), and the
   epilogue coda all live there. See `story_treatment.md` and `plan.md`.
 - **The day loop after the current build.** `free_afternoon` and the
-  `confidant_visit_*` stubs exist (§5.7). The playable story now runs through
-  Monday (§4.9) and lands on the end-of-build card (`end_of_build`), so the
-  repeating day is not missing the terminal path; it is simply still
-  unwritten. A repeating day (morning → lecture → hub → night) remains the
-  missing skeleton.
+  `confidant_visit_*` labels exist (§5.7). The playable story now runs through
+  Tuesday — the first hub day — and lands on the end-of-build card
+  (`end_of_build`), so the repeating day is not missing the terminal path; it is
+  simply still unwritten. A repeating day (morning → lecture → hub → night)
+  remains the missing skeleton.
 - **The confidant locations beyond their first visit.** All five confidants
   now have their **first** visit in the script (§4.6, §4.7, §4.8): Chef, Sim
   and Aya on their first afternoons, Hana and Orson on the Saturday. Every one

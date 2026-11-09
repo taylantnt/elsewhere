@@ -507,9 +507,10 @@ Keep general character attributes distinct from individual relationship values a
 ### 7.6.1 Relationship Trust Levels
 
 Relationship values are written separately from the three attributes. The
-current build uses `sister_affection` for Hikari and `father_affection` for
-Tetsuo, plus per-confidant placeholders for Sim, Orson, Chef, Aya and Hana. Those
-values are **trust**, not points to spend.
+current build tracks Hikari (`sister_affection`), Tetsuo (`father_affection`),
+and each confidant (`chef_affection`, `sim_affection`, `aya_affection`,
+`hana_affection`, `orson_affection`). Those values are **trust**, not points to
+spend.
 
 The helper implementation in `game/script.rpy` reads them through
 `affection_level()`, with thresholds:
@@ -522,9 +523,10 @@ The helper implementation in `game/script.rpy` reads them through
 | 4 | 8 | Family enough that the door is open without asking. |
 
 Hikari’s affection should rise from better answers and real observations; Tetsuo’s
-from kept promises, responsibility, and practical care. Aya’s first maid-cafe
-visit now increments her relationship value. Future confidant content can use the
-same helper rather than adding a second affection system.
+from kept promises, responsibility, and practical care. Each confidant’s first
+visit now increments their relationship value (Chef, Sim, Aya, Hana, Orson).
+Future confidant content can use the same helper rather than adding a second
+affection system.
 
 ### 7.7 Mystery and discovery
 
@@ -551,7 +553,7 @@ as a short centred notice that fades in under the top of the screen and fades ou
 Design rules:
 
 - **Memory is not a reward.** A remembered answer pays nothing and a paying answer is still remembered; the two systems are independent and neither substitutes for the other. That is the whole point: an answer can be free and still matter.
-- **Memory is for people who matter.** Tag someone when losing them is a scene the story is going to spend; do not tag a stranger the protagonist will never see again. The characters tagged so far are **Hikari**, the **circles clerk**, the **professor**, **Tetsuo** (the father), and **Sim**.
+- **Memory is for people who matter.** Tag someone when losing them is a scene the story is going to spend; do not tag a stranger the protagonist will never see again. The characters tagged so far are **Hikari**, the **circles clerk**, the **professor**, **Tetsuo** (the father), **Chef**, **Sim**, **Hana**, and **Orson**.
 - **Write the note as a plain fact, first person.** `remember("hikari", "asked what she saw in the courtyard, years ago")` - not "was kind", not "earned Grace". It is a log of what he did, not of what it was worth.
 - **A replayed answer is still remembered, but only once.** A latched answer (§5.4) that the game plays back on a second visit must not log its memory again, so the notice does not repeat.
 - **The name on screen is not the id.** The keys are lowercase ids; the notice reads from `memory_names` so it can say "Hikari" rather than "hikari", and anything untagged falls back to a capitalised id.
@@ -760,3 +762,30 @@ Every implementation should preserve that purpose: the system exists to create m
 - A player should still be able to reach **Rank 2** in at least one attribute through deliberate play by the end of day two; no single route is wallowing, and the player is never forced onto one attribute’s treadmill.
 
 The next balance pass should wait for Act 2 confidant scenes and Act 3/4 choices, not for this batch.
+
+### 12.2 Final Balance Verdict — 2026-11-09
+
+**Verdict: balance pass applied, then re-audited after the Day 7 build.**
+
+- The confidant close rewards (`*_close`) now rotate across Insight, Grace and
+  Nerve at micro (0.2) instead of paying Grace on nearly every visit.
+- Menus that were one-sided or dead now pay one attribute per answered choice at
+  micro size; the new Day 7 menus (M55–M60) and the hub walks (M58–M59) follow
+  the same spread. The full map lives in `attribute_rewards_checklist.md`.
+- The mislabelled rewards were reassigned: a choice that tests an attribute
+  pays that attribute (`answer_clock_ask` → Nerve; the night-table unhinged
+  answer now pays a nudge), practical questions pay Insight, relationship
+  answers pay Grace, and no answered choice pays a Grace penalty where the
+  behaviour is a win.
+- The first gates are unchanged and still reachable: **0.8 Insight**, **1.0
+  Grace**, and **0.3 Nerve**. The night-table Nerve gate moved from a plain
+  micro reward to a nudge so opening it is worth the player's Nerve.
+- The first-connection and early-reward ceilings hold; the taxi asymmetry
+  (Nerve bonus on the easy route, Insight on the cheap route) was kept as route
+  identity, not fixed away.
+- A player should still be able to reach **Rank 2** in at least one attribute
+  through deliberate play; no attribute is starved and no single route is
+  wallowing.
+
+The next balance pass should wait for the Act 3/4 choices, the Hikari run beats
+and the remaining weekends, not for this batch.

@@ -12,7 +12,7 @@ in `story_treatment.md` and the per-location interaction docs; this file is the
 | Act | Title | Covers | Status |
 |-----|-------|--------|--------|
 | 1 | The Arrival | Airport → home → first dream → first night | **Built** |
-| 2 | The Long Middle | First day, second day, the hub, all confidant visits | **In progress** — days 1–2 built, hub not yet reached by the story |
+| 2 | The Long Middle | First day, second day, the hub, all confidant visits | **In progress** — days 1–7 built, hub reached, visits 2–7 written |
 | 3 | The Glitch | The leaks stop being atmospheric and start being structural (treatment "Escalating Mystery" stages 1–5) | Not written |
 | 4 | The End | The revelation, the three endings, and the epilogue coda | Not written |
 
@@ -68,6 +68,19 @@ which is the simulation removing people as the test measures his equilibrium.
 
 ### Code
 
+- [x] 2026-11-09 — Day 7 (Tuesday, April 14) written end to end:
+      `tuesday_morning` (breakfast fork) → `tuesday_lecture` (haiku) →
+      `free_afternoon` (first hub day) → dinner/night → dream → `end_of_build`;
+      `monday_morning` now ends on `jump tuesday_morning` instead of falling
+      into the end-of-build card. Docs synced to the Tuesday boundary.
+- [x] 2026-11-09 — Hub now routes the two walks: `free_afternoon` passes
+      `places=confidant_order + ["walk_hikari", "walk_alone"]` to
+      `screen location_hub`, writes the pick into `last_afternoon_place`, and
+      jumps to the new `afternoon_walk_hikari` / `afternoon_walk_alone` labels.
+- [x] 2026-11-09 — Hana made an eighth-visit exception like Chef:
+      `confidant_visit_totals["hana"] = 8`, `wire_contacts["hana"]["total"] = 8`,
+      `act_confidant_cap[4] = 8`, so her closed reading-room scene is visit 8,
+      not a counter overflow. Docs synced.
 - [x] 2026-11-05 — Chef teaches `umai` in `after_school_walk_alone` (was: word
       recognized from a packet). Docs synced.
 - [x] 2026-11-05 — `game_structure.md` updated: new act table, §4.7 second
@@ -167,9 +180,10 @@ which is the simulation removing people as the test measures his equilibrium.
       with centered white glyphs in one design language; grayed-out `_disabled`
       variants generated for every app including WIRE; launcher tiles now center
       the icon + label through a centered vbox. Lint passes; docs synced.
-- [ ] Wire `free_afternoon` into a real day loop (needs a day-3+ scene:
-      morning → lecture → hub → night). Visit labels
-      (`confidant_visit_<place>`) are stubs until the Act 2 scenes are written.
+- [x] Wire `free_afternoon` into a real day loop (day-3+ scene now exists:
+      `tuesday_morning` → `tuesday_lecture` → `free_afternoon`; visit labels
+      `confidant_visit_<place>` are written scenes, the repeating loop after the
+      current build remains open).
 - [ ] Script confidant visits 2–7 (chef 2–7, sim 2–7, orson 2–7, aya 2–7,
       hana 2–7). Interaction docs are written for all of them.
 - [ ] Hikari's recurring run beats 2–7 (user intends to write these).

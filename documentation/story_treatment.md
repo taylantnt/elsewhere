@@ -89,13 +89,16 @@ much.
 Each day in Act 2 follows the same shape with different content:
 
 1. **Morning** at the house. Breakfast with the family. Tetsuo gives a rule.
-Miharu worries. Hikari is already leaving.
+Miharu worries. Hikari is already leaving. The first hub day (Day 7) adds the
+midterm briefing to this step; later hub days keep the same shape.
 2. **Lecture** at the university. The professor teaches, the protagonist
 listens, and the lecture topic always carries a thematic echo of what is
 happening in the confidant arcs.
 3. **Free afternoon** via the hub. One visit per day. The protagonist picks
 where to go, and the game takes him there. The list holds the five confidant
-places plus the two walks home.
+places plus the two walks home. Day 7 is the first day this step is real: the
+hub opens after the lecture, and the evening carries the picked place home
+through `last_afternoon_place`.
 4. **Evening** at the house. Dinner at eight. The family talks. The protagonist
 carries what happened that afternoon home with him, and sometimes the house
 notices.
@@ -114,7 +117,9 @@ already asked, and this time she hears herself do it.
 Every confidant has seven visits. After the seventh, they are gone. The place
 they lived in is still there, but the person who made it matter is not. That
 pattern is the thesis of the game: getting close to someone is what makes them
-leave.
+leave. Chef and Hana are the two documented exceptions — their stories run one
+visit longer, to the closed shop and the closed reading room, which is the end
+of the arc rather than a departure.
 
 ### The Ramen Chef — Seven Bowls
 
@@ -769,9 +774,9 @@ anymore. The last thing to go is Hikari voice, telling him which way the door is
 
 There is a second version of this ending, and it is earned. The confidants were
 never just characters — they were constructs with a directive: help the subject
-if he asks for the way out. A confidant the protagonist maxed out (all seven
-visits) remembers what they were built for. If he treated them like people,
-they remember it too, and one of them can be there at the door — a voice on the
+if he asks for the way out. A confidant the protagonist maxed out (their full
+run) remembers what they were built for. If he treated them like people, they
+remember it too, and one of them can be there at the door — a voice on the
 other side, a hand on the lock, a final goodbye that is also a thank-you. An
 under-massed escape still works; it is just lonelier, and the layers peel away
 with no voices in them at all.

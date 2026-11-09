@@ -1,14 +1,15 @@
 # Attribute Rewards Checklist
 
-Current code snapshot: November 6, 2026.
+Current code snapshot: November 7, 2026.
 
 This is an editable checklist of the current story choice menus kept here —
-M01–M45 plus the walk-alone still-full fork (M35A), M46 and M47 for the new
-night/weekend menus, and the retired camera menu (M31) — including every
-answer with no attribute reward. The current live reward groups are E01–E05
-plus the archived E01 board; non-dialogue rewards are listed separately.
-Unwritten future scenes and the developer rank-up shortcut are not story
-rewards.
+M01–M54, the retired weekend-plan menu (M47), the retired camera menu (M31),
+the walk-alone still-full fork (M35A), and M55–M60 for the first hub day
+(Tuesday, Day 7) — including every answer with no attribute reward. The current
+live reward groups are E02–E08 plus the archived E01 board; the five confidant
+chains' visits 2–7 are summarised in the **Confidant Visit Rewards** section
+below; non-dialogue rewards are listed separately. Unwritten future scenes and
+the developer rank-up shortcut are not story rewards.
 
 ## How To Edit
 
@@ -115,9 +116,9 @@ Asking for advice is not the actual travel decision.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M06.01 | Tell me about the train. | No rewards | Leads to M07. |
-| M06.02 | Tell me about the taxi. | No rewards | Receives taxi advice, then leaves the terminal. |
-| M06.03 | I have what I need. Thank you. | Insight +0.2 | Leaves the terminal; flag `veteran_advice_decline`. |
+| M06.01 | Tell me about the train. | Insight +0.2 | Asks the veteran about the cheaper, longer route; flag `veteran_advice_train`. |
+| M06.02 | Tell me about the taxi. | Insight +0.2 | Asks the veteran about the direct, expensive route; flag `veteran_advice_taxi`. |
+| M06.03 | I have what I need. Thank you. | Nerve +0.2 | Decides he has enough information; flag `veteran_advice_decline`. |
 
 ### M07. Additional Taxi Advice
 
@@ -126,7 +127,7 @@ Prompt: "Would you like to hear about the taxi as well?"
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M07.01 | Tell me about the taxi. | No rewards | Receives taxi advice. |
+| M07.01 | Tell me about the taxi. | Insight +0.2 | Follows the train branch into the taxi advice; flag `veteran_advice_taxi_detail`. |
 | M07.02 | I'll take the train. Thank you. | No rewards | This answer does not lock in the route or award points; M08 is the actual decision. |
 
 ## Travel
@@ -162,7 +163,7 @@ Context: the meter has started; the protagonist is uncertain about the fare.
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M10.01 | Thank him in Japanese. | No rewards | Says "Arigatou... gozaimasu." |
-| M10.02 | Ask him to confirm the fare. | Nerve +0.5 | Asks whether it will be around eighteen thousand yen; flag `answer_taxi_fare`. |
+| M10.02 | Ask him to confirm the fare. | Insight +0.2 | Asks whether it will be around eighteen thousand yen; flag `answer_taxi_fare`. |
 | M10.03 | Watch the city through the window. | No rewards | Stops watching the meter for a moment. |
 
 ### M11. Approaching The Train Gate
@@ -206,8 +207,8 @@ Prompt: "Sorry about the stairs. And the boxes. I should have brought them up ea
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M14.01 | You've already done a lot for me. | Grace +0.3 | Acknowledges her effort; flag `answer_boxes_reassure`. |
-| M14.02 | Which ones go upstairs? | No rewards | Asks whether to carry all the boxes or just the clothes. |
-| M14.03 | Can we leave the books until morning? | Grace -0.2 | Asks to postpone the heavier unpacking because of fatigue; flag `answer_boxes_postpone`. |
+| M14.02 | Which ones go upstairs? | Insight +0.2 | Asks whether to carry all the boxes or just the clothes; flag `answer_boxes_upstairs`. |
+| M14.03 | Can we leave the books until morning? | Nerve +0.2 | Asks to postpone the heavier unpacking because of fatigue; flag `answer_boxes_postpone`. |
 
 ### M15. Breakfast With Hikari
 
@@ -216,7 +217,7 @@ Context: people in the department have been asking when the protagonist will arr
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M15.01 | What have you told them about me? | Nerve -0.2 | Hikari remembers the question; flag `answer_breakfast_questions`. |
+| M15.01 | What have you told them about me? | Insight +0.2 | Hikari remembers the question; flag `answer_breakfast_questions`. |
 | M15.02 | Should I introduce myself today? | No rewards | Hikari remembers the question. |
 | M15.03 | Thank you for the emails. | Grace +0.5 | Explains that her emails made the move less frightening; flag `answer_breakfast_emails`; Hikari remembers. |
 
@@ -283,9 +284,9 @@ Context: Student Relations registration made the protagonist late for his first 
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M21.01 | I'll write that down. | No rewards | Records the attendance rule; the professor remembers. |
-| M21.02 | It won't happen again. | No rewards | Apologises and promises to arrive early; the professor remembers. |
-| M21.03 | [Nerve] Can we discuss today's late mark? | Grace -0.2 | Requires 0.3 Nerve points; flag `answer_clock_ask`; requests review of the registration conflict; the professor remembers. |
+| M21.01 | I'll write that down. | Insight +0.2 | Records the attendance rule; the professor remembers; flag `answer_clock_write`. |
+| M21.02 | It won't happen again. | Grace +0.2 | Apologises and promises to arrive early; flag `answer_clock_promise`; the professor remembers. |
+| M21.03 | [Nerve] Can we discuss today's late mark? | Nerve +0.2 | Requires 0.3 Nerve points; flag `answer_clock_ask`; requests review of the registration conflict; the professor remembers. |
 
 ### M22. Responding To Hikari After Class
 
@@ -294,8 +295,8 @@ Prompt: "I should have told you where to go before I ran off. I'm sorry."
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M22.01 | Next time, warn me before you go. | Nerve +0.5, Grace -0.2 | Sets a boundary about being left without directions; flag `answer_hikari_warning`; Hikari remembers. |
-| M22.02 | Thanks for saving me a seat. | No rewards | Hikari remembers the thanks. |
+| M22.01 | Next time, warn me before you go. | Nerve +0.5 | Sets a boundary about being left without directions; flag `answer_hikari_warning`; Hikari remembers. |
+| M22.02 | Thanks for saving me a seat. | Grace +0.2 | Hikari remembers the thanks; flag `answer_hikari_seat`. |
 | M22.03 | Let's get something to eat. | No rewards | Moves on from the lecture; Hikari remembers. |
 
 ### M23. Choosing The First Free Afternoon
@@ -322,9 +323,9 @@ Context: the handwritten menu is unreadable to the protagonist.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M24.01 | Order in English. | No rewards | Asks for ramen in English. |
-| M24.02 | Point at something. | No rewards | Points at the second menu line. |
-| M24.03 | Ask for his recommendation. | Nerve +0.5 | Tries "Osusume" in unfamiliar Japanese; flag `answer_ramen_recommendation`. |
+| M24.01 | Order in English. | Nerve +0.2 | Asks for ramen in English; flag `answer_ramen_english`. |
+| M24.02 | Point at something. | Insight +0.2 | Points at the second menu line; flag `answer_ramen_point`. |
+| M24.03 | Ask for his recommendation. | Grace +0.2 | Tries "Osusume" in unfamiliar Japanese; flag `answer_ramen_recommendation`. |
 
 ### M25. Receiving The Bowl
 
@@ -343,8 +344,8 @@ Prompt: the chef says "うまい、だろ？" after hearing the protagonist enjo
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M26.01 | Ask what it means. | Grace +0.5 | Asks what "umai" means; the chef teaches it; flag `chef_first_umai`. |
-| M26.02 | Thank him properly. | Grace +0.5 | Says "Arigatou gozaimasu."; same flag `chef_first_umai`. |
+| M26.01 | Ask what it means. | Insight +0.2 | Asks what "umai" means; the chef teaches it; flag `chef_first_umai_meaning`. |
+| M26.02 | Thank him properly. | Grace +0.2 | Says "Arigatou gozaimasu."; flag `chef_first_umai_thanks`. |
 | M26.03 | Ask what gives it the smoky flavour. | No rewards | Asks whether the flavour comes from the pork. |
 | M26.04 | Smile and keep eating. | No rewards | Nods and continues eating. |
 
@@ -372,7 +373,7 @@ Context: Hikari walks past the house and says she is going out again.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M28.01 | Out where? | No rewards | Asks where she is going. |
+| M28.01 | Out where? | Insight +0.2 | Asks where she is going; flag `answer_run_where`. |
 | M28.02 | Can I come? | Nerve +0.2 | Asks to join her; flag `answer_run_join`. |
 
 Both answers lead to the run. M28.02's small Nerve reward is separate from
@@ -386,8 +387,8 @@ Context: they drink under a lamp and listen to the water.
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M29.01 | Let her enjoy the quiet. | Grace +0.5 | Gives her space without filling the silence; flag `answer_river_quiet`. |
-| M29.02 | Do you do this every day? | No rewards | Asks how often she runs. |
-| M29.03 | Why the river? | No rewards | Asks why she chooses this route. |
+| M29.02 | Do you do this every day? | Insight +0.2 | Asks how often she runs; flag `answer_river_everyday`. |
+| M29.03 | Why the river? | Nerve +0.2 | Asks why she chooses this route; flag `answer_river_why`. |
 
 ## Photography Club Route
 
@@ -398,9 +399,9 @@ Context: the room turns to look at the newcomer and Sim welcomes him.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M30.01 | Is this the photography club? | No rewards | Confirms he has found the right room. |
+| M30.01 | Is this the photography club? | Insight +0.2 | Confirms he has found the right room; flag `answer_circle_is`. |
 | M30.02 | Could I join today's session? | Nerve +0.5 | Asks to participate despite being new to group sessions; flag `answer_circle_join`. |
-| M30.03 | Hikari told me I could drop in. | No rewards | Checks whether now is a good time. |
+| M30.03 | Hikari told me I could drop in. | Grace +0.2 | Checks whether now is a good time; flag `answer_circle_hikari`. |
 
 ### M31. Answering The Camera Question
 
@@ -425,8 +426,8 @@ Prompt: "What do you notice?"
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M32.01 | The window is brighter than everything else. | Insight +0.5 | Recognises the exposure problem and reframes the shot; flag `sim_circle_first`. |
-| M32.02 | I tilted the phone. | No rewards | Notices the crooked door in the photograph. |
-| M32.03 | I'm not sure what to look for yet. | No rewards | Asks for time and guidance. |
+| M32.02 | I tilted the phone. | Insight +0.2 | Notices the crooked door in the photograph; flag `answer_circle_tilt`. |
+| M32.03 | I'm not sure what to look for yet. | Nerve +0.2 | Asks for time and guidance; flag `answer_circle_unsure`. |
 
 ### M33. Asking Sim About Photography
 
@@ -446,8 +447,8 @@ Context: a volunteer is modelling and the theme is a natural smile.
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M34.01 | Can I help set things up? | Grace +0.5 | Moves spare chairs so the model has room; flag `answer_circle_help`. |
-| M34.02 | Can I watch for a while first? | No rewards | Asks to observe before participating. |
-| M34.03 | Do you choose a new theme each week? | No rewards | Asks how session themes work. |
+| M34.02 | Can I watch for a while first? | Insight +0.2 | Asks to observe before participating; flag `answer_circle_watch`. |
+| M34.03 | Do you choose a new theme each week? | Grace +0.2 | Asks how session themes work; flag `answer_circle_theme`. |
 
 Completing the session closes the route with the Grace award in E05
 (`photo_first_session`); `sim_circle_first` pays for M32.01 specifically, not
@@ -466,7 +467,7 @@ dinner hungry, so this fork does not appear for them.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M35A.01 | Be honest. Tell them you're still full from the ramen. | Grace -0.2 | Sets `declined_dinner = True` and `first_dinner_declined`; father explains the dinner-time rule; Hikari covers for him. Jumps straight to `end_of_first_day`, skipping M35. |
+| M35A.01 | Be honest. Tell them you're still full from the ramen. | Nerve +0.2 | Sets `declined_dinner = True` and `first_dinner_declined`; father explains the dinner-time rule; Hikari covers for him. Jumps straight to `end_of_first_day`, skipping M35. |
 | M35A.02 | Say you're hungry, and sit down to eat with them. | Grace +0.5 | Sets `first_dinner_covered`; he eats with the family anyway, then continues to M35. |
 
 ### M35. First Evening Dinner
@@ -476,7 +477,7 @@ Source: [`first_evening_dinner`](../game/script.rpy).
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M35.01 | Try the natto. | Nerve +0.2 | flag `first_dinner_natto`; father remembers. |
-| M35.02 | How long to get used to the neighborhood? | Insight +0.2 | flag `first_dinner_neighborhood`; father remembers. |
+| M35.02 | How long to get used to the neighborhood? | Grace +0.2 | flag `first_dinner_neighborhood`; father remembers. |
 | M35.03 | Sorry I kept you waiting. | Grace +0.2 | flag `first_dinner_apology`; father remembers. |
 
 ### M36. First Night With Hikari
@@ -538,7 +539,7 @@ Source: [`second_school_day`](../game/script.rpy).
 |---|---|---|---|
 | M41.01 | Follow the arcade sounds for a while. | Nerve +0.2 | Flag `akihabara_explore_arcades`. |
 | M41.02 | Take a closer look at the camera displays. | Insight +0.2 | Flag `akihabara_explore_cameras`. |
-| M41.03 | Keep to the main street and watch the crowd. | Grace +0.2 | Flag `akihabara_explore_crowd`. |
+| M41.03 | Keep to the main street and watch the crowd. | Insight +0.2 | Flag `akihabara_explore_crowd`. |
 
 ### M42. Approaching The Maid Cafe
 
@@ -589,17 +590,228 @@ Context: Tetsuo asks what the new phone/plan actually cost or meant.
 | M46.01 | I checked the total before I signed. It was lower than I expected. | Insight +0.2 | Flag `night_table_total`; Tetsuo's regard increases by 2. |
 | M46.02 | I spent what I needed to. Nothing extra. | Grace +0.2 | Flag `night_table_plain`; Tetsuo's regard increases by 1. |
 | M46.03 | I'd rather not turn dinner into a bill. | Nerve +0.2 | Flag `night_table_boundary`; Tetsuo's regard increases by 1. |
-| M46.04 | [Nerve] I could tell you. Then you could tell me what the car cost. | Nerve +0.2 | Requires 1.2 Nerve points; flag `night_table_nerve`; Tetsuo's regard increases by 1. |
+| M46.04 | [Nerve] I could tell you. Then you could tell me what the car cost. | Nerve +0.3 | Requires 1.2 Nerve points; flag `night_table_nerve`; Tetsuo's regard increases by 1. The gate now buys the larger reward. |
 
 ### M47. The Weekend Plan
 
-Source: [`second_school_day`](../game/script.rpy), upstairs weekend-menu after the night reflection.
+Source: [`second_school_day`](../game/script.rpy), upstairs weekend beat after the night reflection. **Retired as a menu.**
+
+Hikari now settles the plan herself: he names the reading room as the only choice if the quiz is real, and she makes it official. The old wander/river options are gone because Saturday is written as one continuous library → Hana → Orson sequence.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M47.01 | Study. If there's a quiz, I'm not guessing. | Insight +0.2 | Flag `night_weekend_study`; Hikari's trust increases by 1; sets `weekend_plan = "library"`. |
-| M47.02 | Walk until the neighborhood makes sense. No map, no destination. | Nerve +0.2 | Flag `night_weekend_wander`; Hikari's trust increases by 1; sets `weekend_plan = "wander"`. |
-| M47.03 | See the river again. If you'll have me. | Grace +0.2 | Flag `night_weekend_river`; Hikari's trust increases by 2; sets `weekend_plan = "river"`. |
+| M47.01 | The reading room. If the quiz is real, I can't afford to guess. | Insight +0.2 | Flag `night_weekend_study`; Hikari's trust increases by 1. Not a menu — the steer beat. |
+| M47.02 | — | — | Retired `night_weekend_wander`. |
+| M47.03 | — | — | Retired `night_weekend_river`. |
+
+**Retired:** keep the M47 IDs stable only for reference; no code should add a weekend destination menu back unless the wander/river scenes exist.
+
+### M48. Hikari's Room Visit (Night of Day Two)
+
+Source: [`night_room_visit`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M48.01 | I'll be at the library first thing. | Insight +0.2 | Flag `night_room_library_promise`; Hikari's trust increases by 1. |
+| M48.02 | What do I actually need to study? | Insight +0.2 | Flag `night_room_study_plan`; Hikari's trust increases by 1. |
+| M48.03 | You're going to quiz me, aren't you. | Grace +0.2 | Flag `night_room_tease`; Hikari's trust increases by 1. |
+
+## The Saturday Sequence
+
+### M49. Finding The Reading Room
+
+Source: [`library_search`](../game/script.rpy). All three options converge on the same door.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M49.01 | Ask the student reading by the window. | No rewards | Points him at the low-tables room. |
+| M49.02 | Follow the smell of green tea. | No rewards | Leads to the same door. |
+| M49.03 | Check the floor directory by the stairs. | No rewards | Leads to the same door. |
+
+### M50. The Reading Club Rules
+
+Source: [`reading_club_first`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M50.01 | Can I read in Japanese... even if I'm slow? | No rewards | The Student reassures him. |
+| M50.02 | I don't really know what to pick. | No rewards | The Student tells him to pick the shortest one. |
+
+### M51. Lupin's Den
+
+Source: [`lupins_den_first`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M51.01 | "...Thanks." | Grace +0.2 | Flag `lupins_den_thanks`. |
+| M51.02 | Say nothing. Drink the water. | No rewards | Orson notices anyway; the route closer still pays E08. |
+
+## Sunday And Monday
+
+### M52. Hikari's Sunday Practice Quiz
+
+Source: [`sunday_morning`](../game/script.rpy).
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M52.01 | Kigo = the seasonal word that carries the poem. | Insight +0.2 | Flag `sunday_quiz_q1`; only on the correct answer. |
+| M52.02 | 5-7-5 counts mora, on, not English syllables. | Insight +0.2 | Flag `sunday_quiz_q2`; only on the correct answer. |
+| M52.03 | Three absences = no final exam mark. | Insight +0.2 | Flag `sunday_quiz_q3`; only on the correct answer. |
+
+### M53. The Monday Quiz
+
+Source: [`monday_lecture`](../game/script.rpy). Mirrors M52: Insight micro per correct answer; the score itself lives in `monday_quiz_score` and drives closing narration.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M53.01 | Kigo = frog (the pond is the setting). | Insight +0.2 | Flag `monday_quiz_q1`; only on the correct answer. |
+| M53.02 | 5-7-5 counts mora, on, not syllables. | Insight +0.2 | Flag `monday_quiz_q2`; only on the correct answer. |
+| M53.03 | Three absences = attend but no mark. | Insight +0.2 | Flag `monday_quiz_q3`; only on the correct answer; a perfect score logs a professor memory. |
+
+### M54. Monday Afternoon
+
+Source: [`monday_lecture`](../game/script.rpy). Context: the first full school
+day, the afternoon is unstructured after the quiz.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M54.01 | Walk the campus until it stops feeling like a map. | Nerve +0.2 | Pays via flag `monday_walk_campus`; learning the place's shape without a plan. |
+| M54.02 | Go back to the library and finish the handout. | Insight +0.2 | Pays via flag `monday_library`; reading the kigo list until it becomes a weather report. |
+| M54.03 | Check the phone. Hikari is asking how the quiz went. | Grace +0.2 | Pays via flag `monday_phone_hikari`; staying in the conversation. |
+
+### M55. Tuesday Breakfast
+
+Source: [`tuesday_morning`](../game/script.rpy), menu at line 6757.
+Context: midterm briefing, so the morning's questions are about what the exam
+actually wants.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M55.01 | Ask Mother what a Japanese essay exam actually expects. | Insight +0.2 | Pays via flag `tuesday_breakfast_ask`; noticing one thing and staying with it. |
+| M55.02 | Take the dishes before she can ask. | Grace +0.2 | Pays via flag `tuesday_breakfast_dishes`; refusing the dishes. |
+| M55.03 | Tell Father I'm nervous about the midterm. | Nerve +0.2 | Pays via flag `tuesday_breakfast_nerves`; accepting that nervousness is useful. |
+
+### M56. Tuesday Lecture
+
+Source: [`tuesday_lecture`](../game/script.rpy), menu at line 6882.
+Context: the interval `間` and the load-bearing pause.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M56.01 | It gives the other words somewhere to stand. | Insight +0.2 | Pays via flag `tuesday_lecture_answer`; the pause is load-bearing. |
+| M56.02 | Ask whether a poem can have too much space. | Nerve +0.2 | Pays via flag `tuesday_lecture_question`; asking the hard question anyway. |
+| M56.03 | Slide my handout to the student beside me. | Grace +0.2 | Pays via flag `tuesday_lecture_handout`; helping without taking the floor. |
+
+### M57. Tuesday Night Study
+
+Source: [`tuesday_morning`](../game/script.rpy), night study desk menu.
+Context: before sleep, kigo list and the midterm.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M57.01 | Read the kigo list aloud until it sticks. | Insight +0.2 | Pays via flag `tuesday_study_aloud`; the words becoming his own. |
+| M57.02 | Ask her about her seminar. | Grace +0.2 | Pays via flag `tuesday_study_seminar`; asking the question nobody asks. |
+| M57.03 | Tell her I'm scared of the midterm. | Nerve +0.2 | Pays via flag `tuesday_study_scared`; admitting the fear. |
+
+## The Hub Walks
+
+### M58. The Hub Walk: With Hikari
+
+Source: [`afternoon_walk_hikari`](../game/script.rpy), label at the end of the
+Day 7 block.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M58.01 | Ask what she wanted to be before she decided to be this. | Grace +0.2 | Pays via flag `hub_walk_hikari_dream`. |
+| M58.02 | Take the route past the river and name the birds. | Insight +0.2 | Pays via flag `hub_walk_hikari_river`. |
+| M58.03 | Tell her I'm glad she waited. | Nerve +0.2 | Pays via flag `hub_walk_hikari_glad`. |
+
+### M59. The Hub Walk: Alone
+
+Source: [`afternoon_walk_alone`](../game/script.rpy), label at the end of the
+Day 7 block.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M59.01 | Follow the train line until the city changes. | Insight +0.2 | Pays via flag `hub_walk_alone_line`. |
+| M59.02 | Sit on the wall where the old men play shogi. | Grace +0.2 | Pays via flag `hub_walk_alone_shogi`. |
+| M59.03 | Take the street that looks wrong. | Nerve +0.2 | Pays via flag `hub_walk_alone_wrong`. |
+
+### M60. The Tuesday Hub Day
+
+Source: [`tuesday_morning`](../game/script.rpy) through `free_afternoon`.
+
+Context: Day 7 is the first hub day; the hub routes into the visit labels and
+the two walks.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M60.01 | Pick any destination in the hub. | No rewards | The day's own choices are M24–M34 / M35 / M36 / M41–M45; the hub row itself is bookkeeping only. |
+| M60.02 | Head Home. | No rewards | The afternoon is left unspent; the day continues without an outing reward. |
+
+## Confidant Visit Rewards
+
+The five confidant chains are told in visits. Chef and Hana are the two
+documented eight-visit exceptions — their eighth is the closed place, the end of
+the arc — and every close reward below is now one micro (0.2) sized and rotated
+across Insight, Grace and Nerve instead of paying Grace twice in a row.
+
+### Chef — the Ramen Shop (visits 2–8)
+
+| Visit | Answered choices (reward) | Close reward |
+|---|---|---|
+| 2 | Ask what he is making (Insight), watch him work silently (Grace), thank him for the last bowl (Nerve) | Grace micro |
+| 3 | Help them order (Grace), let them figure it out (Insight), ask Chef to recommend (Nerve); humble (Grace), share (Insight), understand (Insight) | Insight micro |
+| 4 | Did you change the recipe (Insight), what are you improving (Insight), how long (Grace); texture/temperature (Insight), perfect (Grace) | Nerve micro |
+| 5 | Introduce her (Grace), discover it (Insight), tell her what to order (Nerve); clean (Grace), work too hard (Insight), retire (Insight) | Grace micro |
+| 6 | Ask how long (Insight), ask what he is working on (Insight), tell him it takes time (Grace); Kenta (Insight), watch (Grace), explain (Insight) | Insight micro |
+| 7 | Good (Grace), needs more time (Insight), reminds him of the first bowl (Grace); refuse (Grace), promise (Grace), meaning (Insight); close the shop (Insight), Kenta (Grace), stay (Nerve) | Nerve micro |
+| Closed | Leave quietly (Grace), write him a message (Nerve), sit at the counter (Insight) | Grace micro |
+
+### Sim — the Photography Club (visits 2–7)
+
+| Visit | Answered choices (reward) | Close reward |
+|---|---|---|
+| 2 | Manual (Insight), automatic (Nerve), what to learn first (Grace) | Grace micro |
+| 3 | Decide (Nerve), wait (Grace), frame (Insight) | Insight micro |
+| 4 | Collective (Grace), choice (Insight), keep it simpler (Nerve); commit (Nerve), fear (Grace), who decides (Insight) | Nerve micro |
+| 5 | Honest (Insight), real (Grace), what made you keep going (Nerve) | Grace micro |
+| 6 | Validate (Grace), future (Insight), fear (Nerve); room not for the magazine (Grace), need time (Nerve), what if the magazine disappeared (Insight) | Insight micro |
+| 7 | Accept (Grace), stay (Nerve), carry (Insight); promise (Grace), meaning (Grace), future (Nerve) | Nerve micro |
+
+### Aya — the Maid Cafe (visits 2–7)
+
+| Visit | Answered choices (reward) | Close reward |
+|---|---|---|
+| 2 | Same as last time (Grace), surprise me (Nerve), what do you recommend today (Insight); lonely (Insight), travel (Nerve), picked (Grace); art surprise (Nerve), art same (Grace), silly (Grace), not silly (Grace), time (Insight) | Grace micro |
+| 3 | How are you actually (Grace), just herself (Insight), exhausting (Nerve); tried (Insight), dream alive (Grace), try for real (Nerve) | Insight micro |
+| 4 | School (Insight), change (Nerve), figuring it out (Grace); coming back (Insight), do they see you (Grace), masks are human (Nerve); wanted (Grace), worth asking (Nerve) | Nerve micro |
+| 5 | What would you do instead (Insight), parents (Grace), carrying (Nerve); doing (Grace), bravery (Nerve), what would make you stay (Insight) | Grace micro |
+| 6 | Audition (Nerve), kind (Insight), different (Grace); felt (Insight), again (Nerve), proud (Grace); more? (Insight), show someone (Nerve), already good (Grace); both (Grace), brave (Nerve) | Insight micro |
+| 7 | Leaving (Insight), happened (Nerve), sorry (Grace); proud (Grace), braver (Nerve), miss (Grace); treasure (Grace), perfect (Nerve) | Nerve micro |
+
+### Hana — the Reading Club (visits 2–8)
+
+| Visit | Answered choices (reward) | Close reward |
+|---|---|---|
+| 2 | Thanks for the book (Grace), watch quietly (Insight) | Grace micro |
+| 3 | What? Sorry (Grace), wait silently (Insight) | Insight micro |
+| 4 | Get up and pull a matching art book (Nerve), stay where I am (Grace) | Nerve micro |
+| 5 | Don't say anything. Just read (Grace), pretend not to notice (Insight) | Grace micro |
+| 6 | Take your time (Grace), I'm listening (Insight); tell them how you feel (Nerve), incredible (Grace) | Insight micro |
+| 7 | You told them (Insight), you talked to your parents (Grace); so what happens now (Insight), then you did win (Grace); won't forget you (Grace), means a lot to me (Nerve) | Nerve micro |
+| Closed | Leave quietly (Grace), message her (Nerve) | Grace micro |
+
+### Orson — Lupin's Den (visits 2–7)
+
+| Visit | Answered choices (reward) | Close reward |
+|---|---|---|
+| 2 | From somewhere far (Nerve), everywhere (Grace); surprise (Nerve), something light (Grace); teach (Grace), next time (Nerve) | Grace micro |
+| 3 | Go on (Grace), notebook (Grace), just live it (Nerve) | Insight micro |
+| 4 | Fake it (Nerve), like the idea of anchors (Insight); quiet (Insight), kindness (Grace), how different it is (Nerve) | Nerve micro |
+| 5 | Thanks that helps (Grace), still feels hard (Nerve) | Grace micro |
+| 6 | Keep showing up (Nerve), still scared (Grace) | Insight micro |
+| 7 | Miss this place (Grace), carry it with me (Nerve) | Nerve micro |
 
 ## Rewards Outside Dialogue Choices
 
@@ -651,6 +863,30 @@ Source: [`after_school_photo_club`](../game/script.rpy).
 | ID | Outcome / Action | Reward (editable) | Notes |
 |---|---|---|---|
 | E05.01 | Finish the first Circle session. | Grace +0.5 | Flag `photo_first_session`. |
+
+### E06. The Library Errand
+
+Source: [`reading_club_first`](../game/script.rpy).
+
+| ID | Outcome / Action | Reward (editable) | Notes |
+|---|---|---|---|
+| E06.01 | Collect the haiku study sheets from the course reserve. | Insight +0.2 | Flag `library_errand_docs`; clears `library_errand_available`. |
+
+### E07. Hana's First Visit
+
+Source: [`reading_club_first`](../game/script.rpy).
+
+| ID | Outcome / Action | Reward (editable) | Notes |
+|---|---|---|---|
+| E07.01 | Survive the reading club's first hour. | Grace +0.2 | Flag `reading_club_first`; `confidant_visits["hana"] = 1`, `hana_affection` +1, memory logged, `wire_unlock("hana")`. |
+
+### E08. Lupin's Den First Visit
+
+Source: [`lupins_den_first`](../game/script.rpy).
+
+| ID | Outcome / Action | Reward (editable) | Notes |
+|---|---|---|---|
+| E08.01 | Walk into Lupin's Den on the way home. | Nerve +0.2 | Flag `lupins_den_first`; `confidant_visits["orson"] = 1`, `orson_affection` +1, memory logged, `wire_unlock("orson")`. |
 
 ## Other Existing Screens
 

@@ -1,7 +1,7 @@
 # Calendar, Dates, and Location Hours
 **Document type:** As-implemented reference
 **Covers:** `game/calendar.rpy`, the date chip, the phone Calendar app, and weekly opening rules
-**Status:** Built; dates are canonical from the airport through Monday
+**Status:** Built; dates are canonical from the airport through Tuesday, Day 7
 
 > This is the document to check before writing a line that names a day or a date.
 > The script does not infer dates from scene order. Each day label pins the
@@ -19,6 +19,7 @@
 | Day 4 | Saturday, April 11 | `saturday_off` |
 | Day 5 | Sunday, April 12 | `sunday_morning` |
 | Day 6 | Monday, April 13 | `monday_morning` |
+| Day 7 | Tuesday, April 14 | `tuesday_morning` |
 
 The year is an internal anchor only. The HUD and the phone Calendar show the
 weekday and month/day; `2026` exists so month lengths and weekdays are real.
@@ -91,7 +92,7 @@ define story_calendar_events = {
     1: "Arrival in Tokyo",
     2: "First school day",
     # ...
-    7: "Tuesday: the next morning",
+    7: "The first hub afternoon",
 }
 ```
 

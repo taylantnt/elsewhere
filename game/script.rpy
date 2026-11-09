@@ -2270,13 +2270,16 @@ label talk_veteran_assistant:
             veteran "First, buy a ticket before you go through the gate."
             veteran "Look for the express on the Keisei Line. The local stops at every station and takes much longer."
             veteran "It should be about forty-five minutes."
+            $ reward_attributes_once("veteran_advice_train", [("insight", "micro")], show="auto")
             jump taxi_choice
         "Tell me about the taxi.":
             veteran "Follow the signs outside to the taxi stand. Show the driver the address."
             veteran "Budget around ¥18,000. More if there's traffic."
+            $ reward_attributes_once("veteran_advice_taxi", [("insight", "micro")], show="auto")
             jump end_airport
         "I have what I need. Thank you.":
-            $ reward_attributes_once("veteran_advice_decline", [("insight", "micro")], show="auto")
+            # Deciding he has enough information is self-reliance, not insight.
+            $ reward_attributes_once("veteran_advice_decline", [("nerve", "micro")], show="auto")
             jump end_airport
 
 label taxi_choice:
@@ -2286,6 +2289,7 @@ label taxi_choice:
             veteran "The taxi stand is just outside. There may be a short wait."
             veteran "The fare will be around ¥18,000, perhaps more in traffic."
             veteran "Show the driver the address and they'll take you there."
+            $ reward_attributes_once("veteran_advice_taxi_detail", [("insight", "micro")], show="auto")
             jump end_airport
         "I'll take the train. Thank you.":
             jump end_airport
@@ -2298,7 +2302,8 @@ label check_boards:
     "[board_line]"
     # Seeing the last notice means he has read the whole board.
     if board_message_index == len(board_messages) - 1:
-        $ reward_attributes_once("information_seeker", [("grace", "tiny")], show="auto")
+        # Reading the whole board is observation, not social grace.
+        $ reward_attributes_once("information_seeker", [("insight", "tiny")], show="auto")
     $ board_message_index = (board_message_index + 1) % len(board_messages)
     jump airport_exploration
 
@@ -2433,8 +2438,8 @@ label taxi_stand:
             mc "Excuse me. Around eighteen thousand yen?"
             taxi_driver "Yes. About. Traffic, little more."
             mc "Okay. Thank you."
-            # Asking about money despite embarrassment, not merely spending it.
-            $ reward_attributes_once("answer_taxi_fare", [("nerve", "small")], show="auto")
+            # Checking the fare is a practical question, not a test of nerve.
+            $ reward_attributes_once("answer_taxi_fare", [("insight", "micro")], show="auto")
         "Watch the city through the window.":
             mc "(The driver knows the way. I can stop staring at the meter for a minute.)"
 
@@ -2807,10 +2812,13 @@ label home_arrival:
         "Which ones go upstairs?":
             mc "All of these, or just the clothes?"
             mother "All three. The books are in the bottom one. Careful with that."
+            # Asking before lifting is practical care, not a social performance.
+            $ reward_attributes_once("answer_boxes_upstairs", [("insight", "micro")], show="auto")
         "Can we leave the books until morning?":
             mc "Could we bring up the clothes now and leave the books until morning? I'm barely awake."
             mother "Of course. The books won't mind waiting."
-            $ reward_attributes_once("answer_boxes_postpone", [("grace", "micro_loss")], show="auto")
+            # Naming a limit honestly is nerve, not a failure of grace.
+            $ reward_attributes_once("answer_boxes_postpone", [("nerve", "micro")], show="auto")
 
     "We carry what I need upstairs. She steadies the box while I find the light switch."
     if arrived_late:
@@ -3121,7 +3129,8 @@ label morning_call:
     hikari "I told them today. No pressure."
     menu:
         "What have you told them about me?":
-            $ reward_attributes_once("answer_breakfast_questions", [("nerve", "micro_loss")], show="auto")
+            # Wanting to know what people have heard is curiosity, not a lapse.
+            $ reward_attributes_once("answer_breakfast_questions", [("insight", "micro")], show="auto")
             mc "What have you told them about me?"
             hikari "That you're in our department and you ask a lot of questions."
             mc "Accurate, unfortunately."
@@ -3173,7 +3182,7 @@ label morning_call:
     "A bowl in my hands, and no idea what to do with either."
     hikari "Hey. You okay?"
     mc "Yeah. Just a lot of firsts in one morning."
-    hikari "First morning's the worst one. It gets easier by Wednesday. I promise."
+    hikari "First morning's the worst one. It gets easier by the weekend. I promise."
 
     jump leaving_house
 
@@ -3641,17 +3650,20 @@ label first_class:
     menu:
         "I'll write that down.":
             "I open my notebook and write the class time at the top of the page."
+            $ reward_attributes_once("answer_clock_write", [("insight", "micro")], show="auto")
             $ remember("professor", "wrote down the attendance rule")
         "It won't happen again.":
             mc "I'm sorry. I'll be here early from now on. I mean it."
             professor "Yes. You will."
+            $ reward_attributes_once("answer_clock_promise", [("grace", "micro")], show="auto")
             $ remember("professor", "apologised and promised to come early")
         "[tag_nerve] Can we discuss today's late mark?" if has_attribute_points("nerve", attribute_reward_value("nudge")):
             mc "Could we discuss today's late mark? Student Relations asked me to register before coming here."
             professor "..."
             professor "Bring me the registration slip. If the appointment overlapped my class, I will review it."
             mc "Thank you. I'll bring it tomorrow."
-            $ reward_attributes_once("answer_clock_ask", [("grace", "micro_loss")], show="auto")
+            # The gate tests nerve; the answer should reward the same behavior.
+            $ reward_attributes_once("answer_clock_ask", [("nerve", "micro")], show="auto")
             $ remember("professor", "asked him to review the registration delay")
 
     professor "Coming on time is late."
@@ -3690,13 +3702,15 @@ label first_class:
     hikari "I should have told you where to go before I ran off. I'm sorry."
     menu:
         "Next time, warn me before you go.":
-            $ reward_attributes_once("answer_hikari_warning", [("nerve", "small"), ("grace", "micro_loss")], show="auto")
+            # Setting a boundary is nerve; it is not a failure of grace.
+            $ reward_attributes_once("answer_hikari_warning", [("nerve", "small")], show="auto")
             mc "Next time, warn me before you go. I can't follow a route I don't know."
             hikari "Fair. I will."
             $ remember("hikari", "asked her not to leave without warning")
         "Thanks for saving me a seat.":
             mc "Thanks for saving me a seat, at least."
             hikari "Window side. You'll want it when the heating starts."
+            $ reward_attributes_once("answer_hikari_seat", [("grace", "micro")], show="auto")
             $ remember("hikari", "thanked her for saving him a seat")
         "I'd rather just move on. Let's eat.":
             mc "I'd rather just move on. Let's eat."
@@ -3829,15 +3843,20 @@ label after_school_walk_alone:
             mc "Uh... hi. Ramen, please?"
             "He looks at me properly for the first time, about a second, and then he waves at the board. The whole board."
             mc "(That was not a no. That was him telling me that the menu is the menu.)"
+            # Speaking first in a language he does not have yet.
+            $ reward_attributes_once("answer_ramen_english", [("nerve", "micro")], show="auto")
         "Point at something.":
             mc "(Right. Fine. This is the part where I point.)"
             "I point at a line. Any line. The second one down, because I have seen one of its words on a packet in the kitchen."
             "He glances at where my finger is, and then at me, and his face does not move at all."
+            # He uses a word he already recognizes to narrow the choice.
+            $ reward_attributes_once("answer_ramen_point", [("insight", "micro")], show="auto")
         "Ask for his recommendation.":
             mc "Sumimasen. Osusume... recommendation?"
             "He stops. He looks at me a second longer than he looked at the money, and then says something short to the pots."
             mc "(I might have said that wrong. He points at the second line and waits for my nod.)"
-            $ reward_attributes_once("answer_ramen_recommendation", [("nerve", "small")], show="auto")
+            # Asking a stranger to choose for him is trust, not nerve.
+            $ reward_attributes_once("answer_ramen_recommendation", [("grace", "micro")], show="auto")
     
     voice "audio/VO/ramen_ok.mp3"
     chef "あいよ。"
@@ -3885,11 +3904,11 @@ label after_school_walk_alone:
             "He grunts yes and turns back to the pots. That is the lesson."
             # The first word of the language, taught mid-bite by the man who
             # never speaks it. No packet, no sign — he learns it here.
-            $ reward_attributes_once("chef_first_umai", [("grace", "small")], show="auto")
+            $ reward_attributes_once("chef_first_umai_meaning", [("insight", "micro")], show="auto")
         "Thank him properly.":
             mc "Arigatou gozaimasu."
             # Meeting him in his language after he hears the reaction.
-            $ reward_attributes_once("chef_first_umai", [("grace", "small")], show="auto")
+            $ reward_attributes_once("chef_first_umai_thanks", [("grace", "micro")], show="auto")
         "Ask what gives it the smoky flavour.":
             mc "The pork? Is that where the smoky taste comes from?"
             "He taps the edge of the grill with his ladle."
@@ -3961,7 +3980,7 @@ label after_school_walk_alone:
     $ night_street()
 
     "It is properly dark by the time I reach the gate, and I do the arithmetic and do not like the answer."
-    mc "(Late. On the first day. I have been in this country for two days and I am already late.)"
+    mc "(Late. On the first school day. I have been in this country for two days and I am already late.)"
 
     scene bg_home_night with walk_fade
 
@@ -4032,6 +4051,8 @@ label after_school_run:
         "Out where?":
             mc "Out where?"
             hikari "The river. Two or three times a week, except the weeks it's five. Tonight counts."
+            # Asking the practical question before agreeing to the plan.
+            $ reward_attributes_once("answer_run_where", [("insight", "micro")], show="auto")
         "Can I come?":
             mc "Can I come?"
             hikari "..."
@@ -4109,12 +4130,16 @@ label after_school_run:
             mc "(That is the first thing today that she did not put a smile on top of.)"
             mc "You come out here instead of going home."
             hikari "I come out here. It's the only hour of the day that's mine."
+            # Reading the routine underneath the answer.
+            $ reward_attributes_once("answer_river_everyday", [("insight", "micro")], show="auto")
         "Why the river?":
             mc "Why the river?"
             hikari "Because it goes one way and comes back the same way and it never asks me anything."
             mc "(She said that like a joke. She did not say it like a joke.)"
             mc "You come out here instead of going home."
             hikari "I come out here. It's the only hour of the day that's mine."
+            # Asking the personal question instead of letting the silence cover it.
+            $ reward_attributes_once("answer_river_why", [("nerve", "micro")], show="auto")
 
     hikari "You run until your head goes quiet. The first ten minutes are just your legs arguing with you."
     hikari "And then it stops hurting in the bad way, and everything goes easy. People call it the runner's high."
@@ -4240,6 +4265,8 @@ label after_school_photo_club:
         "Is this the photography club?":
             mc "Is this the photography club? I saw the notice downstairs."
             sim "Yes. No fees, no pressure, just us and some cameras and a great deal of trial and error."
+            # Confirming the room before committing to it.
+            $ reward_attributes_once("answer_circle_is", [("insight", "micro")], show="auto")
         "Could I join today's session?":
             mc "Could I join today's session? I haven't done this with other people before."
             sim "Of course. There's a chair right here. We were just getting started."
@@ -4247,6 +4274,8 @@ label after_school_photo_club:
         "Hikari told me I could drop in.":
             mc "Hikari said I could drop in. Is now a good time?"
             sim "Perfect timing. Come and sit with us."
+            # Leaning on a friendship to enter a new room.
+            $ reward_attributes_once("answer_circle_hikari", [("grace", "micro")], show="auto")
 
     "I sit in the gap, which is exactly one person wide, next to a boy asleep with his arms folded and entirely committed to it."
 
@@ -4277,9 +4306,13 @@ label after_school_photo_club:
         "I tilted the phone.":
             mc "I tilted the phone. The door looks like it's falling over."
             sim "Easy to do. Try lining it up with the side of the screen."
+            # Naming his own framing mistake.
+            $ reward_attributes_once("answer_circle_tilt", [("insight", "micro")], show="auto")
         "I'm not sure what to look for yet.":
             mc "I'm not sure what to look for yet."
             sim "That's fine. Take a second one and compare them. Start with what changes."
+            # Admitting uncertainty in front of the room.
+            $ reward_attributes_once("answer_circle_unsure", [("nerve", "micro")], show="auto")
 
     sim "I should say who I am, since I am the strange one here. I don't study here. I come in twice a week because they let me."
     sim "By day I am in an office with the numbers. This is the other half of the day, and this is the half I would keep."
@@ -4309,9 +4342,13 @@ label after_school_photo_club:
         "Can I watch for a while first?":
             mc "Can I watch for a while first? I'd like to see how you work."
             sim "Absolutely. Sit where you can see, and ask whenever you want."
+            # Learning the room by watching before joining it.
+            $ reward_attributes_once("answer_circle_watch", [("insight", "micro")], show="auto")
         "Do you choose a new theme each week?":
             mc "Do you choose a new theme each week?"
             sim "Usually. Someone suggests one, then we see what everyone makes of it."
+            # Asking how the group is held together.
+            $ reward_attributes_once("answer_circle_theme", [("grace", "micro")], show="auto")
 
     sim "You don't have to join anything. Come. Sit. Look at what people put on the wall. That is the whole club."
     sim "Join us whenever you are ready. Everybody here started by sitting in that chair and saying nothing."
@@ -4939,7 +4976,8 @@ label first_evening_dinner:
                 father "We couldn't talk to you about it, and that isn't your fault. But dinner time is dinner time."
                 mother "There's rice in the pot. If you get hungry later."
                 $ declined_dinner = True
-                $ reward_attributes_once("first_dinner_declined", [("grace", "micro_loss")], show="auto")
+                # Telling the truth about being full is honesty, not rudeness.
+                $ reward_attributes_once("first_dinner_declined", [("nerve", "micro")], show="auto")
                 $ remember("father", "told him he was still full from ramen on his first night")
                 $ remember("hikari", "covered for him when he skipped dinner")
                 jump end_of_first_day
@@ -4973,7 +5011,7 @@ label first_evening_dinner:
             father "You'll learn the streets. It takes time."
             # He asked about Tetsuo's life instead of only his own.
             $ add_affection("father", 1)
-            $ reward_attributes_once("first_dinner_neighborhood", [("insight", "micro")], show="auto")
+            $ reward_attributes_once("first_dinner_neighborhood", [("grace", "micro")], show="auto")
             $ remember("father", "talked about learning the neighborhood")
         "I'm sorry I kept you waiting. I should have called.":
             mc "I'm sorry I kept you waiting. I should have called."
@@ -5463,7 +5501,8 @@ label second_school_day:
             "I pause in front of the camera shop window and compare the compact models with the larger lenses."
             mc "(The one with the bigger lens looks more serious. That probably isn't a useful way to choose.)"
         "Keep to the main street and watch the crowd.":
-            $ reward_attributes_once("akihabara_explore_crowd", [("grace", "micro")], show="auto")
+            # Reading the crowd's patterns is observation, not social grace.
+            $ reward_attributes_once("akihabara_explore_crowd", [("insight", "micro")], show="auto")
             "I stay on the main street and watch the crowd flow around signboards, shop entrances, and people passing out flyers."
             mc "(There are patterns to it. Once I notice them, the crowd feels a little less like something I have to fight.)"
 
@@ -5751,7 +5790,8 @@ label second_school_day:
             "Something moves at the corner of his mouth. It is gone before I can be sure."
             hikari "Oh no. He's got a sense of humor."
             mother "Don't encourage him."
-            $ reward_attributes_once("night_table_nerve", [("nerve", "micro")], show="auto")
+            # The gate should be worth opening: the bolder answer pays more.
+            $ reward_attributes_once("night_table_nerve", [("nerve", "nudge")], show="auto")
             $ add_affection("father", 1)
 
     father "The plan is a tool. Keep it in your pocket when you walk. Look up."
@@ -5871,7 +5911,8 @@ label night_room_visit:
             hikari "The haiku handout. The history notes. Everything the professors said that sounded like it mattered."
             hikari "If you only have an hour, do the handout. If you have three, do everything and then some."
             $ remember("hikari", "asked her what to study before the quiz")
-            $ reward_attributes_once("night_room_study_plan", [("grace", "micro")], show="auto")
+            # Asking what to study is planning, not social grace.
+            $ reward_attributes_once("night_room_study_plan", [("insight", "micro")], show="auto")
             $ add_affection("sister", 1)
         "\"You're going to quiz me, aren't you.\"":
             mc "You're going to quiz me, aren't you."
@@ -5921,7 +5962,10 @@ label free_afternoon:
 
     # Overnight and between-visit texts arrive here if the line is live.
     $ flush_pending_messages()
-    $ place = renpy.call_screen("location_hub")
+    $ place = renpy.call_screen("location_hub", places=confidant_order + ["walk_hikari", "walk_alone"])
+
+    # The evening reads this to remember where the afternoon went.
+    $ last_afternoon_place = place
 
     if place == "sim":
         jump confidant_visit_sim
@@ -5933,6 +5977,10 @@ label free_afternoon:
         jump confidant_visit_aya
     elif place == "hana":
         jump confidant_visit_hana
+    elif place == "walk_hikari":
+        jump afternoon_walk_hikari
+    elif place == "walk_alone":
+        jump afternoon_walk_alone
 
     # None, or anything the hub should not have offered: the afternoon is his
     # to spend elsewhere, so the day simply continues.
@@ -6184,6 +6232,8 @@ label lupins_den_first:
             "I pick up the glass and drink. He notices anyway, the wolf mask tilts, barely,"
             "in what might be a nod."
             bar_master "You found us. Most people don't."
+            # Reading the room and letting the silence do the introductions.
+            $ reward_attributes_once("lupins_den_silence", [("insight", "micro")], show="auto")
 
     "Two of the masked regulars finish their drinks and leave without a word."
     "The third, the fox, catches my eye for half a second and looks away first,"
@@ -6563,8 +6613,8 @@ label monday_lecture:
     scene bg_campus_interior with walk_fade
 
     if monday_quiz_score == 3:
-        mc "(Three for three. Hikari's quiz was real training."
-        mc "I should tell her, no, she'll find out, she always does.)"
+        mc "(Three for three. Hikari's quiz was real training.)"
+        mc "I should tell her. No — she'll find out. She always does."
         $ remember("professor", "answered all three quiz questions correctly")
     elif monday_quiz_score == 2:
         if not monday_q1_correct:
@@ -6591,13 +6641,16 @@ label monday_lecture:
             "The reading room's corridor passes on my left. The door has no sign, exactly like she said."
             "I don't go in. Whatever she left on that desk was for a Saturday. Today is Monday."
             mc "(I'm learning the shape of this place. That's what the afternoons are for.)"
+            # Going without a destination is its own small act of nerve.
+            $ reward_attributes_once("monday_walk_campus", [("nerve", "micro")], show="auto")
         "Go back to the library and finish the handout properly.":
             "I go back to the third floor, east wing, and find the door without needing the smell of green tea"
             "this time."
             "The room is emptier than Saturday. The low tables, the blinds, the fan, all exactly as described."
             "I read the kigo list until the words stop being a list and start being a weather report."
-            mc "(Somewhere in this building is a girl made of held breath. Today she is not here."
-            mc "The room is just a room, and that is fine, it means she has a life somewhere that isn't this one.)"
+            mc "(Somewhere in this building is a girl made of held breath. Today she is not here.)"
+            mc "The room is just a room, and that is fine, it means she has a life somewhere that isn't this one."
+            $ reward_attributes_once("monday_library", [("insight", "micro")], show="auto")
         "Check the phone. Hikari is asking how the quiz went.":
             $ run_chat("hikari", [
                 {"them": "How'd the quiz go?", "options": [
@@ -6613,6 +6666,8 @@ label monday_lecture:
                 ]},
             ])
             mc "(She knows. She always knows. The only question is whether she says it first or makes me say it.)"
+            # Staying in the conversation instead of disappearing into the day.
+            $ reward_attributes_once("monday_phone_hikari", [("grace", "micro")], show="auto")
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
@@ -6648,8 +6703,362 @@ label monday_lecture:
     stop music fadeout 2.0
     scene black with Dissolve(1.5)
     pause 1.5
+    jump tuesday_morning
+
+
+################################################################################
+## ACT TWO, ELEVENTH BEAT: THE FIRST HUB DAY
+################################################################################
+##
+## Tuesday, April 14. The first day the story hands the afternoon to the hub:
+## morning at the house, the lecture, `free_afternoon`, then dinner and the
+## room. Every later hub day is this shape with different content.
+##
+## `last_afternoon_place` is written by `free_afternoon` so the evening can
+## carry the afternoon home, the way the treatment's "Rhythm of Days" asks.
+
+label tuesday_morning:
+    # Day 7: Tuesday, April 14. The first hub afternoon.
+    $ set_story_day(7)
+    $ last_afternoon_place = None
+
+    $ flush_pending_messages()
+
+    scene bg_room_day with Dissolve(1.5)
+    $ room_ambient(False)
+
+    "Tuesday arrives without a job in it."
+    "No quiz. No first day. No address to find. Just the alarm, the ceiling, and the house already moving below me."
+    mc "(I keep waiting for the next thing to be urgent. It isn't. That's the strange part.)"
+    "The dream was quiet last night. No station. No white room. Just dark, and then morning."
+    mc "(I should be relieved. I am not sure I am.)"
+    "I get dressed before Hikari can knock."
+
+    scene bg_kitchen with walk_fade
+    "Mother is at the stove with her sleeves pushed up. Father has the newspaper open to the weather page, which is how he pretends not to be listening."
+    hikari "You're up. I was about to come and knock."
+    mc "I was awake."
+    hikari "You were horizontal."
+    mc "Those aren't mutually exclusive."
+    hikari "They are in this house."
+    mother "Sit. Both of you. The rice is ready."
+    "I sit. The rice is hot. The miso is darker than yesterday, and Mother watches me take the first spoonful."
+    mother "Midterms are in two weeks. You have had the brief, I hope."
+    mc "Essays. A practical. Something about close reading."
+    father "Close reading."
+    hikari "It means reading the thing instead of reading about the thing."
+    father "I know what it means."
+    hikari "Then why did you say it like that?"
+    father "..."
+    "He turns the page. It is the same page it was open to when I came down."
+
+    menu:
+        "Ask Mother what a Japanese essay exam actually expects.":
+            mc "What does a Japanese essay exam actually want? Not the syllabus. The thing behind it."
+            mother "One thing. They want you to notice one thing and stay with it."
+            mother "Not everything you know. One thing, all the way down."
+            mc "(One thing, all the way down. That is a different instruction from every exam I have ever taken.)"
+            $ reward_attributes_once("tuesday_breakfast_ask", [("insight", "micro")], show="auto")
+        "Take the dishes before she can ask.":
+            "I stand and start clearing the bowls. Mother's hands stop halfway to the tray."
+            mother "You did not have to do that."
+            mc "I know."
+            hikari "He's trying to get out of the walk."
+            mc "I'm trying to get out of the dishes."
+            mother "Sit down. You will both be late."
+            "But she is smiling when she says it."
+            $ reward_attributes_once("tuesday_breakfast_dishes", [("grace", "micro")], show="auto")
+        "Tell Father I'm nervous about the midterm.":
+            mc "I'm nervous about the midterm."
+            "Father lowers the paper. He does not look surprised."
+            father "Good. Nervous means you know it matters."
+            father "Unprepared is the thing to be afraid of. Not nervous."
+            mc "That's not as comforting as you think it is."
+            father "It is not meant to be comforting. It is meant to be useful."
+            $ reward_attributes_once("tuesday_breakfast_nerves", [("nerve", "micro")], show="auto")
+
+    "Hikari stacks her bowl on top of mine, which is her way of saying she is ready to leave."
+
+    scene bg_home_exterior_day with walk_fade
+    "The morning is cool enough for a jacket and warm enough to regret it by the station."
+    "Hikari walks a half-step ahead of me, the way she does when she has something to say and is deciding whether to say it."
+    hikari "You're quiet."
+    mc "I'm thinking."
+    hikari "That's what quiet looks like on you. On me it looks like planning."
+    mc "What are you planning?"
+    hikari "Nothing. That's the problem."
+    "She shifts her bag to the other shoulder."
+
+    menu:
+        "Ask what she's carrying in her bag.":
+            mc "What's in the bag? It's heavier than usual."
+            hikari "Printouts. Someone in seminar keeps forgetting theirs."
+            mc "So you carry a second copy."
+            hikari "I carry one copy. It just happens to be for someone else."
+            mc "(She says it like it is nothing. It is not nothing.)"
+            $ reward_attributes_once("tuesday_walk_bag", [("grace", "micro")], show="auto")
+        "Name the shops we pass before she does.":
+            mc "Bakery. Laundry. The place with the bad fluorescent light."
+            hikari "You're learning the route."
+            mc "I'm learning the route."
+            hikari "Say the next one."
+            mc "The pharmacy with the cat in the window."
+            hikari "..."
+            mc "I'm right."
+            hikari "You're right. It's unsettling."
+            $ reward_attributes_once("tuesday_walk_shops", [("insight", "micro")], show="auto")
+        "Tell her she doesn't have to walk me every day.":
+            mc "You don't have to walk me every day. I know the way now."
+            hikari "I know you do."
+            mc "So why do you?"
+            hikari "Because I want to. There's a difference between being needed and being wanted."
+            mc "(She says it to the pavement, not to me. It lands anyway.)"
+            $ reward_attributes_once("tuesday_walk_independence", [("nerve", "micro")], show="auto")
+
+    scene bg_school_gate with walk_fade
+    "The guard nods. Hikari peels off toward her building with a wave that does not stop moving."
+    scene bg_campus_interior with walk_fade
+    "The corridor smells like floor wax and rain that has not happened yet."
+    jump tuesday_lecture
+
+
+label tuesday_lecture:
+    scene bg_lecture_hall with walk_fade
+
+    "The professor is already at the board. He has drawn a circle and put one character inside it: 間."
+    professor "Ma. The interval. The space between two things."
+    professor "In English you would call it a pause. In a poem it is not a pause. It is a material."
+    "He taps the chalk inside the circle."
+    professor "The kigo tells you when. The kireji tells you where to stop. The stop is not empty. It is where the poem asks you to do the work."
+    "A student near the front writes this down. The professor watches her finish, then erases the board without waiting."
+    professor "So. If the pause is part of the poem, what is it doing?"
+    "The room does what it always does: thirty people looking at their desks."
+    "He waits. He is good at waiting."
+
+    menu:
+        "It gives the other words somewhere to stand.":
+            mc "It gives the other words somewhere to stand."
+            "The professor turns his head, just enough to show he heard."
+            professor "Yes. The pause is load-bearing. Take it out and the poem falls over."
+            mc "(I did not know I knew that until I said it.)"
+            $ reward_attributes_once("tuesday_lecture_answer", [("insight", "micro")], show="auto")
+        "Ask whether a poem can have too much space.":
+            mc "Can a poem have too much space?"
+            professor "That is the question of the term. Ask it again in your essay."
+            professor "Most people fill the silence because they are afraid of it. The poem is what happens when you don't."
+            mc "(He did not answer me. He gave me a direction. I think that is his version of an answer.)"
+            $ reward_attributes_once("tuesday_lecture_question", [("nerve", "micro")], show="auto")
+        "Slide my handout to the student beside me, who is still on the first page.":
+            "The student beside me has been on the same page since the lecture started. I slide my handout across the desk."
+            "They look at it, then at me, then turn it toward the light."
+            quiet_student "...Thanks."
+            mc "The frog is the kigo. The pond is just where it happens."
+            "The professor's eyes pass over us and move on. He does not stop the lecture."
+            $ reward_attributes_once("tuesday_lecture_handout", [("grace", "micro")], show="auto")
+
+    professor "That is enough for today. Read the handout. Bring a question you cannot answer."
+    "The bell goes. The room folds itself up."
+
+    scene bg_campus_interior with walk_fade
+    "Hikari has seminar until five. The afternoon is a door with nothing written on it."
+    mc "(One place. That is the rule I have given myself. One place, and then home.)"
+    call free_afternoon
+
+    # Every visit and every walk returns here. `last_afternoon_place` is the
+    # hub row that was picked, or None for Head Home.
+    scene bg_home_night with walk_fade
+    $ room_ambient(True)
+    "The house is warm the way it is when someone has been cooking for a while."
+    "I leave my shoes by the door and follow the smell to the kitchen."
+
+    scene bg_kitchen_night with walk_fade
+    "Mother is ladling something into four bowls. Father is setting the table with the careful imprecision of a man who has been told to help."
+    mother "There you are. Wash your hands."
+    hikari "You're late."
+    mc "I'm not late. Dinner is early."
+    hikari "Dinner is on time. You're late."
+    "I wash my hands. The water is warm."
+    mother "Where did you go?"
+
+    if last_afternoon_place == "chef":
+        mc "The ramen shop. The same stool. The same bowl."
+        mc "(He remembered what I ordered. He did not make a thing of it. That was the whole welcome.)"
+    elif last_afternoon_place == "aya":
+        mc "The maid cafe. She remembered the order before I said it."
+        mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
+    elif last_afternoon_place == "hana":
+        mc "The reading room. She was there. She stayed."
+        mc "(We did not talk much. It was enough.)"
+    elif last_afternoon_place == "orson":
+        mc "Lupin's Den. The bar was empty enough to hear the ice."
+        mc "(He taught me a phrase I am still turning over.)"
+    elif last_afternoon_place == "sim":
+        mc "The photography club. Sim made us photograph the same wall until it stopped being a wall."
+    elif last_afternoon_place == "walk_hikari":
+        mc "I walked home with Hikari. We took the long way."
+        hikari "You took the long way. I followed."
+        mc "That's not how I remember it."
+        hikari "That's because you were busy being right."
+    elif last_afternoon_place == "walk_alone":
+        mc "Nowhere. I walked until the light changed, and then I walked home."
+        father "Nowhere is a place. Just not a destination."
+        mc "(That is either wisdom or a warning. I am not sure which.)"
+    else:
+        mc "Nowhere. I came straight home."
+        mother "Good. Eat."
+        mc "(She does not ask why. I am grateful for that.)"
+
+    father "And the midterm?"
+    mc "Two weeks. Essays. A practical."
+    father "Then you have two weeks."
+    mc "That's what two weeks means."
+    hikari "He's been like this all day."
+    father "It is a useful thing to be like."
+    "Nobody argues with that. We eat."
+
+    scene bg_room_night with stair_fade
+    $ room_ambient(True)
+    "Upstairs, the handout is exactly where I left it, open to the kigo list."
+    "I have read it so many times that the words have started to look like themselves again instead of like a code."
+    "A knock at the door. Hikari, with two cups of tea and her own notes under her arm."
+    hikari "I'm not staying. I'm just making sure you're not staring at the wall."
+    mc "I was staring at the handout."
+    hikari "Same thing."
+    "She sets the tea down and sits on the floor with her back against the bed."
+
+    menu:
+        "Read the kigo list aloud until it sticks.":
+            "I read the list aloud. Hikari corrects my pronunciation twice and does not laugh at the second one."
+            hikari "Again. The last one."
+            mc "Kareha. Dead leaves."
+            hikari "Better."
+            mc "(The words are mine now. Not borrowed. Mine.)"
+            $ reward_attributes_once("tuesday_study_aloud", [("insight", "micro")], show="auto")
+        "Ask her about her seminar.":
+            mc "What are you working on? Your seminar, I mean."
+            hikari "A paper on dialect in postwar fiction. It is boring."
+            mc "It's not boring to you."
+            hikari "No. It's not."
+            "She talks for a while. I do not understand most of it. I understand that she does not get asked this often."
+            hikari "You're the first person who's asked me that this week."
+            mc "(She says it lightly. It does not land lightly.)"
+            $ reward_attributes_once("tuesday_study_seminar", [("grace", "micro")], show="auto")
+        "Tell her I'm scared of the midterm.":
+            mc "I'm scared of the midterm."
+            hikari "Good."
+            mc "That's what Dad said."
+            hikari "He's right about some things. Don't tell him."
+            hikari "You're allowed to be bad at this for a while. You're new."
+            mc "I don't want to be bad at it."
+            hikari "Then be bad at it and keep going. That's the whole trick."
+            $ reward_attributes_once("tuesday_study_scared", [("nerve", "micro")], show="auto")
+
+    "She takes her cup and leaves the door open a hand's width."
+    "I listen to her go down the stairs, then the house settle into its night sounds."
+    "The handout is still open. The tea is still warm. For the first time in a week, the evening does not feel like a countdown."
+
+    stop music fadeout 2.0
+    scene black with Dissolve(2.0)
+    play music "audio/Music/dream sequence.wav" fadein 3.0
+    "The station again."
+    "The platform lights. The announcement arriving before the voice."
+    "There is someone at the far end of the platform. A woman in white. She is not facing me."
+    "She says, without turning: \"He is starting to keep the days.\""
+    show hospital_flash onlayer overlay at truecenter:
+        alpha 0.0
+        linear 0.1 alpha 0.45
+        linear 0.1 alpha 0.0
+    $ renpy.say(None, "signal lost.", interact=False)
+    pause 0.4
+    stop music fadeout 3.0
+
+    scene bg_room_night with Dissolve(1.5)
+    $ room_ambient(True)
+    "I wake in my room. It is still Tuesday. The clock says 2:14."
+    mc "(Wednesday. The ramen shop is closed.)"
+    "I do not know why that is the first thing I think of. It is almost funny."
+    "I lie there until the numbers on the clock change, and then I sleep again."
+    "The week has started. Whatever it turns into, it started."
+
+    stop music fadeout 2.0
+    scene black with Dissolve(1.5)
+    pause 1.5
     jump end_of_build
 
+
+################################################################################
+## THE HUB'S TWO WALKS
+################################################################################
+##
+## The two rows that are not confidant stories. They are always open, and they
+## are the fallback when the player wants the afternoon to stay small. Each
+## pays once per answer, like every other menu in the game; the walk itself can
+## be taken again, but the first time is the one that teaches him something.
+
+label afternoon_walk_hikari:
+    scene bg_campus_interior with walk_fade
+    "Hikari is at the gate when I get there. She does not ask why I came. She just turns and starts walking, the way she does when she has decided something."
+    hikari "You're slow."
+    mc "You're early."
+    hikari "I'm on time. You're slow."
+    "We take the long way without discussing it."
+
+    menu:
+        "Ask what she wanted to be before she decided to be this.":
+            mc "What did you want to be? Before this."
+            hikari "A translator."
+            mc "Why didn't you?"
+            hikari "I like languages. I don't like being the person who explains them."
+            mc "(She says it like a joke. It is not a joke.)"
+            $ reward_attributes_once("hub_walk_hikari_dream", [("grace", "micro")], show="auto")
+        "Take the route past the river and name the birds.":
+            mc "Heron."
+            hikari "That's a statue."
+            mc "It moved."
+            hikari "It did not move."
+            "It moves. She sees it move. She does not admit it."
+            mc "(I know the river now. I know which bridge has the good light and which one smells like low tide.)"
+            $ reward_attributes_once("hub_walk_hikari_river", [("insight", "micro")], show="auto")
+        "Tell her I'm glad she waited.":
+            mc "I'm glad you waited."
+            hikari "I wasn't waiting. I was walking slowly."
+            mc "In the direction of the gate."
+            hikari "..."
+            hikari "Don't make it a thing."
+            mc "(Too late. It is already a thing.)"
+            $ reward_attributes_once("hub_walk_hikari_glad", [("nerve", "micro")], show="auto")
+
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    return
+
+
+label afternoon_walk_alone:
+    scene bg_campus_interior with walk_fade
+    "I take the gate I have never taken before."
+    "The street bends away from the station and becomes houses, then a wall, then a stretch of river I did not know was there."
+    mc "(One place. This is the place. It doesn't have to be useful.)"
+
+    menu:
+        "Follow the train line until the city changes.":
+            "I follow the elevated line until the houses turn into warehouses and the warehouses turn into a park."
+            "The trains go over my head at the same interval, full of people going somewhere they have already decided on."
+            mc "(I know how the city is put together now. Not all of it. Enough to stop being lost in it.)"
+            $ reward_attributes_once("hub_walk_alone_line", [("insight", "micro")], show="auto")
+        "Sit on the wall where the old men play shogi.":
+            "I sit on the wall at the edge of the park. Two old men are playing shogi on a board balanced between their knees."
+            "One of them loses. He laughs, resets the pieces, and starts again."
+            "Nobody asks me to move. Nobody asks me anything at all. It is the first time in a week I have been somewhere without being a question."
+            $ reward_attributes_once("hub_walk_alone_shogi", [("grace", "micro")], show="auto")
+        "Take the street that looks wrong.":
+            "The street is too narrow and the lights are too dim. I take it anyway."
+            "It ends at a shrine with a torii gate smaller than the ones in the guidebooks, and a cat asleep on the offering box."
+            mc "(Nothing happens. That's the point. I went, and the city did not punish me for it.)"
+            $ reward_attributes_once("hub_walk_alone_wrong", [("nerve", "micro")], show="auto")
+
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    return
 
 ################################################################################
 ## END OF THE CURRENT BUILD

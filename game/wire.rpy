@@ -42,7 +42,7 @@
 ## The order the roster lists people in. It is fixed rather than
 ## most-recent-first so that the list does not reshuffle itself every time
 ## somebody is added, which is how a real contact list behaves.
-define wire_order = ["hikari", "chef", "sim", "aya"]
+define wire_order = ["hikari", "chef", "sim", "aya", "hana", "orson"]
 
 define wire_contacts = {
 
@@ -68,6 +68,9 @@ define wire_contacts = {
         "color": "#d2793a",
         "photo": "images/characters/chef.png",
         "photo_crop": (0.25, 0.005, 0.48, 0.32),
+        # His story runs one visit past the usual seven: the eighth is the
+        # closed shop, the end of his arc.
+        "total": 8,
     },
 
     "sim": {
@@ -87,6 +90,31 @@ define wire_contacts = {
         "photo": "images/characters/aya.png",
         "photo_crop": (0.28, 0.04, 0.45, 0.28),
         "progress": ("confidant_visits", "aya"),
+    },
+
+    "hana": {
+        "name": "Hana",
+        "handle": "@hana",
+        # The badge said her name before she ever did. What the app knows about
+        # her so far is exactly what he knows: she shelves returns, and she ran.
+        "note": "Shelves returns. Never quite says anything.",
+        "color": "#98fb98",
+        "photo": "images/characters/hana.png",
+        "photo_crop": (0.25, 0.0, 0.50, 0.333),
+        # Her story also runs one visit past the usual seven: the eighth is the
+        # empty reading room, the end of her arc.
+        "total": 8,
+    },
+
+    "orson": {
+        "name": "Orson",
+        "handle": "@lupinsden",
+        # He never gave his name either, and neither did the place. What he did
+        # give is a glass of water and a door he said was open.
+        "note": "Lupin's Den. The water's on the house.",
+        "color": "#a9a9a9",
+        "photo": "images/characters/orson.png",
+        "photo_crop": (0.25, 0.0, 0.50, 0.333),
     },
 }
 
@@ -137,6 +165,10 @@ init python:
             value = value.get(key, 0)
 
         return value if isinstance(value, int) else 0
+
+    def wire_total(contact_id):
+        """How many visits this contact's meter is drawn against."""
+        return wire_contacts.get(contact_id, {}).get("total", confidant_visits_total)
 
     def wire_unlock(contact_id):
         """Put somebody in WIRE for the first time, then open the phone.
@@ -349,12 +381,14 @@ screen wire_avatar(cid, px):
 ## The progress meter. One tick per visit, filled up to where he has got to.
 ## There is no number attached to it anywhere on the roster, on purpose: the
 ## shape is the whole message.
-screen wire_meter(seen, w, h, filled):
+screen wire_meter(seen, w, h, filled, total=None):
+
+    $ tick_total = total if total is not None else confidant_visits_total
 
     hbox:
         spacing max(2, int(w * 0.75))
 
-        for i in range(confidant_visits_total):
+        for i in range(tick_total):
             add Solid(filled if i < seen else "#232b33", xysize=(w, h))
 
 
@@ -427,9 +461,9 @@ screen wire_row(cid, is_new):
             ypos gui.scale(91)
             spacing gui.scale(7)
 
-            use wire_meter(wire_seen, gui.scale(4), gui.scale(8), wire_accent)
+            use wire_meter(wire_seen, gui.scale(4), gui.scale(8), wire_accent, wire_total(cid))
 
-            text "[wire_seen] / [confidant_visits_total]" style "wire_count" yalign 0.5
+            text "[wire_seen] / [wire_total(cid)]" style "wire_count" yalign 0.5
 
 
 ## Everything the app knows about one person. The list at the bottom is the same
@@ -468,8 +502,8 @@ screen wire_profile(cid):
 
                 hbox:
                     spacing gui.scale(8)
-                    use wire_meter(wire_seen, gui.scale(7), gui.scale(18), wire_accent)
-                    text "[wire_seen] / [confidant_visits_total]" style "wire_count" yalign 1.0
+                    use wire_meter(wire_seen, gui.scale(7), gui.scale(18), wire_accent, wire_total(cid))
+                    text "[wire_seen] / [wire_total(cid)]" style "wire_count" yalign 1.0
 
                 text wire_entry["note"] style "wire_note" size gui.scale(15) xmaximum gui.scale(wire_screen_w - 24)
 

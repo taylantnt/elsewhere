@@ -8,7 +8,9 @@
 ## The story decides when the screen opens and what happens when a row is picked.
 ##
 ## The rule the screen exists to express:
-##   * a person's story is told in seven visits, one per outing;
+##   * a person's story is told in seven visits, one per outing — Chef's and
+##     Hana's run to eight, because their eighth is the closed place, the end
+##     of the arc;
 ##   * the story only lets it move so far in each act, so a place is either
 ##     *waiting* (there is a scene to play) or *paused* (the act has not caught
 ##     up, and nothing new will happen until it does).
@@ -44,9 +46,20 @@ default confidant_visits = {
     "hana": 0,
 }
 
+## The hub row picked this afternoon, or None for Head Home. The day scene
+## reads it on the way into dinner so the evening can carry the afternoon home.
+default last_afternoon_place = None
+
 ## Seven visits and the story is over: the person leaves, and the row has
-## nothing left to give.
+## nothing left to give. `confidant_visit_totals` names the exceptions: Chef's
+## and Hana's stories each run one visit longer, so the player can return to a
+## closed shop and a closed reading room and see how the story ends.
 define confidant_visits_total = 7
+
+define confidant_visit_totals = {
+    "chef": 8,
+    "hana": 8,
+}
 
 ## Which part of the story we are in. The story bumps this at an act break.
 ## Act 1 is the arrival (airport to first dream), which is before the player
@@ -64,7 +77,9 @@ define act_confidant_cap = {
     1: 0,
     2: 5,
     3: 7,
-    4: 7,
+    # Chef's and Hana's eighth visits are their arcs' endings, so they are
+    # held for the last act.
+    4: 8,
 }
 
 
@@ -72,7 +87,10 @@ init python:
 
     def confidant_cap():
         # If the table ever runs out of acts, the story is open.
-        return act_confidant_cap.get(current_act, confidant_visits_total)
+        return act_confidant_cap.get(current_act, max(act_confidant_cap.values()))
+
+    def confidant_visits_total_for(place):
+        return confidant_visit_totals.get(place, confidant_visits_total)
 
     def all_confidants_met():
         # The introduction gate: nobody's story can be revisited until every
@@ -85,11 +103,11 @@ init python:
         # "paused"       - the act has not caught up; nothing new will happen yet
         # "later"        - already visited, but not everyone has been met yet
         # "closed_today" - the place keeps weekly hours and is shut today
-        # "closed"       - all seven visits are done; the story has finished
+        # "closed"       - every visit is done; the story has finished
         if place not in confidant_visits:
             return "ready"
         seen = confidant_visits[place]
-        if seen >= confidant_visits_total:
+        if seen >= confidant_visits_total_for(place):
             return "closed"
         if not destination_is_open(place):
             return "closed_today"

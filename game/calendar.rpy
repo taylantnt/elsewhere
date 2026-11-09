@@ -44,6 +44,7 @@ define story_calendar_events = {
     4: "Library errand",
     5: "Hikari's practice quiz",
     6: "The haiku quiz",
+    7: "The first hub afternoon",
 }
 
 ## Weekly opening rules, Monday = 0 through Sunday = 6.
