@@ -36,12 +36,22 @@ init python:
         """The display data for one day on the strip."""
         day = max(1, int(day))
         date_value = story_calendar_date(day)
+        weekday = story_weekday_names[date_value.weekday()].upper()
+        # Saturday and Sunday carry the Grace and Nerve attribute colours
+        # respectively. Purely because they please the eye -- no thematic tie.
+        if weekday == "SATURDAY":
+            weekday_color = attribute_color("grace")
+        elif weekday == "SUNDAY":
+            weekday_color = attribute_color("nerve")
+        else:
+            weekday_color = "#f3eee5"
         return {
             "day": day,
             "eyebrow": "DAY %d" % day,
             "month": story_month_names[date_value.month - 1].upper(),
             "number": "%02d" % date_value.day,
-            "weekday": story_weekday_names[date_value.weekday()].upper(),
+            "weekday": weekday,
+            "weekday_color": weekday_color,
             "meta": "WEEK %d" % story_week_number(day),
             "event": story_calendar_events.get(day, ""),
         }
@@ -272,6 +282,7 @@ screen day_transition_date_card(card):
 
         text card["weekday"]:
             style "day_transition_weekday"
+            color card["weekday_color"]
             xalign 0.5
             ypos 218
 
