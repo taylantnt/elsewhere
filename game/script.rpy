@@ -1974,8 +1974,10 @@ label prologue:
     
     "I should focus on what's ahead."
     "A door, and a family I have only ever seen in photographs."
-    
-    stop music fadeout 3.0
+
+    scene black with Dissolve(1.5)
+    stop music fadeout 1.0
+    pause 2.0
     jump airport_arrival
 
 label airport_arrival:
@@ -2081,23 +2083,23 @@ label talk_security:
             jump answer_security_watch
 
 label answer_security_bow:
+    $ reward_attributes_once("answer_security_bow", [("grace", "tiny")], show="auto")
     mc "Sumimasen. Sumimasen."
     mc "(I bowed. I have no idea why I bowed. My body just did it.)"
-    $ reward_attributes_once("answer_security_bow", [("grace", "tiny")], show="auto")
     mc "(Maybe the information desk can help.)"
     jump airport_exploration
 
 label answer_security_press:
+    $ reward_attributes_once("answer_security_press", [("nerve", "tiny")], show="auto")
     mc "Excuse me. 中野3丁目. Please."
     mc "(They glanced at the phone, then at me, and turned away.)"
-    $ reward_attributes_once("answer_security_press", [("nerve", "tiny")], show="auto")
     mc "(I don't know if they understood. Either way, I need to try someone else.)"
     mc "(Maybe the information desk can help.)"
     jump airport_exploration
 
 label answer_security_watch:
-    mc "(Never mind. If I watch where people are going, I might find the exit.)"
-    mc "(Someone at the information desk might be able to help.)"
+    mc "(Never mind. If I follow where people are going, I might find the exit.)"
+    mc "(Maybe someone at the information desk might be able to help.)"
     jump airport_exploration
 
 label talk_timid_man:
@@ -2130,7 +2132,7 @@ label talk_timid_man:
 label answer_timid_again:
     mc "Sorry. Information desk?"
     mc "(He repeated himself at the same speed.)"
-    mc "(Maybe he can't stop. Maybe he just doesn't have time for me.)"
+    mc "(Maybe he just doesn't have time for me.)"
     mc "(I'll leave him alone.)"
     jump airport_exploration
 
@@ -2142,7 +2144,7 @@ label answer_timid_aside:
 label answer_timid_listen:
     mc "(...いそがしい.)"
     mc "(Isogashii. Busy. I practised that one on the plane.)"
-    mc "(He isn't angry. He's busy.)"
+    mc "(Ah.. He isn't angry. He's busy.)"
     $ reward_attributes_once("answer_timid_listen", [("insight", "micro")], show="auto")
     mc "(I'll leave him alone.)"
     jump airport_exploration
@@ -2172,16 +2174,16 @@ label talk_cheerful_woman:
             jump answer_woman_echo
 
 label answer_woman_smile:
-    mc "(She's the first person here who's smiled at me.)"
-    cheerful_woman "あら！ がんばってね！"
     $ reward_attributes_once("answer_woman_smile", [("grace", "micro")], show="auto")
+    cheerful_woman "あら！ がんばってね！"
+    mc "(She's the first person here who's smiled at me.)"
     jump airport_exploration
 
 label answer_woman_echo:
+    $ reward_attributes_once("answer_woman_echo", [("grace", "micro")], show="auto")
     mc "Arigatou gozaimasu."
     cheerful_woman "どういたしまして！"
     mc "(She smiles and waves before disappearing into the crowd.)"
-    $ reward_attributes_once("answer_woman_echo", [("grace", "micro")], show="auto")
     jump airport_exploration
 
 label talk_assistant:
@@ -2201,8 +2203,14 @@ label talk_assistant:
 
     if not assistant_returned:
         $ assistant_returned = True
-        "The desk is not empty now. The assistant is behind it, straightening a stack of pamphlets that was already straight."
+        "There is someone at the desk now. Looks like an assistant is behind it, straightening a stack of pamphlets that was already straight."
         mc "(There she is.)"
+
+    if has_pamphlet:
+        assistant "Good luck! がんばってください！"
+        mc "Thanks. I'll give it a try."
+        "Now I need to figure out how to make sense of this pamphlet..."
+        jump airport_exploration
 
     assistant "いらっしゃいませ～。ようこそ。"
     mc "Hi! Um... Can you help me?"
@@ -2260,6 +2268,7 @@ label answer_assistant_ask:
     $ assistant_shy = False
     assistant "Good luck! がんばってください！"
     mc "Thanks. I'll give it a try."
+    "Now I need to figure out how to make sense of this pamphlet..."
     jump airport_exploration
 
 label answer_assistant_nevermind:
@@ -2292,7 +2301,7 @@ label talk_veteran_assistant:
             veteran "Follow the signs outside to the taxi stand. Show the driver the address."
             veteran "Budget around ¥18,000. More if there's traffic."
             $ reward_attributes_once("veteran_advice_taxi", [("insight", "micro")], show="auto")
-            jump end_airport
+            jump train_choice
         "I have what I need. Thank you.":
             # Deciding he has enough information is self-reliance, not insight.
             $ reward_attributes_once("veteran_advice_decline", [("nerve", "micro")], show="auto")
@@ -2304,10 +2313,22 @@ label taxi_choice:
         "Tell me about the taxi.":
             veteran "The taxi stand is just outside. There may be a short wait."
             veteran "The fare will be around ¥18,000, perhaps more in traffic."
+            veteran "It should be about forty-five minutes."
+            $ reward_attributes_once("veteran_advice_train", [("insight", "micro")], show="auto")
+            jump end_airport
+        "I'll take the train. Thank you.":
+            jump end_airport
+
+label train_choice:
+    veteran "Would you like to hear about the train as well?"
+    menu:
+        "Tell me about the train.":
+            veteran "First, buy a ticket before you go through the gate."
+            veteran "Look for the express on the Keisei Line. The local stops at every station and takes much longer."
             veteran "Show the driver the address and they'll take you there."
             $ reward_attributes_once("veteran_advice_taxi_detail", [("insight", "micro")], show="auto")
             jump end_airport
-        "I'll take the train. Thank you.":
+        "I'll take the taxi. Thank you.":
             jump end_airport
 
 label check_boards:
