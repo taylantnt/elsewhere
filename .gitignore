@@ -12,3 +12,6 @@ traceback.txt
 
 # macOS
 .DS_Store
+
+# Screenshots taken with the in-game camera.
+screenshots/

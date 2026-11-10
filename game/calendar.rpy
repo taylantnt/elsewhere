@@ -327,7 +327,7 @@ screen phone_app_calendar_contents_locked():
 
         text "NOT UNLOCKED YET.":
             xalign 0.5
-            size gui.scale(15)
+            size gui.scale(16)
             bold True
             color "#dce4e8"
             outlines []
@@ -335,7 +335,7 @@ screen phone_app_calendar_contents_locked():
         text "Your first connection opens the calendar.":
             xalign 0.5
             textalign 0.5
-            size gui.scale(13)
+            size gui.scale(14)
             color "#83909a"
             outlines []
 
@@ -351,161 +351,168 @@ screen phone_app_calendar_contents():
     fixed:
         xysize (gui.scale(menu_phone_content_w), gui.scale(474))
 
-        vbox:
-            xalign 0.5
-            spacing gui.scale(4)
-
-            fixed:
-                xfill True
-                ysize gui.scale(22)
-
-                textbutton "‹":
-                    style "phone_small_button"
-                    xalign 0.0
-                    yalign 0.5
-                    text_font "DejaVuSans.ttf"
-                    text_size gui.scale(18)
-                    padding (gui.scale(6), 0)
-                    action Function(phone_calendar_shift_month, -1)
-
-                text "%s %d" % (story_month_names[calendar_view.month - 1].upper(), calendar_view.year):
-                    xalign 0.5
-                    yalign 0.5
-                    size gui.scale(14)
-                    bold True
-                    kerning gui.scale(1)
-                    color "#f1eee7"
-                    outlines []
-
-                textbutton "›":
-                    style "phone_small_button"
-                    xalign 1.0
-                    yalign 0.5
-                    text_font "DejaVuSans.ttf"
-                    text_size gui.scale(18)
-                    padding (gui.scale(6), 0)
-                    action Function(phone_calendar_shift_month, 1)
-
-            hbox:
-                xalign 0.5
-                spacing gui.scale(1)
-
-                for weekday_label in story_weekday_short:
-                    fixed:
-                        xysize (gui.scale(31), gui.scale(13))
-                        text weekday_label:
-                            xalign 0.5
-                            yalign 0.5
-                            size gui.scale(8)
-                            kerning gui.scale(0.5)
-                            color "#71808b"
-                            outlines []
+        viewport:
+            xfill True
+            yfill True
+            mousewheel True
+            draggable True
+            scrollbars None
 
             vbox:
                 xalign 0.5
-                spacing gui.scale(1)
-
-                for calendar_week in calendar_weeks:
-                    hbox:
-                        spacing gui.scale(1)
-
-                        for calendar_date in calendar_week:
-                            $ calendar_is_today = calendar_date == calendar_today
-                            $ calendar_is_selected = calendar_date == calendar_selected
-                            $ calendar_is_other_month = calendar_date.month != calendar_view.month
-                            $ calendar_has_event = phone_calendar_has_event(calendar_date)
-
-                            button:
-                                xysize (gui.scale(31), gui.scale(25))
-                                background (
-                                    Solid("#c8a06a") if calendar_is_selected else
-                                    Solid("#2b3a3f") if calendar_is_today else
-                                    None
-                                )
-                                hover_background Solid("#26343a")
-                                action SetVariable("phone_calendar_selected", calendar_date.isoformat())
-
-                                fixed:
-                                    xysize (gui.scale(31), gui.scale(25))
-
-                                    text str(calendar_date.day):
-                                        xalign 0.5
-                                        yalign 0.5
-                                        size gui.scale(11)
-                                        color (
-                                            "#16130f" if calendar_is_selected else
-                                            "#f3eee5" if calendar_is_today else
-                                            "#5f6a70" if calendar_is_other_month else
-                                            "#c3ccd5"
-                                        )
-                                        outlines []
-
-                                    if calendar_has_event and not calendar_is_selected:
-                                        add Solid("#c8a06a"):
-                                            xalign 0.5
-                                            ypos gui.scale(21)
-                                            xysize (gui.scale(3), gui.scale(3))
-
-            add Solid("#243139") xysize (gui.scale(menu_phone_content_w), 1)
-
-            text calendar_date_label(calendar_selected):
-                size gui.scale(13)
-                color "#f1eee7"
-                outlines []
-
-            text phone_calendar_day_line(calendar_selected):
-                size gui.scale(9)
-                bold True
-                kerning gui.scale(1)
-                color "#c8a06a"
-                outlines []
-
-            if calendar_event:
-                text calendar_event:
-                    size gui.scale(11)
-                    color "#aab7bf"
-                    outlines []
-
-            text "WHO'S OPEN":
-                size gui.scale(9)
-                bold True
-                kerning gui.scale(2)
-                color "#71808b"
-                outlines []
-
-            for place in confidant_order:
-                $ place_open = destination_is_open(place, calendar_weekday)
-                $ place_note = destination_schedule_note(place, calendar_weekday)
+                spacing gui.scale(3)
 
                 fixed:
                     xfill True
-                    ysize gui.scale(24)
+                    ysize gui.scale(26)
 
-                    text destination_names.get(place, place):
-                        xpos 0
-                        ypos 0
-                        size gui.scale(11)
-                        color ("#dce4e8" if place_open else "#7b858c")
-                        outlines []
+                    textbutton "‹":
+                        style "phone_small_button"
+                        xalign 0.0
+                        yalign 0.5
+                        text_font "DejaVuSans.ttf"
+                        text_size gui.scale(18)
+                        padding (gui.scale(6), 0)
+                        action Function(phone_calendar_shift_month, -1)
 
-                    text ("OPEN" if place_open else "CLOSED"):
-                        xalign 1.0
-                        ypos 0
-                        size gui.scale(9)
+                    text "%s %d" % (story_month_names[calendar_view.month - 1].upper(), calendar_view.year):
+                        xalign 0.5
+                        yalign 0.5
+                        size gui.scale(16)
                         bold True
                         kerning gui.scale(1)
-                        color ("#82d7bf" if place_open else "#d98b7a")
+                        color "#f1eee7"
                         outlines []
 
-                    text (destination_schedule_label(place) if place_open else place_note):
-                        xpos 0
-                        ypos gui.scale(12)
-                        size gui.scale(9)
-                        color "#71808b"
+                    textbutton "›":
+                        style "phone_small_button"
+                        xalign 1.0
+                        yalign 0.5
+                        text_font "DejaVuSans.ttf"
+                        text_size gui.scale(18)
+                        padding (gui.scale(6), 0)
+                        action Function(phone_calendar_shift_month, 1)
+
+                hbox:
+                    xalign 0.5
+                    spacing gui.scale(1)
+
+                    for weekday_label in story_weekday_short:
+                        fixed:
+                            xysize (gui.scale(31), gui.scale(15))
+                            text weekday_label:
+                                xalign 0.5
+                                yalign 0.5
+                                size gui.scale(9)
+                                kerning gui.scale(0.5)
+                                color "#71808b"
+                                outlines []
+
+                vbox:
+                    xalign 0.5
+                    spacing gui.scale(1)
+
+                    for calendar_week in calendar_weeks:
+                        hbox:
+                            spacing gui.scale(1)
+
+                            for calendar_date in calendar_week:
+                                $ calendar_is_today = calendar_date == calendar_today
+                                $ calendar_is_selected = calendar_date == calendar_selected
+                                $ calendar_is_other_month = calendar_date.month != calendar_view.month
+                                $ calendar_has_event = phone_calendar_has_event(calendar_date)
+
+                                button:
+                                    xysize (gui.scale(31), gui.scale(26))
+                                    background (
+                                        Solid("#c8a06a") if calendar_is_selected else
+                                        Solid("#2b3a3f") if calendar_is_today else
+                                        None
+                                    )
+                                    hover_background Solid("#26343a")
+                                    action SetVariable("phone_calendar_selected", calendar_date.isoformat())
+
+                                    fixed:
+                                        xysize (gui.scale(31), gui.scale(26))
+
+                                        text str(calendar_date.day):
+                                            xalign 0.5
+                                            yalign 0.5
+                                            size gui.scale(12)
+                                            color (
+                                                "#16130f" if calendar_is_selected else
+                                                "#f3eee5" if calendar_is_today else
+                                                "#5f6a70" if calendar_is_other_month else
+                                                "#c3ccd5"
+                                            )
+                                            outlines []
+
+                                        if calendar_has_event and not calendar_is_selected:
+                                            add Solid("#c8a06a"):
+                                                xalign 0.5
+                                                ypos gui.scale(22)
+                                                xysize (gui.scale(3), gui.scale(3))
+
+                add Solid("#243139") xysize (gui.scale(menu_phone_content_w), 1)
+
+                text calendar_date_label(calendar_selected):
+                    size gui.scale(15)
+                    color "#f1eee7"
+                    outlines []
+
+                text phone_calendar_day_line(calendar_selected):
+                    size gui.scale(10)
+                    bold True
+                    kerning gui.scale(1)
+                    color "#c8a06a"
+                    outlines []
+
+                if calendar_event:
+                    text calendar_event:
+                        size gui.scale(13)
+                        color "#aab7bf"
                         outlines []
 
-            text "Some doors keep their own hours.":
-                size gui.scale(9)
-                italic True
-                color "#64727e"
-                outlines []
+                text "WHO'S OPEN":
+                    size gui.scale(10)
+                    bold True
+                    kerning gui.scale(2)
+                    color "#71808b"
+                    outlines []
+
+                for place in confidant_order:
+                    $ place_open = destination_is_open(place, calendar_weekday)
+                    $ place_note = destination_schedule_note(place, calendar_weekday)
+
+                    fixed:
+                        xfill True
+                        ysize gui.scale(27)
+
+                        text destination_names.get(place, place):
+                            xpos 0
+                            ypos 0
+                            size gui.scale(13)
+                            color ("#dce4e8" if place_open else "#7b858c")
+                            outlines []
+
+                        text ("OPEN" if place_open else "CLOSED"):
+                            xalign 1.0
+                            ypos 0
+                            size gui.scale(10)
+                            bold True
+                            kerning gui.scale(1)
+                            color ("#82d7bf" if place_open else "#d98b7a")
+                            outlines []
+
+                        text (destination_schedule_label(place) if place_open else place_note):
+                            xpos 0
+                            ypos gui.scale(14)
+                            size gui.scale(10)
+                            color "#71808b"
+                            outlines []
+
+                text "Some doors keep their own hours.":
+                    size gui.scale(10)
+                    italic True
+                    color "#64727e"
+                    outlines []

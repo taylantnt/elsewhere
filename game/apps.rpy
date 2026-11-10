@@ -12,7 +12,7 @@ init python:
         ("messages", "Messages", False),
         ("calendar", "Calendar", False),
         ("journal", "Journal", False),
-        ("camera", "Camera", True),
+        ("camera", "Camera", False),
         ("inventory", "Inventory", False),
         ("wire", "WIRE", False),
         ("stats", "Stats", False),
@@ -21,59 +21,84 @@ init python:
         ("settings", "Settings", False),
     ]
 
+    # The map is the phone's index of the city. Every entry carries a neutral
+    # description written by the app and a private note written by him. The
+    # note only appears after he has been there, so an unvisited place never
+    # speaks in his voice. Adding a location is one more dict: the list and the
+    # pins both read from this one table.
     phone_map_locations = [
         {
             "id": "school",
             "name": "University Campus",
             "area": "Bunkyo",
-            "description": "The campus where my new life is supposed to begin.",
+            "summary": "A university campus in Bunkyo, built around a gate, a courtyard, and quiet lecture halls.",
+            "note": "The campus where all of this is supposed to start. It still feels borrowed.",
             "image": "images/backgrounds/bg_school_gate.png",
-            "position": (35, 40),
+            "position": (96, 22),
         },
         {
             "id": "photo_club",
             "name": "Photography Club",
             "area": "Campus, Circle Room",
-            "description": "A room full of photographs, opinions, and people who know each other already.",
+            "summary": "A small circle room on campus, shared by the photography club and its noticeboards.",
+            "note": "Sim's circle room. Everyone there already knows how to stand beside each other.",
             "image": "images/backgrounds/bg_photo_club.png",
-            "position": (105, 75),
+            "position": (112, 38),
         },
         {
             "id": "ramen_shop",
             "name": "Ramen Shop",
             "area": "Side Street",
-            "description": "A small counter, a handwritten menu, and a bowl I still remember.",
+            "summary": "A counter shop on a side street, open late, with a handwritten menu and a single row of stools.",
+            "note": "Chef's counter. I remember the bowl better than the walk there.",
             "image": "images/backgrounds/bg_ramen_shop.png",
-            "position": (178, 43),
+            "position": (148, 28),
         },
         {
             "id": "akihabara",
             "name": "Akihabara",
             "area": "Chiyoda",
-            "description": "Bright signs, crowded streets, and Hamada Denki's eight floors.",
+            "summary": "An electronics district of bright signs, crowded streets, and stacked department stores.",
+            "note": "Hamada Denki, eight floors, and a city that never stops selling.",
             "image": "images/backgrounds/bg_akihabara_hamada_outside.png",
-            "position": (55, 153),
+            "position": (170, 44),
         },
         {
             "id": "harajuku",
             "name": "Harajuku",
             "area": "Shibuya",
-            "description": "A district of narrow streets, small boutiques, and places still waiting to be found.",
+            "summary": "A district of narrow streets, small boutiques, and quieter alleys behind the main avenue.",
+            "note": "I came for the clothes and stayed for the side streets.",
             "image": "images/backgrounds/bg_harajuku.png",
-            "position": (144, 122),
+            "position": (60, 80),
         },
         {
             "id": "asakusa",
             "name": "Asakusa",
             "area": "Taito",
-            "description": "The old temple district. Its map details have not been added yet.",
+            "summary": "The old temple district, anchored by Kaminarimon and the long shopping street beyond it.",
+            "note": "Incense, tourists, and a gate older than everything around it.",
             "image": "images/backgrounds/bg_asakusa_kaminarimon.png",
-            "position": (104, 167),
+            "position": (188, 72),
         },
     ]
 
-    def apps_open():
-        renpy.call_in_new_context("_phone_apps_open")
+    def apps_open(page=None):
+        store.phone_apps_start_page = page
+
+        while True:
+            renpy.call_in_new_context("_phone_apps_open")
+
+            if not store.camera_shot_requested:
+                break
+
+            # The camera shutter closes the phone on purpose: the photo must not
+            # contain any of it. The shot is taken from the game context, where
+            # the dialogue is still up, and then the phone comes back to the
+            # page the player was on.
+            store.camera_shot_requested = False
+            renpy.call_in_new_context("_camera_capture_after_phone", _clear_layers=False)
+            store.phone_apps_start_page = "camera"
 
     def phone_map_visit(location_id):
         if location_id not in store.phone_map_unlocked:
@@ -104,7 +129,7 @@ init python:
 
         if location_id == "school":
             return (
-                getattr(store, "first_day_activity", None) is not None
+                bool(getattr(store, "first_day_activity", None))
                 or getattr(store, "current_act", 1) > 1
             )
         if location_id == "ramen_shop":
@@ -119,6 +144,48 @@ init python:
 
         return False
 
+    def phone_map_place(location_id):
+        for place in phone_map_locations:
+            if place["id"] == location_id:
+                return place
+
+        return None
+
+    # The map draws photographs into fixed boxes. Ren'Py's `fit` only
+    # letterboxes, so a 3:2 photograph spills out of a 16:9 frame; crop the
+    # source to the frame's ratio first, then scale that crop to the exact
+    # size. Sizes are cached because renpy.image_size() decompresses the file.
+    phone_map_image_sizes = {}
+
+    def phone_map_image_size(path):
+        if path not in phone_map_image_sizes:
+            try:
+                phone_map_image_sizes[path] = renpy.image_size(path)
+            except Exception:
+                phone_map_image_sizes[path] = (16, 9)
+
+        return phone_map_image_sizes[path]
+
+    def phone_map_photo(path, width, height, dim=False):
+        source_w, source_h = phone_map_image_size(path)
+        target = float(width) / float(height)
+        source = float(source_w) / float(source_h)
+
+        if source > target:
+            frac = (source_h * target) / float(source_w)
+            crop = ((1.0 - frac) / 2.0, 0.0, frac, 1.0)
+        else:
+            frac = (source_w / target) / float(source_h)
+            crop = (0.0, (1.0 - frac) / 2.0, 1.0, frac)
+
+        return Transform(
+            path,
+            crop=crop,
+            crop_relative=True,
+            xysize=(width, height),
+            matrixcolor=SaturationMatrix(0.0) if dim else None,
+        )
+
     def phone_apps_begin_close():
         if store.phone_apps_closing:
             return
@@ -132,13 +199,14 @@ init python:
 
 
 default phone_apps_page = None
+default phone_apps_start_page = None
 default phone_apps_wire_profile = None
 default phone_apps_messages_contact = None
 default phone_apps_inventory_item = None
 default phone_apps_inventory_open = False
 default phone_apps_backup_mode = None
 default phone_apps_settings_tab = "general"
-default phone_apps_map_location = "school"
+default phone_apps_map_location = None
 default phone_apps_more_open = False
 default phone_apps_more_return_page = None
 default phone_apps_help_device = "keyboard"
@@ -152,14 +220,15 @@ default phone_map_visited = []
 
 
 label _phone_apps_open:
-    $ phone_apps_page = None
+    $ phone_apps_page = phone_apps_start_page
+    $ phone_apps_start_page = None
     $ phone_apps_wire_profile = None
     $ phone_apps_messages_contact = None
     $ phone_apps_inventory_item = None
     $ phone_apps_inventory_open = False
     $ phone_apps_backup_mode = None
     $ phone_apps_settings_tab = "general"
-    $ phone_apps_map_location = "school"
+    $ phone_apps_map_location = None
     $ phone_apps_more_open = False
     $ phone_apps_more_return_page = None
     $ phone_apps_help_device = "keyboard"
@@ -170,6 +239,8 @@ label _phone_apps_open:
     $ phone_apps_close_offset = 0
     $ phone_apps_close_alpha = 1.0
     call screen phone_apps
+    if _return == "camera_shot":
+        $ camera_shot_requested = True
     return
 
 
@@ -185,6 +256,10 @@ screen phone_app_icon(app_id, size=48, disabled=False):
 
 
 screen phone_app_tile(app_id, label, disabled, action):
+    # The camera is only "disabled" until the story hands one over; the tile
+    # still opens, so the player can read why it is dark.
+    $ app_disabled = disabled or (app_id == "camera" and not camera_unlocked)
+
     button:
         xysize (gui.scale(74), gui.scale(94))
         background None
@@ -199,14 +274,14 @@ screen phone_app_tile(app_id, label, disabled, action):
                 yalign 0.5
                 spacing gui.scale(6)
 
-                use phone_app_icon(app_id, 54, disabled)
+                use phone_app_icon(app_id, 54, app_disabled)
 
                 text label:
                     xalign 0.5
                     xmaximum gui.scale(72)
                     textalign 0.5
                     size gui.scale(11)
-                    color ("#a5afb6" if disabled else "#e4e9ec")
+                    color ("#a5afb6" if app_disabled else "#e4e9ec")
                     outlines []
 
 
@@ -251,8 +326,8 @@ screen phone_app_wire_contents(selected_contact):
 
                     hbox:
                         spacing gui.scale(5)
-                        use wire_meter(wire_progress(selected_contact), gui.scale(7), gui.scale(18), contact_color)
-                        text "[wire_progress(selected_contact)] / [confidant_visits_total]":
+                        use wire_meter(wire_progress(selected_contact), gui.scale(7), gui.scale(18), contact_color, wire_total(selected_contact))
+                        text "[wire_progress(selected_contact)] / [wire_total(selected_contact)]":
                             size gui.scale(12)
                             color "#8c9aa4"
                             outlines []
@@ -334,8 +409,8 @@ screen phone_app_wire_contents(selected_contact):
                                     xpos gui.scale(88)
                                     ypos gui.scale(82)
                                     spacing gui.scale(8)
-                                    use wire_meter(seen, gui.scale(4), gui.scale(8), contact["color"])
-                                    text "[seen] / [confidant_visits_total]":
+                                    use wire_meter(seen, gui.scale(4), gui.scale(8), contact["color"], wire_total(cid))
+                                    text "[seen] / [wire_total(cid)]":
                                         size gui.scale(12)
                                         kerning gui.scale(1)
                                         color "#5a6a76"
@@ -359,128 +434,345 @@ screen phone_app_wire_contents(selected_contact):
                 outlines []
 
 
-screen phone_app_maps_contents(selected_location):
-    $ map_location = next(
-        (place for place in phone_map_locations if place["id"] == selected_location),
-        phone_map_locations[0],
-    )
-    $ map_location_unlocked = phone_map_is_unlocked(map_location["id"])
-    $ map_location_visited = phone_map_is_visited(map_location["id"])
+## Maps opens on an index of the city: a small illustrated map, then every
+## known place grouped by whether he has been there. The list is the primary
+## navigation; the pins are a second way in. Both open the same detail page,
+## which is why the list can grow to any number of locations while the map
+## stays a fixed, decorative header.
+screen phone_app_maps_contents():
+    if phone_apps_map_location:
+        use phone_app_map_detail(phone_apps_map_location)
+    else:
+        use phone_app_map_list
+
+
+screen phone_app_map_list():
+    $ map_width = gui.scale(menu_phone_content_w)
+    $ map_visited = [place for place in phone_map_locations if phone_map_is_visited(place["id"])]
+    $ map_unvisited = [place for place in phone_map_locations if not phone_map_is_visited(place["id"])]
+    $ map_tip = GetTooltip()
 
     fixed:
-        xysize (gui.scale(menu_phone_content_w), gui.scale(474))
+        xysize (map_width, gui.scale(474))
 
+        ## --- THE MAP ---
         fixed:
-            xysize (gui.scale(230), gui.scale(218))
-            add Solid("#111c23")
+            xysize (map_width, gui.scale(126))
+            add Solid("#0c161c")
 
-            # A quiet street grid keeps the map legible beneath its location pins.
-            add Solid("#27363d") xpos gui.scale(18) ypos gui.scale(45) xysize (gui.scale(190), gui.scale(7))
-            add Solid("#27363d") xpos gui.scale(18) ypos gui.scale(112) xysize (gui.scale(190), gui.scale(7))
-            add Solid("#27363d") xpos gui.scale(18) ypos gui.scale(177) xysize (gui.scale(190), gui.scale(7))
-            add Solid("#27363d") xpos gui.scale(43) ypos gui.scale(18) xysize (gui.scale(7), gui.scale(184))
-            add Solid("#27363d") xpos gui.scale(111) ypos gui.scale(18) xysize (gui.scale(7), gui.scale(184))
-            add Solid("#27363d") xpos gui.scale(178) ypos gui.scale(18) xysize (gui.scale(7), gui.scale(184))
+            # City blocks, kept quiet so the pins do the talking.
+            add Solid("#111f26") xpos gui.scale(14) ypos gui.scale(18) xysize (gui.scale(54), gui.scale(24))
+            add Solid("#111f26") xpos gui.scale(78) ypos gui.scale(14) xysize (gui.scale(46), gui.scale(30))
+            add Solid("#111f26") xpos gui.scale(140) ypos gui.scale(18) xysize (gui.scale(26), gui.scale(22))
+            add Solid("#111f26") xpos gui.scale(176) ypos gui.scale(16) xysize (gui.scale(50), gui.scale(28))
+            add Solid("#111f26") xpos gui.scale(12) ypos gui.scale(52) xysize (gui.scale(60), gui.scale(22))
+            add Solid("#111f26") xpos gui.scale(84) ypos gui.scale(54) xysize (gui.scale(44), gui.scale(24))
+            add Solid("#111f26") xpos gui.scale(138) ypos gui.scale(52) xysize (gui.scale(30), gui.scale(20))
+            add Solid("#111f26") xpos gui.scale(180) ypos gui.scale(52) xysize (gui.scale(46), gui.scale(26))
+            add Solid("#15261f") xpos gui.scale(14) ypos gui.scale(88) xysize (gui.scale(50), gui.scale(22))
+            add Solid("#111f26") xpos gui.scale(74) ypos gui.scale(90) xysize (gui.scale(56), gui.scale(20))
+            add Solid("#111f26") xpos gui.scale(142) ypos gui.scale(88) xysize (gui.scale(36), gui.scale(22))
+            add Solid("#10242d") xpos gui.scale(188) ypos gui.scale(90) xysize (gui.scale(38), gui.scale(20))
 
-            text "TOKYO  /  CITY MAP":
+            # Roads between them.
+            add Solid("#1a2a32") xpos 0 ypos gui.scale(46) xysize (map_width, 2)
+            add Solid("#1a2a32") xpos 0 ypos gui.scale(80) xysize (map_width, 2)
+            add Solid("#1a2a32") xpos gui.scale(72) ypos 0 xysize (2, gui.scale(126))
+            add Solid("#1a2a32") xpos gui.scale(134) ypos 0 xysize (2, gui.scale(126))
+            add Solid("#1a2a32") xpos gui.scale(172) ypos 0 xysize (2, gui.scale(126))
+
+            text "TOKYO":
                 xpos gui.scale(8)
                 ypos gui.scale(5)
                 size gui.scale(10)
-                kerning gui.scale(1)
-                color "#94a9b5"
+                kerning gui.scale(2)
+                color "#8fa3ad"
                 outlines []
 
-            for index, place in enumerate(phone_map_locations, start=1):
-                $ place_unlocked = phone_map_is_unlocked(place["id"])
-                $ pin_asset = "images/ui/apps/map_pin.png" if place_unlocked else "images/ui/apps/map_pin_locked.png"
+            text "CITY MAP":
+                xalign 1.0
+                xoffset gui.scale(-8)
+                ypos gui.scale(6)
+                size gui.scale(9)
+                kerning gui.scale(1)
+                color "#55666f"
+                outlines []
+
+            for place in phone_map_locations:
+                $ pin_visited = phone_map_is_visited(place["id"])
+                $ pin_asset = "images/ui/apps/map_pin.png" if pin_visited else "images/ui/apps/map_pin_locked.png"
                 button:
-                    xpos gui.scale(place["position"][0])
-                    ypos gui.scale(place["position"][1])
-                    xysize (gui.scale(27), gui.scale(33))
+                    xpos gui.scale(place["position"][0] - 5)
+                    ypos gui.scale(place["position"][1] - 5)
+                    xysize (gui.scale(25), gui.scale(27))
                     background None
-                    hover_background None
+                    hover_background Solid("#c8a06a14")
+                    tooltip place["name"]
                     action [
                         SetVariable("phone_apps_map_location", place["id"]),
-                        With(Dissolve(0.16)),
+                        With(Dissolve(0.14)),
                     ]
-                    add pin_asset xysize (gui.scale(27), gui.scale(33))
-                    text "[index]":
+                    add pin_asset:
                         xalign 0.5
+                        yalign 0.5
+                        xysize (gui.scale(15), gui.scale(19))
+
+            text (map_tip or "TAP A PIN TO OPEN"):
+                xpos gui.scale(8)
+                ypos gui.scale(110)
+                size gui.scale(10)
+                kerning gui.scale(1)
+                color ("#d8b580" if map_tip else "#5c6d77")
+                outlines []
+
+        add Solid("#ffffff10") ypos gui.scale(126) xysize (map_width, 1)
+
+        ## --- THE INDEX ---
+        viewport:
+            xpos 0
+            ypos gui.scale(133)
+            xysize (map_width, gui.scale(341))
+            mousewheel True
+            draggable True
+            scrollbars "vertical"
+            vscrollbar_xsize gui.scale(3)
+            vscrollbar_base_bar Solid("#ffffff08")
+            vscrollbar_thumb Solid("#c8a06a55")
+            vscrollbar_unscrollable "hide"
+
+            vbox:
+                xsize (map_width - gui.scale(9))
+                spacing gui.scale(1)
+
+                use phone_app_map_group("VISITED", len(map_visited))
+
+                if map_visited:
+                    for place in map_visited:
+                        use phone_app_map_row(place)
+                else:
+                    text "No places visited yet.":
+                        xpos gui.scale(8)
                         ypos gui.scale(2)
-                        size gui.scale(9)
-                        bold True
-                        color "#f5f8fa"
+                        size gui.scale(11)
+                        color "#5c6b74"
                         outlines []
 
-        add Solid("#ffffff16") ypos gui.scale(222) xysize (gui.scale(230), gui.scale(1))
+                null height gui.scale(5)
+
+                use phone_app_map_group("NOT VISITED", len(map_unvisited))
+
+                if map_unvisited:
+                    for place in map_unvisited:
+                        use phone_app_map_row(place)
+                else:
+                    text "Every known place has been visited.":
+                        xpos gui.scale(8)
+                        ypos gui.scale(2)
+                        size gui.scale(11)
+                        color "#5c6b74"
+                        outlines []
+
+
+screen phone_app_map_group(label, count):
+    $ group_width = gui.scale(menu_phone_content_w) - gui.scale(9)
+
+    fixed:
+        xysize (group_width, gui.scale(26))
+
+        text label:
+            xpos gui.scale(4)
+            yalign 0.5
+            size gui.scale(11)
+            bold True
+            kerning gui.scale(1.5)
+            color "#7f9099"
+            outlines []
+
+        text "[count]":
+            xalign 1.0
+            xoffset gui.scale(-14)
+            yalign 0.5
+            size gui.scale(11)
+            color "#4f5f68"
+            outlines []
+
+        add Solid("#ffffff10"):
+            xpos gui.scale(4)
+            yalign 1.0
+            xysize ((group_width - gui.scale(18)), 1)
+
+
+screen phone_app_map_row(place):
+    $ row_width = gui.scale(menu_phone_content_w) - gui.scale(9)
+    $ row_visited = phone_map_is_visited(place["id"])
+    $ row_photo = phone_map_photo(place["image"], gui.scale(54), gui.scale(32), dim=not row_visited)
+
+    button:
+        xysize (row_width, gui.scale(50))
+        background None
+        hover_background Solid("#ffffff0a")
+        padding (0, 0)
+        action [
+            SetVariable("phone_apps_map_location", place["id"]),
+            With(Dissolve(0.14)),
+        ]
 
         fixed:
-            ypos gui.scale(230)
-            xysize (gui.scale(230), gui.scale(236))
+            xysize (row_width, gui.scale(50))
 
-            if map_location_unlocked:
-                add Transform(
-                    map_location["image"],
-                    xysize=(gui.scale(220), gui.scale(112)),
-                    fit="cover",
-                ) xpos gui.scale(5) ypos gui.scale(2)
-                text map_location["name"]:
-                    xpos gui.scale(7)
-                    ypos gui.scale(121)
-                    size gui.scale(17)
-                    color "#f1eee7"
-                    outlines []
-                text map_location["area"].upper():
-                    xpos gui.scale(7)
-                    ypos gui.scale(146)
-                    size gui.scale(10)
-                    kerning gui.scale(1)
-                    color "#90a4ae"
-                    outlines []
-                text ("VISITED" if map_location_visited else "NOT VISITED"):
-                    xalign 1.0
-                    xoffset gui.scale(-7)
-                    ypos gui.scale(146)
-                    size gui.scale(10)
-                    bold True
-                    color ("#82d7bf" if map_location_visited else "#e2bb79")
-                    outlines []
-                text map_location["description"]:
-                    xpos gui.scale(7)
-                    ypos gui.scale(168)
-                    xmaximum gui.scale(216)
-                    size gui.scale(12)
-                    color "#c2ccd1"
-                    outlines []
-            else:
-                add Transform(
-                    map_location["image"],
-                    xysize=(gui.scale(220), gui.scale(112)),
-                    fit="cover",
-                    matrixcolor=SaturationMatrix(0.0),
-                ) xpos gui.scale(5) ypos gui.scale(2)
-                add Solid("#10171c88") xpos gui.scale(5) ypos gui.scale(2) xysize (gui.scale(220), gui.scale(112))
-                text map_location["name"]:
-                    xpos gui.scale(7)
-                    ypos gui.scale(121)
-                    size gui.scale(17)
-                    color "#89939a"
-                    outlines []
-                text "NOT VISITED  /  LOCKED":
-                    xpos gui.scale(7)
-                    ypos gui.scale(146)
-                    size gui.scale(10)
-                    bold True
-                    kerning gui.scale(0.5)
-                    color "#78848d"
-                    outlines []
-                text "Details and photos will be added when this place is discovered.":
-                    xpos gui.scale(7)
-                    ypos gui.scale(168)
-                    xmaximum gui.scale(216)
-                    size gui.scale(12)
-                    color "#89939a"
-                    outlines []
+            add Solid("#82d7bf" if row_visited else "#3f4d55"):
+                xpos 0
+                ypos gui.scale(5)
+                xysize (gui.scale(2), gui.scale(40))
+
+            fixed:
+                xpos gui.scale(9)
+                ypos gui.scale(9)
+                xysize (gui.scale(54), gui.scale(32))
+                add Solid("#0d171d")
+                add row_photo
+                if not row_visited:
+                    add Solid("#08111688") xysize (gui.scale(54), gui.scale(32))
+
+            text place["name"]:
+                xpos gui.scale(71)
+                ypos gui.scale(6)
+                xmaximum gui.scale(136)
+                size gui.scale(15)
+                color ("#e8eef2" if row_visited else "#9aa8b0")
+                outlines []
+
+            text place["area"].upper():
+                xpos gui.scale(71)
+                ypos gui.scale(28)
+                xmaximum gui.scale(136)
+                size gui.scale(10)
+                kerning gui.scale(1)
+                color ("#73848e" if row_visited else "#5a6871")
+                outlines []
+
+            text "›":
+                xpos gui.scale(row_width - 16)
+                yalign 0.5
+                font "DejaVuSans.ttf"
+                size gui.scale(18)
+                color ("#c8a06a" if row_visited else "#4c5a63")
+                outlines []
+
+
+screen phone_app_map_detail(location_id):
+    $ detail_place = phone_map_place(location_id) or phone_map_locations[0]
+    $ detail_visited = phone_map_is_visited(detail_place["id"])
+    $ detail_width = gui.scale(menu_phone_content_w)
+    $ detail_photo_w = detail_width - gui.scale(8)
+    $ detail_photo_h = gui.scale(128)
+    $ detail_photo = phone_map_photo(detail_place["image"], detail_photo_w, detail_photo_h, dim=not detail_visited)
+
+    fixed:
+        xysize (detail_width, gui.scale(474))
+
+        fixed:
+            xpos gui.scale(4)
+            ypos gui.scale(2)
+            xysize (detail_photo_w, detail_photo_h)
+            add Solid("#0d171d")
+            add detail_photo
+            if not detail_visited:
+                add Solid("#08111670") xysize (detail_photo_w, detail_photo_h)
+
+        text detail_place["name"]:
+            xpos gui.scale(6)
+            ypos gui.scale(136)
+            size gui.scale(20)
+            color "#f1eee7"
+            outlines []
+
+        text detail_place["area"].upper():
+            xpos gui.scale(6)
+            ypos gui.scale(165)
+            size gui.scale(11)
+            kerning gui.scale(1)
+            color "#90a4ae"
+            outlines []
+
+        hbox:
+            xalign 1.0
+            xoffset gui.scale(-6)
+            ypos gui.scale(164)
+            spacing gui.scale(4)
+
+            text "●":
+                size gui.scale(8)
+                yalign 0.5
+                color ("#82d7bf" if detail_visited else "#5b6a73")
+                outlines []
+
+            text ("VISITED" if detail_visited else "NOT VISITED"):
+                size gui.scale(11)
+                bold True
+                kerning gui.scale(1)
+                color ("#82d7bf" if detail_visited else "#7d8a92")
+                outlines []
+
+        add Solid("#ffffff10"):
+            xpos gui.scale(4)
+            ypos gui.scale(184)
+            xysize ((detail_width - gui.scale(8)), 1)
+
+        text "ABOUT":
+            xpos gui.scale(6)
+            ypos gui.scale(192)
+            size gui.scale(10)
+            bold True
+            kerning gui.scale(2)
+            color "#5f707a"
+            outlines []
+
+        text detail_place["summary"]:
+            xpos gui.scale(6)
+            ypos gui.scale(207)
+            xmaximum gui.scale(228)
+            size gui.scale(15)
+            line_spacing gui.scale(2)
+            color "#c2ccd1"
+            outlines []
+
+        if detail_visited:
+            text "FROM YOUR NOTES":
+                xpos gui.scale(6)
+                ypos gui.scale(296)
+                size gui.scale(10)
+                bold True
+                kerning gui.scale(2)
+                color "#5f707a"
+                outlines []
+
+            text detail_place["note"]:
+                xpos gui.scale(6)
+                ypos gui.scale(310)
+                xmaximum gui.scale(228)
+                size gui.scale(15)
+                line_spacing gui.scale(2)
+                color "#d8dfe2"
+                outlines []
+        else:
+            text "NOT VISITED":
+                xpos gui.scale(6)
+                ypos gui.scale(296)
+                size gui.scale(10)
+                bold True
+                kerning gui.scale(2)
+                color "#5f707a"
+                outlines []
+
+            text "No photographs or notes from this area yet.":
+                xpos gui.scale(6)
+                ypos gui.scale(310)
+                xmaximum gui.scale(228)
+                size gui.scale(15)
+                line_spacing gui.scale(2)
+                color "#8d9aa2"
+                outlines []
 
 
 screen phone_app_journal_contents():
@@ -939,10 +1231,12 @@ screen phone_apps_help_contents(device):
                         ("Ctrl / Tab", "Hold to skip / toggle skipping."),
                         ("Page Up / Down", "Roll back / roll forward."),
                         ("H", "Hide the interface."),
-                        ("S", "Take a screenshot."),
+                        ("S", "Take a photo of the scene."),
                         ("V", "Toggle self-voicing."),
                         ("Shift+A", "Open accessibility settings."),
                     ]
+                    if not camera_unlocked:
+                        $ bindings = [binding for binding in bindings if binding[0] != "S"]
                 elif device == "mouse":
                     $ bindings = [
                         ("Left Click", "Advance dialogue or activate a control."),
@@ -1099,7 +1393,13 @@ screen phone_apps():
             "confirm_quit": "Quit Game",
         }
         $ app_title = app_titles[phone_apps_page]
-        $ app_subtitle = msg_contact_name(phone_apps_messages_contact) if phone_apps_page == "messages_thread" else None
+        $ app_subtitle = (
+            msg_contact_name(phone_apps_messages_contact)
+            if phone_apps_page == "messages_thread" else
+            (phone_map_place(phone_apps_map_location) or {}).get("name")
+            if phone_apps_page == "maps" and phone_apps_map_location else
+            None
+        )
         $ app_back_action = None if phone_apps_page is None else (
             [SetVariable("phone_apps_wire_profile", None), With(Dissolve(0.16))]
             if phone_apps_page == "wire" and phone_apps_wire_profile else
@@ -1109,6 +1409,8 @@ screen phone_apps():
             if phone_apps_page == "inventory" and phone_apps_inventory_item else
             [SetVariable("phone_apps_backup_mode", None), With(Dissolve(0.16))]
             if phone_apps_page == "backup" and phone_apps_backup_mode else
+            [SetVariable("phone_apps_map_location", None), With(Dissolve(0.16))]
+            if phone_apps_page == "maps" and phone_apps_map_location else
             [
                 SetVariable("phone_apps_page", "messages"),
                 SetVariable("phone_apps_messages_contact", None),
@@ -1179,30 +1481,13 @@ screen phone_apps():
                 elif phone_apps_page == "messages_thread":
                     use phone_app_messages_thread_contents(phone_apps_messages_contact)
                 elif phone_apps_page == "camera":
-                    vbox:
-                        xalign 0.5
-                        yalign 0.5
-                        spacing gui.scale(12)
-                        use phone_app_icon(phone_apps_page, 72)
-                        text "NOT AVAILABLE YET":
-                            xalign 0.5
-                            size gui.scale(14)
-                            kerning gui.scale(1)
-                            color "#dce4e8"
-                            outlines []
-                        text "The camera is not available yet.":
-                            xalign 0.5
-                            textalign 0.5
-                            xmaximum gui.scale(205)
-                            size gui.scale(13)
-                            color "#83909a"
-                            outlines []
+                    use phone_app_camera_contents
                 elif phone_apps_page == "wire":
                     use phone_app_wire_contents(phone_apps_wire_profile)
                 elif phone_apps_page == "inventory":
                     use phone_app_inventory_contents(phone_apps_inventory_item)
                 elif phone_apps_page == "maps":
-                    use phone_app_maps_contents(phone_apps_map_location)
+                    use phone_app_maps_contents
                 elif phone_apps_page == "stats":
                     use phone_app_stats_contents
                 elif phone_apps_page == "journal":

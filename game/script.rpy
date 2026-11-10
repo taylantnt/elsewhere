@@ -4411,6 +4411,9 @@ label after_school_photo_club:
     "Bring the camera if you like, he says. The phone is fine too."
     mc "(That is one place in this city I can find now without being shown.)"
 
+    # Circle is where the phone stops being a phone and becomes a camera.
+    $ camera_unlock()
+
     scene bg_home_exterior_night with walk_fade
     $ night_street()
 

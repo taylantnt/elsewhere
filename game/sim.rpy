@@ -105,6 +105,9 @@ label sim_visit_01:
     $ remember("sim", "found Circle at the end of the second-floor corridor and photographed the tape on the door")
     $ reward_attributes_once("sim_visit_01_close", [("grace", "micro")], show="card")
 
+    # The same unlock as the Day 2 photo-club route: Circle hands him a camera.
+    $ camera_unlock()
+
     scene bg_campus_interior with walk_fade
     stop music fadeout 2.0
     return

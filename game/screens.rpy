@@ -1409,7 +1409,7 @@ screen keyboard_help():
 
     hbox:
         label "S"
-        text _("Takes a screenshot.")
+        text _("Takes a photo of the scene.")
 
     hbox:
         label "V"

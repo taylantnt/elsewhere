@@ -269,7 +269,7 @@ screen phone_msg_bubble(msg, cid, accent, show_avatar=True):
     if msg["me"]:
         frame:
             xalign 1.0
-            xmaximum gui.scale(184)
+            xmaximum gui.scale(188)
             background bubble_bg
             padding (gui.scale(10), gui.scale(7))
             at phone_message_enter(entry_time, True)
@@ -279,23 +279,23 @@ screen phone_msg_bubble(msg, cid, accent, show_avatar=True):
                     add msg["img"] xysize (gui.scale(132), gui.scale(88))
                 if msg["text"] and msg["text"] != "(photo)":
                     text msg["text"]:
-                        size gui.scale(13)
+                        size gui.scale(15)
                         color "#0d1115"
                         outlines []
-                        xmaximum gui.scale(160)
+                        xmaximum gui.scale(164)
                         textalign 1.0
     else:
         hbox:
             spacing gui.scale(6)
             at phone_message_enter(entry_time, False)
             if show_avatar and cid in wire_contacts:
-                use wire_avatar(cid, gui.scale(24))
+                use wire_avatar(cid, gui.scale(28))
             elif show_avatar:
-                add Solid(accent + "55", xysize=(gui.scale(24), gui.scale(24)))
+                add Solid(accent + "55", xysize=(gui.scale(28), gui.scale(28)))
             else:
-                null width gui.scale(24)
+                null width gui.scale(28)
             frame:
-                xmaximum gui.scale(184)
+                xmaximum gui.scale(182)
                 background bubble_bg
                 padding (gui.scale(10), gui.scale(7))
                 vbox:
@@ -304,7 +304,7 @@ screen phone_msg_bubble(msg, cid, accent, show_avatar=True):
                         add msg["img"] xysize (gui.scale(132), gui.scale(88))
                     if msg["text"] and msg["text"] != "(photo)":
                         text msg["text"]:
-                            size gui.scale(13)
+                            size gui.scale(15)
                             color "#e6ebef"
                             outlines []
                             xmaximum gui.scale(160)
@@ -322,11 +322,11 @@ screen phone_typing_bubble(cid, show_avatar=True):
         spacing gui.scale(6)
         at phone_typing_enter
         if show_avatar and cid in wire_contacts:
-            use wire_avatar(cid, gui.scale(24))
+            use wire_avatar(cid, gui.scale(28))
         elif show_avatar:
-            add Solid(accent + "55", xysize=(gui.scale(24), gui.scale(24)))
+            add Solid(accent + "55", xysize=(gui.scale(28), gui.scale(28)))
         else:
-            null width gui.scale(24)
+            null width gui.scale(28)
         frame:
             background typing_bg
             padding (gui.scale(11), gui.scale(8))
@@ -348,7 +348,7 @@ screen phone_chat_popup(cid, options=None, typing=False, auto=None, show_continu
     $ closing = getattr(store, "phone_chat_closing", False)
     $ content_h = gui.scale(474)
     $ footer_h = gui.scale(66)
-    $ opt_h = min(content_h - gui.scale(120), gui.scale(18 + len(options) * 48)) if options else 0
+    $ opt_h = min(content_h - gui.scale(120), gui.scale(18 + len(options) * 52)) if options else 0
     $ sheet_h = opt_h if options else footer_h
     $ thread_top = content_h - sheet_h
     $ sheet_bg = Transform(
@@ -462,14 +462,14 @@ screen phone_chat_popup(cid, options=None, typing=False, auto=None, show_continu
                                 yalign 0.5
                                 spacing gui.scale(7)
                                 text "TAP TO CONTINUE":
-                                    size gui.scale(11)
+                                    size gui.scale(13)
                                     bold True
                                     kerning gui.scale(1.5)
                                     color "#d8b580"
                                     outlines []
                                 text "›":
                                     font "DejaVuSans.ttf"
-                                    size gui.scale(16)
+                                    size gui.scale(17)
                                     color "#d8b580"
                                     outlines []
                                     at phone_continue_chevron
@@ -489,7 +489,7 @@ screen phone_chat_popup(cid, options=None, typing=False, auto=None, show_continu
                             text "Message":
                                 xpos gui.scale(12)
                                 yalign 0.5
-                                size gui.scale(11)
+                                size gui.scale(13)
                                 color "#5f6f79"
                                 outlines []
                             fixed:
@@ -503,7 +503,7 @@ screen phone_chat_popup(cid, options=None, typing=False, auto=None, show_continu
                                     font "DejaVuSans.ttf"
                                     xalign 0.5
                                     yalign 0.5
-                                    size gui.scale(12)
+                                    size gui.scale(14)
                                     color "#7e8f99"
                                     outlines []
 
@@ -524,7 +524,7 @@ screen phone_chat_option(label, index, cid):
 
     button:
         xfill True
-        yminimum gui.scale(42)
+        yminimum gui.scale(46)
         background option_bg
         hover_background option_hover
         padding (gui.scale(10), gui.scale(6))
@@ -535,17 +535,17 @@ screen phone_chat_option(label, index, cid):
             xfill True
             yalign 0.5
             spacing gui.scale(8)
-            add Solid(accent) xysize (gui.scale(3), gui.scale(24))
+            add Solid(accent) xysize (gui.scale(3), gui.scale(26))
             text phone_reply_label(label):
-                xmaximum gui.scale(186)
+                xmaximum gui.scale(182)
                 yalign 0.5
-                size gui.scale(12)
+                size gui.scale(14)
                 color "#edf0f1"
                 outlines []
             text "›":
                 font "DejaVuSans.ttf"
                 yalign 0.5
-                size gui.scale(15)
+                size gui.scale(16)
                 color accent
                 outlines []
 
@@ -572,7 +572,7 @@ screen phone_app_messages_contents():
                     $ unread = msg_unread(cid)
                     button:
                         xfill True
-                        ysize gui.scale(52)
+                        ysize gui.scale(66)
                         background None
                         hover_background Solid("#ffffff0d")
                         action [
@@ -582,38 +582,44 @@ screen phone_app_messages_contents():
                         ]
                         hbox:
                             yalign 0.5
-                            spacing gui.scale(9)
+                            spacing gui.scale(10)
                             xfill True
                             if cid in wire_contacts:
-                                use wire_avatar(cid, gui.scale(40))
+                                use wire_avatar(cid, gui.scale(44))
                             else:
-                                add Solid(contact["color"], xysize=(gui.scale(40), gui.scale(40)))
+                                add Solid(contact["color"], xysize=(gui.scale(44), gui.scale(44)))
                             vbox:
-                                xsize gui.scale(145)
-                                spacing gui.scale(1)
+                                xsize gui.scale(140)
+                                spacing gui.scale(2)
                                 text contact["name"]:
-                                    size gui.scale(15)
+                                    size gui.scale(17)
                                     color "#e8eef2"
                                     outlines []
-                                text msg_last_text(cid):
-                                    size gui.scale(12)
-                                    color "#8b97a3"
-                                    outlines []
-                                    xmaximum gui.scale(145)
-                                    ymaximum gui.scale(15)
+                                # Two lines of preview, clipped so a long message
+                                # can never push the avatar out of its row.
+                                fixed:
+                                    xsize gui.scale(140)
+                                    ysize gui.scale(34)
+                                    clipping True
+                                    text msg_last_text(cid):
+                                        size gui.scale(13)
+                                        color "#8b97a3"
+                                        outlines []
+                                        xmaximum gui.scale(140)
                             if unread:
                                 fixed:
-                                    xsize gui.scale(20)
-                                    ysize gui.scale(20)
-                                    add Solid("#c94f4f", xysize=(gui.scale(16), gui.scale(16)))
+                                    xsize gui.scale(22)
+                                    ysize gui.scale(22)
+                                    add Solid("#c94f4f", xysize=(gui.scale(18), gui.scale(18)))
                                     text "[unread]":
-                                        size gui.scale(9)
+                                        size gui.scale(10)
                                         color "#ffffff"
                                         outlines []
                                         xalign 0.5
                                         yalign 0.5
                             text ">":
                                 style "phone_detail"
+                                size gui.scale(15)
                                 yalign 0.5
                                 xalign 1.0
                                 xfill True
@@ -627,7 +633,7 @@ screen phone_app_messages_contents():
                 color "#c3ccd5"
                 outlines []
             text "People you meet can text once you have a data plan.":
-                size gui.scale(12)
+                size gui.scale(13)
                 color "#75838d"
                 textalign 0.5
                 xmaximum gui.scale(menu_phone_content_w)
@@ -656,7 +662,7 @@ screen phone_app_messages_thread_contents(cid, typing=False, bottom_pad=18):
                 if day_label != prev_day_label:
                     text "[day_label]  ·  20:00":
                         xalign 0.5
-                        size gui.scale(9)
+                        size gui.scale(10)
                         kerning gui.scale(1)
                         color "#66757f"
                         outlines []
