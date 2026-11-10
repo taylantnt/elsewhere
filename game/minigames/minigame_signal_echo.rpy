@@ -380,7 +380,7 @@ label test_signal_echo:
     "This is a standalone test of the minigame."
     "The simulation will transmit an audio-visual sequence across 4 channels. Repeat each sequence accurately."
 
-    call minigame_signal_echo(rounds=3, starting_len=3, tolerances=3)
+    call minigame_signal_echo(rounds=3, starting_len=3, tolerances=3) from _call_minigame_signal_echo
 
     if _return:
         play sfx "audio/SFX/attribute_swell.wav"
@@ -403,10 +403,3 @@ label test_signal_echo:
     return
 
 
-# Optional test shortcut: Bind key 'M' to jump to test_signal_echo
-init python:
-    config.underlay.append(
-        renpy.Keymap(
-            K_m=lambda: renpy.jump_out_of_context("test_signal_echo")
-        )
-    )

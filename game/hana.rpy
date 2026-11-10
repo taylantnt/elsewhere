@@ -243,7 +243,7 @@ label hana_visit_05:
 
     "Inside, in careful pencil, in handwriting that's small enough to fit on a train ticket:"
 
-    hana "Thank you... for not giving up on me."
+    hana "Arigatou... Thank you... for not giving up on me."
 
     "Nothing else. No signature. No smiley. Just those seven words, and the ghost of an eraser mark beneath the final line, like she'd written it more than once before getting it right."
 
@@ -271,7 +271,7 @@ label hana_visit_06:
 
     "She doesn't pretend to read this time. She just looks at me. Her eyes are wet, but not from crying — more like she's been holding her breath for a very long time and is finally, slowly, letting some of it out."
 
-    hana "I... I'm going to try. To say it. If I stop, please don't... please don't fill it in for me."
+    hana "I... try. Going to... try. Please. Don't... fill in. If I stop. Don't. Please."
 
     menu:
         "\"Okay. Take your time.\"":
@@ -281,21 +281,21 @@ label hana_visit_06:
             mc "I'm listening."
             $ reward_attributes_once("hana_visit_06_listen", [("insight", "micro")], show="auto")
 
-    hana "...I don't have any friends. Not one. Not since... I don't even know when."
+    hana "No friends. Not... not one. Don't... don't know when. When... when I stopped."
 
-    hana "I hate that about myself. I hate it. I want to talk to people and my whole body says no. I've tried. I've stood next to people for an hour and said nothing."
+    hana "Hate it. Want to... to talk. But body... says no. Tried. Stood there. For... for hour. Said... nothing."
 
     "She looks down at her notebook."
 
-    hana "I come here for the art books. That's the real reason. I tell the club I like shelving. I don't. I just want to be near the pictures."
+    hana "Here for... art books. Real reason. Tell club... like shelving. Don't. Just want... near pictures."
 
-    hana "My parents are lawyers. Both of them. They've already decided. University, then law school, then the same office, the same life. They've never once asked me what I want. And I've never once told them."
+    hana "Parents... lawyers. Both. Decided. University. Law school. Same office. Same life. Never ask... what I want. I never... tell them."
 
-    hana "I feel... stuck. Like I'm a person-shaped space where a person should be. I can't say anything and I can't rebel either. So I just... hide. In here. In books. Under my own arms."
+    hana "Feel... stuck. Like... person-shaped space. Where person... should be. Can't say anything. Can't... rebel. So I... hide. Here. In books. Under... arms."
 
     "A long silence. The rain fills it. Then, slowly, she pushes the notebook across the table toward me — with one finger, like she's surrendering a weapon."
 
-    hana "...You can look. I've never shown anyone."
+    hana "You can... look. Never shown... anyone."
 
     "I open it."
 
@@ -313,12 +313,12 @@ label hana_visit_06:
             $ reward_attributes_once("hana_visit_06_tell", [("nerve", "micro")], show="auto")
         "\"These are incredible. Do you know that?\"":
             mc "These are incredible. Do you know that? You have real talent."
-            hana "It's just... doodling. But... thank you. Nobody's ever said that to me before."
+            hana "Just... doodling. But... thank you. Nobody... ever said that. Before."
             $ reward_attributes_once("hana_visit_06_incredible", [("grace", "micro")], show="auto")
 
-    hana "You're the first person who's stayed. Everyone else gave up after a week. You just... kept showing up. And you never once asked me to be normal."
+    hana "First person... who stayed. Everyone else... gave up. After week. You just... kept showing up. Never asked me... to be normal."
 
-    hana "I don't know if I can do what you're saying. But... I think I want to try."
+    hana "Don't know... if I can. What you're saying. But... think I want... to try."
 
     "She closes the notebook, holds it against her chest, and for the first time all year — Hana smiles."
     "It's small and crooked and terrified, like a first step. But it's real."
@@ -348,7 +348,7 @@ label hana_visit_07:
 
     "She's trembling. But she's smiling."
 
-    hana "I did it."
+    hana "I... I did it."
 
     menu:
         "\"...You told them?\"":
@@ -358,38 +358,38 @@ label hana_visit_07:
             mc "You talked to your parents? About the art?"
             $ reward_attributes_once("hana_visit_07_parents", [("grace", "micro")], show="auto")
 
-    hana "Last night. Both of them. At the dinner table. I said I don't want to be a lawyer. I said I want to draw. I said it all at once, because I knew if I stopped I'd never start again."
+    hana "Last night. Both of them. Dinner table. I said... don't want to be lawyer. I said... want to draw. Said it all... at once. Because if I stopped... never start again."
 
-    hana "They were... angry. But not because of the art. That's the part I can't stop thinking about."
+    hana "They were... angry. But not... because of art. That's the part... can't stop thinking about."
 
-    hana "They were angry because I hid it for so long. Because I sat at that table every night for years and never said a word, and they thought I was fine."
+    hana "Angry because... I hid it. For so long. Because I sat at table... every night. For years. Never said a word. They thought... I was fine."
 
     "She looks out the window, at the rooftops, at the city she's been drawing from behind glass her whole life."
 
-    hana "My mother cried. My father went very quiet, the way he does. And then he said — he said they'd been afraid of the same thing. That they'd made the plan because they thought I needed one. He said he was sorry."
+    hana "Mother... cried. Father went quiet. The way he does. Then he said... they'd been afraid. Same thing. Made the plan because... thought I needed one. He said... he was sorry."
 
-    hana "And I said I was sorry too. For not speaking."
+    hana "And I said... I was sorry too. For not... speaking."
 
-    hana "We talked until midnight. Really talked. I've never... I've never done that. It never ended with me winning anything before. It ended with me going quiet."
+    hana "We talked... until midnight. Really talked. Never... never done that. Never ended with me... winning anything before. Ended with me... going quiet."
 
     menu:
         "\"So what happens now?\"":
             mc "So what happens now?"
-            hana "Now I apply to art school. Part-time work, evening classes. It's going to be poor and slow and nobody's impressed. And it's mine."
+            hana "Now I apply... to art school. Part-time work. Evening classes. Going to be poor. Slow. Nobody impressed. But it's... mine."
             $ reward_attributes_once("hana_visit_07_now", [("insight", "micro")], show="auto")
         "\"Then you did win.\"":
             mc "Then you did win. You found a way to speak."
-            hana "Maybe. It doesn't feel like winning. It feels like... putting something heavy down."
+            hana "Maybe. Doesn't feel like winning. Feels like... putting something heavy down."
             $ reward_attributes_once("hana_visit_07_win", [("grace", "micro")], show="auto")
 
     "She reaches into her bag and takes out something small, wrapped in a square of plain paper. She holds it out with both hands — the way you hand someone something that matters."
 
-    hana "This is for you. I made it. It's not very good."
+    hana "This is for you. I made it. Not... very good."
 
     "I unwrap it. A small cloth strap — the kind you'd hang on a phone or a bag — with a tiny brush and a painter's palette stitched into it in coloured thread."
     "The stitching is uneven. Every stitch is deliberate."
 
-    hana "A brush and a palette. It's what I'm going to be, if I'm brave enough. I wanted you to carry it with you. So you don't forget me."
+    hana "Brush and palette. What I'm going to be... if I'm brave enough. Wanted you to carry it. So you don't... forget me."
 
     menu:
         "\"I won't forget you.\"":
@@ -399,7 +399,7 @@ label hana_visit_07:
             mc "This means a lot to me. Thank you, Hana."
             $ reward_attributes_once("hana_visit_07_means", [("nerve", "micro")], show="auto")
 
-    hana "No — not like that. For you... so you don't forget me. Like... like you carried my dream, when I couldn't. You kept showing up. Every week. Nobody's ever kept showing up."
+    hana "No — not like that. For you... so you don't forget me. Like... like you carried my dream. When I couldn't. You kept showing up. Every week. Nobody... ever kept showing up."
 
     "She steps back and bows — slow, deep, the way she did at the door last time. Then she picks up her bag and walks out. Not fleeing. Walking."
     "At the door she stops for half a second and looks back one last time, and this time she holds my eyes for a full breath before she goes."

@@ -4,25 +4,25 @@
 
 [Narration]: She doesn't pretend to read this time. She just looks at me. Her eyes are wet, but not from crying — more like she's been holding her breath for a very long time and is finally, slowly, letting some of it out.]
 
-Hana (quiet, halting): "I… I'm going to try. To say it. If I stop, please don't… please don't fill it in for me."
+Hana (quiet, halting, fragmented): "I... try. Going to... try. Please. Don't... fill in. If I stop. Don't. Please."
 
 Player: "Okay. Take your time."
 
-Hana: "…I don't have any friends. Not one. Not since… I don't even know when."
+Hana: "No friends. Not... not one. Don't... don't know when. When... when I stopped."
 
-Hana: "I hate that about myself. I hate it. I want to talk to people and my whole body says no. I've tried. I've stood next to people for an hour and said nothing."
+Hana: "Hate it. Want to... to talk. But body... says no. Tried. Stood there. For... for hour. Said... nothing."
 
 [She looks down at her notebook.]
 
-Hana: "I come here for the art books. That's the real reason. I tell the club I like shelving. I don't. I just want to be near the pictures."
+Hana: "Here for... art books. Real reason. Tell club... like shelving. Don't. Just want... near pictures."
 
-Hana: "My parents are lawyers. Both of them. They've already decided. University, then law school, then the same office, the same life. They've never once asked me what I want. And I've never once told them."
+Hana: "Parents... lawyers. Both. Decided. University. Law school. Same office. Same life. Never ask... what I want. I never... tell them."
 
-Hana (voice getting smaller): "I feel… stuck. Like I'm a person-shaped space where a person should be. I can't say anything and I can't rebel either. So I just… hide. In here. In books. Under my own arms."
+Hana (voice getting smaller): "Feel... stuck. Like... person-shaped space. Where person... should be. Can't say anything. Can't... rebel. So I... hide. Here. In books. Under... arms."
 
 [A long silence. The rain fills it. Then, slowly, she pushes the notebook across the table toward me — with one finger, like she's surrendering a weapon.]
 
-Hana: "…You can look. I've never shown anyone."
+Hana: "You can... look. Never shown... anyone."
 
 [I open it.]
 
@@ -36,11 +36,11 @@ Player (choice):
 
 Player (if 1): [Hana flinches, then nods very slightly, eyes fixed on the table. "…How?" she whispers. "I don't know how to say a sentence that long out loud."]
 
-Player (if 2): [Hana stares at me, then at the notebook, like she's checking whether I'm lying. "It's just… doodling," she says. But her ears go pink. She has never once been told this.]
+Player (if 2): [Hana stares at me, then at the notebook, like she's checking whether I'm lying. "Just... doodling. But... thank you. Nobody... ever said that. Before." But her ears go pink. She has never once been told this.]
 
-Hana (quiet): "You're the first person who's stayed. Everyone else gave up after a week. You just… kept showing up. And you never once asked me to be normal."
+Hana (quiet): "First person... who stayed. Everyone else... gave up. After week. You just... kept showing up. Never asked me... to be normal."
 
-Hana: "I don't know if I can do what you're saying. But… I think I want to try."
+Hana: "Don't know... if I can. What you're saying. But... think I want... to try."
 
 [She closes the notebook, holds it against her chest, and for the first time all year — Hana smiles. It's small and crooked and terrified, like a first step. But it's real.]
 

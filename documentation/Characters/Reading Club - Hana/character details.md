@@ -8,7 +8,7 @@
 | **Location** | Reading Club — a small room off the university library corridor (a quiet room, one hour of reading, optional sharing) |
 | **Archetype** | The Quiet Observer / The Girl Made of Held Breath |
 | **Affection Variable** | `hana_affection` |
-| **Language** | Almost none. Her arc is told through gestures, notes and silences long before she speaks |
+| **Language** | Almost none at first; when she finally speaks, it's fragmented and hesitant (Ellipses, pauses, struggling to form sentences). Occasional Japanese slips through when emotional. |
 | **Confidant Theme** | Shyness as a cage, art as a voice, and the courage to speak first |
 | **Leaves / Closes?** | **Yes — she stops coming to the club to pursue art.** |
 
@@ -47,6 +47,6 @@ Hana is the sharpest small clue that the world is watching. She is the only mino
 
 ## Signature Lines
 - *(a whisper, almost inaudible)* "…"
-- *"Thank you… for not giving up on me."*
-- *"You gave me courage. Without you, I… I'd still be hiding."*
-- *"For you… so you don't forget me. Like… you carried my dream, when I couldn't."*
+- *"Arigatou... Thank you... for not giving up on me."*
+- *(fragmented, struggling)* "No friends. Not... not one. Don't... don't know when. When... when I stopped."
+- *(fragmented, but determined)* "I... I did it."

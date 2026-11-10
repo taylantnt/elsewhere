@@ -24,7 +24,7 @@
 
 [Inside, in careful pencil, in handwriting that's small enough to fit on a train ticket:]
 
-Hana (written note): "Thank you… for not giving up on me."
+Hana (written note): "Arigatou... Thank you... for not giving up on me."
 
 [Nothing else. No signature. No smiley. Just those seven words, and the ghost of an eraser mark beneath the final line, like she'd written it more than once before getting it right.]
 

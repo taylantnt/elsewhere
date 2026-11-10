@@ -62,7 +62,7 @@ init python:
                     "label": "FRAME B: BALANCED THIRDS",
                     "desc": "Framed so the vertical street signs balance against the lone pedestrian waiting at the crossing.",
                     "crop": (180, 40, 920, 640),
-                    "critique": "Look at that balance. The signs guide the eye down, and the figure in the lower third grounds the whole street. That's not just a snapshot — that's a story."
+                    "critique": "Look at that balance. The signs guide the eye down, and the figure in the lower third grounds the whole street. That's not just a snapshot, that's a story."
                 },
                 {
                     "label": "FRAME C: TIGHT DETAIL",
@@ -682,7 +682,7 @@ label test_photography:
     "This is a standalone test of the photography composition minigame."
     "Sim has given you three assignments around Tokyo. Select your framing and exposure carefully."
 
-    call minigame_photography
+    call minigame_photography from _call_minigame_photography
 
     if _return:
         play sfx "audio/SFX/attribute_swell.wav"
@@ -696,12 +696,3 @@ label test_photography:
     stop music fadeout 1.5
     scene black with Dissolve(1.0)
     return
-
-
-# Optional test shortcut: Bind key 'P' to jump to test_photography
-init python:
-    config.underlay.append(
-        renpy.Keymap(
-            K_p=lambda: renpy.jump_out_of_context("test_photography")
-        )
-    )

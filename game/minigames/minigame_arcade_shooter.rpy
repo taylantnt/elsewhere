@@ -472,7 +472,7 @@ label minigame_arcade_shooter:
 label test_arcade_shooter:
     scene black with Dissolve(0.4)
     "A quick arcade test: clear the wave, or leave with Escape."
-    call minigame_arcade_shooter
+    call minigame_arcade_shooter from _call_minigame_arcade_shooter
     if _return:
         "The arcade screen flashes a victory message."
     else:
@@ -480,10 +480,3 @@ label test_arcade_shooter:
     return
 
 
-# Press 0 at any time during development to launch the standalone test.
-init python:
-    config.underlay.append(
-        renpy.Keymap(
-            K_0=lambda: renpy.jump_out_of_context("test_arcade_shooter")
-        )
-    )

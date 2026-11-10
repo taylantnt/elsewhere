@@ -267,7 +267,7 @@ label minigame_dance:
 label test_dance:
     scene black with Dissolve(0.4)
     "Follow the arrows as they reach the line. Use the arrow keys or tap the matching lane."
-    call minigame_dance
+    call minigame_dance from _call_minigame_dance
     if _return:
         "You finish the song in rhythm. The dance floor lights flare around you."
     else:
@@ -275,10 +275,3 @@ label test_dance:
     return
 
 
-# Press 1 at any time during development to launch the dance test.
-init python:
-    config.underlay.append(
-        renpy.Keymap(
-            K_1=lambda: renpy.jump_out_of_context("test_dance")
-        )
-    )

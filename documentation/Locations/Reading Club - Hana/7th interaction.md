@@ -6,38 +6,38 @@
 
 [Narration]: She's trembling. But she's smiling.]
 
-Hana: "I did it."
+Hana: "I... I did it."
 
 Player: "…You told them?"
 
-Hana (nods, words coming slow but steady): "Last night. Both of them. At the dinner table. I said I don't want to be a lawyer. I said I want to draw. I said it all at once, because I knew if I stopped I'd never start again."
+Hana (nods, words still fragmented but stronger): "Last night. Both of them. Dinner table. I said... don't want to be lawyer. I said... want to draw. Said it all... at once. Because if I stopped... never start again."
 
-Hana: "They were… angry. But not because of the art. That's the part I can't stop thinking about."
+Hana: "They were... angry. But not... because of art. That's the part... can't stop thinking about."
 
-Hana: "They were angry because I hid it for so long. Because I sat at that table every night for years and never said a word, and they thought I was fine."
+Hana: "Angry because... I hid it. For so long. Because I sat at table... every night. For years. Never said a word. They thought... I was fine."
 
 [She looks out the window, at the rooftops, at the city she's been drawing from behind glass her whole life.]
 
-Hana: "My mother cried. My father went very quiet, the way he does. And then he said — he said they'd been afraid of the same thing. That they'd made the plan because they thought I needed one. He said he was sorry."
+Hana: "Mother... cried. Father went quiet. The way he does. Then he said... they'd been afraid. Same thing. Made the plan because... thought I needed one. He said... he was sorry."
 
-Hana: "And I said I was sorry too. For not speaking."
+Hana: "And I said... I was sorry too. For not... speaking."
 
-Hana (voice breaking a little, then holding): "We talked until midnight. Really talked. I've never… I've never done that. It never ended with me winning anything before. It ended with me going quiet."
+Hana (voice breaking a little, then holding): "We talked... until midnight. Really talked. Never... never done that. Never ended with me... winning anything before. Ended with me... going quiet."
 
 Player (choice):
 "So what happens now?"
 "Then you did win."
 
-Hana (if 1): "Now I apply to art school. Part-time work, evening classes. It's going to be poor and slow and nobody's impressed. And it's mine."
-Hana (if 2): "Maybe. It doesn't feel like winning. It feels like… putting something heavy down."
+Hana (if 1): "Now I apply... to art school. Part-time work. Evening classes. Going to be poor. Slow. Nobody impressed. But it's... mine."
+Hana (if 2): "Maybe. Doesn't feel like winning. Feels like... putting something heavy down."
 
 [She reaches into her bag and takes out something small, wrapped in a square of plain paper. She holds it out with both hands — the way you hand someone something that matters.]
 
-Hana: "This is for you. I made it. It's not very good."
+Hana: "This is for you. I made it. Not... very good."
 
 [I unwrap it. A small cloth strap — the kind you'd hang on a phone or a bag — with a tiny brush and a painter's palette stitched into it in coloured thread. The stitching is uneven. Every stitch is deliberate.]
 
-Hana: "A brush and a palette. It's what I'm going to be, if I'm brave enough. I wanted you to carry it with you. So you don't forget me."
+Hana: "Brush and palette. What I'm going to be... if I'm brave enough. Wanted you to carry it. So you don't... forget me."
 
 Player (quietly): "I won't forget you."
 

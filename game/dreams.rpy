@@ -87,7 +87,7 @@ label dream_day_two_cellular_maid:
     stop music fadeout 3.0
     scene black with Dissolve(1.5)
     pause 1.5
-    jump end_of_build
+    jump saturday_off
 
 
 ## --- QUIET FALLBACK ----------------------------------------------------------
