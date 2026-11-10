@@ -15,3 +15,6 @@ traceback.txt
 
 # Screenshots taken with the in-game camera.
 screenshots/
+
+# Editor backup files.
+*.bak
