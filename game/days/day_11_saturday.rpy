@@ -244,8 +244,8 @@ label saturday_recovery:
     mother "Where did you go?"
 
     if last_afternoon_place == "chef":
-        mc "The ramen shop. The same stool. The same bowl."
-        mc "(He remembered what I ordered. He did not make a thing of it. That was the whole welcome.)"
+        mc "The ramen shop. The broth had been going since morning."
+        mc "(He did not make a thing of it. That was the whole welcome.)"
     elif last_afternoon_place == "aya":
         mc "The maid cafe. She remembered the order before I said it."
         mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
@@ -256,7 +256,7 @@ label saturday_recovery:
         mc "Lupin's Den. The bar was empty enough to hear the ice."
         mc "(He taught me a phrase I am still turning over.)"
     elif last_afternoon_place == "sim":
-        mc "The photography club. Sim made us photograph the same wall until it stopped being a wall."
+        mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
     elif last_afternoon_place == "walk_hikari":
         mc "I walked home with Hikari. We took the long way."
         hikari "You took the long way. I followed."

@@ -7014,7 +7014,7 @@ label tuesday_lecture:
     stop music fadeout 2.0
     scene black with Dissolve(1.5)
     pause 1.5
-    jump end_of_build
+    jump wednesday_morning
 
 
 ################################################################################

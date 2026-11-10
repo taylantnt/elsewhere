@@ -14,7 +14,7 @@ label sunday_practice:
 
     "Sunday arrives the way Sundays do, late, and without apology."
     "The light on the ceiling is the color of the inside of a shell. The house is doing its slow morning."
-    "One week of the elective. One week of the house. One week of being a person who knows which platform."
+    "A weekend of the elective. Twelve days of the house. Twelve days of being a person who knows which platform."
     mc "(I am not the same person who landed. I do not know when that happened. Probably on a train.)"
 
     "My phone buzzes once on the desk."
@@ -45,8 +45,8 @@ label sunday_practice:
         mc "(She has a question. That means she has been thinking since before I woke up.)"
 
     "The door slides open. Hikari is already dressed, holding two cups of tea."
-    hikari "One week."
-    mc "One week."
+    hikari "Almost two weeks."
+    mc "Almost two weeks."
     hikari "How does it feel?"
     mc "Like a week."
     hikari "That's the right answer. The wrong answer is 'like a month'."
@@ -219,7 +219,7 @@ label sunday_practice:
 
     scene bg_asakusa_kaminarimon with walk_fade
     "I stand under the big lantern for a while. The smoke goes up. The people go in and out."
-    mc "(One week. One meeting. One time.)"
+    mc "(One afternoon. One meeting. One time.)"
     mc "(The afternoon is mine. I should use it.)"
 
     scene bg_station with walk_fade
@@ -247,8 +247,8 @@ label sunday_practice:
     mother "Where did you go?"
 
     if last_afternoon_place == "chef":
-        mc "The ramen shop. The same stool. The same bowl."
-        mc "(He remembered what I ordered. He did not make a thing of it. That was the whole welcome.)"
+        mc "The ramen shop. The broth had been going since morning."
+        mc "(He did not make a thing of it. That was the whole welcome.)"
     elif last_afternoon_place == "aya":
         mc "The maid cafe. She remembered the order before I said it."
         mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
@@ -259,7 +259,7 @@ label sunday_practice:
         mc "Lupin's Den. The bar was empty enough to hear the ice."
         mc "(He taught me a phrase I am still turning over.)"
     elif last_afternoon_place == "sim":
-        mc "The photography club. Sim made us photograph the same wall until it stopped being a wall."
+        mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
     elif last_afternoon_place == "walk_hikari":
         mc "I walked home with Hikari. We took the long way."
         hikari "You took the long way. I followed."

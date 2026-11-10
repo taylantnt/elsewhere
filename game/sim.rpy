@@ -5,7 +5,12 @@ define riku = Character("Riku", callback=type_sound)
 
 label confidant_visit_sim:
     $ visit = confidant_visits.get("sim", 0)
-    if visit == 1:
+    if visit == 0:
+        # The Day 2 photo-club route is the usual first meeting. A player who
+        # walked home instead never climbed to the second floor, so the hub's
+        # zero-visit rule lets Circle introduce itself on a later Thursday.
+        jump sim_visit_01
+    elif visit == 1:
         jump sim_visit_02
     elif visit == 2:
         jump sim_visit_03
@@ -25,6 +30,85 @@ label sim_common_open:
     play music "audio/Music/circle.mp3" fadein 2.0
     $ phone_map_visit("photo_club")
     return
+
+################################################################################
+## VISIT 1 — THE DOOR WITH TAPE ON IT
+################################################################################
+##
+## The alternate first meeting. The Day 2 photo-club route already contains the
+## argument and the first frame, so this one only runs when that route was
+## skipped. It does the same work in less time: the club, Sim, and the WIRE
+## invitation.
+
+label sim_visit_01:
+    call sim_common_open
+
+    "The corridor on the second floor is longer than it has any right to be."
+    "At the end of it is a door with a strip of tape down one side. A sheet of printer paper, two words in marker, and a circle drawn under them by hand."
+    mc "(Circle. That is either the name of the club or a warning about the door.)"
+    "I knock. Nobody answers. I open it anyway, because the door is already open."
+
+    "The room smells of fixative and warm electronics and too much coffee. Four people are arguing in front of a whiteboard."
+    sim "— it is not lazy. It is just not thinking about the picture."
+    marco "It is a machine making the decision for you. That is the definition of lazy."
+    sim "It is a machine making a decision you would have made anyway, only faster. That is the definition of a tool."
+    nami "You two have had this argument every week since March."
+    sim "And every week I win."
+    marco "You do not win. You just talk longer."
+
+    "The man in the middle of it turns around. He is older than the students, with the kind of calm that comes from having been the youngest person in a room for a long time."
+    sim "Ah. A guest. Or a member. It is hard to tell the difference before the first photograph."
+    mc "I was in the corridor. The door was open."
+    sim "The door is always open. That is the whole membership policy."
+    "He holds out a hand. His grip is dry and certain."
+    sim "Sim. I run Circle. Which is a grand way of saying I bring the coffee and lose the arguments."
+    marco "You do not lose the arguments."
+    sim "Not when I am right."
+    "He picks up a camera from the table and holds it out to me."
+    sim "Here. Before we talk about anything, take one photograph of this room."
+    mc "I don't know how to use this."
+    sim "That is the correct answer. Nobody knows how to use it the first time. The people who think they do are the ones who take the boring photographs."
+
+    menu:
+        "Ask what I should look for.":
+            mc "What should I look for?"
+            sim "Something in this room that would be gone if you blinked. Not the people. The people will pose. Something else."
+            mc "(I look. The light on the whiteboard. The tape on the door. The way the coffee cups are all on the same side of the table.)"
+            sim "There. You found it. Now press the button."
+            $ reward_attributes_once("sim_visit_01_look", [("insight", "micro")], show="auto")
+        "Take the photograph without asking.":
+            "I lift the camera and press the button before I can think about it."
+            "The shutter makes a sound like a small, polite cough."
+            sim "Good. The first one is always the honest one. After that you start trying to be good."
+            $ reward_attributes_once("sim_visit_01_shoot", [("nerve", "micro")], show="auto")
+        "Ask why he runs a club nobody joins.":
+            mc "Why do you run a club that's this hard to find?"
+            sim "Because the people who find it are the ones who were looking. The rest would have left after one meeting anyway."
+            sim "A club is not a room. It is the people who keep coming back to it."
+            $ reward_attributes_once("sim_visit_01_why", [("grace", "micro")], show="auto")
+
+    "He takes the camera back, looks at the screen, and makes a sound that is not quite a laugh."
+    sim "You photographed the thing nobody else would have chosen."
+    mc "It was the most honest thing in the room."
+    sim "That is either a very good answer or a very lucky one. I will take it."
+    "He opens the group invitation on his phone and hands it to me."
+    mc "I can't see the posts yet."
+    sim "Not without a signal. They will be there when you get connected."
+    "I type my name. WIRE saves the invitation."
+    $ wire_unlock("sim")
+
+    sim "We meet Thursdays. Bring the camera, or don't. The wall doesn't care."
+    mc "The wall?"
+    sim "You will meet it. It is the most photographed wall in this building, and it has never once complained."
+    $ sim_affection += 1
+    $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 1)
+    $ remember("sim", "found Circle at the end of the second-floor corridor and photographed the tape on the door")
+    $ reward_attributes_once("sim_visit_01_close", [("grace", "micro")], show="card")
+
+    scene bg_campus_interior with walk_fade
+    stop music fadeout 2.0
+    return
+
 
 label sim_visit_02:
     call sim_common_open

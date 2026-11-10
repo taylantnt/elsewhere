@@ -11,7 +11,14 @@ init 999 python:
 
 label confidant_visit_chef:
     $ visit = confidant_visits.get("chef", 0)
-    if visit == 1:
+    if visit == 0:
+        # The Day 2 walk-alone route is the usual first meeting, but the first
+        # free afternoon is a fork: a player who walked home with Hikari or
+        # joined Circle never came down this street. The hub's zero-visit rule
+        # ("a place with zero visits is always available") is what lets the
+        # ramen shop introduce itself later instead of deadlocking the gate.
+        jump chef_visit_01
+    elif visit == 1:
         jump chef_visit_02
     elif visit == 2:
         jump chef_visit_03
@@ -33,6 +40,95 @@ label chef_common_open:
     play music "audio/Music/ramen_shop.mp3" fadein 2.0
     $ phone_map_visit("ramen_shop")
     return
+
+################################################################################
+## VISIT 1 — THE FIRST BOWL
+################################################################################
+##
+## The alternate first meeting. The Day 2 walk-alone route already contains a
+## full ramen-shop scene, so this one only runs when that route was skipped.
+## It has to do the same work in less time: the shop, the man, the menu he
+## cannot read, and the WIRE card that makes him a contact.
+
+label chef_visit_01:
+    call chef_common_open
+
+    "The noren hangs in the doorway, blue and faded, with a white character on it I have walked past twice without reading."
+    "Steam comes out under it in a slow curtain. The smell is pork and soy and something roasted."
+    mc "(The kind of smell that makes a decision for you.)"
+    "I push the curtain aside."
+
+    "The shop is six stools and a counter and a man. The man is at the stove with his back to the door, and he does not turn around."
+    chef "いらっしゃい。"
+    mc "(Irasshai. Welcome. I know that one now.)"
+
+    "There is one other customer, an old man in a cap, eating with the focused silence of a man who has done this ten thousand times."
+    "I take the stool farthest from him, because it feels like the polite amount of distance."
+    chef "おう。"
+    "The chef grunts without turning. Then he turns. He looks at me the way a mechanic looks at a car that has arrived with no appointment."
+    chef "はじめて？"
+    mc "(Hajimete. First time. He is asking if it is my first time.)"
+    mc "Hai. First time."
+    chef "そうか。"
+    "He points at the wall with his ladle. A handwritten menu, four lines, all of them characters I cannot read."
+
+    menu:
+        "Ask him what he recommends.":
+            mc "Osusume wa? What do you recommend?"
+            "He looks at me for a second longer than I expected. Then he nods once, as if I have passed a test I did not know I was taking."
+            chef "豚骨。"
+            mc "(Tonkotsu. I do not know what it means. I will find out.)"
+            $ reward_attributes_once("chef_visit_01_recommend", [("grace", "micro")], show="auto")
+        "Point at the second line.":
+            "I point at the second line on the menu and hope it is not a price."
+            "The chef follows my finger, then looks at my face, then makes a sound that might be a laugh."
+            chef "それか。"
+            mc "(That one. Good. I have ordered a thing.)"
+            $ reward_attributes_once("chef_visit_01_point", [("insight", "micro")], show="auto")
+        "Order in English and hope.":
+            mc "Ramen, please. Whatever's good."
+            "The chef stares at me. Then he says, slowly, in English:"
+            chef "Good. I choose."
+            mc "(He has more English than he lets on. He was waiting to see if I would try.)"
+            $ reward_attributes_once("chef_visit_01_english", [("nerve", "micro")], show="auto")
+
+    "He turns back to the pots. The broth goes into the bowl in one motion, the noodles go in after, the egg is cut and laid down like it is being placed on a map."
+    "He sets the bowl in front of me and taps the counter once."
+    chef "熱い。"
+    mc "(Atsui. Hot. He is warning me, not selling me.)"
+    mc "Arigatou gozaimasu."
+    "He grunts. It is the warmest grunt I have heard."
+
+    "The first mouthful is so much better than anything I have eaten here that I have to put the chopsticks down."
+    mc "(It is not just food. It is a whole day of somebody's work in a bowl.)"
+    "I eat. The old man finishes, pays, and leaves without a word. The chef wipes the counter where he was sitting."
+    chef "どう？"
+    mc "(Dou. How is it.)"
+    mc "Umai. Really umai."
+    chef "そうか。"
+    "He nods once, satisfied, and goes back to the pots."
+
+    "When I finish, he sets a small card beside my bowl. A black square made of smaller black squares, with six words in English in handwriting that is not his."
+    chef "「読め」"
+    mc "(Read it. That one is no mystery.)"
+    "I hold my phone over the card. The app takes it without asking, and puts a name on the list."
+    mc "So I know if you're shut before I walk down here for nothing."
+    chef "水曜、休み。"
+    mc "(Wednesday, closed. Noted.)"
+    $ wire_unlock("chef")
+
+    "I pay. He counts the coins into the till without looking at them."
+    chef "また。"
+    mc "(Mata. Again. He is not saying goodbye. He is saying the door is still here.)"
+    $ chef_affection += 1
+    $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 1)
+    $ remember("chef", "found the ramen shop on a free afternoon and learned the shop is closed Wednesdays")
+    $ reward_attributes_once("chef_visit_01_close", [("grace", "micro")], show="card")
+
+    scene bg_home_exterior_night with walk_fade
+    stop music fadeout 2.0
+    return
+
 
 label chef_visit_02:
     call chef_common_open

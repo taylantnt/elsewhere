@@ -616,8 +616,8 @@ path" from "the long way home." Visit 7 sets `hikari_run_finished = True` for
 the Act 3/4 threshold. The run chain is tracked by `hikari_visits`, not
 `confidant_visits`, so it does not affect the confidant caps or the "all
 confidants met" gate; WIRE reads `hikari_visits` through its contact entry.
-Only visit 2 is reachable in the current Day 7 build; visits 3–7 are written
-and waiting for later hub days.
+Visits 2–5 are reachable in the Days 7–12 build (Act 2 caps each confidant at
+five); visits 6–7 are written and wait for Act 3.
 
 ### 5.8 Messages — texting, threads, and the buzz
 `game/messages.rpy`. WIRE is the contacts book; Messages is the conversation.
@@ -671,7 +671,7 @@ what makes them textable.
 and one place to say which weekdays a destination is open.
 
 - **The anchor is fixed.** Day 1 is Wednesday, April 8; Day 2 is Thursday,
-  April 9; and the built story runs through Tuesday, April 14 (Day 7). Every day
+  April 9; and the built story runs through Sunday, April 19 (Day 12). Every day
   label pins its absolute day at the top with `set_story_day()`, so a branch or
   a rollback cannot leave the calendar a day behind. The full date table lives
   in `documentation/calendar.md`.
@@ -830,10 +830,10 @@ that does not exist.
   `documentation/Locations/`, and none of the remaining visits is in the
   script — visits 2–7 for all five.
 - **The later hub days that reach Hikari's remaining runs.** Visits 3–7 are
-  written in `game/hikari.rpy` and wired through `confidant_visit_hikari`, but
-  the current build ends on Day 7, so only visit 2 is reachable. The repeating
-  day loop that would carry the player through the rest of Act 2 is the missing
-  piece, not the run scenes themselves.
+  written in `game/hikari.rpy` and wired through `confidant_visit_hikari`. The
+  Days 7–12 build reaches visits 2–5 (the Act 2 cap); visits 6–7 wait for Act 3.
+  The repeating day loop that carries the player through the rest of Act 2 is
+  still future work, not the run scenes themselves.
 - **The photography club's camera.** The first visit is built around arriving with
   nothing to shoot (§4.6). The seven-interaction outline assumes a "beginner's
   camera" by the third visit, so the camera still has to be acquired somewhere

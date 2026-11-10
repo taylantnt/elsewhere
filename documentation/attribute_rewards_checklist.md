@@ -4,8 +4,9 @@ Current code snapshot: November 7, 2026.
 
 This is an editable checklist of the current story choice menus kept here —
 M01–M54, the retired weekend-plan menu (M47), the retired camera menu (M31),
-the walk-alone still-full fork (M35A), and M55–M60 for the first hub day
-(Tuesday, Day 7) — including every answer with no attribute reward. The current
+the walk-alone still-full fork (M35A), M55–M60 for the first hub day
+(Tuesday, Day 7), and the Days 8–12 beats — including every answer with no
+attribute reward. The current
 live reward groups are E02–E08 plus the archived E01 board; the five confidant
 chains' visits 2–7 are summarised in the **Confidant Visit Rewards** section
 below; non-dialogue rewards are listed separately. Unwritten future scenes and

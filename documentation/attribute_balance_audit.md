@@ -554,3 +554,29 @@ the chain totals Grace 0.4, Insight 0.9, Nerve 0.7. The run route stays
 Insight-forward without adding to Grace, which was the highest ceiling on every
 route in §4. The menus are M61–M66 in `attribute_rewards_checklist.md`; the
 progression summary is under `documentation/Locations/Night run - Hikari/`.
+
+## Follow-up — 2026-11-10 (Days 8–12 and the hub first visits)
+
+Scope: `game/days/day_8_wednesday.rpy` … `day_12_sunday.rpy`, plus the new
+`chef_visit_01` and `sim_visit_01` first-visit scenes in `game/chef.rpy` and
+`game/sim.rpy`.
+
+- **Days 8–12 are deliberately even.** Each day pays one micro reward per
+  attribute across its three kitchen/class/night menus, and each travel menu
+  offers one option per attribute. The menu-max totals are Insight 8.0 /
+  Grace 7.6 / Nerve 8.0 across the five days, so the week adds no new skew.
+- **The two hub first visits close the Day 2 fork.** `chef_visit_01` and
+  `sim_visit_01` each pay Grace on the close, matching the other first visits;
+  their menus offer one option per attribute. Before this fix, a player who did
+  not take the matching Day 2 route could never meet Chef or Sim, which also
+  kept `all_confidants_met()` false and locked every revisit behind “Come back
+  another day.” The zero-visit branch now plays an intro instead of returning.
+- **Remaining skew (known, not new).** The confidant files still lean Grace:
+  across the six written arcs the menu-max totals are Grace 32.4 / Insight 25.3
+  / Nerve 25.4. Chef pays Nerve 2.8 and Hana Nerve 2.0 across their written
+  visits, and Orson pays Insight 1.2. Days 8–12 do not make this worse;
+  balancing the confidant chains is a separate pass. Rank 4 (9.5) is reachable
+  by Day 12 on any route. Rank 5 (15.0) is easiest in Grace and needs
+  deliberate play in Insight and Nerve.
+- **No duplicate flags.** The only repeated flag is `travel_route_attribute`
+  (three mutually exclusive Day 1 branches), which is intentional.

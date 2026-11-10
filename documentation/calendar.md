@@ -1,7 +1,7 @@
 # Calendar, Dates, and Location Hours
 **Document type:** As-implemented reference
 **Covers:** `game/calendar.rpy`, the date chip, the phone Calendar app, and weekly opening rules
-**Status:** Built; dates are canonical from the airport through Tuesday, Day 7
+**Status:** Built; dates are canonical from the airport through Sunday, Day 12
 
 > This is the document to check before writing a line that names a day or a date.
 > The script does not infer dates from scene order. Each day label pins the

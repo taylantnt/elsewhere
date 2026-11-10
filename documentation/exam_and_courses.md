@@ -34,6 +34,11 @@ the miss.
 | Sunday, April 12 (Day 5) | Hikari's three-question practice quiz off the handout. |
 | Monday, April 13 (Day 6) | The professor's three-question quiz at the end of the haiku lecture; the result colors the afternoon and evening. |
 | Tuesday, April 14 (Day 7) | First hub afternoon: the midterm briefing and the haiku lecture continuation, then the free afternoon, dinner, and night study. |
+| Wednesday, April 15 (Day 8) | Bashō and the frog; kigo and *mono no aware*; the quiet car on the train. |
+| Thursday, April 16 (Day 9) | *The Tale of Genji* and the Heian court; the genkan and the platform queue. |
+| Friday, April 17 (Day 10) | Elective fair after lunch; **Murakami** and the three scripts (*kanji*, *manyōgana*, *kana*). |
+| Saturday, April 18 (Day 11) | Jimbocho book town with Murakami; Sōseki, Kawabata, Tanizaki, *wabi-sabi*. |
+| Sunday, April 19 (Day 12) | Sensō-ji with Murakami; *ma*, *ichigo ichie*, *omikuji*. End of the current build. |
 | Act 2, late | The wider exam period — later exams, optional `run_quiz` sets, results echoing in later dialogue. |
 | Act 3 | No classes — the world is breaking. (Deliberate contrast.) |
 
