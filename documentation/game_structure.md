@@ -507,8 +507,10 @@ is the index.
 ### 5.2 Language progression
 - Japanese starts plain and turns coloured as fluency rises. The `{jp}` tag and
   the `language_tag` helper handle it; at `japanese_fluency >= 5` the text is
-  `#87cefa`. No scene currently raises `japanese_fluency`, so every line still
-  renders in the plain style.
+  `#87cefa`.
+- Murakami's Japanese elective (Days 10–12, `game/days/`) raises
+  `japanese_fluency` by 1 per lesson, capped at 5. The elective is chosen at the
+  Friday fair and continues through the weekend.
 - Hiragana and katakana are used freely; Kanji only where the font group covers it.
 
 ### 5.3 Money and the Bag
@@ -762,7 +764,7 @@ or nightmare — so the calendar move is never lost to a missing dream.
 | `player_name` | name entry | Every line of his own; the name the family uses |
 | `money` | `start`, `spend_money()` | The wallet |
 | `inventory` | `start`, `add_item()` | The Bag |
-| `japanese_fluency` | initialised in `start` | Colour and comprehension of Japanese; no scene raises it yet |
+| `japanese_fluency` | initialised in `start`; raised by Murakami's elective (Days 10–12) | Colour and comprehension of Japanese; `{jp}` text turns `#87cefa` at 5 |
 | `travel_method` | `travel_choice` | Taxi vs train downstream (`home_arrival`, `dream_router`) |
 | `boarded_shinkansen` | `train_platform` | Express vs local |
 | `arrived_late` | train route | Which `home_arrival` opening plays |

@@ -376,6 +376,13 @@ image bg_student_relations = Transform("images/backgrounds/bg_student_relations.
 image bg_lecture_hall = Transform("images/backgrounds/bg_lecture_hall.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_library = Transform("images/backgrounds/bg_library.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 
+# The old city around Sensō-ji. These were painted for the map app; defining them
+# here lets the Sunday elective use them as scene backgrounds by name.
+image bg_asakusa_kaminarimon = Transform("images/backgrounds/bg_asakusa_kaminarimon.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_asakusa_inside = Transform("images/backgrounds/bg_asakusa_inside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_asakusa_kuji = Transform("images/backgrounds/bg_asakusa_kuji.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_asakusa_smoke = Transform("images/backgrounds/bg_asakusa_smoke.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+
 # The two rooms the first free afternoon can end in. The ramen shop has art now
 # (it lives at images/backgrounds/bg_ramen_shop.png, which is why the scene name
 # and the file name differ slightly). The club room is still being drawn, so it
@@ -1257,6 +1264,9 @@ define veteran = Character("Veteran Assistant", callback=type_sound, image="vete
 # he did not know existed, and the clerk is the first adult here who was told he
 # was coming before he arrived. Both of those are the point of their scenes.
 define professor = Character("Professor", color="#c9c4b0", callback=type_sound, image="professor")
+# The elective teacher. He arrives in the second week with the Japanese course,
+# and he is the one who turns the language from a subject into a place.
+define murakami = Character("Murakami", color="#c9b38a", callback=type_sound, image="murakami")
 define clerk = Character("Student Relations", color="#b8c6bd", callback=type_sound, image="clerk")
 define yamada = Character("Yamada", color="#b6d2e8", callback=type_sound, image="yamada")
 
@@ -1350,6 +1360,8 @@ image side taxi_driver = At(Transform("images/characters/taxidriver.png", xysize
 
 # The professor already has a portrait on disk, so he uses it.
 image side professor = At(Transform("images/characters/teacher.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# The elective teacher is drawn from the second teacher portrait on disk.
+image side murakami = At(Transform("images/characters/teacher2.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side yamada = At(Transform("images/characters/hamadadenki.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side aya = At(Transform("images/characters/aya.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side Maid = At(Transform("images/characters/maid.png", xysize=(256, 384), fit="contain"), portrait_idle)

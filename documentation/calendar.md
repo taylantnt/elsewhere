@@ -20,6 +20,11 @@
 | Day 5 | Sunday, April 12 | `sunday_morning` |
 | Day 6 | Monday, April 13 | `monday_morning` |
 | Day 7 | Tuesday, April 14 | `tuesday_morning` |
+| Day 8 | Wednesday, April 15 | `wednesday_morning` |
+| Day 9 | Thursday, April 16 | `thursday_morning` |
+| Day 10 | Friday, April 17 | `friday_morning` |
+| Day 11 | Saturday, April 18 | `saturday_recovery` |
+| Day 12 | Sunday, April 19 | `sunday_practice` |
 
 The year is an internal anchor only. The HUD and the phone Calendar show the
 weekday and month/day; `2026` exists so month lengths and weekdays are real.

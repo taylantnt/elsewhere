@@ -74,11 +74,18 @@ the calendar are in `documentation/calendar.md`.
   - "Five-seven-five counts what, exactly — and why did the professor say the
     count is not the point?"
 
-### (future) Language / electives
+### Language / electives (built)
 
 - The clerk's electives list is wide open — a Japanese-language course for
-  exchange students is already named in `student_relations`. Natural fit for
-  the `japanese_fluency` progression and for the chef/Sim language beats.
+  exchange students is already named in `student_relations`.
+- The course is now built: the elective fair on Friday (Day 10) introduces
+  **Murakami**, and Days 10–12 (`game/days/day_10_friday.rpy`,
+  `day_11_saturday.rpy`, `day_12_sunday.rpy`) are his lessons. Each lesson raises
+  `japanese_fluency` by 1, capped at 5; at 5 the `{jp}` tag renders `#87cefa`.
+- The lessons connect language to literature: haiku and Bashō (Day 8), *The Tale
+  of Genji* and *mono no aware* (Day 9), the three scripts and *onnade* (Day 10),
+  Sōseki/Kawabata/Tanizaki and *wabi-sabi* (Day 11), and *ma*/*ichigo ichie*
+  at Sensō-ji (Day 12).
 
 ## Mechanics
 
