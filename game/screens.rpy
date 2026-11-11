@@ -395,7 +395,7 @@ screen wallet():
 
                 text _("Cash") style "wallet_label"
 
-                text "¥ [money]" style "wallet_text"
+                text money_text() style "wallet_text"
 
 
 init python:

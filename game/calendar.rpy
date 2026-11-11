@@ -285,6 +285,17 @@ screen story_day_hud():
                 text "DAY %d  ·  WEEK %d" % (story_day, story_week_number()):
                     style "story_day_meta"
 
+                null height gui.scale(3)
+
+                # The wallet, directly under the date. It rides the same
+                # visibility switch as the rest of the chip, so cash is on
+                # screen whenever the day and date are.
+                hbox:
+                    spacing gui.scale(6)
+
+                    text "CASH" style "story_day_cash_label" yalign 0.5
+                    text money_text() style "story_day_cash" yalign 0.5
+
 style story_day_frame is empty:
     xpos gui.scale(28)
     ypos gui.scale(24)
@@ -305,6 +316,22 @@ style story_day_meta is default:
     bold True
     color "#c8a06a"
     kerning gui.scale(1)
+    outlines []
+
+style story_day_cash_label is default:
+    font "DejaVuSans.ttf"
+    size gui.scale(9)
+    bold True
+    color "#8a8479"
+    kerning gui.scale(1)
+    outlines []
+
+style story_day_cash is default:
+    font "DejaVuSans.ttf"
+    size gui.scale(14)
+    bold True
+    color "#e7c08d"
+    kerning gui.scale(0)
     outlines []
 
 

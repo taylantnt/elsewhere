@@ -342,6 +342,8 @@ image bg_home_night = Transform("images/backgrounds/bg_home_inside_night.png", x
 image bg_nightfood = Transform("images/backgrounds/bg_nightfood.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_home_day = Transform("images/backgrounds/bg_home_inside_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_room_night = Transform("images/backgrounds/bg_room_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_room_bed_day = Transform("images/backgrounds/bg_room_bed_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_room_bed_night = Transform("images/backgrounds/bg_room_bed_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_room_day = Transform("images/backgrounds/bg_room_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_train_interior = Transform("images/backgrounds/bg_train_interior.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_home_exterior_night = Transform("images/backgrounds/bg_home_exterior_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
@@ -642,6 +644,12 @@ init python:
     # worry about clamping or about going into the red.
     def give_money(amount):
         store.money += amount
+
+    def money_text(amount=None):
+        """The wallet as it reads on screen: ¥ 30,000, never ¥30000."""
+        if amount is None:
+            amount = store.money
+        return "¥ {:,}".format(int(amount))
 
     def can_afford(amount):
         return store.money >= amount
@@ -1756,6 +1764,19 @@ screen attribute_gain_card(attribute_id, amount, rank_up=False, rank_down=False)
     timer 1.82 action Play("attribute_ui", "audio/SFX/attribute_settle.wav")
     timer 1.92 action SetScreenVariable("ready", True)
 
+    # Once the card has landed, a click or any key plays the same exit the
+    # Continue button does. Until `ready` the keys are inert, so the intro
+    # animation cannot be skipped; the menu, rollback and skip keys stay
+    # blocked for as long as the card is up, matching the day transition.
+    key "dismiss" action If(ready, true=SetScreenVariable("hiding", True), false=NullAction())
+    key "game_menu" action NullAction()
+    key "rollback" action NullAction()
+    key "skip" action NullAction()
+    key "toggle_skip" action NullAction()
+    key "fast_skip" action NullAction()
+    for _keysym in day_transition_extra_keys:
+        key _keysym action If(ready, true=SetScreenVariable("hiding", True), false=NullAction())
+
     if hiding:
         timer 0.300 action Return()
 
@@ -1936,7 +1957,6 @@ label prologue:
     # goes quiet, holds, and then begins.
     stop music fadeout 2.0
     scene bg_airplane with Fade(2.0, 1.0, 0.0)
-    #DISABLED FOR NOW# play music "audio/Music/dream sequence 1 (short loop).wav" fadein 2.0#
     play music "audio/SFX/airplane.mp3" fadein 2.0
     
     "That flight felt endless."
@@ -2582,16 +2602,17 @@ label train_station:
             $ reward_attributes_once("answer_train_gate", [("nerve", "nudge")], show="auto")
             jump train_gate_slam
         "Buy a ticket first.":
+            $ reward_attributes_once("answer_buy_ticket", [("insight", "nudge")], show="auto")
             jump train_ticket
 
 
 label train_gate_slam:
     "I put my head down and step forward like I've done it a thousand times."
+    $ play_sfx("audio/SFX/gate.wav")
     # The buzz of the gate refusing him, and a shake that lasts long enough to
     # actually feel like a wall hitting his legs.
-    mc "WHOAH!"
-    $ play_sfx("audio/SFX/gate.wav")
-    "The flaps snap shut hard, right across my shins, and a buzzer goes off above my head loud enough to turn three heads." with gate_shake
+    mc "WHOAH!" with gate_shake
+    "The flaps snap shut hard, right across my shins, and a buzzer goes off above my head loud enough to turn three heads."
     mc "(That actually hit me.)"
     mc "(Right. Buy a ticket first.)"
     "Behind me, a man in a station uniform clears his throat. He doesn't say anything. He just looks at me."
@@ -2627,7 +2648,7 @@ label ticket_machine:
             mc "(Put it down. Try again.)"
             jump ticket_machine
 
-        "Try the 800 yen button. That was the number on the pamphlet.":
+        "Try the 800 yen button. That was one of the numbers on the pamphlet.":
             if has_item("ticket_800"):
                 mc "(I already purchased this ticket. It's the wrong one.)"
                 jump ticket_machine
@@ -2643,9 +2664,9 @@ label ticket_machine:
             $ reward_attributes_once("answer_ticket_ask", [("grace", "micro")], show="auto")
             "I catch the eye of a woman in a station uniform and hold the pamphlet up."
             mc "Sumimasen... 中野3丁目?"
-            "She takes the pamphlet, reads it, and presses the button for me without a word."
+            "She takes the pamphlet, reads it, tells me the correct fare, and presses the button for me without a word."
             $ spend_money(1300)
-            "¥1,300 Yen... A ticket slides out."
+            "I put in 1,300 Yen... A ticket slides out."
             mc "(That took her four seconds. It took me four minutes.)"
             mc "Arigatou gozaimasu."
             "She nods, already walking away."
@@ -2658,7 +2679,7 @@ label train_platform:
     "I feed the ticket into the gate."
     "It beeps, the flaps swing open, and I walk through like it's nothing."
     mc "(So much easier with a ticket.)"
-    mc "(Also, I notice, nobody closed anything on my legs this time.)"
+    mc "(Also, I notice, nothing closed on my legs this time.)"
 
     # Through the gate and up to the platform. A different part of the station,
     # so a different background.
@@ -2683,13 +2704,62 @@ label train_platform:
             jump train_board
 
 
+# While he rides, the carriage never quite sits still: the rails knock the
+# whole frame sideways in little hops, at irregular intervals, the way a real
+# train does. Each pass through the block picks one weighted branch, so the
+# waits and the shapes of the jolts both vary and never settle into a rhythm.
+# The long quiet branches keep it occasional rather than constant, and the
+# motion matters least once he dozes off, which is exactly when it starts.
+transform train_ride_shake:
+    block:
+        xoffset 0
+        yoffset 0
+        choice 4:
+            pause 0.8
+            xoffset 4 yoffset 1
+            pause 0.04
+            xoffset -3 yoffset 0
+            pause 0.03
+            xoffset 0 yoffset 0
+        choice 4:
+            pause 1.4
+            xoffset -5 yoffset 2
+            pause 0.035
+            xoffset 4 yoffset -1
+            pause 0.04
+            xoffset 0 yoffset 0
+        choice 3:
+            pause 2.3
+            xoffset 6 yoffset -2
+            pause 0.045
+            xoffset -5 yoffset 1
+            pause 0.035
+            xoffset 2 yoffset 0
+            pause 0.05
+            xoffset 0 yoffset 0
+        choice 2:
+            pause 3.8
+            xoffset 8 yoffset 3
+            pause 0.05
+            xoffset -7 yoffset -2
+            pause 0.04
+            xoffset 0 yoffset 0
+        choice 3:
+            pause 1.1
+        choice 3:
+            pause 2.6
+        choice 2:
+            pause 5.5
+        repeat
+
+
 label train_board:
     "A train sighs to a stop in front of me and the doors hiss open."
     "I step in, find a seat by the window, and hold my bag on my lap with both hands."
     "The doors close. The platform slides away."
     stop ambient fadeout 1.5
 
-    scene bg_train_interior with walk_fade
+    scene bg_train_interior at train_ride_shake with walk_fade
     play music "audio/SFX/traininside.mp3" fadein 2.0
 
     if boarded_shinkansen:
@@ -3005,7 +3075,7 @@ label dream_first_night:
 
     # The dream gets its own bed of sound. It is a loop, so nothing has to be
     # restarted while the sequence plays out.
-    play music "audio/Music/dream sequence.wav" fadein 3.0
+    play music "audio/Music/dream_sequence.mp3" fadein 3.0
 
     # The first thing that is wrong is that the dark is not quiet. Something thin
     # and bright keeps crossing it, like a scan line on a tired television.
@@ -3099,7 +3169,7 @@ label morning_call:
     #
     # The room in the morning. room_ambient plays room_day.mp3 here by default;
     # this scene is where that track lives, so nothing is overridden.
-    scene bg_room_day with Dissolve(2.0)
+    scene bg_room_bed_day with Dissolve(2.0)
     $ room_ambient(False)
     "Three seconds before I remember where I am."
     "The airport. A road with no end on it. Two voices talking over me like I wasn't in the room."
@@ -3116,6 +3186,8 @@ label morning_call:
     "Then the whole house wakes up around me at once."
     "Pans, somewhere below. A radio turned down low. Wood moving."
     "Feet on the stairs, two steps at a time, and then three quick knocks on my door."
+
+    scene bg_room_day with Dissolve(2.0)
     "It slides open before I can answer it."
     hikari "Morning. You're awake. I'd already knocked once."
     "A girl about my age. A blouse, jeans, hair still damp from the shower."
@@ -5165,7 +5237,7 @@ label end_of_first_day:
 
 
 label first_night_memory:
-    play music "audio/Music/dream sequence.wav" fadein 2.0
+    play music "audio/Music/dream_sequence.mp3" fadein 2.0
     $ day_memory_cards = build_first_day_memory_deck(first_day_activity)
     $ renpy.random.shuffle(day_memory_cards)
     $ day_memory_matched = []
@@ -5718,7 +5790,7 @@ label second_school_day:
     mc "(I went in. I ordered lunch. I did the spell. The last one is going in the notebook.)"
     "A group of students passes me, comparing keychains from a capsule machine. I let them go by, then check the station sign."
     "I find the station using the map. This time I check the sign before choosing an entrance."
-    scene bg_train_interior with walk_fade
+    scene bg_train_interior at train_ride_shake with walk_fade
     stop music fadeout 0.8
     play music "audio/Music/train.mp3" fadein 1.5
     "On the train, I open my notebook and write down the phrase I heard at the cafe door: 'okaerinasaimase', welcome home."
@@ -7014,7 +7086,7 @@ label tuesday_lecture:
 
     stop music fadeout 2.0
     scene black with Dissolve(2.0)
-    play music "audio/Music/dream sequence.wav" fadein 3.0
+    play music "audio/Music/dream_sequence.mp3" fadein 3.0
     "The station again."
     "The platform lights. The announcement arriving before the voice."
     "There is someone at the far end of the platform. A woman in white. She is not facing me."

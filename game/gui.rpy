@@ -315,6 +315,10 @@ define config.thumbnail_height = gui.scale(144)
 define gui.file_slot_cols = 3
 define gui.file_slot_rows = 2
 
+## The number of save/load pages offered in the file screens. Save and Load
+## share the same pages, so this is the limit for both.
+define gui.file_page_count = 3
+
 
 ## Positioning and Spacing #####################################################
 ##

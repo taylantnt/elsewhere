@@ -14,6 +14,16 @@ default menu_phone_close_alpha = 1.0
 init python:
     import time
 
+    # Save and Load only expose gui.file_page_count pages. If a player was
+    # parked on a higher page before that limit existed, bring them back into
+    # the visible range instead of showing an unselected page.
+    try:
+        _saved_page = int(persistent._file_page)
+    except (TypeError, ValueError):
+        _saved_page = 1
+    if _saved_page > gui.file_page_count:
+        persistent._file_page = "1"
+
     menu_phone_font = FontGroup()
     menu_phone_font.add("DejaVuSans.ttf", 0x20, 0x024f)
     menu_phone_font.add("fonts/KiwiMaru-Medium.ttf", None, None)
@@ -422,12 +432,12 @@ screen phone_files(title):
                     textbutton "A" style "phone_small_button" action FilePage("auto")
                 if config.has_quicksave:
                     textbutton "Q" style "phone_small_button" action FilePage("quick")
-                textbutton ">" style "phone_small_button" action FilePageNext()
+                textbutton ">" style "phone_small_button" action FilePageNext(max=gui.file_page_count)
             vpgrid:
-                cols 5
-                xfill True
+                cols gui.file_page_count
+                xalign 0.5
                 spacing gui.scale(3)
-                for page in range(1, 10):
+                for page in range(1, gui.file_page_count + 1):
                     textbutton "[page]" style "phone_page_button" action FilePage(page)
             for slot in range(1, gui.file_slot_cols * gui.file_slot_rows + 1):
                 button:
@@ -493,7 +503,7 @@ screen phone_inventory():
     use game_menu(_("Bag")):
         vbox:
             spacing gui.scale(14)
-            text _("Cash: ¥ [money]") style "phone_heading"
+            text _("Cash: %s") % money_text() style "phone_heading"
             if inventory:
                 $ current_index = min(browsing, len(inventory) - 1)
                 $ current_item = inventory[current_index]

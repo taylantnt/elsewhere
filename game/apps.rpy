@@ -246,6 +246,9 @@ label _phone_apps_open:
 
 screen phone_app_icon(app_id, size=48, disabled=False):
     fixed:
+        # Centre the icon whenever it sits in a box wider than itself (for
+        # example the camera's unavailable state, whose copy is wider).
+        xalign 0.5
         xysize (gui.scale(size), gui.scale(size))
         if app_id == "wire":
             $ wire_icon_path = "images/ui/apps/wire_app_disabled.png" if disabled else "images/ui/apps/wire_app.png"
@@ -262,6 +265,10 @@ screen phone_app_tile(app_id, label, disabled, action):
 
     button:
         xysize (gui.scale(74), gui.scale(94))
+        # The global button style carries a 4px padding; with a tile-sized
+        # child that padding pushes the icon right and down. The tile owns its
+        # own geometry, so zero the padding and center from the tile's center.
+        padding (0, 0)
         background None
         hover_background Solid("#ffffff0b")
         action action
@@ -890,7 +897,7 @@ screen phone_app_inventory_contents(selected_item):
                     kerning gui.scale(2)
                     color "#71808b"
                     outlines []
-                text "¥ [money]":
+                text money_text():
                     size gui.scale(18)
                     color "#e7c08d"
                     outlines []
@@ -1033,12 +1040,12 @@ screen phone_app_backup_contents(mode, page_value):
                     textbutton "A" style "phone_small_button" action FilePage("auto")
                 if config.has_quicksave:
                     textbutton "Q" style "phone_small_button" action FilePage("quick")
-                textbutton ">" style "phone_small_button" action FilePageNext()
+                textbutton ">" style "phone_small_button" action FilePageNext(max=gui.file_page_count)
             vpgrid:
-                cols 5
+                cols gui.file_page_count
                 xalign 0.5
                 spacing gui.scale(2)
-                for page in range(1, 10):
+                for page in range(1, gui.file_page_count + 1):
                     textbutton "[page]":
                         style "phone_page_button"
                         action FilePage(page)
@@ -1386,7 +1393,7 @@ screen phone_apps():
             "maps": "Maps",
             "stats": "Stats",
             "journal": "Journal",
-            "backup": ("Cloud / " + phone_apps_backup_mode.title() if phone_apps_backup_mode else "Cloud"),
+            "backup": ("Backup / " + phone_apps_backup_mode.title() if phone_apps_backup_mode else "Backup"),
             "about": "About",
             "help": "Help",
             "confirm_title": "Return to Title",
@@ -1441,6 +1448,9 @@ screen phone_apps():
                 if phone_apps_page is None:
                     vbox:
                         xalign 0.5
+                        # Fill the content width so the grid and labels centre
+                        # against the phone, not against the widest child.
+                        xsize gui.scale(menu_phone_content_w)
                         ypos gui.scale(15)
                         spacing gui.scale(10)
 
