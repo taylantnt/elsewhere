@@ -12,7 +12,7 @@ in `story_treatment.md` and the per-location interaction docs; this file is the
 | Act | Title | Covers | Status |
 |-----|-------|--------|--------|
 | 1 | The Arrival | Airport → home → first dream → first night | **Built** |
-| 2 | The Long Middle | First day, second day, the hub, all confidant visits | **In progress** — days 1–7 built, hub reached, visits 2–7 written |
+| 2 | The Long Middle | First day, second day, the hub, all confidant visits | **In progress** — days 1–14 built through the second hub day; all confidant visits 2–7 and the repeatable epilogues written; the repeating loop after Day 14 is still open |
 | 3 | The Glitch | The leaks stop being atmospheric and start being structural (treatment "Escalating Mystery" stages 1–5) | Not written |
 | 4 | The End | The revelation, the three endings, and the epilogue coda | Not written |
 
@@ -35,7 +35,7 @@ Notes:
 | 1 | 0 (no hub yet) |
 | 2 | 5 — visits 1–5 during the long middle |
 | 3 | 7 — final visits land as the world breaks |
-| 4 | 7 (default) |
+| 4 | 8 — the repeatable epilogue opens as soon as visit 7 is done |
 
 Final visits (6–7, the departures) are meant to fall inside Act 3's collapse,
 which is the simulation removing people as the test measures his equilibrium.
@@ -48,13 +48,15 @@ which is the simulation removing people as the test measures his equilibrium.
   until *every* confidant has been met at least once — then free choice.
 - Act cap still applies on top: a place that has caught up with
   `act_confidant_cap[current_act]` shows **paused**.
-- State order in `destination_state()`: closed → paused → later → ready.
+- State order in `destination_state()`: epilogue → closed → closed_today →
+  paused → later → ready.
 
 ## Endings (Act 4) — decided direction
 
 - **The Escape:** Hikari guides him out. Confidants who were maxed out
-  (all 7 visits) remember their original programming — they were built to
-  help the subject — and can assist. Under-massed escape is harder.
+  (all 8 visits, the epilogue included) remember their original programming —
+  they were built to help the subject — and can assist. Under-massed escape is
+  harder.
 - **The Blue Pill:** he stays. The world keeps running without the people
   who mattered.
 - **The Failure:** he never reaches the threshold / is not assimilated enough.
@@ -68,6 +70,68 @@ which is the simulation removing people as the test measures his equilibrium.
 
 ### Code
 
+- [x] 2026-11-14 — All five confidants extended to a repeatable eighth
+      epilogue: `confidant_visit_totals` maps sim, orson, chef, aya and hana to
+      8; `destination_state()` returns `epilogue` at seven or more visits and
+      keeps the row clickable; Sim (`sim_visit_closed`), Aya (`aya_visit_closed`)
+      and Orson (`orson_visit_closed`) got their closing scenes; Chef's and
+      Hana's epilogue bookkeeping is gated so a replay cannot farm affection,
+      memories or texts; `wire_total()` reads `confidant_visit_totals`. Hub
+      legend now carries `Epilogue`. Docs synced. Lint passes.
+- [x] 2026-11-14 — Day 7 afternoon changed from first hub day to a forced
+      second-confidant meeting: `tuesday_lecture` now routes to
+      `day7_sim_campus` (special Tuesday Circle session -> `sim_visit_01` with
+      `sim_campus_intro`), `day7_missing_chef` (broth lead-in ->
+      `confidant_visit_chef`), or `day7_missing_hikari` (WIRE come-home ->
+      `hikari_first_run`) depending on which first-week confidant is still
+      unmet; `free_afternoon` begins on Day 8. Docs synced. Lint passes.
+- [x] 2026-11-12 — Hana visits 1–2 revised around the book: she leaves
+      *A Child's Garden of Verses* on his table, he tries to return it, she
+      panics and drops a handmade WIRE card, and visit 2 opens with him
+      returning the book and finding her grandmother's dedication inside.
+      WIRE unlock is now earned by the card; docs synced. Lint passes.
+- [x] 2026-11-12 — Orson visit 1 revised around the Day 4 approach:
+      lost streets and the wolf-signed door lead to an accidental entry,
+      fluent-English reassurance instead of pure silence, a counter WIRE card
+      scanned on the way home, and a warmer exit. Interaction source and
+      character/story docs synced. Lint passes.
+- [x] 2026-11-12 — Day 13 (Monday, April 20) written end to end: school,
+      the combini counter (Tanaka's full Japanese Q&A), Asakusa with Hikari
+      (Kaminarimon, Raijin/Fūjin, Nakamise, incense, omikuji), the Fortune
+      Teller's first three-card reading, the white-corridor flashback, dinner
+      and night. Omikuji result is attribute-driven: Grace > Nerve is good,
+      Nerve > Grace is bad, a tie is mixed. Day 12 now jumps to
+      `monday_asakusa`.
+- [x] 2026-11-12 — Day 14 (Tuesday, April 21) written as a short hub day:
+      morning, elective (the city as a conversation), one free afternoon,
+      dinner, night, then `end_of_build`. The build now runs to the second
+      Tuesday instead of stopping on Day 12.
+- [x] 2026-11-12 — Fortune Teller added as a **three-card limited confidant**:
+      `confidant_visits["fortune"]`, `confidant_visit_totals["fortune"] = 3`,
+      hub row gated by `fortune_arc_started`, `confidant_visit_fortune` turns
+      the second and third cards in one scene. She is **not** in
+      `confidant_order`, so she cannot block the five original arcs.
+      `hub_destination_order()` builds the hub list.
+- [x] 2026-11-12 — Combini job added: `combini_first_counter` teaches the
+      register script and sets `combini_job_unlocked`; `tanaka_shift` pays
+      ¥4,800 (¥1,200 × 4h), consumes the afternoon, unlocks Tanaka in WIRE on
+      the first shift, and advances `tanaka_story` (0–7 once the seven-visit
+      restructure landed) and `combini_shifts`.
+- [x] 2026-11-12 — Tanaka job restructured into a confidant-style file layout:
+      `game/job_combini/` holds `tanaka_job.rpy` (dispatcher + shared open/wage
+      close) and `tanaka_visit_01.rpy` … `tanaka_visit_07.rpy` (register, floor,
+      hot case, fryer, just-enough order, the tencho reveal, closing), then
+      `tanaka_visit_repeat` after visit 7. Visit 6 reveals that Tanaka is the
+      tencho, the store manager. Confidant files moved into
+      `game/confidant_visits/` (fix: `sim.rpy` needed `init 999 python` after the
+      move, since its characters now load before `script.rpy`).
+- [x] 2026-11-12 — Six city rows added: Odaiba, Yokohama Chinatown, Ueno Park,
+      Shibuya Crossing, Shimokitazawa, Omotesando / Meiji Shrine. All use
+      `bg_or_placeholder()` until art arrives. Harajuku was relabelled
+      `Harajuku: Takeshita Street`.
+- [x] 2026-11-12 — Murakami made female: pronouns and descriptions fixed across
+      Days 10–12, character/WIRE comments updated, `teacher2.png` confirmed as
+      her portrait.
 - [x] 2026-11-09 — Day transition written: full-screen day-progression card
       (`game/day_transition.rpy`) wired into every day label that follows a
       night (`morning_call`, `second_morning`, `saturday_off`,
@@ -83,7 +147,7 @@ which is the simulation removing people as the test measures his equilibrium.
       design note §5.11 (The nightmare rhythm). User preference: sparse nightmares
       are better, not every night.
 - [x] 2026-11-09 — Hikari's recurring run chain written: visits 2–7 live in
-      `game/hikari.rpy`, routed by `confidant_visit_hikari` from the hub's
+      `game/confidant_visits/hikari.rpy`, routed by `confidant_visit_hikari` from the hub's
       `walk_hikari` row. Each run has two 3-option menus, one attribute per
       option at micro; close rewards rotate Grace / Insight / Nerve and the
       final run closes at Insight small (0.5). Visit 7 sets
@@ -92,9 +156,10 @@ which is the simulation removing people as the test measures his equilibrium.
       the current build; 3–7 are wired for later hub days. Lint passes.
 - [x] 2026-11-09 — Day 7 (Tuesday, April 14) written end to end:
       `tuesday_morning` (breakfast fork) → `tuesday_lecture` (haiku) →
-      `free_afternoon` (first hub day) → dinner/night → dream → `end_of_build`;
-      `monday_morning` now ends on `jump tuesday_morning` instead of falling
-      into the end-of-build card. Docs synced to the Tuesday boundary.
+      forced last first-week confidant afternoon → dinner/night → dream →
+      `end_of_build`; `monday_morning` now ends on `jump tuesday_morning`
+      instead of falling into the end-of-build card. Docs synced to the
+      Tuesday boundary. (Hub opens Day 8; see 2026-11-14 entry.)
 - [x] 2026-11-09 — Hub now routes the two walks: `free_afternoon` passes
       `places=confidant_order + ["walk_hikari", "walk_alone"]` to
       `screen location_hub`, writes the pick into `last_afternoon_place`, and
@@ -202,21 +267,28 @@ which is the simulation removing people as the test measures his equilibrium.
       with centered white glyphs in one design language; grayed-out `_disabled`
       variants generated for every app including WIRE; launcher tiles now center
       the icon + label through a centered vbox. Lint passes; docs synced.
-- [x] Wire `free_afternoon` into a real day loop (day-3+ scene now exists:
-      `tuesday_morning` → `tuesday_lecture` → `free_afternoon`; visit labels
+- [x] Wire `free_afternoon` into a real day loop (hub scene now exists:
+      `day_8_wednesday` onward call `free_afternoon` after the lecture; Day 7
+      is forced to the last first-week confidant; visit labels
       `confidant_visit_<place>` are written scenes, the repeating loop after the
       current build remains open).
-- [ ] Script confidant visits 2–7 (chef 2–7, sim 2–7, orson 2–7, aya 2–7,
-      hana 2–7). Interaction docs are written for all of them.
-- [x] Hikari's recurring run beats 2–7 (written in `game/hikari.rpy`; only
-      visit 2 is reachable in the current Day 7 build).
+- [x] Script confidant visits 2–8 (chef 2–8, sim 2–8, orson 2–8, aya 2–8,
+      hana 2–8). Verified in the 2026-11-12 audit: every visit label writes its
+      counter. The Act 2 cap makes 2–5 reachable now; 6–7 wait for Act 3 and the
+      eighth epilogue waits for Act 4 (or an unlocked cap).
+- [x] Hikari's recurring run beats 2–7 (written in `game/confidant_visits/hikari.rpy`; the
+      Days 7–14 build reaches 2–5, visits 6–7 wait for Act 3).
 - [ ] Act 3 glitch content (treatment "Escalating Mystery" stages 1–5).
 - [ ] Act 4 revelation + endings + epilogue.
-- [ ] Fortune teller encounters (3, one per chapter — see treatment).
-- [ ] Tokyo location visits: Asakusa, Odaiba, Harajuku, Yokohama Chinatown
-      (treatment has full scenes; `Levels/` stubs created).
-- [ ] Cultural-shock vignettes (onsen, 2 AM FamilyMart, karaoke, rush-hour
-      train, matsuri) — treatment has them, unscripted.
+- [x] Fortune teller encounters: built as three cards, not one per chapter.
+      Day 13 first reading + one hub return that turns cards two and three.
+      Harajuku and the night corner are named by the cards, not separate rows.
+- [x] Tokyo location visits: Asakusa (Day 12 with Murakami, Day 13 with
+      Hikari), Odaiba, Harajuku/Takeshita, Yokohama Chinatown, Ueno Park,
+      Shibuya Crossing, Shimokitazawa, Omotesando / Meiji Shrine. All city rows
+      are playable; the later six are placeholder art.
+- [ ] Cultural-shock vignettes still unscripted: onsen, rush-hour train,
+      matsuri. Karaoke and the 2 AM combini now exist as city rows.
 - [ ] Exam period arc beyond the first Monday quiz (see
       `exam_and_courses.md`): later exams and `run_quiz` sets, with results
       echoing into Act 3.
@@ -226,10 +298,15 @@ which is the simulation removing people as the test measures his equilibrium.
 
 ### Art / assets
 
-- [ ] `bg_department_hall`, `bg_ramen`, `bg_ramen_empty`, `bg_photo_club`
-      placeholders → real art (drop file in `images/backgrounds/`).
-- [ ] Portraits still missing: fortune teller, side characters. Hana's and
-      Orson's portraits are in place for their Saturday scenes.
+- [ ] `bg_department_hall`, `bg_ramen`, `bg_ramen_empty`, `bg_photo_club`,
+      `bg_fortune_stall`, `bg_combini`, `bg_odaiba`, `bg_yokohama`, `bg_ueno`,
+      `bg_shibuya`, `bg_shimokitazawa`, `bg_omotesando` placeholders → real art
+      (drop file in `images/backgrounds/`).
+- [x] Fortune Teller portrait: `images/characters/fortuneteller.png` is wired.
+      Tanaka uses `images/characters/combini_worker.png`.
+- [ ] Side-character portraits still missing (Circle members, combini
+      regulars). Hana's and Orson's portraits are in place for their Saturday
+      scenes.
 - [ ] `images/ui/camera_frame.png` referenced by `screen photo_mode`.
 - [ ] `images/messages/notebook_page.png` is a generated placeholder for the
       notebook-cat photo texted on the train — replace with real art when
@@ -243,7 +320,9 @@ which is the simulation removing people as the test measures his equilibrium.
       `character_attributes.md` §11); real names can replace them later if
       Act 2 gates want them.
 - [ ] Whether Act 4 needs its own cap row or the 7-default is enough.
-- [ ] Part-time jobs (ideas below) — none scheduled.
+- [x] 2026-11-12 — Combini night shift scheduled and built as a repeatable city
+      row (`tanaka_shift` → `game/job_combini/`, seven teaching visits, repeat
+      after). The other job ideas stay in the parking lot.
 
 ### Part-time job ideas (parking lot)
 
@@ -258,8 +337,10 @@ Existing reminder folders were empty and removed; ideas live here instead:
 - English conversation tutor (ties to Aya's English backstory)
 - Photo studio assistant (ties to Sim)
 
-### Level stubs to fill
+### Level docs
 
-`documentation/Levels/`: `akihabara.md`, `harajuku.md` (0 bytes),
-`asakusa.md`, `odaiba.md`, `yokohama_chinatown.md` (new stubs).
-Treatment already contains the Asakusa/Odaiba/Harajuku/Chinatown scenes.
+`documentation/Levels/`: `asakusa.md`, `harajuku.md`, `odaiba.md`,
+`yokohama_chinatown.md` now describe the built scenes and point at the labels.
+`akihabara.md` remains a stub (Akihabara is still only a treatment location).
+New stubs: `ueno.md`, `shibuya.md`, `shimokitazawa.md`, `omotesando.md`.
+Treatment contains all of the city scenes.

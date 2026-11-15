@@ -32,9 +32,33 @@ define destination_names = {
     "chef":  "Ramen Shop",
     "aya":   "Maid Cafe",
     "hana":  "Reading Club",
+    "fortune": "Asakusa: The Fortune Teller",
     "walk_hikari": "Walk home with Hikari",
     "walk_alone":  "Walk home alone",
+    "library":     "Campus Library",
+    "river":       "Riverbank",
+    "harajuku":    "Harajuku: Takeshita Street",
+    "karaoke":     "Karaoke Box",
+    "night_market": "Night Food Stalls",
+    "combini":     "Combini",
+    "odaiba":      "Odaiba",
+    "yokohama":    "Yokohama Chinatown",
+    "ueno":        "Ueno Park",
+    "shibuya":     "Shibuya Crossing",
+    "shimokitazawa": "Shimokitazawa",
+    "omotesando":  "Omotesando / Meiji Shrine",
+    "tanaka":      "Combini: Night Shift",
 }
+
+## The city rows. These are not confidant arcs: no visits, no cap, no closing.
+## They exist so a paused or closed afternoon still has somewhere to go.
+define city_row_order = [
+    "library", "river", "harajuku", "karaoke", "night_market", "combini",
+    "odaiba", "yokohama", "ueno", "shibuya", "shimokitazawa", "omotesando",
+    # The night shift is a city row, not a person: it is a place he goes to
+    # work. It is filtered out until Tanaka puts the card in the window.
+    "tanaka",
+]
 
 ## How many of the seven visits have happened. Zero means they have never been
 ## met. Only the story writes these; the screen only reads them.
@@ -44,6 +68,11 @@ default confidant_visits = {
     "chef": 0,
     "aya": 0,
     "hana": 0,
+    # The Fortune Teller is the one deliberate exception to the seven-visit
+    # rule: three cards, three meetings, and then the deck is closed. She is
+    # still not part of `confidant_order`, so she can never hold back the five
+    # original arcs or their introduction gate.
+    "fortune": 0,
 }
 
 ## The hub row picked this afternoon, or None for Head Home. The day scene
@@ -54,15 +83,26 @@ default last_afternoon_place = None
 ## ordinary walk home. The evening uses it to tell the two apart.
 default last_afternoon_was_run = False
 
-## Seven visits and the story is over: the person leaves, and the row has
-## nothing left to give. `confidant_visit_totals` names the exceptions: Chef's
-## and Hana's stories each run one visit longer, so the player can return to a
-## closed shop and a closed reading room and see how the story ends.
+## Day 7's dinner needs to know whether Hikari came home with him or was
+## already at the table. She cannot be "home waiting" if she ran the river
+## path beside him, so the ordinary dinner greeting forks on this.
+default day7_walked_with_hikari = False
+
+## Seven visits and the story is over: the person leaves. Every one of the five
+## confidants then gets an eighth visit, the epilogue, where the place is still
+## there and the person is not. The epilogue is repeatable: the row stays
+## clickable and plays the same closing scene every time. `confidant_visit_totals`
+## names the exceptions: the five arcs run to eight, and the Fortune Teller's
+## shorter arc runs to three.
 define confidant_visits_total = 7
 
 define confidant_visit_totals = {
+    "sim": 8,
+    "orson": 8,
     "chef": 8,
+    "aya": 8,
     "hana": 8,
+    "fortune": 3,
 }
 
 ## Which part of the story we are in. The story bumps this at an act break.
@@ -81,8 +121,8 @@ define act_confidant_cap = {
     1: 0,
     2: 5,
     3: 7,
-    # Chef's and Hana's eighth visits are their arcs' endings, so they are
-    # held for the last act.
+    # The eighth visit is the epilogue. It opens as soon as the seventh visit
+    # is done, so the place can stay visitable for the rest of the story.
     4: 8,
 }
 
@@ -99,11 +139,34 @@ init python:
     def all_confidants_met():
         # The introduction gate: nobody's story can be revisited until every
         # confidant has been met at least once. First visits are always open;
-        # this only holds back seconds and later.
+        # this only holds back seconds and later. The Fortune Teller is not in
+        # `confidant_order`, so she can never block the original five.
         return all(confidant_visits.get(c, 0) > 0 for c in confidant_order)
+
+    def hub_destination_order():
+        """Every row the hub should show today, in reading order.
+
+        The five original confidants stay first. The Fortune Teller joins the
+        people only once her Asakusa card has been turned. The city rows follow,
+        and the night shift appears at the bottom of the city list only after
+        Tanaka has put the HELP WANTED card in his window.
+        """
+        people = list(confidant_order)
+        if store.fortune_arc_started:
+            people.append("fortune")
+        people += ["walk_hikari", "walk_alone"]
+
+        city = [
+            p for p in city_row_order
+            if p != "tanaka" or store.combini_job_unlocked
+        ]
+
+        return people + city
 
     def destination_state(place):
         # "ready"        - there is a visit waiting to be played here
+        # "epilogue"     - the seven visits are done; the place remains, and the
+        #                  same closing scene can be replayed
         # "paused"       - the act has not caught up; nothing new will happen yet
         # "later"        - already visited, but not everyone has been met yet
         # "closed_today" - the place keeps weekly hours and is shut today
@@ -111,6 +174,11 @@ init python:
         if place not in confidant_visits:
             return "ready"
         seen = confidant_visits[place]
+        # The five confidants keep their epilogue after the seventh visit. It
+        # opens immediately, even when the act cap would otherwise pause them,
+        # because the farewell is the end of the numbered arc.
+        if place in confidant_order and seen >= 7:
+            return "epilogue"
         if seen >= confidant_visits_total_for(place):
             return "closed"
         if not destination_is_open(place):
@@ -124,55 +192,178 @@ init python:
     def destination_state_label(place, state):
         if state == "ready":
             return "Visit available"
-        if state == "paused":
+        if state == "epilogue":
+            return "The story is over. The place remains."
+        # A place held by the introduction gate wears the same neutral line as
+        # one held by the act cap. The player does not need to know which
+        # mechanism is waiting, only that today has nothing new.
+        if state == "paused" or state == "later":
             return "No new visit yet"
-        if state == "later":
-            return "Come back another day"
         if state == "closed_today":
             return destination_schedule_note(place)
         return "Story complete"
 
     def hub_state_color(state):
         # The name on the row dims as the row has less to offer, so the list
-        # reads at a glance before any of the marks are read.
+        # reads at a glance before any of the marks are read. "later" is shown
+        # as "paused": the introduction gate is an internal reason, not a label
+        # the player should see.
         if state == "ready":
             return "#e6e1d8"
-        if state == "later":
-            return "#8a8377"
-        if state == "paused" or state == "closed_today":
+        if state == "epilogue":
+            return "#d6c7ae"
+        if state == "paused" or state == "later" or state == "closed_today":
             return "#6f6a60"
         return "#413d36"
 
     def hub_bar_color(state):
-        if state == "paused" or state == "closed_today":
+        if state == "epilogue":
+            return "#9a8a72"
+        if state == "paused" or state == "later" or state == "closed_today":
             return "#7a7266"
-        if state == "later":
-            return "#5c574d"
         return "#2b2721"
+
+    def hub_pin_color(state):
+        # The map pin and the list dot share one colour language, so a player
+        # can read the map without opening the legend and still be right.
+        if state == "ready":
+            return "#c8a06a"
+        if state == "epilogue":
+            return "#b8a382"
+        if state == "paused" or state == "later":
+            return "#7a8a94"
+        if state == "closed_today":
+            return "#5c574d"
+        return "#413d36"
+
+    def hub_state_short(state):
+        # The row's right-hand label and the map legend share one short
+        # vocabulary, so the list and the legend never disagree. "later" is
+        # deliberately folded into "No new": naming it would hint at content
+        # the player has not met yet.
+        if state == "ready":
+            return "New"
+        if state == "epilogue":
+            return "Epilogue"
+        if state == "paused" or state == "later":
+            return "No new"
+        if state == "closed_today":
+            return "Closed"
+        return "Complete"
+
+    def hub_status_color(state):
+        if state == "ready":
+            return "#c8a06a"
+        if state == "epilogue":
+            return "#c0b09a"
+        if state == "paused" or state == "later":
+            return "#7a8a94"
+        if state == "closed_today":
+            return "#6f6a60"
+        return "#413d36"
+
+    def hub_legend_items():
+        # No "later" entry: the state still exists, but it is shown as
+        # "No new" so the legend never advertises an unmet cast.
+        return [
+            ("ready", hub_state_short("ready")),
+            ("paused", hub_state_short("paused")),
+            ("closed_today", hub_state_short("closed_today")),
+            ("epilogue", hub_state_short("epilogue")),
+            ("closed", hub_state_short("closed")),
+        ]
 
 
 ## --- STYLES ---
-
-style hub_place is default:
-    size gui.scale(26)
-    italic True
-    kerning gui.scale(2)
 
 style hub_mark_text is default:
     size gui.scale(20)
     italic True
     kerning gui.scale(3)
 
-style hub_legend_text is default:
-    size gui.scale(17)
-    color "#8a8377"
-    kerning gui.scale(0.5)
+style hub_row_name is default:
+    font guide_font
+    size gui.scale(14)
+    color "#e6e1d8"
+    outlines []
 
-style hub_button is default:
-    background None
-    hover_background Solid("#3d362bf0")
-    insensitive_background None
-    padding (gui.scale(26), gui.scale(9), gui.scale(26), gui.scale(9))
+style hub_row_status is default:
+    font guide_font
+    size gui.scale(9)
+    color "#8a8377"
+    outlines []
+
+style hub_legend_text is default:
+    font guide_font
+    size gui.scale(9)
+    color "#8a8377"
+    outlines []
+
+
+## --- MOTION ---
+##
+## Bare named transforms, not calls with arguments: a screen rebuilds a
+## displayable whenever its `at` changes, and a transform built fresh on each
+## render would restart instead of settling. The hub rebuilds on every hover
+## because the map header follows the cursor, so this matters here more than
+## usual.
+
+transform hub_left_in:
+    alpha 0.0
+    xoffset -14
+    easeout 0.40 alpha 1.0 xoffset 0
+
+transform hub_right_in:
+    alpha 0.0
+    xoffset 14
+    pause 0.06
+    easeout 0.44 alpha 1.0 xoffset 0
+
+transform hub_tip_in:
+    alpha 0.0
+    easeout 0.18 alpha 1.0
+
+transform hub_row_hover:
+    on idle:
+        easeout 0.16 xoffset 0
+    on hover:
+        easeout 0.16 xoffset 3
+
+transform hub_row_still:
+    xoffset 0
+
+transform hub_pin_hover:
+    on idle:
+        easeout 0.16 yoffset 0
+    on hover:
+        easeout 0.16 yoffset -2
+
+transform hub_pin_pulse:
+    alpha 0.10
+    block:
+        easeout 1.4 alpha 0.30
+        easein 1.4 alpha 0.10
+        repeat
+
+## The epilogue pin breathes more slowly than a new one. The place is still
+## there, but it is not waiting for anything.
+transform hub_epilogue_pulse:
+    alpha 0.08
+    block:
+        easeout 2.0 alpha 0.22
+        easein 2.0 alpha 0.08
+        repeat
+
+## The word on a live row blinks, so the eye finds it without reading every
+## line. A soft dip rather than a hard flash: the hub is a quiet screen, and a
+## list full of strobing labels would fight the map.
+transform hub_new_blink:
+    alpha 1.0
+    block:
+        pause 1.45
+        easeout 0.18 alpha 0.30
+        easein 0.26 alpha 1.0
+        repeat
 
 
 ## --- THE MARK ---
@@ -190,6 +381,8 @@ screen hub_mark(state):
 
         if state == "ready":
             text "( ! )" style "hub_mark_text" color gui.accent_color xalign 0.5 yalign 0.5
+        elif state == "epilogue":
+            add Transform(Solid(hub_bar_color(state)), xysize=(gui.scale(8), gui.scale(8)), rotate=45) xalign 0.5 yalign 0.5
         elif state == "closed_today":
             text "×":
                 style "hub_mark_text"
@@ -209,45 +402,313 @@ screen hub_mark(state):
 
 ## --- THE HUB ---
 ##
-## `places` is which rows to show, and in what order. Leave it out and every
-## confidant location is listed. `heading` and `blurb` are the two lines at the
-## top, so the same screen can open after school, at night, or on a day off
-## without a second copy of it existing.
+## The free-afternoon screen puts the list on the left and the map on the
+## right, so the player reads the destinations in words first and sees the city
+## beside them. Every destination the player could go to is a pin on the map,
+## coloured by what it can do today; the list spells the same thing out, because
+## a map should never be the only way to read a menu. Only a ready pin or row
+## can be picked.
 ##
-## The screen returns the id of the row that was picked (e.g. "sim"), or None if
-## the player chose to leave the day as it is. Only a waiting row can be picked:
-## a paused or finished place does nothing when clicked, which is the point of
-## the mark.
+## `places` is which rows to show, and in what order. Leave it out and every
+## destination the hub currently offers is listed. `heading` and `blurb` are
+## the two lines at the top, so the same screen can open after school, at
+## night, or on a day off without a second copy of it existing.
+##
+## The screen returns the id of the row that was picked (e.g. "sim"), or None
+## if the player chose to leave the day as it is.
+
+## Where each destination sits on the free-afternoon map. The map is a stylised
+## Tokyo, not a real one: the pins are spread so nothing overlaps and the
+## colours carry the meaning. Coordinates are normalised to the map panel, so
+## the same table survives any future resize.
+define hub_map_positions = {
+    "hana":          (0.13, 0.15),
+    "library":       (0.29, 0.10),
+    "sim":           (0.46, 0.17),
+    "ueno":          (0.64, 0.10),
+    "fortune":       (0.84, 0.16),
+    "shimokitazawa": (0.14, 0.36),
+    "orson":         (0.33, 0.40),
+    "chef":          (0.55, 0.33),
+    "aya":           (0.79, 0.39),
+    "harajuku":      (0.09, 0.56),
+    "omotesando":    (0.25, 0.60),
+    "shibuya":       (0.41, 0.53),
+    "karaoke":       (0.57, 0.58),
+    "night_market":  (0.72, 0.51),
+    "tanaka":        (0.90, 0.59),
+    "walk_hikari":   (0.10, 0.77),
+    "river":         (0.30, 0.75),
+    "combini":       (0.45, 0.79),
+    "odaiba":        (0.66, 0.74),
+    "walk_alone":    (0.29, 0.91),
+    "yokohama":      (0.78, 0.90),
+}
+
+## The city blocks under the pins. Each entry is (x, y, width, height, colour)
+## in map-panel pixels. Kept quiet so the pins do the talking.
+define hub_map_blocks = [
+    # North
+    (10, 8, 54, 22, "#12241d"),
+    (74, 10, 46, 18, "#101f26"),
+    (130, 6, 58, 24, "#101f26"),
+    (198, 10, 50, 18, "#101f26"),
+    (258, 6, 56, 24, "#101f26"),
+    # Upper middle
+    (12, 40, 48, 18, "#101f26"),
+    (70, 36, 58, 24, "#101f26"),
+    (138, 42, 44, 16, "#101f26"),
+    (192, 36, 54, 24, "#101f26"),
+    (256, 42, 56, 16, "#101f26"),
+    # Middle
+    (12, 72, 46, 18, "#101f26"),
+    (68, 76, 54, 14, "#101f26"),
+    (132, 70, 58, 22, "#101f26"),
+    (200, 76, 48, 14, "#101f26"),
+    (258, 70, 54, 22, "#101f26"),
+    # Lower middle
+    (12, 104, 50, 18, "#101f26"),
+    (72, 108, 46, 14, "#101f26"),
+    (128, 102, 62, 22, "#101f26"),
+    (200, 108, 46, 14, "#101f26"),
+    (256, 102, 56, 22, "#101f26"),
+    # South
+    (0, 164, 48, 24, "#0e222b"),
+    (58, 168, 48, 20, "#101f26"),
+    (116, 162, 58, 26, "#101f26"),
+    (184, 168, 48, 20, "#101f26"),
+    (242, 162, 52, 26, "#101f26"),
+    (304, 168, 20, 20, "#0e222b"),
+]
+
+
+screen hub_map_pin(place, hovered=None):
+    $ place_state = destination_state(place)
+    $ pin_nx, pin_ny = hub_map_positions[place]
+    $ pin_x = int(pin_nx * gui.scale(324)) - gui.scale(10)
+    $ pin_y = int(pin_ny * gui.scale(188)) - gui.scale(12)
+    $ pin_color = hub_pin_color(place_state)
+    $ is_ready = place_state in ("ready", "epilogue")
+    $ pin_halo = "#f0d3a6" if place_state == "ready" else "#e8dcc4"
+
+    button:
+        xpos pin_x
+        ypos pin_y
+        xysize (gui.scale(20), gui.scale(24))
+        background None
+        hover_background None
+        tooltip place
+        action (Return(place) if is_ready else NullAction())
+        at hub_pin_hover
+
+        fixed:
+            xysize (gui.scale(20), gui.scale(24))
+
+            # The glow breathes under a ready pin, so the map has a heartbeat
+            # without any of the closed places moving. An epilogue pin breathes
+            # more slowly: the place is still there, but it is not waiting.
+            if place_state == "ready":
+                add Transform(Solid("#c8a06a"), xysize=(gui.scale(13), gui.scale(13)), rotate=45) xalign 0.5 ypos 0 at hub_pin_pulse
+            elif place_state == "epilogue":
+                add Transform(Solid("#b8a382"), xysize=(gui.scale(13), gui.scale(13)), rotate=45) xalign 0.5 ypos 0 at hub_epilogue_pulse
+
+            # A soft halo when either the pin or its row is under the cursor.
+            if hovered == place:
+                add Transform(Solid(pin_halo), xysize=(gui.scale(13), gui.scale(13)), rotate=45, alpha=0.22) xalign 0.5 ypos 0
+
+            add Transform(Solid(pin_color), xysize=(gui.scale(8), gui.scale(8)), rotate=45) xalign 0.5 ypos gui.scale(2)
+            add Solid(pin_color) xysize (gui.scale(1), gui.scale(6)) xalign 0.5 ypos gui.scale(10)
+            add Solid(pin_color) xysize (gui.scale(3), gui.scale(1)) xalign 0.5 ypos gui.scale(16)
+
+
+screen hub_row(place, hovered=None):
+    $ place_state = destination_state(place)
+    $ place_name = destination_names.get(place, place)
+    $ place_short = hub_state_short(place_state)
+    $ is_ready = place_state in ("ready", "epilogue")
+    $ is_hovered = hovered == place
+    $ row_motion = hub_row_hover if is_ready else hub_row_still
+    $ status_motion = hub_new_blink if place_state == "ready" else hub_row_still
+    $ status_hover = "#e4bd87" if place_state == "ready" else ("#e8dcc4" if place_state == "epilogue" else hub_status_color(place_state))
+
+    button:
+        action (Return(place) if is_ready else NullAction())
+        background None
+        hover_background None
+        padding (0, 0)
+        xysize (gui.scale(302), gui.scale(23))
+        tooltip place
+        at row_motion
+
+        fixed:
+            xysize (gui.scale(302), gui.scale(23))
+
+            if is_hovered:
+                add Solid("#ffffff08")
+
+            add Solid("#26231e") xysize (gui.scale(302), gui.scale(1)) ypos gui.scale(22)
+
+            add Solid(hub_pin_color(place_state)) xysize (gui.scale(2), gui.scale(13)) xpos 0 yalign 0.5
+            add Solid(hub_pin_color(place_state)) xysize (gui.scale(5), gui.scale(5)) xpos gui.scale(10) yalign 0.5
+
+            text place_name:
+                style "hub_row_name"
+                color hub_state_color(place_state)
+                hover_color ("#f5eee2" if is_ready else hub_state_color(place_state))
+                xpos gui.scale(22)
+                yalign 0.5
+
+            text place_short:
+                style "hub_row_status"
+                color hub_status_color(place_state)
+                hover_color status_hover
+                xalign 1.0
+                xoffset gui.scale(-8)
+                yalign 0.5
+                at status_motion
+
 
 screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one destination for this afternoon."):
 
     modal True
     zorder notice_window_zorder
-    $ hub_places = places if places is not None else confidant_order
+    $ hub_places = places if places is not None else hub_destination_order()
+    $ hub_people = [p for p in hub_places if p not in city_row_order]
+    $ hub_city = [p for p in hub_places if p in city_row_order]
+
+    # The tooltip is the destination id, not a sentence. The parent turns it
+    # into the map header and the hover strip, and the rows and pins use it to
+    # light each other up.
+    $ hub_tip_raw = GetTooltip()
+    $ hub_tip_place = hub_tip_raw if hub_tip_raw in destination_names else None
+    $ hub_tip_name = destination_names.get(hub_tip_place) if hub_tip_place else None
+    $ hub_tip_state = destination_state(hub_tip_place) if hub_tip_place else None
+    $ hub_tip_status = destination_state_label(hub_tip_place, hub_tip_state) if hub_tip_place else None
+    $ hub_tip_color = ("#e4bd87" if hub_tip_state == "ready" else ("#d6c7ae" if hub_tip_state == "epilogue" else "#b9b1a5")) if hub_tip_state else "#5c6d77"
 
     add Solid("#000000") at notice_backdrop_in
     use standalone_notice_window(heading, "DESTINATIONS  ·  " + story_date_category(), notice_window_in):
-        text blurb style "guide_body" xsize gui.scale(648)
-        viewport:
-            ypos gui.scale(54)
-            xysize (gui.scale(648), gui.scale(156))
-            mousewheel True
-            draggable True
-            vbox:
-                spacing gui.scale(4)
-                for place in hub_places:
-                    $ place_state = destination_state(place)
-                    $ place_name = destination_names.get(place, place)
-                    $ place_status = destination_state_label(place, place_state)
-                    button:
-                        action Return(place)
-                        sensitive (place_state == "ready")
-                        background Solid("#25221d")
-                        hover_background Solid("#393126")
-                        insensitive_background Solid("#181714")
-                        padding (gui.scale(12), gui.scale(10))
-                        fixed:
-                            xysize (gui.scale(624), gui.scale(26))
-                            text place_name style "guide_body" color hub_state_color(place_state) yalign 0.5
-                            text place_status style "guide_meta" xalign 1.0 yalign 0.5
+        fixed:
+            xysize (gui.scale(648), gui.scale(230))
+
+            ## --- THE LIST ---
+            fixed:
+                xysize (gui.scale(306), gui.scale(230))
+                at hub_left_in
+
+                text blurb:
+                    style "guide_body"
+                    xsize gui.scale(306)
+                    size gui.scale(13)
+                    line_spacing gui.scale(2)
+                    color "#cfc8bd"
+
+                text "PEOPLE":
+                    style "guide_meta"
+                    color "#c8a06a"
+                    kerning gui.scale(2)
+                    ypos gui.scale(38)
+
+                add Solid("#2a2620") ypos gui.scale(54) xysize (gui.scale(306), gui.scale(1))
+
+                viewport:
+                    ypos gui.scale(62)
+                    xysize (gui.scale(306), gui.scale(168))
+                    mousewheel True
+                    draggable True
+
+                    vbox:
+                        spacing gui.scale(1)
+                        for place in hub_people:
+                            use hub_row(place, hub_tip_place)
+                        if hub_city:
+                            null height gui.scale(7)
+                            text "THE CITY":
+                                style "guide_meta"
+                                color "#c8a06a"
+                                kerning gui.scale(2)
+                            add Solid("#2a2620") xysize (gui.scale(302), gui.scale(1))
+                            null height gui.scale(3)
+                            for place in hub_city:
+                                use hub_row(place, hub_tip_place)
+
+            add Solid("#2a2620") xpos gui.scale(315) ypos 0 xysize (gui.scale(1), gui.scale(230))
+
+            ## --- THE MAP ---
+            fixed:
+                xpos gui.scale(324)
+                xysize (gui.scale(324), gui.scale(230))
+                at hub_right_in
+
+                text "THE MAP":
+                    style "guide_meta"
+                    color "#c8a06a"
+                    kerning gui.scale(2)
+                    xpos gui.scale(10)
+
+                text (hub_tip_name or "HOVER A PIN"):
+                    size gui.scale(10)
+                    color hub_tip_color
+                    kerning gui.scale(1)
+                    outlines []
+                    xalign 1.0
+                    xoffset gui.scale(-10)
+                    ypos gui.scale(1)
+                    at hub_tip_in
+
+                add Solid("#2a3a42") ypos gui.scale(18) xysize (gui.scale(324), gui.scale(1))
+
+                fixed:
+                    ypos gui.scale(24)
+                    xysize (gui.scale(324), gui.scale(188))
+
+                    add Solid("#22323a") xysize (gui.scale(324), gui.scale(188))
+                    add Solid("#0b1419") xpos gui.scale(1) ypos gui.scale(1) xysize (gui.scale(322), gui.scale(186))
+
+                    for bx, by, bw, bh, bcolor in hub_map_blocks:
+                        add Solid(bcolor) xpos gui.scale(bx) ypos gui.scale(by) xysize (gui.scale(bw), gui.scale(bh))
+
+                    for rx in (66, 126, 190, 250, 302):
+                        add Solid("#152831") xpos gui.scale(rx) ypos gui.scale(1) xysize (gui.scale(1), gui.scale(186))
+                    for ry in (34, 66, 98, 130, 158):
+                        add Solid("#152831") xpos gui.scale(1) ypos gui.scale(ry) xysize (gui.scale(322), gui.scale(1))
+
+                    # Keep the frame crisp where the edge blocks meet it.
+                    add Solid("#22323a") xpos 0 ypos 0 xysize (gui.scale(324), gui.scale(1))
+                    add Solid("#22323a") xpos 0 ypos gui.scale(187) xysize (gui.scale(324), gui.scale(1))
+                    add Solid("#22323a") xpos 0 ypos 0 xysize (gui.scale(1), gui.scale(188))
+                    add Solid("#22323a") xpos gui.scale(323) ypos 0 xysize (gui.scale(1), gui.scale(188))
+
+                    for place in hub_places:
+                        if place in hub_map_positions:
+                            use hub_map_pin(place, hub_tip_place)
+
+                add Solid("#2a3a42") ypos gui.scale(212) xysize (gui.scale(324), gui.scale(1))
+
+                fixed:
+                    ypos gui.scale(213)
+                    xysize (gui.scale(324), gui.scale(17))
+
+                    if hub_tip_place:
+                        text (hub_tip_name + "  ·  " + hub_tip_status):
+                            size gui.scale(9)
+                            color hub_tip_color
+                            xpos gui.scale(10)
+                            yalign 0.5
+                            layout "nobreak"
+                            outlines []
+                            at hub_tip_in
+                    else:
+                        hbox:
+                            spacing gui.scale(10)
+                            xpos gui.scale(10)
+                            yalign 0.5
+                            for state, label in hub_legend_items():
+                                hbox:
+                                    spacing gui.scale(3)
+                                    add Solid(hub_pin_color(state)) xysize (gui.scale(6), gui.scale(6)) yalign 0.5
+                                    text label:
+                                        style "hub_legend_text"
+                                        yalign 0.5
+
         use standalone_notice_footer("Scroll to see more destinations.", "Head Home", Return(None))

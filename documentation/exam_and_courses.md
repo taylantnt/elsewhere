@@ -1,9 +1,9 @@
 # Exam Period & Course Load
 
 **Status:** design memo — the first quiz arc is scripted (Hikari's Sunday
-practice and the professor's Monday quiz); the first hub day (Tuesday) now
-runs the midterm briefing and the haiku lecture continuation; later
-exam-period scenes remain future.
+practice and the professor's Monday quiz); Tuesday runs the midterm briefing,
+the haiku lecture continuation, and the forced last first-week confidant
+meeting; the hub starts Wednesday and later exam-period scenes remain future.
 **Why it exists:** Hana's introduction (and the Reading Club errand) hangs off
 exam season, and the lectures the protagonist attends should all teach
 something that can come back as an exam question. This file is the memo of
@@ -38,7 +38,9 @@ the miss.
 | Thursday, April 16 (Day 9) | *The Tale of Genji* and the Heian court; the genkan and the platform queue. |
 | Friday, April 17 (Day 10) | Elective fair after lunch; **Murakami** and the three scripts (*kanji*, *manyōgana*, *kana*). |
 | Saturday, April 18 (Day 11) | Jimbocho book town with Murakami; Sōseki, Kawabata, Tanizaki, *wabi-sabi*. |
-| Sunday, April 19 (Day 12) | Sensō-ji with Murakami; *ma*, *ichigo ichie*, *omikuji*. End of the current build. |
+| Sunday, April 19 (Day 12) | Sensō-ji with Murakami; *ma*, *ichigo ichie*, *omikuji*. |
+| Monday, April 20 (Day 13) | The city as a text; Asakusa with Hikari; the Fortune Teller's first reading. |
+| Tuesday, April 21 (Day 14) | The city as a conversation; one free afternoon (the first reachable hub day after the expansion). End of the current build. |
 | Act 2, late | The wider exam period — later exams, optional `run_quiz` sets, results echoing in later dialogue. |
 | Act 3 | No classes — the world is breaking. (Deliberate contrast.) |
 

@@ -10,7 +10,7 @@ shimokitazawa
 Asakusa
 odaiba
 harajuku
-akihabara
+
 yokohama- chinatown
 
 school - done
@@ -19,3 +19,4 @@ train - done
 train station - done
 taxi 
 airport - done
+akihabara - done

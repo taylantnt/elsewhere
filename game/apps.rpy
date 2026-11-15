@@ -34,7 +34,7 @@ init python:
             "summary": "A university campus in Bunkyo, built around a gate, a courtyard, and quiet lecture halls.",
             "note": "The campus where all of this is supposed to start. It still feels borrowed.",
             "image": "images/backgrounds/bg_school_gate.png",
-            "position": (96, 22),
+            "position": (96, 18),
         },
         {
             "id": "photo_club",
@@ -43,7 +43,7 @@ init python:
             "summary": "A small circle room on campus, shared by the photography club and its noticeboards.",
             "note": "Sim's circle room. Everyone there already knows how to stand beside each other.",
             "image": "images/backgrounds/bg_photo_club.png",
-            "position": (112, 38),
+            "position": (112, 42),
         },
         {
             "id": "ramen_shop",
@@ -52,7 +52,7 @@ init python:
             "summary": "A counter shop on a side street, open late, with a handwritten menu and a single row of stools.",
             "note": "Chef's counter. I remember the bowl better than the walk there.",
             "image": "images/backgrounds/bg_ramen_shop.png",
-            "position": (148, 28),
+            "position": (148, 32),
         },
         {
             "id": "akihabara",
@@ -61,7 +61,7 @@ init python:
             "summary": "An electronics district of bright signs, crowded streets, and stacked department stores.",
             "note": "Hamada Denki, eight floors, and a city that never stops selling.",
             "image": "images/backgrounds/bg_akihabara_hamada_outside.png",
-            "position": (170, 44),
+            "position": (170, 48),
         },
         {
             "id": "harajuku",
@@ -80,6 +80,33 @@ init python:
             "note": "Incense, tourists, and a gate older than everything around it.",
             "image": "images/backgrounds/bg_asakusa_kaminarimon.png",
             "position": (188, 72),
+        },
+        {
+            "id": "odaiba",
+            "name": "Odaiba",
+            "area": "Tokyo Bay",
+            "summary": "A futuristic artificial island in Tokyo Bay, with shopping malls, entertainment centers, and waterfront views.",
+            "note": "A man-made island that feels like a different city entirely.",
+            "image": "images/backgrounds/bg_akihabara_hamada_outside.png",
+            "position": (210, 90),
+        },
+        {
+            "id": "yokohama",
+            "name": "Yokohama Chinatown",
+            "area": "Yokohama",
+            "summary": "The largest Chinatown in Japan, with vibrant streets, red gates, and countless restaurants.",
+            "note": "A taste of another country just a train ride away.",
+            "image": "images/backgrounds/bg_asakusa_kaminarimon.png",
+            "position": (30, 100),
+        },
+        {
+            "id": "omotesando",
+            "name": "Meiji Shrine",
+            "area": "Omotesando",
+            "summary": "A serene Shinto shrine surrounded by a forest, nestled in the heart of Tokyo's fashionable Omotesando district.",
+            "note": "Peace among the fashion and crowds.",
+            "image": "images/backgrounds/bg_harajuku.png",
+            "position": (100, 95),
         },
     ]
 
@@ -120,6 +147,8 @@ init python:
             )
         if location_id == "akihabara":
             return store.cellular_data_active
+        if location_id in ("odaiba", "yokohama", "omotesando"):
+            return True
 
         return False
 
@@ -456,7 +485,7 @@ screen phone_app_maps_contents():
 screen phone_app_map_list():
     $ map_width = gui.scale(menu_phone_content_w)
     $ map_visited = [place for place in phone_map_locations if phone_map_is_visited(place["id"])]
-    $ map_unvisited = [place for place in phone_map_locations if not phone_map_is_visited(place["id"])]
+    $ map_unvisited = [place for place in phone_map_locations if not phone_map_is_visited(place["id"]) and place["id"] not in ("photo_club", "ramen_shop")]
     $ map_tip = GetTooltip()
 
     fixed:
@@ -615,7 +644,7 @@ screen phone_app_map_row(place):
     $ row_photo = phone_map_photo(place["image"], gui.scale(54), gui.scale(32), dim=not row_visited)
 
     button:
-        xysize (row_width, gui.scale(50))
+        xysize (row_width, gui.scale(54))
         background None
         hover_background Solid("#ffffff0a")
         padding (0, 0)
@@ -625,16 +654,16 @@ screen phone_app_map_row(place):
         ]
 
         fixed:
-            xysize (row_width, gui.scale(50))
+            xysize (row_width, gui.scale(54))
 
             add Solid("#82d7bf" if row_visited else "#3f4d55"):
                 xpos 0
                 ypos gui.scale(5)
-                xysize (gui.scale(2), gui.scale(40))
+                xysize (gui.scale(2), gui.scale(44))
 
             fixed:
                 xpos gui.scale(9)
-                ypos gui.scale(9)
+                ypos gui.scale(11)
                 xysize (gui.scale(54), gui.scale(32))
                 add Solid("#0d171d")
                 add row_photo
@@ -644,17 +673,17 @@ screen phone_app_map_row(place):
             text place["name"]:
                 xpos gui.scale(71)
                 ypos gui.scale(6)
-                xmaximum gui.scale(136)
-                size gui.scale(15)
+                xmaximum gui.scale(144)
+                size gui.scale(12)
                 color ("#e8eef2" if row_visited else "#9aa8b0")
                 outlines []
 
             text place["area"].upper():
                 xpos gui.scale(71)
-                ypos gui.scale(28)
-                xmaximum gui.scale(136)
+                ypos gui.scale(31)
+                xmaximum gui.scale(144)
                 size gui.scale(10)
-                kerning gui.scale(1)
+                kerning gui.scale(0.5)
                 color ("#73848e" if row_visited else "#5a6871")
                 outlines []
 
@@ -960,9 +989,9 @@ screen phone_app_stats_contents():
                             add attribute_ring_displayable(attribute_id, orb_progress, 76)
                             text "[orb_rank]":
                                 font "DejaVuSans.ttf"
-                                size gui.scale(26)
+                                size gui.scale(30)
                                 bold True
-                                color "#f4eee4"
+                                color orb_color
                                 xalign 0.5
                                 yalign 0.5
                         vbox:
@@ -1040,19 +1069,15 @@ screen phone_app_backup_contents(mode, page_value):
                     textbutton "A" style "phone_small_button" action FilePage("auto")
                 if config.has_quicksave:
                     textbutton "Q" style "phone_small_button" action FilePage("quick")
-                textbutton ">" style "phone_small_button" action FilePageNext(max=gui.file_page_count)
-            vpgrid:
-                cols gui.file_page_count
-                xalign 0.5
-                spacing gui.scale(2)
                 for page in range(1, gui.file_page_count + 1):
                     textbutton "[page]":
                         style "phone_page_button"
                         action FilePage(page)
+                textbutton ">" style "phone_small_button" action FilePageNext(max=gui.file_page_count)
 
             viewport:
                 xfill True
-                ysize gui.scale(342)
+                ysize gui.scale(360)
                 mousewheel True
                 draggable True
                 style_prefix "phone_apps"
@@ -1060,21 +1085,39 @@ screen phone_app_backup_contents(mode, page_value):
                 vbox:
                     spacing gui.scale(7)
                     for slot in range(1, gui.file_slot_cols * gui.file_slot_rows + 1):
+                        $ slot_loadable = FileLoadable(slot)
                         button:
                             xfill True
-                            ysize gui.scale(118)
+                            ysize gui.scale(174)
                             background Solid("#141c22")
                             hover_background Solid("#1a282d")
-                            sensitive (mode == "save" or FileLoadable(slot))
+                            sensitive (mode == "save" or slot_loadable)
                             action (FileSave(slot) if mode == "save" else FileLoad(slot))
                             vbox:
-                                spacing gui.scale(4)
-                                add FileScreenshot(slot):
-                                    xysize (gui.scale(202), gui.scale(74))
-                                text (FileSaveName(slot) or "Empty slot"):
+                                xfill True
+                                spacing gui.scale(5)
+                                if slot_loadable:
+                                    add FileScreenshot(slot):
+                                        xysize (gui.scale(224), gui.scale(126))
+                                        xalign 0.5
+                                else:
+                                    fixed:
+                                        xysize (gui.scale(224), gui.scale(126))
+                                        xalign 0.5
+                                        add Solid("#0d1419")
+                                        text "EMPTY":
+                                            font "DejaVuSans.ttf"
+                                            size gui.scale(11)
+                                            kerning gui.scale(2)
+                                            color "#55636d"
+                                            outlines []
+                                            xalign 0.5
+                                            yalign 0.5
+                                text save_slot_label(slot):
                                     size gui.scale(12)
                                     color "#e8eef2"
                                     outlines []
+                                    xmaximum gui.scale(224)
                                 text FileTime(slot, format="%Y-%m-%d  %H:%M", empty="No save data"):
                                     size gui.scale(10)
                                     color "#83909a"

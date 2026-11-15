@@ -22,17 +22,10 @@ label wednesday_morning:
 
     if "chef" in wire_unlocked:
         $ run_chat("chef", [
-            {"them": "Don't come today. Closed Wednesdays.", "options": [
-                {"label": "\"I remember. It's on your profile.\"",
-                 "send": "I remember. It's on your profile.",
-                 "them": ["Good.", "Eat something before you go. Not convenience store bread."]},
-                {"label": "\"Then where am I supposed to eat?\"",
-                 "send": "Then where am I supposed to eat?",
-                 "them": ["Home. You have a home now.", "That is the whole point of one."]},
-            ]},
-            {"them": "And don't tell anyone I texted you. I have a reputation."},
+            {"them": "今日は来るな。水曜日は休み。"},
+            {"them": "コンビニのパンで済ませるな。ちゃんと食え。"},
         ])
-        mc "(A man who closes his shop on a Wednesday and texts a customer to make sure he eats. That is the whole man, I think.)"
+        mc "(A man who closes his shop on a Wednesday and texts a customer to make sure he eats. I cannot read a word of it. I read the shape of it: a day off, a bowl, a warning. That is the whole man, I think.)"
     else:
         $ run_chat("hikari", [
             {"them": "You're awake. I can hear you moving.", "options": [
@@ -84,6 +77,9 @@ label wednesday_morning:
     "She says it plainly, the way she says everything, and then goes back to her rice."
     father "It is not superstition. It is a way of remembering who is not at the table."
     mc "(That is the most he has said all morning.)"
+    "Father goes back to his rice. Then he says, without looking up, the same sentence he said on my first Saturday."
+    father "Eat first. Breakfast can wait ten minutes. You cannot."
+    mc "(Word for word. Nobody else at the table reacts.)"
 
     menu:
         "Ask what else is for the dead, and for the living.":
@@ -183,6 +179,11 @@ label wednesday_morning:
             hikari "..."
             hikari "That is the most honest ambition you've had all week."
             $ reward_attributes_once("day8_train_sleep", [("nerve", "micro")], show="auto")
+        "Close my eyes and let the car be nobody.":
+            "I close my eyes. The train moves. Nobody asks me anything."
+            "For one stop I am not a foreigner or a student or a guest. I am a person in a car, going somewhere."
+            mc "(It is not a lesson. It is a rest. I needed one.)"
+            $ reward_attributes_once("day8_train_rest", [])
 
     scene black with Fade(1.0, 0.3, 0.0)
     stop music fadeout 1.0
@@ -247,47 +248,7 @@ label wednesday_morning:
     mc "(One place. That is the rule I have given myself. One place, and then home.)"
     call free_afternoon
 
-    scene bg_home_night with walk_fade
-    $ room_ambient(True)
-    "The house is warm the way it is when someone has been cooking for a while."
-    "I leave my shoes by the door and follow the smell to the kitchen."
-
-    scene bg_kitchen_night with walk_fade
-    "Mother is ladling something into four bowls. Father is setting the table with the careful imprecision of a man who has been told to help."
-    mother "There you are. Wash your hands."
-    hikari "You're late."
-    mc "I'm not late. Dinner is early."
-    hikari "Dinner is on time. You're late."
-    "I wash my hands. The water is warm."
-    mother "Where did you go?"
-
-    if last_afternoon_place == "chef":
-        mc "The ramen shop. The broth had been going since morning."
-        mc "(He did not make a thing of it. That was the whole welcome.)"
-    elif last_afternoon_place == "aya":
-        mc "The maid cafe. She remembered the order before I said it."
-        mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
-    elif last_afternoon_place == "hana":
-        mc "The reading room. She was there. She stayed."
-        mc "(We did not talk much. It was enough.)"
-    elif last_afternoon_place == "orson":
-        mc "Lupin's Den. The bar was empty enough to hear the ice."
-        mc "(He taught me a phrase I am still turning over.)"
-    elif last_afternoon_place == "sim":
-        mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
-    elif last_afternoon_place == "walk_hikari":
-        mc "I walked home with Hikari. We took the long way."
-        hikari "You took the long way. I followed."
-        mc "That's not how I remember it."
-        hikari "That's because you were busy being right."
-    elif last_afternoon_place == "walk_alone":
-        mc "Nowhere. I walked until the light changed, and then I walked home."
-        father "Nowhere is a place. Just not a destination."
-        mc "(That is either wisdom or a warning. I am not sure which.)"
-    else:
-        mc "Nowhere. I came straight home."
-        mother "Good. Eat."
-        mc "(She does not ask why. I am grateful for that.)"
+    call dinner_open
 
     father "And the midterm?"
     mc "Two weeks. Essays. A practical."
@@ -295,17 +256,15 @@ label wednesday_morning:
     mc "That's what two weeks means."
     hikari "He's been like this all day."
     father "It is a useful thing to be like."
-    "Nobody argues with that. We eat."
+
+    call dinner_close
 
     scene bg_room_night with stair_fade
     $ room_ambient(True)
     "Upstairs, the handout is exactly where I left it, open to the kigo list."
     "I have read it so many times that the words have started to look like themselves again instead of like a code."
-    "A knock at the door. Hikari, with two cups of tea and her own notes under her arm."
-    hikari "I'm not staying. I'm just making sure you're not staring at the wall."
-    mc "I was staring at the handout."
-    hikari "Same thing."
-    "She sets the tea down and sits on the floor with her back against the bed."
+    $ night_desk_line = "the handout"
+    call night_open
 
     menu:
         "Tell her about the frog.":
@@ -315,6 +274,7 @@ label wednesday_morning:
             hikari "I think it's a frog. And I think that's the point."
             hikari "The poem doesn't need the season explained. It needs you to hear the water."
             mc "(She says it like she has known it for years. She probably has.)"
+            $ remember("hikari", "told her the frog is the season, and she said it is just a frog")
             $ reward_attributes_once("day8_night_frog", [("grace", "micro")], show="auto")
         "Ask her what mono no aware means to her.":
             mc "Mono no aware. What does it mean to you? Not the dictionary."
@@ -324,15 +284,17 @@ label wednesday_morning:
             mc "Why?"
             hikari "Because they were real. And because they're over."
             mc "(I do not have anything to say to that. I drink the tea instead.)"
+            $ remember("hikari", "asked what mono no aware means to her and she showed him the ticket stubs")
             $ reward_attributes_once("day8_night_aware", [("insight", "micro")], show="auto")
         "Say nothing. Drink the tea.":
             "I do not say anything. The tea is hot and the room is quiet."
             "Hikari does not fill the silence. She has learned that I do not need her to."
             mc "(Some things do not need a sentence. This is one of them.)"
+            $ remember("hikari", "sat with her in silence and did not fill it")
             $ reward_attributes_once("day8_night_quiet", [("nerve", "micro")], show="auto")
 
-    "She takes her cup and leaves the door open a hand's width."
-    "I listen to her go down the stairs, then the house settle into its night sounds."
+    call night_close
+
     "The handout is still open. The tea is still warm."
     "Tomorrow is Thursday. Another class. Another train. Another small thing to notice."
 

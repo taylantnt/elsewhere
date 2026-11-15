@@ -15,9 +15,7 @@ Player (choice):
 Student (if 1): "Slow is allowed. This is the one room in the city where nobody will rush you."
 Student (if 2): "Then pick the shortest one. Nobody's grading you. That's the whole point of this place."
 
-[I sit. Paper rustles. Someone turns a page. I start to relax into the quiet.]
-
-[And then I see her.]
+[I sit. Paper rustles. Someone turns a page. I start to relax into the quiet. And then I see her.]
 
 [A girl is shelving returns at the far wall. Dark hair, plain clothes, moving so carefully she barely makes a sound. She slots a book into place, then looks up — and for one split second, our eyes meet.]
 
@@ -31,18 +29,46 @@ Player (whispered): "Who's that?"
 
 Student (shrugs): "Oh… Hana? She volunteers here. Shelves the returns, straightens everything, never stays long."
 
+Student: "Her badge says it, she wrote it herself, I think. Nobody's ever heard her say it out loud."
+
 Student: "Doesn't really… talk. Every time someone tries, she runs off. But she's always around. Every single week."
 
 Player: "Has she ever said anything to anyone?"
 
 Student (a small, unbothered laugh): "Not to me."
 
-[The hour ends. People begin to gather their things. I pull my jacket back on and turn to leave —]
+[Narration]: I write it down anyway. Hana. That's her name now, whether she wants it to be or not.
 
-[— and there it is. On my table, a book I never picked up. A slim, older volume, placed square to the edge, spine facing me. I look toward the side door, but there's no one there.]
+[Halfway through the hour, something small lands at the edge of my table. A slim, older book, spine out, square to the edge, like it was placed there by someone who did not want to be seen doing it.]
 
-[The ceiling fan ticks. Somewhere, a page turns.]
+[I look up. Hana is at the end of the aisle with a stack of returns against her chest. Our eyes meet. She looks away first — then sets the book a little closer to me, like she is still deciding whether I am allowed to have it. She is gone through the side door before I can answer.]
 
-[Narration]: I don't know her. I don't know why she left a book on my desk. I only know she didn't want me to see her do it.
+[Narration / Player's Monologue]: Did she mean to leave it? Was she listening to me talk about the Haiku? Did she even know I was here? I am happy and confused at once.
+
+Student: "That's her book. She never lends anything."
+
+Player: "She left it on my table."
+
+Student: "I know. Don't read too much into it. Or read exactly enough into it. With Hana, those are the same thing."
+
+[The hour ends. People begin to gather their things. I should leave the book — but it feels wrong to keep something that fell into my lap. I pick it up and stand.]
+
+[A girl rounds the shelf with a stack of returns, and she sees the book in my hands. She goes still. Her eyes go to the side door, then to the book, then to me. She changes direction so fast her shoe catches a chair leg. Books spill. A stool scrapes.]
+
+[The slim volume hits the floor, and something small slides out of the front cover face-up: a handmade card. The letters are careful and too small, like they were written by somebody who did not want to be interrupted.]
+
+Card: "Hana — volunteer, student library desk. Reading club. @hana. Only if you actually read the rules."
+
+[Narration]: A square WIRE code is printed beside the words. A contact. Not a name on a badge — a way to reach her.
+
+[I bend to pick up the book. When I straighten, she is already gone.]
+
+[Mechanics: visit count set to at least 1, hana_affection +1, memory logged, wire_unlock("hana") opens WIRE, a queued WIRE message waits for later, Grace micro paid.]
+
+[WIRE note under her name: "Books before words."]
+
+[WIRE message, delivered later: "The book... you have it now. I... I couldn't take it back. I'm sorry. It was... it was mine. But maybe... maybe that's okay."]
+
+[Narration]: I still have her book. I don't know if I earned it or borrowed it. I slide the haiku sheets into my bag, then pack up slowly, like the room might object.
 
 [Scene fades.]

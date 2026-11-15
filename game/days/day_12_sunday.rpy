@@ -44,6 +44,10 @@ label sunday_practice:
         ])
         mc "(She has a question. That means she has been thinking since before I woke up.)"
 
+    if "murakami" in wire_unlocked:
+        mc "(Murakami texted at eleven last night. One sentence. It is still on the screen: did you read the page.)"
+        mc "(I read it four times. I say none of that. Sunday will say it for me.)"
+
     "The door slides open. Hikari is already dressed, holding two cups of tea."
     hikari "Almost two weeks."
     mc "Almost two weeks."
@@ -99,9 +103,9 @@ label sunday_practice:
             father "It is a light thing. It means pay attention."
             $ reward_attributes_once("day12_kitchen_ichigo", [("nerve", "micro")], show="auto")
 
-    hikari "You're meeting him again today?"
-    mc "Asakusa. He said the old city."
-    hikari "The old city. Of course he did."
+    hikari "You're meeting her again today?"
+    mc "Asakusa. She said the old city."
+    hikari "The old city. Of course she did."
     mother "Take an umbrella."
     mc "It is not raining."
     mother "Take the umbrella."
@@ -116,7 +120,7 @@ label sunday_practice:
     murakami "You came again."
     mc "You said Sunday."
     murakami "People say a lot of things. You came."
-    "He turns and walks toward the platform. I follow. This time I do not need to be told."
+    "She turns and walks toward the platform. I follow. This time I do not need to be told."
 
     scene bg_platform with walk_fade
     "The Sunday platform is full of people who are not in a hurry. Families. Tourists. A woman in a kimono with a small bag."
@@ -132,7 +136,7 @@ label sunday_practice:
     murakami "You are looking at them."
     mc "I'm learning the country."
     murakami "No. You are learning the people. The country is the easy part."
-    "He takes out his notebook and writes something down. He does not show me."
+    "She takes out her notebook and writes something down. She does not show me."
 
     scene bg_asakusa_kaminarimon with Fade(0.0, 0.0, 1.5)
     "We come out of the station and the city changes."
@@ -146,6 +150,8 @@ label sunday_practice:
     scene bg_asakusa_inside with walk_fade
     "Beyond the gate, the Nakamise street is a long line of shops selling fans and sweets and small wooden dolls."
     "A woman is turning a crank that makes a machine drop tiny cakes into a box. A child watches as if it is magic."
+    "A child in a yellow hat runs past me, laughing. A moment later she runs past again, in the same direction, laughing the same laugh."
+    "I turn. There is only one child."
     "At the end of the street, the temple stands with its roof curved up at the corners."
     murakami "Sensō-ji. The oldest temple in Tokyo. It is also a place where people buy souvenirs and eat ice cream."
     mc "Those two things don't go together."
@@ -166,12 +172,12 @@ label sunday_practice:
     murakami "If it is good, you keep it. If it is bad, you tie it to the rack and leave it here."
     mc "So the bad luck stays at the temple."
     murakami "The bad luck stays where you left it. That is not the same thing."
-    "He buys a slip and reads it without expression."
+    "She buys a slip and reads it without expression."
     mc "What does it say?"
     murakami "That I should be careful with my words."
     mc "Is that bad?"
     murakami "It is always true. That is the trick of fortune slips."
-    mc "(He folds it and puts it in his pocket. He does not tie it to the rack.)"
+    mc "(She folds it and puts it in her pocket. She does not tie it to the rack.)"
 
     menu:
         "Draw an omikuji of my own.":
@@ -196,7 +202,7 @@ label sunday_practice:
             mc "(A wall of strangers' wishes, hanging in the rain. It is the most hopeful thing I have seen here.)"
             $ reward_attributes_once("day12_ema", [("nerve", "micro")], show="auto")
 
-    "We walk to the side of the temple where the crowd thins. Murakami sits on a low stone wall. I sit beside him."
+    "We walk to the side of the temple where the crowd thins. Murakami sits on a low stone wall. I sit beside her."
     murakami "You have been in this country for twelve days."
     mc "Twelve days."
     murakami "What have you learned?"
@@ -204,18 +210,43 @@ label sunday_practice:
     murakami "Good. That is the first thing. What is the second?"
     mc "That the pause is not empty."
     murakami "You have been listening."
-    "He looks at the temple, not at me."
+    "She looks at the temple, not at me."
+    murakami "You did the homework."
+    mc "Ten times. The tenth one looked like a word."
+    murakami "And did you look up what it meant?"
+    mc "No."
+    murakami "Good. The hand learned it first."
+    murakami "The page. Did you read it?"
+    mc "Four times. I brought you the sentence I did not understand."
+    murakami "You brought it in your head. That counts."
+    $ murakami_lessons = max(murakami_lessons, 3)
     murakami "This is the last lesson of the week. Ma. The interval. The space between."
     murakami "The train is ma. The silence between stations. The bow before the greeting. The breath before the word."
     murakami "Your whole life here is a ma. You are the space between the person you were and the person you will be."
     mc "(I do not have a joke for that. I do not want one.)"
     murakami "Do not fill it too quickly. The empty room is where the next thing happens."
 
-    "He stands and brushes the dust from his cardigan."
+    "She stands and brushes the dust from her cardigan."
     murakami "Same time next week. Bring the book. Bring a question you cannot answer."
     mc "I have about forty."
     murakami "Bring one. The other thirty-nine will wait."
-    "He walks into the crowd and is gone before I can say goodbye."
+    "She walks into the crowd and is gone before I can say goodbye."
+
+    scene bg_asakusa_smoke with walk_fade
+    "I turn back toward the courtyard. A woman has set up a folding table between the incense burner and the souvenir stalls."
+    "No sign. No price. A deck of cards, face down, and a small brass bowl."
+    "She looks up before I decide whether to stop."
+    fortune_teller "You have been here before."
+    mc "In Asakusa?"
+    fortune_teller "Not Asakusa."
+    "She turns one card over. A figure on a table, wires at the wrists. The card is worn white at the corners."
+    fortune_teller "The cards say you are being looked after."
+    mc "By whom?"
+    "She smiles the way people smile at a question they have already answered."
+    fortune_teller "Come back when you are ready to hear it. You will not be. You will come back anyway."
+    "She gathers the cards. When I look again, the table is folded and she is part of the crowd."
+    mc "(I did not see her stand up.)"
+    $ fortune_teller_met = True
 
     scene bg_asakusa_kaminarimon with walk_fade
     "I stand under the big lantern for a while. The smoke goes up. The people go in and out."
@@ -232,47 +263,7 @@ label sunday_practice:
     mc "(One place. That is the rule I have given myself. One place, and then home.)"
     call free_afternoon
 
-    scene bg_home_night with walk_fade
-    $ room_ambient(True)
-    "The house is warm the way it is when someone has been cooking for a while."
-    "I leave my shoes by the door, turned around, and follow the smell to the kitchen."
-
-    scene bg_kitchen_night with walk_fade
-    "Mother is ladling something into four bowls. Father is setting the table with the careful imprecision of a man who has been told to help."
-    mother "There you are. Wash your hands."
-    hikari "You're late."
-    mc "I'm not late. Dinner is early."
-    hikari "Dinner is on time. You're late."
-    "I wash my hands. The water is warm."
-    mother "Where did you go?"
-
-    if last_afternoon_place == "chef":
-        mc "The ramen shop. The broth had been going since morning."
-        mc "(He did not make a thing of it. That was the whole welcome.)"
-    elif last_afternoon_place == "aya":
-        mc "The maid cafe. She remembered the order before I said it."
-        mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
-    elif last_afternoon_place == "hana":
-        mc "The reading room. She was there. She stayed."
-        mc "(We did not talk much. It was enough.)"
-    elif last_afternoon_place == "orson":
-        mc "Lupin's Den. The bar was empty enough to hear the ice."
-        mc "(He taught me a phrase I am still turning over.)"
-    elif last_afternoon_place == "sim":
-        mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
-    elif last_afternoon_place == "walk_hikari":
-        mc "I walked home with Hikari. We took the long way."
-        hikari "You took the long way. I followed."
-        mc "That's not how I remember it."
-        hikari "That's because you were busy being right."
-    elif last_afternoon_place == "walk_alone":
-        mc "Nowhere. I walked until the light changed, and then I walked home."
-        father "Nowhere is a place. Just not a destination."
-        mc "(That is either wisdom or a warning. I am not sure which.)"
-    else:
-        mc "Nowhere. I came straight home."
-        mother "Good. Eat."
-        mc "(She does not ask why. I am grateful for that.)"
+    call dinner_open
 
     father "And the temple?"
     mc "The gate has burned down and been rebuilt. The smoke is medicine. The bad luck stays where you leave it."
@@ -280,43 +271,54 @@ label sunday_practice:
     mc "It was a lot of temple."
     hikari "He's been like this all day."
     father "It is a useful thing to be like."
-    "Nobody argues with that. We eat."
+
+    call dinner_close
 
     scene bg_room_night with stair_fade
     $ room_ambient(True)
     "Upstairs, the sheet with the three scripts is on the desk. The Kokoro is beside it. The tea is still warm."
-    "A knock at the door. Hikari, with two cups of tea and her own notes under her arm."
-    hikari "I'm not staying. I'm just making sure you're not staring at the wall."
-    mc "I was staring at the week."
-    hikari "Same thing."
-    "She sets the tea down and sits on the floor with her back against the bed."
+    $ night_desk_line = "the week"
+    call night_open
 
     menu:
         "Tell her about the pause.":
             mc "Murakami says the pause is not empty. Ma. The space between."
-            hikari "He would say that."
+            hikari "She would say that."
             mc "What do you think it is?"
             hikari "I think it's the part of the day I don't tell anyone about."
             mc "(She says it lightly. It does not land lightly.)"
+            $ remember("hikari", "told her the pause is not empty, and she said it is the part of the day she does not tell anyone about")
             $ reward_attributes_once("day12_night_ma", [("grace", "micro")], show="auto")
         "Ask her what happens next week.":
             mc "What happens next week?"
             hikari "More classes. More trains. More of the same, only harder."
             mc "That's not an answer."
             hikari "It's the answer I have. The same only harder is how you get good at something."
+            $ remember("hikari", "asked what happens next week, and she said the same only harder")
             $ reward_attributes_once("day12_night_next", [("insight", "micro")], show="auto")
         "Say nothing. Drink the tea.":
             "I do not say anything. The tea is hot and the room is quiet."
             "Hikari does not fill the silence. She has learned that I do not need her to."
             mc "(Some things do not need a sentence. This is one of them.)"
+            $ remember("hikari", "drank the tea in silence on the last night of the week")
             $ reward_attributes_once("day12_night_quiet", [("nerve", "micro")], show="auto")
 
-    "She takes her cup and leaves the door open a hand's width."
-    "I listen to her go down the stairs, then the house settle into its night sounds."
+    # The Act 3 seed. She was in the genkan on Thursday when it stopped being
+    # the genkan. She has been carrying it for three days and says it the way
+    # you admit something: facing away, almost asleep.
+    hikari "Thursday morning. In the genkan."
+    mc "What about it?"
+    hikari "For a second it wasn't the genkan. It was a corridor. White. You saw it too."
+    "I do not answer."
+    hikari "That's what I thought."
+    "She does not ask anything else. She finishes her tea and stays on the far side of the question."
+
+    call night_close
+
     "The week is over. The elective is not. The country is not."
     "I turn off the lamp. The room is dark. The room is not empty."
 
     stop music fadeout 2.0
     scene black with Dissolve(1.5)
     pause 1.5
-    jump end_of_build
+    jump monday_asakusa

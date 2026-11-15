@@ -104,6 +104,14 @@ label thursday_morning:
             father "This country is built around not making meiwaku. It is why the trains are quiet."
             mc "(So the silence is not silence. It is a courtesy.)"
             $ reward_attributes_once("day9_kitchen_meiwaku", [("nerve", "micro")], show="auto")
+        "Make a joke about the rules.":
+            mc "So the chopsticks are a language and the bath is a conversation. What do you call a foreigner who keeps getting it wrong?"
+            hikari "Guest."
+            mc "That was fast."
+            hikari "It was accurate."
+            mother "It is not a joke. It is a lesson."
+            mc "(The table goes quiet. I have said the wrong thing in the right language.)"
+            $ reward_attributes_once("day9_kitchen_joke", [("nerve", "micro"), ("grace", "micro_loss")], show="auto")
 
     father "The genkan. You take your shoes off and you turn them around."
     mc "Turn them around?"
@@ -111,6 +119,9 @@ label thursday_morning:
     mc "(I have been leaving my shoes pointing at the door like a man about to run.)"
     hikari "He'll learn it. He learned the amado."
     father "The amado is a door. The shoes are a person."
+    "For a moment the genkan is not the genkan. It is a white corridor with a door at the end, and someone is waiting on the other side of it."
+    "Then Hikari says my name and it is a house again."
+    call leak_flash
 
     scene bg_home_day with walk_fade
     "In the genkan I take off my shoes, turn them around, and set them side by side."
@@ -141,10 +152,9 @@ label thursday_morning:
     mc "(That is the same thing, said in a way that makes it true.)"
 
     scene bg_train_interior with walk_fade
-    "The car is full again. The same silence. The same sleeping man, or a different one who has learned the same trick."
+    "Yesterday the silence was a surprise. Today it is a room I know how to sit in."
     "A woman in a business suit stands by the door with her eyes closed. She is not asleep. She is resting her face."
-    "The announcement comes in Japanese, then in English. The English is slower, as if it is apologizing for being necessary."
-    "At the next station, a man in a white glove stands at the edge of the platform and gently pushes the last passengers into the car."
+    "At the next station, a man in white gloves stands at the edge of the platform and gently pushes the last passengers into the car."
     mc "(He is not pushing. He is folding. The train is a suitcase and the city is packing itself.)"
 
     menu:
@@ -226,47 +236,7 @@ label thursday_morning:
     mc "(One place. That is the rule I have given myself. One place, and then home.)"
     call free_afternoon
 
-    scene bg_home_night with walk_fade
-    $ room_ambient(True)
-    "The house is warm the way it is when someone has been cooking for a while."
-    "I leave my shoes by the door, turned around, and follow the smell to the kitchen."
-
-    scene bg_kitchen_night with walk_fade
-    "Mother is ladling something into four bowls. Father is setting the table with the careful imprecision of a man who has been told to help."
-    mother "There you are. Wash your hands."
-    hikari "You're late."
-    mc "I'm not late. Dinner is early."
-    hikari "Dinner is on time. You're late."
-    "I wash my hands. The water is warm."
-    mother "Where did you go?"
-
-    if last_afternoon_place == "chef":
-        mc "The ramen shop. The broth had been going since morning."
-        mc "(He did not make a thing of it. That was the whole welcome.)"
-    elif last_afternoon_place == "aya":
-        mc "The maid cafe. She remembered the order before I said it."
-        mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
-    elif last_afternoon_place == "hana":
-        mc "The reading room. She was there. She stayed."
-        mc "(We did not talk much. It was enough.)"
-    elif last_afternoon_place == "orson":
-        mc "Lupin's Den. The bar was empty enough to hear the ice."
-        mc "(He taught me a phrase I am still turning over.)"
-    elif last_afternoon_place == "sim":
-        mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
-    elif last_afternoon_place == "walk_hikari":
-        mc "I walked home with Hikari. We took the long way."
-        hikari "You took the long way. I followed."
-        mc "That's not how I remember it."
-        hikari "That's because you were busy being right."
-    elif last_afternoon_place == "walk_alone":
-        mc "Nowhere. I walked until the light changed, and then I walked home."
-        father "Nowhere is a place. Just not a destination."
-        mc "(That is either wisdom or a warning. I am not sure which.)"
-    else:
-        mc "Nowhere. I came straight home."
-        mother "Good. Eat."
-        mc "(She does not ask why. I am grateful for that.)"
+    call dinner_open
 
     father "And the book?"
     mc "The Tale of Genji. A thousand pages of weather."
@@ -275,17 +245,15 @@ label thursday_morning:
     hikari "He's been reading it on the train. In Japanese. Slowly."
     mc "Very slowly."
     father "Slow is how you read a thousand pages."
-    "Nobody argues with that. We eat."
+
+    call dinner_close
 
     scene bg_room_night with stair_fade
     $ room_ambient(True)
     "Upstairs, the first chapter of Genji is open on the desk."
     "I have read the same paragraph four times. The words are not the problem. The distance is."
-    "A knock at the door. Hikari, with two cups of tea and her own notes under her arm."
-    hikari "I'm not staying. I'm just making sure you're not staring at the wall."
-    mc "I was staring at Genji."
-    hikari "Same thing."
-    "She sets the tea down and sits on the floor with her back against the bed."
+    $ night_desk_line = "Genji"
+    call night_open
 
     menu:
         "Ask her to read the first line aloud.":
@@ -295,6 +263,7 @@ label thursday_morning:
             "She reads it. Her voice changes. The room gets smaller and older."
             hikari "That's the trick. You don't read it like a sentence. You read it like a memory."
             mc "(I do not understand the words. I understand the pause.)"
+            $ remember("hikari", "asked her to read the first line of Genji aloud, and she read it like a memory")
             $ reward_attributes_once("day9_night_read", [("grace", "micro")], show="auto")
         "Ask her if she likes Genji.":
             mc "Do you like him? Genji."
@@ -302,6 +271,7 @@ label thursday_morning:
             mc "Then why?"
             hikari "Because he's beautiful and he ruins things. And the book lets you watch."
             mc "(She says it with the flat certainty of someone who has finished it.)"
+            $ remember("hikari", "asked if she likes Genji and she said nobody likes Genji, that is not why you read it")
             $ reward_attributes_once("day9_night_genji", [("insight", "micro")], show="auto")
         "Tell her I'm afraid I'm not getting it.":
             mc "I'm afraid I'm not getting it. The book. Any of it."
@@ -309,11 +279,12 @@ label thursday_morning:
             mc "How do you know?"
             hikari "Because you're afraid of not getting it. That's the whole first step."
             "She does not make it a speech. She just says it and drinks her tea."
+            $ remember("hikari", "admitted he was afraid he was not getting Genji, and she said the fear was the first step")
             $ reward_attributes_once("day9_night_afraid", [("nerve", "micro")], show="auto")
 
-    "She takes her cup and leaves the door open a hand's width."
-    "I listen to her go down the stairs, then the house settle into its night sounds."
-    "The book is still open. The tea is still warm."
+    call night_close
+
+    "The book is still open. The night is still outside the window."
     "Tomorrow is Friday. The elective fair. Something is going to change."
 
     stop music fadeout 2.0

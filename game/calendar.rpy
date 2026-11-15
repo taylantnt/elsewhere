@@ -45,6 +45,13 @@ define story_calendar_events = {
     5: "Hikari's practice quiz",
     6: "The haiku quiz",
     7: "The first hub afternoon",
+    8: "The frog lecture",
+    9: "Genji and the genkan",
+    10: "The elective fair",
+    11: "Jimbocho book town",
+    12: "Asakusa with Murakami",
+    13: "Asakusa with Hikari",
+    14: "The second week",
 }
 
 ## Weekly opening rules, Monday = 0 through Sunday = 6.
@@ -148,15 +155,51 @@ init python:
             int(day),
         )
 
+    # --- SAVE SLOT LABELS ----------------------------------------------------
+    #
+    # Save files carry the story date in their metadata, so a save/load screen
+    # can label a slot without loading it. Saves made before this existed do
+    # not have the field; those fall back to their save name or slot number.
+
+    def _record_save_date(json):
+        json["story_day"] = int(store.story_day)
+        json["story_date"] = story_date_label()
+        json["story_event"] = story_calendar_events.get(int(store.story_day), "")
+
+    config.save_json_callbacks = [
+        callback for callback in config.save_json_callbacks
+        if getattr(callback, "__name__", "") != "_record_save_date"
+    ]
+    config.save_json_callbacks.append(_record_save_date)
+
+    def save_slot_label(slot, empty="Empty slot"):
+        """The story date for a save slot, or a sensible fallback."""
+        if not FileLoadable(slot):
+            return empty
+
+        label = FileJson(slot, "story_date", empty="")
+        if label:
+            return label
+
+        name = FileSaveName(slot)
+        if name:
+            return name
+
+        return "Slot %d" % slot
+
     # --- WRITING THE CLOCK ---------------------------------------------------
 
     def set_story_day(day):
         """Pin the story to an absolute day. Safe to call again after rollback."""
         store.story_day = max(1, int(day))
+        store.save_name = story_date_label()
+        store.sunday_at_home = story_calendar_weekday() == 6
 
     def advance_story_day(count=1):
         """Move forward from the current day. Use for new day labels."""
         store.story_day = max(1, int(store.story_day) + int(count))
+        store.save_name = story_date_label()
+        store.sunday_at_home = story_calendar_weekday() == 6
 
     # --- OPENING HOURS -------------------------------------------------------
 

@@ -1,6 +1,6 @@
 [Rain outside. The club room feels smaller and warmer for it — coats over chair backs, umbrellas leaning by the door. The window is a blur of grey light. Everyone reads a little slower on days like this.]
 
-[Narration]: Three weeks now. The book she left is on my shelf at home. I still haven't figured out how to say thank you in a way she'd let me finish.
+[Narration]: Three weeks now. The book I returned is hers again. I keep thinking about the dedication inside the cover — allowed to be small. I still haven't figured out how to say thank you in a way she'd let me finish.
 
 [I'm actually reading this time. Deep enough that I don't notice her until she's already there.]
 

@@ -23,7 +23,7 @@
 ## Backstory
 The recipe is a family recipe. He has poured years of his life into this neighbourhood, and the shop is his entire identity. Behind the counter he is a man who has quietly given up on most conversation except the kind that happens over a bowl of food. His gruffness is pride wearing armour.
 
-## Confidant Arc (Interactions 1–7)
+## Confidant Arc (Interactions 1–8)
 | # | Beat |
 | :--- | :--- |
 | 1 | The protagonist points blindly at the menu; the wrong bowl arrives. It's incredible anyway. First clumsy bridge. |
@@ -33,11 +33,12 @@ The recipe is a family recipe. He has poured years of his life into this neighbo
 | 5 | Quiet bond — the "usual" appears without being ordered. A gestured look at the photograph. Wordless trust. |
 | 6 | The revelation: through Hikari, he admits his aging parents back home need him and he doesn't know who takes over the shop. |
 | 7 | **Farewell.** The shop is unnaturally still. One last ceremonial bowl and a hand-polished wooden ramen spoon, the shop's name carved into the handle. 「思い出」 (*omoide* — memory). |
+| 8 | **Epilogue: the closed shop.** The noren is gone and a printed notice is taped to the glass. He has gone home to his parents. Repeats on every later visit. |
 
 ## How His Arc Ends (The Departure Theme)
 His arc line from the start — you get close to someone, and then they go — lands hardest here because there is no villain and no fix. He leaves Tokyo to care for his parents, and the shop does not reopen.
 
-**In-game consequence**: after Interaction 7 the Ramen Shop becomes permanently inaccessible (or appears closed and dark, shutters down, with no dialogue available). `chef_affection` is locked. The keepsake spoon stays in the inventory as a permanent memento.
+**In-game consequence**: after Interaction 7 the Ramen Shop is dark and permanently closed. The eighth visit is the repeatable epilogue at the shuttered shop, and the row stays on the hub. `chef_affection` is locked. The keepsake spoon stays in the inventory as a permanent memento.
 
 ## What He Symbolises in the Simulation
 The gatekeeper of assimilation. The simulation is testing whether the subject can earn their way into a closed society. The Chef is the most literal version of that test: harsh at first, generous only to those who persist — and then he is removed, because the simulation's thesis is that belonging is always temporary.

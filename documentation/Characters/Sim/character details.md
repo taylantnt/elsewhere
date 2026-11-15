@@ -23,7 +23,7 @@
 ## Backstory
 Before founding Circle, Sim had no friends and no network: only submissions that went unanswered. He built the group as a free creative space — portfolio practice, no gatekeeping, and a reason to be around people. Photography is how he anchors himself to a city that had been indifferent to him.
 
-## Confidant Arc (Interactions 1–7)
+## Confidant Arc (Interactions 1–8)
 | # | Beat |
 | :--- | :--- |
 | 1 | Awkward introductions. He explains the group's purpose: free space, portfolios, friendships. "Next time, you shoot." |
@@ -33,14 +33,16 @@ Before founding Circle, Sim had no friends and no network: only submissions that
 | 5 | A quiet night. He admits the club exists because he had nobody, and thanks the protagonist: "This group feels real because you're here too." |
 | 6 | A magazine editor has contacted him about his work — real recognition, but it means relocating. He promises an exhibition first. |
 | 7 | **Farewell at the exhibition.** He announces he's leaving for the job and gives the protagonist a camera strap identical to his own. |
+| 8 | **Epilogue: the club on hold.** The school has paused Circle until a new student host is found. Nami is on the campus steps with the exhibition in a cardboard box. The same steps, box and maybe replay on every later visit. |
 
 ## How His Arc Ends (The Departure Theme)
 Sim's growth is real: he gets the recognition he spent years chasing. The cost is that the thing he built — the club, the room, the weekly ritual — dissolves the moment he succeeds, and the protagonist is left holding a camera strap instead of a friend.
 
-**In-game consequence**: after Interaction 7 he stops coming in. The room is still
-there, the circle still meets, but the person who made it glad to be somewhere is
-gone and the **Photo Mode** mentoring sessions end with him. `sim_affection` is
-locked.
+**In-game consequence**: after Interaction 7 he stops coming in. The room is
+still there, but the club is on hold: a club needs a faculty advisor and a
+student host, and it has neither. The **Photo Mode** mentoring sessions end with
+him, and `sim_affection` is locked. The eighth visit is the repeatable epilogue
+on the campus steps, with Nami and the box of prints and the maybe of a new host.
 
 ## What He Symbolises in the Simulation
 Sim is the "escape fantasy" mirror. He proves he can leave — for a better city, a better life — while the protagonist cannot leave the world they are in. When Hikari later starts guiding the protagonist toward reality, Sim's departure is the emotional rehearsal for it.

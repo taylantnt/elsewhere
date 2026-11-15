@@ -12,6 +12,9 @@
 # Defined late so type_sound (script.rpy) already exists when this runs.
 init 999 python:
     shiori = Character("Shiori", color="#dda0dd", callback=type_sound, image="aya")
+    # The maid who covers Aya's shifts after she leaves. She has no name here
+    # because that is the point: the role is filled, the person is not.
+    new_maid = Character("Maid", color="#c9a6b8", callback=type_sound)
 
 label confidant_visit_aya:
     $ visit = confidant_visits.get("aya", 0)
@@ -27,6 +30,8 @@ label confidant_visit_aya:
         jump aya_visit_06
     elif visit == 6:
         jump aya_visit_07
+    elif visit >= 7:
+        jump aya_visit_closed
     return
 
 label aya_common_open:
@@ -595,6 +600,76 @@ label aya_visit_07:
     $ wire_contacts["aya"]["name"] = "Shiori"
     $ queue_message("aya", "It is Shiori now. Same phone, different name. I am going to miss this place, but I am not going to miss who I was here. Thank you for everything.", day="yesterday")
     $ reward_attributes_once("aya_visit_07_close", [("nerve", "micro")], show="card")
+
+    scene bg_home_exterior_night with walk_fade
+    stop music fadeout 3.0
+    return
+
+
+################################################################################
+## EPILOGUE — THE SAME OMURICE
+################################################################################
+##
+## Aya is gone. The cafe is not. The new maid has been trained from Aya's notes,
+## so the ritual runs exactly as it always did, and that is what makes it hurt.
+## The epilogue is repeatable: the same table, the same cat, the same spell.
+## Only the first pass writes anything to the save.
+
+label aya_visit_closed:
+    scene bg_maidcafe with walk_fade
+    stop music fadeout 2.0
+    play music "audio/Music/maidcafe.mp3" fadein 2.0
+    $ phone_map_visit("akihabara")
+
+    "The bell over the door rings before I am fully inside, and the room answers it."
+    "Jackets off, voices up, the whole ritual of arriving somewhere that has decided to be happy about it."
+    "The chorus comes from everywhere at once. It is the same chorus."
+    "I scan the room for the maid who used to serve me. She is not there."
+
+    new_maid "Okaerinasaimase, Goshujin-sama! Welcome back!"
+    "A girl I have never seen bows at the edge of the room and gestures me to the same table by the window."
+    "She is cheerful. She is good at it. The apron is the same. The bow is the same depth."
+
+    new_maid "Your usual? The omurice with the cat?"
+    mc "You know my usual."
+    new_maid "Aya-san wrote it down before she left. Table by the window. Omurice. Draw the cat, not too neat. Say the spell after the first bite."
+    "She says it like a recipe. Which, to her, it is."
+
+    "The omurice arrives. The cat is drawn in ketchup, the same shape, the same ears. It is a little neater than Aya's ever was."
+    new_maid "Moe moe kyun! Make it delicious, make it warm, make it yours!"
+    "The words are right. The room claps. I clap too."
+
+    "I take the first bite. It tastes the same. That is the strange part. It tastes exactly the same."
+
+    menu:
+        "Tell her it is good.":
+            mc "It is good. Really good."
+            new_maid "Thank you! Aya-san trained me for two days. She said the cat is the hard part."
+            $ reward_attributes_once("aya_visit_closed_good", [("grace", "micro")], show="auto")
+        "Ask about Aya.":
+            mc "Did she say where she was going?"
+            new_maid "She said somewhere with a sewing machine and no uniform. She seemed happy. She also seemed like she had not slept."
+            $ reward_attributes_once("aya_visit_closed_ask", [("insight", "micro")], show="auto")
+        "Eat in silence.":
+            "I eat without saying anything. The room hums around me. The cat watches from the rice."
+            "It is not a sad meal. It is a meal in a place where someone used to know my name."
+            $ reward_attributes_once("aya_visit_closed_silence", [("nerve", "micro")], show="auto")
+
+    "When I finish, the new maid takes the plate and hesitates."
+    new_maid "You were her regular, right? The one she talked about?"
+    mc "She talked about me?"
+    new_maid "She said there was a customer who came back. She said it like it mattered."
+    "She bows and goes to the next table. The bell rings again. Someone else arrives."
+
+    "The cafe is still here. The music is still here. The cat in the ketchup is still here."
+    "Aya is not. But she left the recipe, and the room is still saying her lines."
+
+    if confidant_visits.get("aya", 0) < 8:
+        $ aya_affection += 1
+        $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 8)
+        $ remember("aya", "visited the cafe after Aya left; a new maid serves the same omurice")
+        $ queue_message("aya", "I heard you came back. Of course you did. Tell me the new girl draws the ears wrong. I need to believe she draws the ears wrong.", day="yesterday")
+    $ reward_attributes_once("aya_visit_closed_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
     stop music fadeout 3.0

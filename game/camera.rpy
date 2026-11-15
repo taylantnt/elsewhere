@@ -107,7 +107,7 @@ init python:
         while len(store.camera_photos) > store.camera_gallery_limit:
             del store.camera_photos[0]
 
-        play_sfx("audio/SFX/camera_shutter.wav")
+        play_sfx("audio/SFX/camera_shutter.mp3")
         return True
 
     def camera_thumb_source(entry):

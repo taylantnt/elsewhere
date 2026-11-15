@@ -108,6 +108,18 @@ screen say(who, what):
     if not renpy.variant("small") and not standalone_window_active():
         add SideImage() xalign 0.5 ypos config.screen_height yanchor 1.0 zoom 1.8
 
+    ## Modern, elegant namebox with layered design
+    if who is not None:
+        frame:
+            style "namebox"
+            xpos gui.dialogue_xpos
+            yalign 1.0
+            yoffset -gui.textbox_height
+
+            ## Character name text
+            text who id "who":
+                style "say_label"
+
     window:
         id "window"
         at Transform(alpha=0.0 if standalone_window_active() else 1.0)
@@ -117,13 +129,6 @@ screen say(who, what):
         ## same rule that sits under the title on the main menu.
         add Solid(gui.accent_color) xpos gui.dialogue_xpos ypos gui.scale(5) xsize gui.dialogue_width ysize gui.scale(2)
 
-        if who is not None:
-
-            window:
-                id "namebox"
-                style "namebox"
-                text who id "who"
-
         text what id "what"
 
 
@@ -132,13 +137,10 @@ init python:
     config.character_id_prefixes.append('namebox')
 
 style window is default
+style namebox is default
 style say_label is default
 style say_dialogue is default
 style say_thought is say_dialogue
-
-style namebox is default
-style namebox_label is say_label
-
 
 style window:
     xalign 0.5
@@ -149,19 +151,19 @@ style window:
     background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
 
 style namebox:
-    xpos gui.name_xpos
-    xanchor gui.name_xalign
-    xsize gui.namebox_width
-    ypos gui.name_ypos
-    ysize gui.namebox_height
-
-    background gui.namebox_background
+    # The chip hugs the name: no fixed minimum or maximum width, so short
+    # names get a snug plate and long names never clip. Padding comes from
+    # namebox_borders, which also drives the 9-patch borders of the plate.
     padding gui.namebox_borders.padding
+    background gui.namebox_background
 
 style say_label:
     properties gui.text_properties("name", accent=True)
-    xalign gui.name_xalign
+    xalign 0.0
     yalign 0.5
+
+    # Elegant subtle text outline for better readability
+    outlines [(gui.scale(1), "#00000060", 0, 1)]
 
 style say_dialogue:
     properties gui.text_properties("dialogue")
@@ -702,8 +704,8 @@ style title_phone_menu_detail is gui_text
 style title_phone_footer is gui_text
 
 style title_start_button:
-    background Solid("#0b1425dd")
-    hover_background Solid("#1b2940ed")
+    background Solid("#0e0d0ccc")
+    hover_background Solid("#141110d8")
     padding (gui.scale(18), gui.scale(12))
     xalign 0.0
     yalign 0.0
@@ -821,12 +823,12 @@ style game_menu_outer_frame:
     xalign 0.5
     yalign 0.5
     padding (gui.scale(22), gui.scale(22))
-    background Solid("#0a1422e8")
+    background Solid("#0e0d0ccc")
 
 style game_menu_navigation_frame:
     xsize gui.scale(230)
     yfill True
-    background Solid("#121f30")
+    background Solid("#0e0d0ccc")
     padding (gui.scale(10), gui.scale(16))
 
 style game_menu_content_frame:
@@ -1047,7 +1049,7 @@ style attributes_kicker is gui_text:
     kerning gui.scale(3)
 
 style attributes_row is frame:
-    background Solid("#111820e8")
+    background Solid("#0e0d0ccc")
     padding (gui.scale(20), gui.scale(14), gui.scale(20), gui.scale(14))
 
 style attributes_bar is bar:
@@ -1120,7 +1122,7 @@ style page_label:
     xpadding gui.scale(50)
     ypadding gui.scale(3)
     xalign 0.5
-    background Solid("#17263a")
+    background Solid("#0e0d0ccc")
 
 style page_label_text:
     textalign 0.5
@@ -1141,9 +1143,9 @@ style page_button_text:
     selected_color gui.accent_color
 
 style slot_button:
-    background Solid("#17263a")
-    hover_background Solid("#263a53")
-    selected_background Solid("#263a53")
+    background Solid("#0e0d0ccc")
+    hover_background Solid("#141110d8")
+    selected_background Solid("#141110d8")
     padding (gui.scale(8), gui.scale(8))
     xsize gui.slot_button_width
     ysize gui.slot_button_height
@@ -1609,34 +1611,51 @@ style skip_triangle:
 
 screen notify(message):
 
-    zorder 100
+    zorder 200
     style_prefix "notify"
 
     frame at notify_appear:
-        text "[message!tq]"
+        xalign 0.5
+        yalign 0.5
+        xminimum gui.scale(340)
+        xmaximum gui.scale(600)
 
-    timer 3.25 action Hide('notify')
+        vbox:
+            xalign 0.5
+            spacing gui.scale(6)
+
+            ## A short gold rule so the card reads as a deliberate notice
+            ## rather than a stray line of text.
+            add Solid("#c8a06a") xalign 0.5 xysize (gui.scale(46), gui.scale(2))
+
+            text "[message!tq]":
+                xalign 0.5
+                textalign 0.5
+                xmaximum gui.scale(520)
+
+    timer 3.5 action Hide('notify')
 
 
 transform notify_appear:
     on show:
-        alpha 0
-        linear .25 alpha 1.0
+        alpha 0.0
+        yoffset gui.scale(14)
+        ease 0.22 alpha 1.0 yoffset 0
     on hide:
-        linear .5 alpha 0.0
+        ease 0.35 alpha 0.0
 
 
 style notify_frame is empty
 style notify_text is gui_text
 
 style notify_frame:
-    ypos gui.notify_ypos
-
-    background Frame("gui/notify.png", gui.notify_frame_borders, tile=gui.frame_tile)
-    padding gui.notify_frame_borders.padding
+    background Frame("gui/notify_card.png", gui.notify_frame_borders, tile=False)
+    padding (gui.scale(34), gui.scale(24))
 
 style notify_text:
     properties gui.text_properties("notify")
+    color "#f4eee4"
+    outlines []
 
 
 ## NVL screen ##################################################################
@@ -1907,7 +1926,7 @@ style game_menu_outer_frame:
     xsize config.screen_width - gui.scale(24)
     ysize config.screen_height - gui.scale(24)
     padding (gui.scale(12), gui.scale(12))
-    background Solid("#0a1422e8")
+    background Solid("#0e0d0ccc")
 
 style game_menu_navigation_frame:
     variant "small"

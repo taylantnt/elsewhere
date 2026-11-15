@@ -3,11 +3,12 @@
 ################################################################################
 ##
 ## Visit 1 happened in script.rpy, on the Saturday library errand: the haiku
-## handout, the quiet room, the girl who flees, and the book left on the desk.
-## Everything after that lives here. The arc follows the documentation under
-## Reading Club - Hana/: observation, tiny attempts at connection, the art book
-## revelation, the shared silence, the confession, and the final farewell where
-## she leaves to pursue art.
+## handout, the quiet room, the girl who flees, the book she leaves behind, and
+## the handmade WIRE card she drops when he tries to return it. Visit 2 is him
+## giving the book back. Everything after that lives here. The arc follows the
+## documentation under Reading Club - Hana/: observation, tiny attempts at
+## connection, the art book revelation, the shared silence, the confession, and
+## the final farewell where she leaves to pursue art.
 
 label confidant_visit_hana:
     $ visit = confidant_visits.get("hana", 0)
@@ -37,56 +38,57 @@ label hana_common_open:
 label hana_visit_02:
     call hana_common_open
 
-    "The window light is thinner today — late afternoon, everything turning amber."
-    "The usual readers are in their usual seats. The ceiling fan ticks its slow clock."
-    "I take the same table as last time. The book she left is in my bag, and I still don't know what to do with it."
-    "I set it on the table, spine out, in case she's watching."
+    "The book is in my bag. It has been in my bag for three days, and every time I take it out I put it back."
+    "Today I am not putting it back."
+    "I told myself I would return it properly: find Hana, hand it over, apologize for keeping it even this long."
+    "I take the book out and stand near the returns cart, holding it with both hands like a confession."
 
-    "I read. Ten minutes. Twenty. Nothing."
+    "It is *A Child's Garden of Verses*, a slim older volume with a spine faded soft at the corners."
+    "I open it carefully to the front flyleaf."
+    "In faded pencil: For Hana — when the house gets too loud, read this and remember you are allowed to be small. — Grandma."
+    "Beside the words, a pressed flower has gone gray with age, and near the title someone has pencilled a small private star."
+    "This was never a library book she could lend. This was hers."
 
-    "And then — a shadow at the edge of my table. She's there, a stack of returns balanced against her chest, so close I can see the loose thread on her sleeve."
-    "She sets a book down near mine. Not on my table. Just... near it. Close enough to be meant."
-
-    "She doesn't leave immediately this time. She pauses — half a second, one full second — hovering as if she's going to say something."
-    "Then she turns and walks back toward the shelves."
-
-    "That's when I see it. Pinned to her collar. A small plastic badge, printed in plain lettering."
-
-    hana "Hana."
-
-    "So that's her name."
+    "A girl rounds the shelf with a stack of returns balanced against her chest."
+    "She sees the book in my hands and goes still."
+    "Her eyes go to the side door, then to the book, then to me."
 
     menu:
-        "\"Hana... thanks. For the book.\"":
-            mc "Hana... thanks. For the book."
-            "She stops. Her shoulders go rigid. Slowly — like turning a key in a rusted lock — she half-turns toward me."
-            "She doesn't speak. She bows. A quick, deep bow, eyes on the floor, then straightens and disappears into the shelves."
+        "\"Hana... this is yours. I should give it back.\"":
+            mc "Hana... this is yours. I should give it back."
+            "She stops mid-step. Her shoulders go rigid, like turning a key in a rusted lock."
+            "Slowly — slower than I expect — she half-turns toward me."
+            "She reaches out and takes the book with both hands, careful not to touch my fingers."
             $ reward_attributes_once("hana_visit_02_thanks", [("grace", "micro")], show="auto")
-        "(Watch her quietly)":
-            "I don't say anything. I just watch her walk away, the way you watch a bird you don't want to startle."
-            "She doesn't stop, but her walk slows for a moment. As if she's waiting for something that doesn't come."
+        "(Set it on the table and let her come to it.)":
+            "I set the book on the table between us and step back, giving her the choice to take it or leave it."
+            "She watches it like it might bite. Then, after what feels like a full minute, she crosses the last few steps."
+            "She takes it with both hands and does not let go right away."
             $ reward_attributes_once("hana_visit_02_quiet", [("insight", "micro")], show="auto")
+
+    "She doesn't speak. She bows — a quick, deep bow, eyes on the floor — then straightens and walks back toward the shelves."
+    "It is not running. It is not quite staying either. It is the closest thing to walking she has given anyone."
 
     "The student from last week slides into the chair beside me, following my gaze."
 
     quiet_student "See? That right there? That was practically a conversation, for her."
 
-    mc "That was a bow."
+    mc "(She took the book back.)"
 
-    quiet_student "Yeah. That's a lot for Hana."
+    quiet_student "Yeah. She doesn't lend anything. She barely lets people touch her books."
     quiet_student "She's like a ghost. Shows up, disappears. Honest? I don't think she has any friends. Not one. People give up on her after a week or two."
 
-    "I look at the book she left. Then at the empty space where she was standing."
+    "I look at the empty space where she was standing."
+    "The book is hers again. I am not carrying it anymore."
+    "I don't know if that makes me lighter or more responsible. Probably both."
 
-    "The hour ends. Regulars drift out. I stay a little longer than I need to, turning the book over in my hands."
-    "At the very back, just inside the cover, someone has pencilled a small, private star next to the title. Faint. Practically invisible."
-
-    "I put the book in my bag."
+    "The hour ends. Regulars drift out. I stay a little longer than I need to, turning over what she wrote inside the cover."
+    "Allowed to be small. I did not know a book could give someone permission like that."
 
     $ hana_affection += 1
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 2)
-    $ remember("hana", "learned her name from her badge and saw she left a star in the book")
-    $ queue_message("hana", "The book... the one with the star. I hope you liked it. Please come back.", day="yesterday")
+    $ remember("hana", "returned her grandmother's book and saw the dedication inside the cover")
+    $ queue_message("hana", "You returned it. I... I didn't think anyone would. Thank you. For not... for not making me chase you.", day="yesterday")
     $ reward_attributes_once("hana_visit_02_close", [("grace", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
@@ -99,7 +101,8 @@ label hana_visit_03:
     "Rain outside. The club room feels smaller and warmer for it — coats over chair backs, umbrellas leaning by the door."
     "The window is a blur of grey light. Everyone reads a little slower on days like this."
 
-    "Three weeks now. The book she left is on my shelf at home. I still haven't figured out how to say thank you in a way she'd let me finish."
+    "Three weeks now. The book is hers again. I keep thinking about the dedication inside the cover — allowed to be small."
+    "I still haven't figured out how to say thank you in a way she'd let me finish."
 
     "I'm actually reading this time. Deep enough that I don't notice her until she's already there."
 
@@ -436,7 +439,7 @@ label hana_visit_closed:
 
     "I take my usual seat. The table feels larger without her. The silence feels different."
 
-    "The book she left on my first visit is still in my bag. The rain window drawing is still in my pocket. The note is folded along every crease, exactly as she left it."
+    "The book I returned is still hers. The rain window drawing is still in my pocket. The note is folded along every crease, exactly as she left it."
     "The charm hangs from my phone — brush and palette, uneven stitches, proof that courage comes in small handmade things."
 
     menu:
@@ -450,10 +453,13 @@ label hana_visit_closed:
     "The hour ends. I pack up slowly. The fan ticks. Somewhere in the library, a door closes."
     "The room is just a room now. But for months, it was hers."
 
-    $ hana_affection += 1
-    $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 8)
-    $ remember("hana", "found the reading club without her; she left to pursue art")
-    $ queue_message("hana", "The room is still there. The books are still there. But I'm not, and that's the point. Thank you for everything.", day="yesterday")
+    # The epilogue can be replayed, so the bookkeeping runs once. Only the
+    # scene and its choices come back.
+    if confidant_visits.get("hana", 0) < 8:
+        $ hana_affection += 1
+        $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 8)
+        $ remember("hana", "found the reading club without her; she left to pursue art")
+        $ queue_message("hana", "The room is still there. The books are still there. But I'm not, and that's the point. Thank you for everything.", day="yesterday")
     $ reward_attributes_once("hana_visit_closed_close", [("grace", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade

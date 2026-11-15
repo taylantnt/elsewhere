@@ -117,7 +117,7 @@ define gui.interface_text_size = gui.scale(22)
 define gui.label_text_size = gui.scale(24)
 
 ## The size of text on the notify screen.
-define gui.notify_text_size = gui.scale(16)
+define gui.notify_text_size = gui.scale(22)
 
 ## The size of the game's title.
 define gui.title_text_size = gui.scale(64)
@@ -150,26 +150,37 @@ define gui.textbox_yalign = 1.0
 
 ## The placement of the speaking character's name, relative to the textbox.
 ## These can be a whole number of pixels from the left or top, or 0.5 to center.
-define gui.name_xpos = gui.scale(240)
+define gui.name_xpos = gui.scale(250)
 define gui.name_ypos = gui.scale(0)
 
 ## The horizontal alignment of the character's name. This can be 0.0 for
 ## left-aligned, 0.5 for centered, and 1.0 for right-aligned.
 define gui.name_xalign = 0.0
 
-## The width, height, and borders of the box containing the character's
-## name, or None to automatically size it.
-define gui.namebox_width = None
-define gui.namebox_height = None
+## The width of the box containing the character's name is automatic, so it
+## grows and shrinks with the name. These bounds keep very short names from
+## collapsing into a sliver and very long names (like the player's) from
+## stretching across the screen.
+define gui.namebox_min_width = gui.scale(120)
+define gui.namebox_max_width = gui.scale(400)
+define gui.namebox_height = gui.scale(56)
 
 ## The borders of the box containing the character's name, in left, top,
 ## right, bottom order. The same values are used as the box's padding, so the
 ## name sits inside a small chip of its own instead of on top of the textbox.
-define gui.namebox_borders = Borders(gui.scale(16), gui.scale(7), gui.scale(16), gui.scale(7))
+define gui.namebox_borders = Borders(gui.scale(20), gui.scale(10), gui.scale(20), gui.scale(10))
 
-## The plate behind the speaker's name. A translucent near-black, so the amber
-## name reads as a label.
-define gui.namebox_background = Solid("#12111080")
+## The plate behind the speaker's name. A rounded glass chip in the same family
+## as the HUD cards, with a gold accent along its top edge that lines up with
+## the accent rule inside the dialogue box below it.
+init python:
+    gui.namebox_background = Frame(
+        "gui/namebox_panel.png",
+        left=gui.namebox_borders.left,
+        top=gui.namebox_borders.top,
+        right=gui.namebox_borders.right,
+        bottom=gui.namebox_borders.bottom,
+    )
 
 ## If True, the background of the namebox will be tiled, if False, the background
 ## of the namebox will be scaled.
@@ -196,7 +207,7 @@ define gui.dialogue_text_line_spacing = gui.scale(9)
 
 ## The speaker's name is set in the accent color and tracked out, so it reads
 ## as a label rather than as the first word of the sentence.
-define gui.name_text_kerning = gui.scale(2)
+define gui.name_text_kerning = gui.scale(3)
 
 
 ## Buttons #####################################################################
@@ -332,9 +343,6 @@ define gui.navigation_xpos = gui.scale(40)
 ## The vertical position of the skip indicator.
 define gui.skip_ypos = gui.scale(10)
 
-## The vertical position of the notify screen.
-define gui.notify_ypos = gui.scale(45)
-
 ## The spacing between menu choices.
 define gui.choice_spacing = gui.scale(22)
 
@@ -372,7 +380,7 @@ define gui.confirm_frame_borders = Borders(gui.scale(40), gui.scale(40), gui.sca
 define gui.skip_frame_borders = Borders(gui.scale(16), gui.scale(5), gui.scale(50), gui.scale(5))
 
 ## The frame that is used as part of the notify screen.
-define gui.notify_frame_borders = Borders(gui.scale(16), gui.scale(5), gui.scale(40), gui.scale(5))
+define gui.notify_frame_borders = Borders(gui.scale(30), gui.scale(30), gui.scale(30), gui.scale(30))
 
 ## Should frame backgrounds be tiled?
 define gui.frame_tile = False

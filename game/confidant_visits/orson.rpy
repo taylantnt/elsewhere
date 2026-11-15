@@ -3,12 +3,17 @@
 ################################################################################
 ##
 ## Visit 1 happened in script.rpy, on the wrong turn home from the library:
-## the water on the house, "you found us," and the wooden bowl for notes. The
-## arc after that lives here, written from the files under
-## documentation/Locations/Bar - Orson/. This file currently holds visit 2 —
-## the masks explained, the first real advice, and the first phrase he teaches.
-## Visits 3-7 are still stubs: the hub simply lets the afternoon continue, the
-## same way every unwritten place behaves.
+## the wolf-signed door, the accidental step inside, fluent-English reassurance,
+## the water on the house, "you found us," the wooden bowl for notes, and the
+## WIRE card he scans on the way home. The arc after that lives here, written
+## from the files under
+## documentation/Locations/Bar - Orson/.
+##
+## The whole chain is written: visit 2 explains the masks and teaches the first
+## phrase; 3 is the notebook; 4 is the anchors and the life before the bar; 5 is
+## the routines; 6 is the coaster and the crack in the door; 7 is the night he
+## takes the mask off. The bar closes at the end of the arc, so visit 7 is the
+## last one the hub will offer.
 
 label confidant_visit_orson:
     $ visit = confidant_visits.get("orson", 0)
@@ -24,12 +29,14 @@ label confidant_visit_orson:
         jump orson_visit_06
     elif visit == 6:
         jump orson_visit_07
+    elif visit >= 7:
+        jump orson_visit_closed
     return
 
 label orson_common_open:
     scene bg_lupins_den with walk_fade
     stop music fadeout 1.2
-    play music "audio/Music/(Orsons bar) the_corner_booth.mp3" fadein 2.0
+    play music "audio/Music/lupins_den.mp3" fadein 2.0
     return
 
 label orson_visit_02:
@@ -119,49 +126,52 @@ label orson_visit_02:
 label orson_visit_03:
     call orson_common_open
 
-    "The bar is busier tonight. The low light glows against rows of bottles."
-    "I slide onto the now-familiar bench, and Orson nods, already reaching for the citrus."
-    bar_master "Regular's posture. You sit like the seat knows you."
+    "The bar is busier than I have seen it. Two stools are taken by people in masks who do not turn around."
+    "Orson nods at the bench. He is already reaching for the citrus."
+    bar_master "You sit like the seat knows you."
     "He sets the first drink down."
-    bar_master "I trade drinks for stories. Want some?"
+    bar_master "I trade drinks for stories. The drinks are better."
 
     menu:
         "\"Go on.\"":
             mc "Go on."
-            bar_master "There was a tourist couple, arguing about the map like it was the last lifeboat on a sinking ship. I gave them two paper cranes and asked them to fold a third together."
-            bar_master "They kept the cranes, stopped fighting, and sent me a postcard from Kyoto."
+            bar_master "A couple came in with a map and a fight. I gave them two paper cranes and told them to fold a third."
+            bar_master "They stopped fighting because folding is hard."
             "He shrugs."
-            bar_master "People don't always need answers. Sometimes they just need a small task to remember they're on the same team."
+            bar_master "They sent a postcard from Kyoto. I do not know why. The fight was not mine."
+            mc "That's a good story."
+            bar_master "It is a true one. Good is different."
             $ reward_attributes_once("orson_visit_03_story", [("grace", "micro")], show="auto")
 
-    mc "And locals?"
-    bar_master "A poet who hasn't published. A barista who hates coffee but loves steam. A nurse who laughs too loud because the hospital is too quiet."
-    bar_master "Japan is... polite, yes. But under that, it's a mess, tender, stubborn, funny. Like everywhere else, just wearing formal shoes."
-    "I let out a small laugh."
-    mc "That... helps."
-    "He leans in, his voice dropping."
-    bar_master "Carry a tiny notebook. Write down three moments each day that felt real: a dog in a raincoat, the station melody, an old man feeding crows."
-    bar_master "When the city feels too big, your pages make it small again."
+    mc "And the locals?"
+    bar_master "A poet who will not publish. A barista who hates coffee. A nurse who laughs too loud. The hospital is quiet."
+    bar_master "People think this country is polite. It is. Under the politeness it is the same mess as everywhere. The mess is just wearing shoes."
+    "I laugh before I can stop myself."
+    mc "That helps."
+    "He leans in, not far."
+    bar_master "Carry something to write on. Not a journal. A receipt is enough. Three things a day that were actually there."
+    bar_master "A dog in a raincoat. The station bell. An old man feeding crows."
+    bar_master "When the city gets too big, you read the receipts. It gets small again."
 
     menu:
         "\"I'll try that.\"":
             mc "I'll try that."
-            bar_master "Good. Memory needs a home."
+            bar_master "Good. Memory needs somewhere to sit."
             $ reward_attributes_once("orson_visit_03_notebook", [("grace", "micro")], show="auto")
         "\"I'll just live it.\"":
             mc "I'll just live it."
-            bar_master "Then live it—but don't forget it. Same difference, different discipline."
+            bar_master "Then live it. But live it twice. Once when it happens, once when you write it down."
             $ reward_attributes_once("orson_visit_03_live", [("nerve", "micro")], show="auto")
 
     "He slides over a small bowl of edamame."
-    bar_master "Eat. Drinking without eating is like sightseeing without looking up."
-    "I crack a pod open. The bar's noise swells and softens like a tide."
-    "When I leave, the door cloth swings shut, and the night carries the scent of gin and soy sauce with me."
+    bar_master "Eat. A drink is not a meal."
+    "I crack a pod open. The bar's noise rises and falls like a tide."
+    "When I leave, the door cloth swings shut, and the night carries the smell of gin and soy sauce with me."
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 3)
     $ remember("orson", "heard a story about paper cranes and was told to carry a notebook")
-    $ queue_message("orson", "Write three moments each day. When the city feels too big, your pages make it small again.", day="yesterday")
+    $ queue_message("orson", "Write three things a day that were actually there. When the city gets too big, the pages make it small again.", day="yesterday")
     $ reward_attributes_once("orson_visit_03_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -171,60 +181,52 @@ label orson_visit_03:
 label orson_visit_04:
     call orson_common_open
 
-    "It's a slow night. Rain taps the window in a steady rhythm."
-    "Orson pours two modest servings and keeps one for himself, something I've never seen him do before."
-    bar_master "I used to be a 'normal' person. Dress shoes, morning trains, meetings that used words like 'synergy' with a straight face."
-    bar_master "I was good at it. That was the problem."
-
-    mc "So... why did you leave that life behind?"
-
-    bar_master "Because, being good at something and being alive inside it are different things."
-    "He swirls his glass, watching the liquid catch the light."
-    bar_master "I wanted change. I wanted... not to count years by fiscal quarters. I failed some expectations. Then I succeeded at failing them."
-    bar_master "Also I learned that the only constant in life is change. Whether it's good or bad is up to you."
-    "There's a smile in his voice now."
-    bar_master "This place is the result. A third space. Not home, not work. It's a place where you can exhale."
+    "Rain on the window. The bar is empty except for us and the fox mask at the end of the counter."
+    "Orson pours two. He has never poured himself one."
+    bar_master "I had a different life. Shoes that hurt. A train I did not choose. Meetings where the words meant nothing and the silence meant less."
+    mc "Why did you leave?"
+    bar_master "I was good at it. That is not the same as being alive in it."
+    "He drinks. He does not look at me."
+    bar_master "I failed some expectations. Then I got good at failing them. This place is what was left."
+    mc "It doesn't look like what was left."
+    bar_master "It is. You build something out of the leftovers and call it a plan."
 
     mc "I'm still figuring out where I fit."
-
-    bar_master "That's honest. Here's a Tokyo trick: choose a few 'anchors'. A coffee shop you claim. A park bench you check in with weekly. A train line you ride for no reason."
-    bar_master "Belonging grows from repetition."
+    bar_master "Find three places and go back to them. A bench. A counter. A train line you ride for no reason."
+    bar_master "Belonging is repetition. There is nothing more romantic than that."
 
     menu:
         "\"It feels fake to force it.\"":
             mc "It feels fake to force it."
-            bar_master "Everything feels fake until it's familiar. Familiarity is just time you decide to spend."
+            bar_master "Everything is fake until it is familiar. Familiarity is just time you decided to spend."
             $ reward_attributes_once("orson_visit_04_fake", [("nerve", "micro")], show="auto")
         "\"I like the idea of anchors.\"":
             mc "I like the idea of anchors."
-            bar_master "Good. Anchors don't stop the tide; they stop you from drifting."
+            bar_master "Anchors do not stop the tide. They stop you from drifting."
             $ reward_attributes_once("orson_visit_04_anchors", [("insight", "micro")], show="auto")
 
-    "After a beat, he speaks again."
-    bar_master "Tonight I'll ask you one thing: what surprised you most about Japan so far. Good or bad?"
+    "After a while he speaks again."
+    bar_master "One thing. What surprised you most about this country. Good or bad."
 
     menu:
         "\"The quiet.\"":
             mc "The quiet."
-            # Naming a pattern in the place, not just a feeling about it.
             $ reward_attributes_once("orson_visit_04_quiet", [("insight", "micro")], show="auto")
         "\"The kindness.\"":
             mc "The kindness."
-            # Choosing to see the people, not only the strangeness.
             $ reward_attributes_once("orson_visit_04_kindness", [("grace", "micro")], show="auto")
         "\"How different it is.\"":
             mc "How different it is."
-            # Admitting the distance out loud instead of pretending it is small.
             $ reward_attributes_once("orson_visit_04_different", [("nerve", "micro")], show="auto")
 
-    bar_master "Keep noticing. Noticing is the first kindness we give a place."
-    "He raises his glass slightly. The rain keeps time against the glass."
-    "When I leave, the rain has slowed to a drizzle, and the city feels smaller somehow."
+    bar_master "Keep noticing. A place cannot be kind back if nobody is looking."
+    "He raises his glass a little. The rain keeps time against the window."
+    "When I leave, the rain has slowed to a drizzle, and the city feels smaller."
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 4)
     $ remember("orson", "learned about his past life and the concept of anchors")
-    $ queue_message("orson", "Everything feels fake until it's familiar. Familiarity is just time you decide to spend.", day="yesterday")
+    $ queue_message("orson", "Everything is fake until it is familiar. Familiarity is just time you decided to spend.", day="yesterday")
     $ reward_attributes_once("orson_visit_04_close", [("nerve", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -234,45 +236,38 @@ label orson_visit_04:
 label orson_visit_05:
     call orson_common_open
 
-    "The bar is lively tonight, laughter ricocheting between tables."
-    "Orson spots me and claims the usual bench with a small flourish."
-    bar_master "Look at you. Shoulders are lighter. Eyes are less 'help-I'm-astronaut-in-a-convenience-store.' Progress."
-
-    mc "I'm learning... slowly."
-
-    bar_master "Slow is the speed of everything worth keeping."
-    "He slides over a glass and a tiny dish of yuzu peel."
-    bar_master "Let me guess, you've had days that felt like you said everything wrong."
-
+    "The bar is full tonight. Laughter, glass, the low run of the jazz."
+    "Orson sees me and lifts two fingers. The bench is free before I reach it."
+    bar_master "You look less like a man reading a map upside down."
+    mc "I'm learning. Slowly."
+    bar_master "Slow is the only speed that keeps."
+    "He sets down a glass and a small dish of yuzu peel."
+    bar_master "You have had days where everything you said came out wrong."
     mc "All of them."
-
-    bar_master "Good. You're practicing. Loneliness doesn't vanish, get used to that. But it gets... companionable."
-    bar_master "Learn small rituals: greet the same crossing guard, memorize a vending machine, bow at the shrine even if you don't know the words."
-    bar_master "Routines let the city recognize you."
-
-    mc "Routines feel... safe, I guess."
-
-    bar_master "And safety lets you be brave elsewhere."
+    bar_master "Good. That is practice."
+    bar_master "Loneliness does not go away. It gets familiar. That is not better. It is easier to carry."
+    bar_master "Make small rituals. Greet the same guard. Use the same vending machine. Bow at the shrine even without the words."
+    bar_master "The city starts to recognize you. That is all belonging is at first."
+    mc "Rituals feel safe."
+    bar_master "Safe lets you be brave somewhere else."
     "He leans on the counter."
-    bar_master "Practical notes: if you end up doing バイト（baito）, bring a little notebook for shift phrases. Keep coins for bus fare. Last trains are sacred."
-    bar_master "Never block the escalator right side. And if you don't know, copy the elderly. They always know, haha."
-
+    bar_master "Practical. If you take a part-time job, carry a notebook for shift words. Keep coins for the bus. The last train is not a suggestion."
+    bar_master "Do not block the escalator. If you do not know what to do, copy the old people. They have been doing it longer."
     mc "I'll remember the copying rule."
-
-    bar_master "And remember: you can ask for help. The trick is asking in the smallest possible way. People here love to help if you make it easy for them to succeed."
+    bar_master "And you can ask for help. Ask in the smallest way you can. People here will help if you make it easy to say yes."
 
     menu:
         "\"Thanks... that helps.\"":
             mc "Thanks... that helps."
-            bar_master "Good. Let it help."
+            bar_master "Good. Let it."
             $ reward_attributes_once("orson_visit_05_helps", [("grace", "micro")], show="auto")
         "\"It still feels hard.\"":
             mc "It still feels hard."
-            bar_master "Of course it's hard. Worthwhile things are heavy. Carry them with both hands."
+            bar_master "It is hard. Worthwhile things are heavy. Carry them with both hands."
             $ reward_attributes_once("orson_visit_05_hard", [("nerve", "micro")], show="auto")
 
-    "A moment of companionable silence as the bar noise blurs into a warm hum."
-    "When I leave, the laughter follows me out the door, fading as I step into the night."
+    "For a while neither of us says anything. The bar hums around us."
+    "When I leave, the laughter follows me to the door and stops at the street."
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 5)
@@ -287,53 +282,42 @@ label orson_visit_05:
 label orson_visit_06:
     call orson_common_open
 
-    "It's near closing. Only a couple of customers remain."
-    "Orson moves more slowly tonight; the wolf mask's smile looks almost thoughtful in the low light."
-    "The shelves behind him are a little emptier than usual, one or two bottles missing from their usual places."
-    bar_master "Have you ever noticed how doors look heavier at night? Same wood, same hinges but just... heavier."
-    bar_master "Funny thing about doors: they never promise they'll open forever. You just assume they will."
-
+    "It is near closing. Two customers, then one, then none."
+    "One shelf behind the bar has a gap in it. Three bottles wide. He has not replaced them."
+    bar_master "Doors look heavier at night. Same door. Same hinges."
     mc "Long day?"
-
     bar_master "Long year."
-    "He sets down a small, neat drink, pausing before sliding it across."
-    bar_master "I tried other lives. My family wanted me in the company—good hours, good title. I tried my own shop once. Bad location, worse timing."
-    bar_master "I've failed politely and loudly. This place... was desperation dressed as a plan. A corner where failure could sit down and order a drink."
-
+    "He pours a small neat drink and pauses before sliding it across."
+    bar_master "I tried other lives. The company my family wanted. A shop of my own. Bad location. Worse timing."
+    bar_master "This place was desperation with a lease."
     mc "And it worked."
-
-    bar_master "Sometimes. Sometimes it barely limps. Bars are fragile things—you keep them alive night by night. Like a candle in the wind, you don't know how long the wax will last."
-    "He catches himself, then chuckles to break the heaviness."
-    bar_master "But hey, tonight it's still burning."
-
+    bar_master "It works some nights. A bar is a candle. You do not know how long the wax is."
+    "He catches himself. The mask tilts."
+    bar_master "Tonight it is still burning. That is enough."
     mc "I don't feel courageous."
-
-    bar_master "You came back. Courage doesn't always roar; sometimes it just shows up again."
-    "He reaches under the counter and hands out a paper coaster with the wolf logo."
-    bar_master "Here. For when the city feels too big. A silly souvenir, but... you'd be surprised how much meaning fits in small circles."
-    bar_master "Small things outlive us sometimes."
-
+    bar_master "You came back. Courage is mostly coming back."
+    "He reaches under the counter and puts a paper coaster on the bar. The wolf logo, slightly off-centre."
+    bar_master "For when the city is too big. It is a silly thing. Small things outlast us."
     "I turn it in my hand."
     mc "Thanks."
-
-    bar_master "I see you, you know. Not every detail. Just enough to know you're trying. You remind me of the kid I was when I first came to Tokyo."
-    bar_master "Lost, stubborn, curious. Curiosity will keep you alive here. Even when places don't."
+    bar_master "I see you. Not all of it. Enough."
+    bar_master "You remind me of myself when I came here. Lost. Stubborn. Curious. Curiosity keeps you alive here. Even when the place does not."
 
     menu:
         "\"I'll keep showing up.\"":
             mc "I'll keep showing up."
-            bar_master "That's the whole game. Keep showing up! Wherever the game happens to be."
+            bar_master "That is the whole game. Keep showing up. Wherever the game is."
             $ reward_attributes_once("orson_visit_06_showup", [("nerve", "micro")], show="auto")
         "\"I'm still scared.\"":
             mc "I'm still scared."
-            bar_master "Good. Fear keeps your eyes open. Just don't let it keep your feet still."
+            bar_master "Good. Fear keeps your eyes open. Do not let it keep your feet still."
             $ reward_attributes_once("orson_visit_06_scared", [("grace", "micro")], show="auto")
 
-    "He looks down the bar, then back. There's a softness in his voice that wasn't there before."
-    bar_master "Finish that. Walk home slow. Notice three good things. Bring them back to me next time."
-    bar_master "...Every night's different, and we never know how many more we'll get."
-    "The lights dim slightly. One of the neon signs outside flickers, buzzing. The night exhales."
-    "When I leave, the coaster sits in my pocket, warm against my palm."
+    "He looks down the bar, then back."
+    bar_master "Finish that. Walk home slow. Notice three good things. Bring them back next time."
+    bar_master "We never know how many nights we get."
+    "The lights dim. Outside, one neon sign flickers and buzzes."
+    "When I leave, the coaster is in my pocket, warm against my palm."
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 6)
@@ -348,61 +332,38 @@ label orson_visit_06:
 label orson_visit_07:
     call orson_common_open
 
-    "The bench that once felt too narrow now seems made for me."
-    "The air carries the warm scent of citrus and gin, but tonight there's a subtle heaviness, as if the room itself knows this is a final chapter."
-    "The last customers have already gone. The bar is quiet, dim, only the hum of the fridge and the soft buzz of neon outside."
-    "Orson leans against the bar, polishing a glass, his wolf mask tilted low in thought."
-    bar_master "You've grown a lot since that first night. Back then you barely looked at me. Now you sit like the bar was built around you."
-
-    mc "I do feel like I belong here."
-
-    bar_master "That's the trick of places like this. You find a rhythm, and suddenly it feels permanent. But..."
-    "He sets the glass down, hands lingering on the counter."
-    bar_master "This place won't be around much longer."
-
-    mc "...What do you mean?"
-
-    bar_master "It's not one thing. It's all of it. Rent that keeps rising. A neighborhood that's sprinting ahead without me. Too many nights when the till doesn't quite balance."
-    bar_master "And me... I'm tired. More tired than I let on."
-
-    mc "But you built something real here. For people like me."
-
-    bar_master "I built it as a refuge. A place where people could breathe. Where being hidden meant being seen in a different way."
-    bar_master "I thought if I gave others that freedom, maybe I'd feel it too."
-    "He looks around the dim bar—the shelves, the lights, the empty stools."
-    bar_master "But sometimes even the places we love most can't hold us up forever. The city doesn't wait. It just keeps moving."
-
-    mc "What do you mean..? So this... is goodbye?"
-
-    bar_master "Not the kind that erases anything. Endings don't erase what happened. You came here. You made this place alive. That doesn't vanish."
-    "He leans forward, steady and deliberate."
-    bar_master "You reminded me why I kept these doors open. Not for money. For moments like this. For people like you."
+    "The bench is the same bench. Tonight it feels like a seat in a house that is being packed."
+    "The last customer left an hour ago. Orson has not locked the door."
+    bar_master "You came."
+    mc "You said tonight."
+    bar_master "I say a lot of things."
+    "He finishes polishing a glass and sets it down. The shelves behind him are half empty."
+    bar_master "The lease is done. The neighborhood is changing. I am tired. It is not one thing."
+    mc "So this is goodbye."
+    bar_master "Not the kind that erases anything. You came here. You made the place alive. That does not vanish."
+    "He leans forward, steady."
+    bar_master "You reminded me why I kept the doors open. Not for the money. For this."
 
     menu:
         "\"I'll miss this place.\"":
             mc "I'll miss this place."
-            bar_master "Good. Missing something means it mattered. It means it left its mark."
+            bar_master "Good. Missing something means it mattered."
             $ reward_attributes_once("orson_visit_07_miss", [("grace", "micro")], show="auto")
         "\"I'll carry it with me.\"":
             mc "I'll carry it with me."
-            bar_master "Exactly. The bar, the mask, the laughter—they're just tools. What you really take with you is the warmth, the courage, the lessons. That's what lasts."
+            bar_master "Then it is not gone. It is just somewhere else."
             $ reward_attributes_once("orson_visit_07_carry", [("nerve", "micro")], show="auto")
 
-    "There's silence. Orson studies me for a long moment."
-    "Then he exhales slowly and reaches up. For the first time, he pulls the wolf mask free."
-    "The sound of it leaving his face is strangely final. He sets it on the counter, eyes bare and tired, but kind."
-    bar_master "I don't do this for anyone. But you... you deserve to see me, not just the mask."
-    "He reaches under the counter, produces a small badge shaped like a wolf's paw print, edges slightly worn as if it's been carried for years. He slides it across the bar."
-    bar_master "Here. Something to remember me by. Might not look like much, but sometimes the smallest things carry the most weight."
-
-    "I turn it in my hand."
-    mc "I'll keep it safe."
-
-    bar_master "Don't keep it too safe. Carry it. Let it remind you. One day, you'll walk into a place like this, and you won't need me."
-    bar_master "You'll be part of the warmth yourself. Maybe even be the reason someone else feels at home."
-    "The bar is utterly still now. Orson leans back, mask beside him, the wolf paw badge warm in my hand."
-    "His eyes glimmer—not with mystery, but with raw gratitude and the quiet weight of farewell."
-    "When I finally stand to leave, the door closes behind me with a soft thud. The hum of the bar lingers in memory, warm and fleeting, already almost gone."
+    "He studies me for a long moment. Then he reaches up and takes off the wolf mask."
+    "It comes away slowly, as if it has been on a long time. Under it his face is tired and ordinary and kind."
+    bar_master "I do not do that for everyone."
+    "He reaches under the counter and puts a small badge on the bar. A wolf's paw, the edges worn pale."
+    bar_master "Do not keep it safe. Carry it. One day you will walk into a place like this and you will not need me."
+    mc "I'll carry it."
+    bar_master "You will be part of the warmth yourself. Maybe you already are."
+    "The bar is still. The mask sits on the counter between us. The badge is warm in my hand."
+    "When I stand to leave, he does not put the mask back on."
+    "The door closes softly behind me, the way a door closes when someone is holding it."
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 7)
@@ -412,4 +373,61 @@ label orson_visit_07:
 
     scene bg_home_exterior_night with walk_fade
     stop music fadeout 2.0
+    return
+
+
+################################################################################
+## EPILOGUE — THE WOLF STILL HANGING
+################################################################################
+##
+## The lease ended and Orson is gone. The bar is closed, the window is dark, and
+## the room is stripped, but the wolf sign is still on the wall and the alley is
+## still the alley. The epilogue is repeatable: the same locked door, the same
+## notice, the same sign. Only the first pass writes anything to the save.
+
+label orson_visit_closed:
+    scene bg_lupins_alley_night with walk_fade
+    show black:
+        alpha 0.42
+    stop music fadeout 2.0
+
+    "The alley is the same alley. Wet stone, a bicycle, the smell of the yakitori place two doors down."
+    "Lupin's Den is at the end, under the wooden wolf."
+    "The wolf is still there. The window under it is dark."
+    "No light behind the bottles. No glass on the door. Just the sign, the small brass handle, and a notice taped at eye level."
+
+    "PREMISES AVAILABLE.\nFormer tenant: bar.\nViewings by appointment."
+
+    "I read it twice. The font is a letting agent's. The paper is already curling at one corner."
+    "Through the window, the room is a shape I know with the lights off. The counter. The bench. The shelves, empty now, or maybe just dark."
+    "I try the handle. It is locked. Of course it is."
+
+    menu:
+        "Leave the wolf where it is.":
+            "It belongs to the building. I step back and let it hang there, unlit and patient."
+            $ reward_attributes_once("orson_visit_closed_leave", [("grace", "micro")], show="auto")
+        "Look through the window.":
+            "I cup my hands around my eyes. The room resolves slowly: the counter, the bench, a single coaster on the wood, a tiny wolf printed slightly off center."
+            "I do not know if it is really there. The glass makes everything a guess."
+            $ reward_attributes_once("orson_visit_closed_look", [("insight", "micro")], show="auto")
+        "Sit on the step.":
+            "I sit on the step. The stone is cold. The alley keeps moving without me: a bicycle, a door, someone laughing two floors up."
+            "The bar used to be the warm part of this street. Now the warm part is the yakitori lantern."
+            $ reward_attributes_once("orson_visit_closed_sit", [("nerve", "micro")], show="auto")
+
+    "The wolf looks down at the empty window. It has the same fixed smile."
+    "The bar was never the bottles. It was the hour when someone would listen without asking for your name."
+    "That hour is not here anymore. But I know how to carry it."
+
+    if confidant_visits.get("orson", 0) < 8:
+        $ orson_affection += 1
+        $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 8)
+        $ remember("orson", "found Lupin's Den closed; the wolf sign was still up and the window was dark")
+        $ queue_message("orson", "The bar is a room again. Rooms are patient. If you ever need the door, you know where it was.", day="yesterday")
+    $ reward_attributes_once("orson_visit_closed_close", [("grace", "micro")], show="card")
+
+    "I walk back up the alley. The yakitori lantern is doing its best."
+    "The door stays locked. The wolf stays up."
+    scene bg_home_exterior_night with walk_fade
+    stop music fadeout 3.0
     return

@@ -49,7 +49,8 @@ world has moved enough to let the next chapter of it mean something.
 The hub opens on the first free afternoon after the current build's Monday —
 the day-loop scene that calls it is not written yet (see `plan.md`). The phone
 already has WIRE contacts on it — Hikari, the chef, Sim, and Aya by the end of
-day two, with Hana and Orson added by the Saturday introductions — and the hub
+day two, with Hana added through a dropped handmade card and Orson through a
+scanned counter card on Saturday — and the hub
 adds the list of places: the five confidant locations plus the two walks home.
 
 ### How New Characters Enter
@@ -62,9 +63,10 @@ place, and the person is already there, being themselves.
 **Orson** is found the way every student in Tokyo finds a bar eventually: by
 walking the wrong street at night. The protagonist gets lost a second time, or
 takes a detour after a late lecture, and finds a narrow door with a cloth over
-it and a small wolf painted on the sign. The bar is called Lupin's Den. Inside, a
-man in a wolf mask polishes a glass and says nothing until the protagonist sits
-down. The introduction is the silence.
+it and a small wolf painted on the sign. The bar is called Lupin's Den. He means
+only to look, but curiosity carries him inside before he decides. Inside, a man
+in a wolf mask polishes a glass and says almost nothing until he sits down. The
+introduction is the door left open.
 
 **Hana** is found through an errand, not by wandering. Exams are coming — the
 clerk's attendance rules have been circling since orientation — and the
@@ -89,8 +91,9 @@ much.
 Each day in Act 2 follows the same shape with different content:
 
 1. **Morning** at the house. Breakfast with the family. Tetsuo gives a rule.
-Miharu worries. Hikari is already leaving. The first hub day (Day 7) adds the
-midterm briefing to this step; later hub days keep the same shape.
+Miharu worries. Hikari is already leaving. Day 7 adds the midterm briefing and
+then forces the last first-week confidant meeting; from Day 8 the free
+afternoon is the hub and later hub days keep the same shape.
 2. **Lecture** at the university. The professor teaches, the protagonist
 listens, and the lecture topic always carries a thematic echo of what is
 happening in the confidant arcs.
@@ -114,12 +117,15 @@ already asked, and this time she hears herself do it.
 
 ## The Confidant Arcs
 
-Every confidant has seven visits. After the seventh, they are gone. The place
-they lived in is still there, but the person who made it matter is not. That
-pattern is the thesis of the game: getting close to someone is what makes them
-leave. Chef and Hana are the two documented exceptions — their stories run one
-visit longer, to the closed shop and the closed reading room, which is the end
-of the arc rather than a departure.
+Every confidant has seven numbered visits. The seventh is the farewell. After
+it, the person is gone, but the place stays visitable: every one of the five has
+an eighth **epilogue** at the same location, and the same closing scene replays
+on every later visit. Chef and Hana reach the closed shop and the closed reading
+room. Sim's club is on hold until a new host is found. Aya's cafe is staffed by
+someone new who has been trained from her notes. Orson's bar is an empty room
+with the wolf sign taken down. The epilogue is the end of the arc rather than a
+departure, and it is deliberately repeatable: the place remains, the routine
+remains, and the person who made it matter does not.
 
 ### The Ramen Chef — Seven Bowls
 
@@ -250,25 +256,32 @@ meets, but the person who made it glad to be somewhere is gone.
 ### Orson — Seven Masks
 
 Orson is found, not introduced. The protagonist takes a wrong turn after a late
-evening lecture, or walks a street he has not walked before, and finds a narrow
-door with a cloth over it. A small wolf is painted on the sign. The bar is called
-Lupin's Den. Inside, a man in a wolf mask polishes a glass and says nothing.
+evening lecture, or walks a street he has not walked before, finds a narrow door
+with a cloth over it, and sees a small wolf painted on the sign. He means only to
+look, but curiosity carries him inside before he decides. Inside, a man in a wolf
+mask polishes a glass and says almost nothing.
 
 The mask never changes expression. That is the point: it is a wall, and he
 knows it. The bar is the one place in Tokyo where the protagonist speaks English
 with an adult who is not Hikari, and the conversations run long because Orson
-never rushes anyone.
+never rushes anyone. The first time Orson speaks, the protagonist is surprised by
+how fluent and unhurried the English is.
 
-**Visit 1: The Silence**
+**Visit 1: The Door Left Open**
 The protagonist sits down at the counter. Orson puts a glass of water in front of
-him without being asked and says nothing — or almost nothing. Two lines is all
-the night gives him: "You found us. Most people don't," and, on the way out,
-"The water's on the house. The conversation isn't. But you're welcome to it."
-Cracked but not explained. The bar is narrow, dim, and warm. Three other
-customers sit along the counter, all in masks, none of them talking to each
-other. There is a small wooden bowl by the till for notes to the Master — he
-does not use it, but he notices it exists, and that is the hook that brings him
-back.
+him without being asked and says almost nothing — until the protagonist is about
+to leave. Then, in fluent English, he says, "Easy. You look lost," and adds that
+curiosity and being lost are both allowed there. The player chooses whether to
+thank him or let the water answer for him. Either way Orson tilts the mask and
+says, "You found us. Most people don't." On the way out he adds, "The water's on
+the house. The conversation isn't. But you're welcome to it." The bar is narrow,
+dim, and warm. Three other customers sit along the counter, all in masks, none of
+them talking to each other. There is a small wooden bowl by the till for notes to
+the Master — he does not use it, but he notices it exists, and that is the hook
+that brings him back. Beside it is a black card with a square WIRE code; he says
+it is "a door with better manners." On the walk home the protagonist scans it,
+and Orson's name settles onto the WIRE list. The protagonist leaves unsure what
+he is feeling, but for some reason it feels good.
 
 **Visit 2: The Mask Explained**
 Orson initiates. He asks where the protagonist is from, and listens to the answer
@@ -383,18 +396,18 @@ same. The warmth is absent.
 
 ---
 
-### Hana — Seven Silences
+### Hana — The Reading Club
 
 Hana is the confidant who almost does not exist. She shelves books in the reading
 circle room, avoids eye contact, and flees the instant anyone tries to talk to
 her. Her arc is told through gestures, notes, and silences long before she
-speaks. The protagonist finds the reading circle on a free afternoon, on an
-errand: exams are coming, he needs somewhere quiet to study and a department
-document he cannot find, and Hikari sends him to the library — the place
-students go when they actually need to get something done. Some people there
-are reading, some are studying, and the circle shares the same quiet rooms.
-He takes the corridor she describes. The door is open. Four chairs, a shelf of
-returns, and a girl who glances at him once and then looks away.
+speaks. The protagonist finds the reading circle on Saturday, on an errand:
+exams are coming, he needs somewhere quiet to study and a department document
+he cannot find, and Hikari sends him to the library — the place students go
+when they actually need to get something done. Some people there are reading,
+some are studying, and the circle shares the same quiet rooms. He takes the
+corridor she describes. The door is open. Four chairs, a shelf of returns, and
+a girl who meets his eyes once and then looks away.
 
 A side character — one of the circle's own regulars — is reading in the corner.
 He explains in one line: she is like a ghost. She is here every week. Nobody
@@ -402,14 +415,27 @@ has heard her speak.
 
 **Visit 1: The Ghost**
 The protagonist sits down with a book. Hana shelves returns on the other side of
-the room without looking at him. When he leaves, she glances at the door. He
-does not notice. The side character does.
+the room without looking at him. When their eyes meet, she looks away, catches
+a slipping book, and leaves through the side door. Halfway through the hour, a
+slim older book lands on the protagonist's table — placed by someone who did
+not want to be seen doing it. He is happy and confused at once: did she mean
+to leave it, was she listening, or had she simply decided he was allowed to
+have it? When the hour ends he tries to return it. Hana sees the book in his
+hands, panics, changes direction, and spills her returns; the book hits the
+floor and a handmade WIRE card slides out — *Hana — volunteer, student library
+desk. Reading club. @hana.* Scanning the card is how he adds her. He keeps the
+book until the next meeting. A shy WIRE message arrives later: she could not
+take it back, and maybe that is okay.
 
-**Visit 2: The Linger**
-She places a book on the shelf nearest the protagonist. She lingers a second
-longer than last time. He sees her badge for the first time: Hana. She notices
-him noticing and retreats behind the returns shelf. The side character turns a
-page and does not comment.
+**Visit 2: The Return**
+He brings the book back. It is *A Child's Garden of Verses*, a slim older
+volume with a flyleaf dedication from her grandmother: *when the house gets
+too loud, read this and remember you are allowed to be small.* That is why she
+carries it — it is permission, not a loan. The player chooses between saying it
+directly or setting the book down and letting her come to it. Either way, Hana
+takes it with both hands, bows, and walks away without running. She is still
+not speaking to him, but the book is hers again, and he is no longer carrying
+it.
 
 **Visit 3: The Whisper**
 She tries to speak. The protagonist is close enough to hear. What comes out is
@@ -446,6 +472,13 @@ stitched in thread. She says: you gave me courage. Without you, I would still
 be hiding. Then she leaves, and the reading circle is just a room with chairs
 and shelves and quiet. The side character turns a page.
 
+**Visit 8: The Empty Room**
+The reading club is still there — shelves, chairs, the ticking fan — but Hana is
+gone. A different volunteer shelves the returns without her careful hesitations.
+The protagonist keeps the rain-window drawing, the folded note, and the
+brush-and-palette charm. He can leave quietly or send Hana one last WIRE
+message. Either way, the room is just a room now, but for months it was hers.
+
 ---
 
 ## Hikari Parallel Arc — The Compass Turns
@@ -460,14 +493,16 @@ relationship itself.
 ### The Run Becomes Recurring
 
 The first river run is written in `after_school_run` in `script.rpy`; the other
-six are written in `game/hikari.rpy`. The run is a recurring after-school
+six are written in `game/confidant_visits/hikari.rpy`. The run is a recurring after-school
 activity, not a numbered confidant chain. It is tracked by `hikari_visits` (for
 routing and WIRE progress) and `sister_affection` (for the relationship), and
 the hub's "Walk home with Hikari" row sends the player to the next run through
-`confidant_visit_hikari`. After the seventh run the row falls back to the
-ordinary walk home, `afternoon_walk_hikari`, so the place never runs out of
-something to do. The seventh run sets `hikari_run_finished = True` for the
-Act 3/4 threshold; it does not begin that threshold itself.
+`confidant_visit_hikari`. Players who skipped the Day 2 run get the shorter
+`hikari_first_run` fallback from Day 6 or the hub; after the seventh run the
+row falls back to the ordinary walk home, `afternoon_walk_hikari`, so the
+place never runs out of something to do. The seventh run sets
+`hikari_run_finished = True` for the Act 3/4 threshold; it does not begin that
+threshold itself.
 
 The seven beats the game planned are now all written:
 
@@ -540,11 +575,24 @@ The Fortune Teller appears once per chapter, in a location the protagonist is
 already visiting. She never seeks him out. He turns a corner and there she is,
 with her cards on a folding table and a smile that knows too much.
 
+**Build note (2026-11-12):** Encounter 1 is now the Day 13 Asakusa reading with
+Hikari. Encounters 2 and 3 are turned in one hub return at the same folding
+table, so the arc is three cards and then closed (`confidant_visits["fortune"]`
+= 3). The Harajuku and night-corner locations are named by the cards, not played
+as separate rows yet. She is a limited confidant, not a seven-visit arc.
+
 **Encounter 1: Asakusa**
 He finds her on the temple steps, between the incense sellers and the omikuji
 stalls. She reads his palm and says: you have been here before. Not this temple.
 This moment. He asks what that means. She says come back when you are ready to
 hear it. You will not be. You will come back anyway.
+
+In the built scene, the first reading is a three-card spread: the gate, the
+white corridor, and the figure on the table. The corridor card triggers the Day
+9 genkan flashback and the first clean epiphany: Hikari saw it too. The omikuji
+he drew earlier is read against his attributes. Grace turns the slip good, nerve
+turns it bad, and an even hand gets the honest middle. The paper and the cards
+agree.
 
 **Encounter 2: Harajuku**
 She is on a side street off Takeshita-dori, between a vintage shop and a
@@ -587,6 +635,15 @@ Japanese. He cannot read it. A stranger beside him reads it aloud: excellent
 fortune. The stranger smiles and walks away. The protagonist keeps the paper
 and ties it to the rack, the way everyone else does. He does not know why. It
 feels right.
+
+**Build note (2026-11-12):** Asakusa is now a full Day 13 scene with Hikari, not
+only Murakami's Sunday lesson. It walks the Kaminarimon gate (Raijin's drums,
+Fūjin's bag, the rebuilt gate), Nakamise (ningyo-yaki, the funnel of the crowd,
+the sacred and the snack stand), the incense burner (watching people pull smoke
+toward the part of them that needs it, then doing it himself), and the omikuji
+rack. Hikari is the one who gets excited about the paper. The Fortune Teller's
+folding table is between the burner and the souvenir stalls. The scene ends with
+the white-corridor flashback and Hikari admitting she saw it too.
 
 ### Odaiba — The Future That Already Happened
 
@@ -647,6 +704,22 @@ has crossed this month, and that the barrier is thinner than he thought.
 Simulation thread: he sees a restaurant sign that says, in English, WELCOME
 HOME. The words sit strangely. He has never been to Yokohama before. He passes
 the sign and does not look back, but the words stay.
+
+### The Additional City Rows (2026-11-12)
+
+These are the six extra rows the Act 2 audit asked for. They are not confidant
+arcs and they never close.
+
+- **Ueno Park** — April hanami. Blue tarps, loosened ties, old men with a bottle
+  and a radio. The flowers are an excuse; the sitting is the point.
+- **Shibuya Crossing** — the scramble as a performance. A thousand people walk
+  into each other and nobody touches. Hachikō waits; the city sells above him.
+- **Shimokitazawa** — what Harajuku would be if it stopped performing. Used
+  records, a live house the size of a fridge, a coffee shop with six seats.
+- **Omotesando / Meiji Shrine** — the luxury avenue that ends at a torii. The
+  temizuya, the gravel path, the ema wall. The city gets quiet all at once.
+- **Odaiba** — already specced above. The Gundam blinks once, for a frame.
+- **Yokohama Chinatown** — already specced above. The other foreigner.
 
 ---
 

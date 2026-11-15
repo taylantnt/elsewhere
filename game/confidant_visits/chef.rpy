@@ -53,80 +53,164 @@ label chef_common_open:
 label chef_visit_01:
     call chef_common_open
 
-    "The noren hangs in the doorway, blue and faded, with a white character on it I have walked past twice without reading."
-    "Steam comes out under it in a slow curtain. The smell is pork and soy and something roasted."
-    mc "(The kind of smell that makes a decision for you.)"
-    "I push the curtain aside."
+    "Broth, and steam, and fat hitting a hot pan behind a wall. My whole body turns towards it before I have decided anything."
+    "A doorway with a cloth over it, dark blue and gone soft at the hem. A bowl painted on it in white. No glass, no sign I can read."
+    "I lift the cloth and go in."
 
-    "The shop is six stools and a counter and a man. The man is at the stove with his back to the door, and he does not turn around."
+
+
+    "It is four seats and a counter and a wall of steam, and the steam is the only thing in here that moves."
+    "There is one man behind the counter, in an apron and a towel tied around his head, and he does not look up."
+    "The board on the wall is handwritten and I cannot read one character of it."
+    "Under it, the prices in numbers, which everybody can read."
+    "I put a thousand yen on the counter. He does not look at it."
+    "He pushes it back with one finger and grunts at the empty space in front of the seat, which I take to mean afterwards."
+
+    voice "audio/VO/ramen_welcome.mp3"
     chef "いらっしゃい。"
-    mc "(Irasshai. Welcome. I know that one now.)"
+    mc "(I know that one. Every shop in this country says it when a person walks in. It means welcome, and it means get on with it.)"
 
-    "There is one other customer, an old man in a cap, eating with the focused silence of a man who has done this ten thousand times."
-    "I take the stool farthest from him, because it feels like the polite amount of distance."
-    chef "おう。"
-    "The chef grunts without turning. Then he turns. He looks at me the way a mechanic looks at a car that has arrived with no appointment."
-    chef "はじめて？"
-    mc "(Hajimete. First time. He is asking if it is my first time.)"
-    mc "Hai. First time."
-    chef "そうか。"
-    "He points at the wall with his ladle. A handwritten menu, four lines, all of them characters I cannot read."
-
+    # How he orders. All three roads end in the same bowl, because the chef is the
+    # one steering and the protagonist has none of the language; what the player is
+    # actually choosing is what kind of person he is when he cannot be understood.
     menu:
-        "Ask him what he recommends.":
-            mc "Osusume wa? What do you recommend?"
-            "He looks at me for a second longer than I expected. Then he nods once, as if I have passed a test I did not know I was taking."
-            chef "豚骨。"
-            mc "(Tonkotsu. I do not know what it means. I will find out.)"
-            $ reward_attributes_once("chef_visit_01_recommend", [("grace", "micro")], show="auto")
-        "Point at the second line.":
-            "I point at the second line on the menu and hope it is not a price."
-            "The chef follows my finger, then looks at my face, then makes a sound that might be a laugh."
-            chef "それか。"
-            mc "(That one. Good. I have ordered a thing.)"
-            $ reward_attributes_once("chef_visit_01_point", [("insight", "micro")], show="auto")
-        "Order in English and hope.":
-            mc "Ramen, please. Whatever's good."
-            "The chef stares at me. Then he says, slowly, in English:"
-            chef "Good. I choose."
-            mc "(He has more English than he lets on. He was waiting to see if I would try.)"
-            $ reward_attributes_once("chef_visit_01_english", [("nerve", "micro")], show="auto")
+        "Order in English.":
+            mc "Uh... hi. Ramen, please?"
+            "He looks at me properly for the first time, about a second, and then he waves at the board. The whole board."
+            mc "(That was not a no. That was him telling me that the menu is the menu.)"
+            # Speaking first in a language he does not have yet.
+            $ reward_attributes_once("answer_ramen_english", [("nerve", "micro")], show="auto")
+        "Point at something.":
+            mc "(Right. Fine. This is the part where I point.)"
+            "I point at a line. Any line. The second one down, because I have seen one of its words on a packet in the kitchen."
+            "He glances at where my finger is, and then at me, and his face does not move at all."
+            # He uses a word he already recognizes to narrow the choice.
+            $ reward_attributes_once("answer_ramen_point", [("insight", "micro")], show="auto")
+        "Ask for his recommendation.":
+            mc "Sumimasen. Osusume... recommendation?"
+            "He stops. He looks at me a second longer than he looked at the money, and then says something short to the pots."
+            mc "(I might have said that wrong. He points at the second line and waits for my nod.)"
+            # Asking a stranger to choose for him is trust, not nerve.
+            $ reward_attributes_once("answer_ramen_recommendation", [("grace", "micro")], show="auto")
+    
+    voice "audio/VO/ramen_ok.mp3"
+    chef "あいよ。"
+    "He barks something at somebody. There is nobody else in the room. He is the kitchen and the waiter, and he is barking at himself."
 
-    "He turns back to the pots. The broth goes into the bowl in one motion, the noodles go in after, the egg is cut and laid down like it is being placed on a map."
-    "He sets the bowl in front of me and taps the counter once."
-    chef "熱い。"
-    mc "(Atsui. Hot. He is warning me, not selling me.)"
-    mc "Arigatou gozaimasu."
-    "He grunts. It is the warmest grunt I have heard."
+    scene bg_ramen with walk_fade
+    
+    "A few minutes later he puts down a bowl. It is much darker than the picture I had in my head."
+    "The broth is almost black. More pork than noodle. And a hill of green onions on top of that which should not be legal."
+    mc "(I thought I was ordering something lighter. I don't know what I actually asked for.)"
+    "He crosses his arms and looks at it, and then at me, which is a sentence in a language I can read."
 
-    "The first mouthful is so much better than anything I have eaten here that I have to put the chopsticks down."
-    mc "(It is not just food. It is a whole day of somebody's work in a bowl.)"
-    "I eat. The old man finishes, pays, and leaves without a word. The chef wipes the counter where he was sitting."
-    chef "どう？"
-    mc "(Dou. How is it.)"
-    mc "Umai. Really umai."
-    chef "そうか。"
-    "He nods once, satisfied, and goes back to the pots."
+    # Both answers lead to the same meal. Restore the counter shot before the
+    # chef speaks, so his portrait never covers the food close-up.
+    menu:
+        "Ask what kind of broth it is.":
+            mc "Sumimasen. Shoyu? Miso?"
+            "He follows my finger towards the bowl."
+            "He points to the dark bottle beside the stove."
+            mc "(Soy sauce. That answers that.)"
+            "I stop talking. He pushes the bowl half a centimetre towards me with one finger."
+            $ reward_attributes_once("answer_ramen_broth", [("insight", "nudge")], show="auto")
+            chef "どうぞ。"
+            mc "(That one I know. It means here you go. It also means eat it.)"
+        "Try it before asking.":
+            "I pick up the spoon before I can think about it, which he appears to consider the entire conversation."
+            chef "どうぞ。"
+            mc "(That one I know. It means here you go. It also means eat it.)"
 
-    "When I finish, he sets a small card beside my bowl. A black square made of smaller black squares, with six words in English in handwriting that is not his."
+    "I eat it."
+    "The first mouthful hits like something walking into a door. Rich and smoky and far too much. The second is better than the first."
+    mc "...This is actually amazing."
+    "I say it half under my breath, in English, to nobody."
+    "He hears the tone of it even if he does not have the words. He does not turn around."
+    chef "うまい、だろ？"
+    "One word, said to the pot, in a voice that has clearly said it ten thousand times."
+    mc "(No idea what that was. But the way he said it, it sounded like a verdict on the bowl.)"
+    menu:
+        "Ask what it means.":
+            mc "Sumimasen. What does that mean?"
+            chef "「うまい。」"
+            "He says it again, slower this time, and points at the bowl with the ladle."
+            mc "Umai?"
+            chef "「うん。うまい。」"
+            "He grunts yes and turns back to the pots. That is the lesson."
+            # The first word of the language, taught mid-bite by the man who
+            # never speaks it. No packet, no sign — he learns it here.
+            $ reward_attributes_once("chef_first_umai_meaning", [("insight", "micro")], show="auto")
+        "Thank him properly.":
+            mc "Arigatou gozaimasu."
+            # Meeting him in his language after he hears the reaction.
+            $ reward_attributes_once("chef_first_umai_thanks", [("grace", "micro")], show="auto")
+        "Ask what gives it the smoky flavour.":
+            mc "The pork? Is that where the smoky taste comes from?"
+            "He taps the edge of the grill with his ladle."
+        "Smile and keep eating.":
+            "I nod with the spoon still in my hand. He turns back to the stove."
+
+    "He snorts. A small sound, killed immediately. Something in his face moves for a quarter of a second before he turns back to the pots."
+    "He says nothing else. I slurp, badly, and get broth on the counter, and he does not comment."
+    "I am fairly sure that is the compliment."
+
+    # The meal continues in the shop. No more choices, just the eating, and the
+    # room around it. Every route comes back through the same empty bowl, the
+    # same bill, and the same walk home.
+    scene black with walk_fade
+    "Two men come in while I eat. They sit at the other end of the counter without speaking, and the chef puts two bowls down without looking at either of them."
+    "I watch how they hold their chopsticks and try the same grip. It is not the grip I know."
+    "Chopsticks in one hand, spoon in the other, head down over the bowl. They eat the way this country eats, and I copy it badly, and neither of them looks up."
+    "I finish the whole bowl. Soup and all. There is nothing left in it but the pattern on the bottom, and I am surprised by how much I want there to be."
+
+    scene bg_ramen_empty with Dissolve(2.0)
+
+    "When I finish I put the thousand yen back on the counter."
+    "This time he takes it, counts the change without looking, and sets it beside my hand."
+    $ spend_money(900)
+    "A hundred yen. Nine hundred for the bowl. I do not know what I actually ordered and I do not think I ever will."
+    mc "(Not what I expected. I'd order it again.)"
+
+    $ confidant_visits["chef"] = 1
+    $ remember("chef", "sat down in his shop and finished the bowl")
+
+    # Back to the counter shot for this, for the same reason the whole scene
+    # works this way: he does not say anything that is not sitting in front of
+    # him, and this is going to happen across a counter. The fade is also what
+    # gives the memory notice above its full time on screen before the phone
+    # takes the whole frame.
+    scene bg_ramen_shop with walk_fade
+
+    "He has been looking at the phone on the counter since I put the money down."
+    chef "「WIRE、やってるか」"
+    "Two English sounds, dropped into a Japanese sentence, at the exact volume of the pots."
+    mc "(I caught the whole thing. I have no idea how.)"
+    mc "Yeah. Hikari put it on here. My host sister. She set the whole thing up before I landed."
+    "He grunts, which is what he does instead of a nod."
+    "Then he turns a small laminated card round on the counter so that it is facing me."
+    "A black square made out of smaller black squares. Under it, six words in English, in handwriting that is not his."
     chef "「読め」"
-    mc "(Read it. That one is no mystery.)"
-    "I hold my phone over the card. The app takes it without asking, and puts a name on the list."
+    mc "(Read it. That one is no mystery either. I am learning to read this room instead of the language.)"
+    "I hold the phone over the card. The app takes it without asking me anything, and puts a name on the list."
     mc "So I know if you're shut before I walk down here for nothing."
-    chef "水曜、休み。"
-    mc "(Wednesday, closed. Noted.)"
+    "He turns the card back round and goes to the pots, which is the conversation over."
     $ wire_unlock("chef")
-
-    "I pay. He counts the coins into the till without looking at them."
-    chef "また。"
-    mc "(Mata. Again. He is not saying goodbye. He is saying the door is still here.)"
+    # The shop's only broadcast, sent while the phone still has no data. It
+    # waits in the queue until the line goes live the next day.
+    $ queue_message("chef", "新メニュー。900円。水曜日は休み。", day="yesterday")
+    # Forced closer for the walk route. Finding the shop by getting lost is the
+    # Insight beat that matches the run's Nerve and the club's Grace.
+    $ reward_attributes_once("walk_first_found", [("insight", "small")], show="card")
     $ chef_affection += 1
-    $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 1)
-    $ remember("chef", "found the ramen shop on a free afternoon and learned the shop is closed Wednesdays")
-    $ reward_attributes_once("chef_visit_01_close", [("grace", "micro")], show="card")
 
-    scene bg_home_exterior_night with walk_fade
-    stop music fadeout 2.0
+    mc "(Home. Four minutes. Let's see if I can find it twice.)"
+    "I come out from under the cloth and the street is dark, and I know exactly where I am."
+    "Those two convenience stores are twenty metres away."
+    mc "(That sign. That one there. I know that street.)"
+    mc "(I was on it this morning, on the way to school, and I did not look at it once.)"
+    "Home is four minutes away and it took me an hour to do it, and I would do it again exactly the same way."
+    mc "(I found a ramen shop. I found it by getting lost, which means it was always findable. It was there the whole time.)"
+
     return
 
 
@@ -205,7 +289,7 @@ label chef_visit_02:
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 2)
     $ remember("chef", "learned that resting is also work and had tonkotsu ramen")
-    $ queue_message("chef", "The broth needs twelve hours. The rest needs two days. Both are part of the bowl.", day="yesterday")
+    $ queue_message("chef", "スープは十二時間。残りは二日。どちらも一杯のうちに入っている。", day="yesterday")
     $ reward_attributes_once("chef_visit_02_close", [("grace", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -296,7 +380,7 @@ label chef_visit_03:
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 3)
     $ remember("chef", "helped foreign students order and received a special bowl with ajitsuke tamago")
-    $ queue_message("chef", "The students came back yesterday. They ordered in Japanese. Badly, but in Japanese. That is progress.", day="yesterday")
+    $ queue_message("chef", "学生たちが昨日戻ってきた。日本語で注文した。下手だが、日本語だ。それでも進歩だ。", day="yesterday")
     $ reward_attributes_once("chef_visit_03_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -393,7 +477,7 @@ label chef_visit_04:
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 4)
     $ remember("chef", "saw his recipe notebook and learned that he changes the broth every day")
-    $ queue_message("chef", "I changed the recipe again. The students noticed. They said it was 'different, but still good.' That is enough.", day="yesterday")
+    $ queue_message("chef", "またレシピを変えた。学生たちは気づいた。「違うけど、まだうまい」と言った。それで十分だ。", day="yesterday")
     $ reward_attributes_once("chef_visit_04_close", [("nerve", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -489,7 +573,7 @@ label chef_visit_05:
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 5)
     $ remember("chef", "saw the shop at its busiest and heard that he will never retire")
-    $ queue_message("chef", "The woman in the suit came back today. She brought a coworker. They are becoming regulars. The shop grows whether I try or not.", day="yesterday")
+    $ queue_message("chef", "スーツの女性が今日も来た。同僚を連れていた。常連になりつつある。店は、俺がやろうがやるまいが育つ。", day="yesterday")
     $ reward_attributes_once("chef_visit_05_close", [("grace", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -591,7 +675,7 @@ label chef_visit_06:
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 6)
     $ remember("chef", "met his apprentice Kenta and ate the best bowl he has ever made")
-    $ queue_message("chef", "Kenta is learning. Slowly. But he is learning. The knife work is getting better. The notebook is getting fuller. The forgetting is beginning.", day="yesterday")
+    $ queue_message("chef", "健太は少しずつ覚えている。包丁さばきが良くなっている。ノートが厚くなっている。忘れ方が始まっている。", day="yesterday")
     $ reward_attributes_once("chef_visit_06_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -743,7 +827,7 @@ label chef_visit_07:
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 7)
     $ remember("chef", "received his personal chopsticks and learned the shop is closing forever")
-    $ queue_message("chef", "The shop closes at the end of the month. That was your last bowl. The chopsticks are yours now — use them well.", day="yesterday")
+    $ queue_message("chef", "月末で店を閉める。あれがお前の最後の一杯だった。箸はお前のものだ。大切に使え。", day="yesterday")
     $ reward_attributes_once("chef_visit_07_close", [("nerve", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -778,11 +862,14 @@ label chef_visit_closed:
     "Behind the counter, the pots are gone. The recipe notebook is gone. What remains is a room that used to be a promise."
     "I touch the chopsticks through my pocket. 心. They will outlive the shop."
     "Some lanterns go out so that people can find their way home."
-    $ chef_affection += 1
+    # The epilogue can be replayed, so the bookkeeping runs once. Only the
+    # scene and its choices come back.
+    if confidant_visits.get("chef", 0) < 8:
+        $ chef_affection += 1
 
-    $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 8)
-    $ remember("chef", "found the ramen shop permanently closed; he had gone home to care for his parents")
-    $ queue_message("chef", "If you are reading this: the shop is closed for good. The parents need me more than the pots do. The broth was never mine anyway — it belonged to everyone who ate it.", day="yesterday")
+        $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 8)
+        $ remember("chef", "found the ramen shop permanently closed; he had gone home to care for his parents")
+        $ queue_message("chef", "これを読んでいるなら：店はもう完全に閉めた。両親の方が、鍋よりも俺を必要としている。スープは元々俺のものではなかった。食べた全員のものだ。", day="yesterday")
     $ reward_attributes_once("chef_visit_closed_close", [("grace", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade

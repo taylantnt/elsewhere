@@ -1,14 +1,17 @@
-define nami = Character("Nami", callback=type_sound)
-define marco = Character("Marco", callback=type_sound)
-define rika = Character("Rika", callback=type_sound)
-define riku = Character("Riku", callback=type_sound)
+# Defined late so type_sound (script.rpy) already exists when this runs.
+init 999 python:
+    nami = Character("Nami", callback=type_sound)
+    marco = Character("Marco", callback=type_sound)
+    rika = Character("Rika", callback=type_sound)
+    riku = Character("Riku", callback=type_sound)
 
 label confidant_visit_sim:
     $ visit = confidant_visits.get("sim", 0)
     if visit == 0:
         # The Day 2 photo-club route is the usual first meeting. A player who
-        # walked home instead never climbed to the second floor, so the hub's
-        # zero-visit rule lets Circle introduce itself on a later Thursday.
+        # walked home instead never climbed to the second floor, so Day 7's
+        # forced campus session (or a later Thursday via the hub) introduces
+        # Circle instead of deadlocking the gate.
         jump sim_visit_01
     elif visit == 1:
         jump sim_visit_02
@@ -22,6 +25,8 @@ label confidant_visit_sim:
         jump sim_visit_06
     elif visit == 6:
         jump sim_visit_07
+    elif visit >= 7:
+        jump sim_visit_closed
     return
 
 label sim_common_open:
@@ -37,16 +42,21 @@ label sim_common_open:
 ##
 ## The alternate first meeting. The Day 2 photo-club route already contains the
 ## argument and the first frame, so this one only runs when that route was
-## skipped. It does the same work in less time: the club, Sim, and the WIRE
+## skipped. Day 7 can reach it through `day7_sim_campus` with `sim_campus_intro`
+## set, which skips the corridor/door approach because Sim already greeted him
+## outside. It does the same work in less time: the club, Sim, and the WIRE
 ## invitation.
 
 label sim_visit_01:
     call sim_common_open
 
-    "The corridor on the second floor is longer than it has any right to be."
-    "At the end of it is a door with a strip of tape down one side. A sheet of printer paper, two words in marker, and a circle drawn under them by hand."
-    mc "(Circle. That is either the name of the club or a warning about the door.)"
-    "I knock. Nobody answers. I open it anyway, because the door is already open."
+    if not sim_campus_intro:
+        "The corridor on the second floor is longer than it has any right to be."
+        "At the end of it is a door with a strip of tape down one side. A sheet of printer paper, two words in marker, and a circle drawn under them by hand."
+        mc "(Circle. That is either the name of the club or a warning about the door.)"
+        "I knock. Nobody answers. I open it anyway, because the door is already open."
+    else:
+        "Sim leads me the last few steps to the studio room and opens the door himself."
 
     "The room smells of fixative and warm electronics and too much coffee. Four people are arguing in front of a whiteboard."
     sim "— it is not lazy. It is just not thinking about the picture."
@@ -96,13 +106,19 @@ label sim_visit_01:
     sim "Not without a signal. They will be there when you get connected."
     "I type my name. WIRE saves the invitation."
     $ wire_unlock("sim")
+    # Circle's welcome message. The Day 2 route sends the longer version; this
+    # one matches the shorter first meeting and waits for the phone to connect.
+    $ queue_message("sim", "Welcome to Circle! I posted the one you took today. The room one. Next meeting is Thursday. Bring the camera if you have it.", day="yesterday")
 
     sim "We meet Thursdays. Bring the camera, or don't. The wall doesn't care."
     mc "The wall?"
     sim "You will meet it. It is the most photographed wall in this building, and it has never once complained."
     $ sim_affection += 1
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 1)
-    $ remember("sim", "found Circle at the end of the second-floor corridor and photographed the tape on the door")
+    if sim_campus_intro:
+        $ remember("sim", "met Sim on the campus lawn and joined Circle")
+    else:
+        $ remember("sim", "found Circle at the end of the second-floor corridor and photographed the tape on the door")
     $ reward_attributes_once("sim_visit_01_close", [("grace", "micro")], show="card")
 
     # The same unlock as the Day 2 photo-club route: Circle hands him a camera.
@@ -625,5 +641,73 @@ label sim_visit_07:
     sim "Go home. Rest. Tomorrow the city will still be here, and so will the photographs."
     sim "I will be gone, but the seeing will not."
     scene bg_campus_interior with walk_fade
+    stop music fadeout 3.0
+    return
+
+
+################################################################################
+## EPILOGUE — THE CLUB ON HOLD
+################################################################################
+##
+## Sim is gone and Circle has no host. The school has put the club on hold
+## rather than closing it, and the exhibition has come down into a cardboard
+## box. The epilogue is repeatable: the same steps, the same box, the same
+## conversation with Nami, the same maybe. Only the first pass writes anything
+## to the save.
+
+label sim_visit_closed:
+    scene bg_campus_dusk with walk_fade
+    stop music fadeout 2.0
+    $ phone_map_visit("photo_club")
+
+    "The campus is doing its evening thing: bicycles, club posters, the last of the light on the clock tower."
+    "I came to the building where Circle meets. The second-floor window is dark."
+    "Nami is sitting on the steps with a cardboard box and a printed sheet of paper."
+
+    nami "Oh. You heard."
+    mc "I heard the club was on hold."
+    nami "The school says a club needs a faculty advisor and a student host. Sim was the host. The advisor retired. So we are a club with no adults and no founder."
+    "She holds up the notice. The font is the school's, careful and square."
+    nami "They did not close us. They put us on hold. It sounds gentler when they say it."
+
+    "The box is full of prints. The exhibition, taken down in one afternoon."
+    nami "We are supposed to put it all in storage until someone takes over."
+    mc "And if someone does?"
+    nami "Then we put it back up. That is what a hold is. A maybe with a padlock on it."
+
+    menu:
+        "Help her carry the box.":
+            "We carry it together across the quad. The box is heavier than it looks. Prints are mostly paper, but a room full of them is not."
+            nami "He would hate this part. The taking down."
+            mc "He would photograph it."
+            nami "Yeah. He would."
+            $ reward_attributes_once("sim_visit_closed_help", [("grace", "micro")], show="auto")
+        "Ask her who might take over.":
+            mc "Do you think anyone will?"
+            nami "Marco asked. The school said he is a first-year and the club needs a second-year host. Rika said she would do it if they let her run it like a zine. They are thinking about it."
+            nami "Someone will. The room is too good to leave empty."
+            $ reward_attributes_once("sim_visit_closed_ask", [("insight", "micro")], show="auto")
+        "Look through the prints.":
+            "I kneel beside the box. The portrait of Rika. Marco's map. The last photograph, the one Sim took of all of us, slightly overexposed and completely alive."
+            "Sim is in the center, camera raised, smiling wider than he did all evening. He is not looking at the lens. He is looking at the people he arranged around it."
+            $ reward_attributes_once("sim_visit_closed_look", [("nerve", "micro")], show="auto")
+
+    "Nami tapes the box shut and writes CIRCLE on the side in marker."
+    nami "You can still come up. The door is not locked. It is just not a club for a while."
+    mc "That is a strange kind of open."
+    nami "It is the kind we have."
+
+    "She carries the box toward the building. I stay on the steps until the second-floor light comes on."
+    "It is a storage light. It is still a light."
+    "The club is on hold. The campus still smells like it."
+
+    if confidant_visits.get("sim", 0) < 8:
+        $ sim_affection += 1
+        $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 8)
+        $ remember("sim", "found Circle on hold after Sim left; the exhibition came down into a box")
+        $ queue_message("sim", "Nami told me about the hold. A club is not a room. It is the people who keep showing up. Keep showing up.", day="yesterday")
+    $ reward_attributes_once("sim_visit_closed_close", [("grace", "micro")], show="card")
+
+    scene bg_home_exterior_night with walk_fade
     stop music fadeout 3.0
     return

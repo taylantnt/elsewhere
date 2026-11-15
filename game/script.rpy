@@ -348,6 +348,8 @@ image bg_room_day = Transform("images/backgrounds/bg_room_day.png", xysize=(conf
 image bg_train_interior = Transform("images/backgrounds/bg_train_interior.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_home_exterior_night = Transform("images/backgrounds/bg_home_exterior_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_home_exterior_day = Transform("images/backgrounds/bg_home_exterior_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_sukiyaki = Transform("images/backgrounds/bg_sukiyaki.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_quiz = Transform("images/backgrounds/bg_quiz.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 
 # The kitchen on the first morning, which is where Act 2 begins. Real art, so
 # it gets no placeholder label.
@@ -373,6 +375,7 @@ image bg_school_gate = Transform("images/backgrounds/bg_school_gate.png", xysize
 # bg_department_hall.png, drop it in images/backgrounds/, and it appears here on
 # its own; until then the placeholder prints the room we are standing in.
 image bg_campus_interior = Transform("images/backgrounds/bg_campus.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_campus_dusk = Transform("images/backgrounds/bg_campus_dusk.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_department_hall = bg_or_placeholder("bg_department_hall", "#3a3630", "OUR DEPARTMENT\nSECOND FLOOR")
 image bg_student_relations = Transform("images/backgrounds/bg_student_relations.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_lecture_hall = Transform("images/backgrounds/bg_lecture_hall.png", xysize=(config.screen_width, config.screen_height), fit="cover")
@@ -384,6 +387,22 @@ image bg_asakusa_kaminarimon = Transform("images/backgrounds/bg_asakusa_kaminari
 image bg_asakusa_inside = Transform("images/backgrounds/bg_asakusa_inside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_asakusa_kuji = Transform("images/backgrounds/bg_asakusa_kuji.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_asakusa_smoke = Transform("images/backgrounds/bg_asakusa_smoke.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+
+# The Fortune Teller's folding table, tucked between the incense burner and the
+# souvenir stalls. No art yet, so the placeholder names the corner of Asakusa it
+# is standing in.
+image bg_fortune_stall = bg_or_placeholder("bg_fortune_stall", "#2a211b", "ASAKUSA\nFORTUNE STALL")
+
+# The week-two city rows. Every one of these is a placeholder until the art
+# arrives; dropping the matching file into images/backgrounds/ replaces it with
+# no code change.
+image bg_combini = bg_or_placeholder("bg_combini", "#26302a", "COMBINI\nNIGHT SHIFT")
+image bg_odaiba = bg_or_placeholder("bg_odaiba", "#202b33", "ODAIBA\nARTIFICIAL ISLAND")
+image bg_yokohama = bg_or_placeholder("bg_yokohama", "#331f1f", "YOKOHAMA\nCHINATOWN")
+image bg_ueno = bg_or_placeholder("bg_ueno", "#2c3025", "UENO PARK\nAPRIL")
+image bg_shibuya = bg_or_placeholder("bg_shibuya", "#25222f", "SHIBUYA\nSCRAMBLE CROSSING")
+image bg_shimokitazawa = bg_or_placeholder("bg_shimokitazawa", "#262321", "SHIMOKITAZAWA\nSMALL THEATERS")
+image bg_omotesando = bg_or_placeholder("bg_omotesando", "#252a26", "OMOTESANDO\nMEIJI SHRINE")
 
 # The two rooms the first free afternoon can end in. The ramen shop has art now
 # (it lives at images/backgrounds/bg_ramen_shop.png, which is why the scene name
@@ -404,7 +423,10 @@ image bg_river_night = Transform("images/backgrounds/bg_river_night.png", xysize
 # gate, and walks deeper into the evening until he finds the ramen shop doorway.
 # The art is already low and warm, so nothing darkens it; the dialogue is what
 # moves the light down.
+
+image bg_lupins_alley_night = Transform("images/backgrounds/bg_lupins_alley_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_alley = bg_or_placeholder("bg_alley", "#2a2320", "SIDE STREET\nDUSK")
+image bg_alley_night = Transform("images/backgrounds/bg_alley_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_lupins_den = Transform("images/backgrounds/bg_bar.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_nakanostation_night = Transform("images/backgrounds/bg_nakanostation_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 
@@ -530,6 +552,17 @@ default after_school_hint_shown = False
 # `first_class` and read immediately afterwards; declared here so it rolls back
 # with everything else. The name is never shown to the player.
 default first_day_activity = ""
+# Day 6 reads `first_day_activity` and uses these to carry the second-confidant
+# route through the afternoon menu; both are internal only.
+default day6_route = ""
+default day6_chef_route = ""
+# Day 6 dinner reads these: `day6_ate_out` means the ramen route fed him before
+# the table, `day6_dinner_declined` records whether he told the family.
+default day6_ate_out = False
+default day6_dinner_declined = False
+# Day 7's campus greeting hands off to `sim_visit_01` with the corridor/door
+# intro skipped, because the meeting already happened outside.
+default sim_campus_intro = False
 
 # The haiku lesson is the first topic the player is asked to study deliberately.
 # Keep their chosen approach in save data so a later exam can acknowledge it.
@@ -553,11 +586,6 @@ default monday_quiz_score = 0
 default monday_q1_correct = False
 default monday_q2_correct = False
 default monday_q3_correct = False
-
-
-# True once the river run has happened once. The run is not a confidant slot in
-# locations.rpy yet, so this is the only thing that records it for now.
-default first_run_started = False
 
 # How many times he has been out to the river with her. The run is a recurring
 # activity rather than one of the seven-visit chains in locations.rpy, so it
@@ -804,25 +832,69 @@ init python:
         alpha = max(0.0, min(1.0, float(alpha)))
         return "#%s%02x" % (base, int(round(alpha * 255)))
 
-    def attribute_ring_displayable(attribute_id, progress, size):
-        segments = 24
-        filled = int(max(0.0, min(1.0, progress)) * segments + 0.00001)
-        large = size > 100
-        dot_size = gui.scale(max(2, size * (0.022 if large else 0.075)))
-        radius = gui.scale(size * (0.47 if large else 0.38))
-        center = gui.scale(size * 0.5)
-        empty_color = attribute_color_alpha(attribute_id, 0.16)
+    # The gameplay HUD geometry lives here so the floating gain chip can line
+    # up with the card it belongs to instead of guessing at coordinates.
+    attribute_hud_card_width = 178
+    attribute_hud_card_height = 46
+    attribute_hud_card_spacing = 6
+    attribute_hud_margin = 18
+
+    def attribute_hud_card_left():
+        """Screen x of the left edge of the HUD cards."""
+        return config.screen_width - gui.scale(attribute_hud_margin + attribute_hud_card_width)
+
+    def attribute_hud_row_center(attribute_id):
+        """Screen y of the vertical middle of an attribute's HUD card."""
+        index = attribute_order.index(attribute_id)
+        return gui.scale(
+            attribute_hud_margin
+            + index * (attribute_hud_card_height + attribute_hud_card_spacing)
+            + (attribute_hud_card_height / 2.0)
+        )
+
+    def attribute_ring_displayable(attribute_id, progress, size, knots=None):
+        """A ring of discrete knots, one per slice of the current rank.
+
+        Every knot stays visible — filled ones in the attribute's colour, the
+        rest as faint beads — so the ring can be read as a count rather than
+        a vague glow. The knot straddling the current progress is lit
+        fractionally, which keeps fractional rewards (0.1, 0.2, 0.3) honest
+        without needing more dots than the eye can count.
+        """
+        progress = max(0.0, min(1.0, float(progress)))
+
+        if knots is None:
+            knots = 20 if size <= 48 else (24 if size <= 140 else 40)
+
+        size = gui.scale(size)
+        radius = size * 0.44
+        spacing = (2.0 * math.pi * radius) / knots
+        dot_size = max(gui.scale(2), spacing * 0.62)
+        center = size * 0.5
+
+        exact = progress * knots
+        filled = int(exact)
+        partial = exact - filled
+
+        filled_path = "gui/hud_knot_%s.png" % attribute_id
+        empty_path = "gui/hud_knot_empty.png"
+
         dots = []
 
-        for i in range(segments):
-            angle = (2.0 * math.pi * i / segments) - (math.pi / 2.0)
-            x = int(center + math.cos(angle) * radius - (dot_size * 0.5))
-            y = int(center + math.sin(angle) * radius - (dot_size * 0.5))
-            color = attribute_color(attribute_id) if i < filled else empty_color
-            dots.append(Solid("#05080db8", xysize=(dot_size + gui.scale(2), dot_size + gui.scale(2)), xpos=x - gui.scale(1), ypos=y - gui.scale(1)))
-            dots.append(Solid(color, xysize=(dot_size, dot_size), xpos=x, ypos=y))
+        for i in range(knots):
+            angle = (2.0 * math.pi * i / knots) - (math.pi / 2.0)
+            x = int(round(center + math.cos(angle) * radius - (dot_size * 0.5)))
+            y = int(round(center + math.sin(angle) * radius - (dot_size * 0.5)))
+            box = (int(round(dot_size)), int(round(dot_size)))
 
-        return Fixed(*dots, xysize=(gui.scale(size), gui.scale(size)))
+            dots.append(Transform(empty_path, xysize=box, xpos=x, ypos=y))
+
+            if i < filled:
+                dots.append(Transform(filled_path, xysize=box, xpos=x, ypos=y))
+            elif i == filled and partial > 0.02:
+                dots.append(Transform(filled_path, xysize=box, xpos=x, ypos=y, alpha=partial))
+
+        return Fixed(*dots, xysize=(int(size), int(size)))
 
     def attribute_orb_image(attribute_id):
         return "images/ui/attributes/%s_orb.png" % attribute_id
@@ -941,7 +1013,7 @@ init python:
         if ceiling is None:
             return "Maximum rank"
 
-        return "%s to next rank" % format_points(ceiling - attribute_total(attribute_id))
+        return "%s pts to next rank" % format_points(ceiling - attribute_total(attribute_id))
 
     def has_attribute(attribute_id, minimum_rank):
         """Whether a gated choice is open to him yet.
@@ -1272,10 +1344,19 @@ define veteran = Character("Veteran Assistant", callback=type_sound, image="vete
 # he did not know existed, and the clerk is the first adult here who was told he
 # was coming before he arrived. Both of those are the point of their scenes.
 define professor = Character("Professor", color="#c9c4b0", callback=type_sound, image="professor")
-# The elective teacher. He arrives in the second week with the Japanese course,
-# and he is the one who turns the language from a subject into a place.
+# The elective teacher. She arrives in the second week with the Japanese course,
+# and she is the one who turns the language from a subject into a place.
 define murakami = Character("Murakami", color="#c9b38a", callback=type_sound, image="murakami")
+# She is the one person in the city who talks as if she has read the script.
+# Three cards, three meetings, and then the deck is closed. The hub treats her
+# as a limited confidant, not a seven-visit arc.
+define fortune_teller = Character("Fortune Teller", color="#d8b580", callback=type_sound, image="fortune_teller")
+# The combini cashier. Cold, efficient, and wearing the same face as somebody
+# the protagonist has met in a room he cannot explain.
+define tanaka = Character("Tanaka", color="#b8c4c8", callback=type_sound, image="tanaka")
 define clerk = Character("Student Relations", color="#b8c6bd", callback=type_sound, image="clerk")
+# The Hamada Denki mobile-counter staff. A woman, and the first adult in the
+# city who treats the protagonist like a customer instead of a foreigner.
 define yamada = Character("Yamada", color="#b6d2e8", callback=type_sound, image="yamada")
 
 # The regular who explains how the reading room works. A name in the box, no
@@ -1344,8 +1425,21 @@ image side assistant = At(ConditionSwitch(
 image side veteran = At(Transform("images/characters/veteran.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side security = At(Transform("images/characters/security.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side security2 = At(Transform("images/characters/security2.png", xysize=(256, 384), fit="contain"), portrait_idle)
-image side mother = At(Transform("images/characters/mother.png", xysize=(256, 384), fit="contain"), portrait_idle)
-image side father = At(Transform("images/characters/father.png", xysize=(256, 384), fit="contain"), portrait_idle)
+default sunday_at_home = False
+
+image side mother = At(ConditionSwitch(
+    "sunday_at_home",
+    Transform("images/characters/mother_sunday.png", xysize=(256, 384), fit="contain"),
+    True,
+    Transform("images/characters/mother.png", xysize=(256, 384), fit="contain"),
+), portrait_idle)
+
+image side father = At(ConditionSwitch(
+    "sunday_at_home",
+    Transform("images/characters/father_sunday.png", xysize=(256, 384), fit="contain"),
+    True,
+    Transform("images/characters/father.png", xysize=(256, 384), fit="contain"),
+), portrait_idle)
 
 # Hikari. She is asleep on the night he arrives and awake on the morning after,
 # which makes the kitchen her first appearance on screen, so this is the first
@@ -1361,6 +1455,8 @@ default hikari_run = False
 image side sister = At(ConditionSwitch(
     "hikari_run",
     Transform("images/characters/sister_run.png", xysize=(256, 384), fit="contain"),
+    "sunday_at_home",
+    Transform("images/characters/sister_sunday.png", xysize=(256, 384), fit="contain"),
     True,
     Transform("images/characters/sister.png", xysize=(256, 384), fit="contain"),
 ), portrait_idle)
@@ -1370,7 +1466,13 @@ image side taxi_driver = At(Transform("images/characters/taxidriver.png", xysize
 image side professor = At(Transform("images/characters/teacher.png", xysize=(256, 384), fit="contain"), portrait_idle)
 # The elective teacher is drawn from the second teacher portrait on disk.
 image side murakami = At(Transform("images/characters/teacher2.png", xysize=(256, 384), fit="contain"), portrait_idle)
-image side yamada = At(Transform("images/characters/hamadadenki.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# The fortune teller already has art on disk. She is rare enough that the one
+# portrait is the whole character.
+image side fortune_teller = At(Transform("images/characters/fortuneteller.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# The combini cashier. The portrait is the one already on disk; the name tag
+# says たなか, which is the only name he offers.
+image side tanaka = At(Transform("images/characters/combini_worker.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side yamada = At(Transform("images/characters/yamada.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side aya = At(Transform("images/characters/aya.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side Maid = At(Transform("images/characters/maid.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
@@ -1784,8 +1886,9 @@ screen attribute_gain_card(attribute_id, amount, rank_up=False, rank_down=False)
 #
 # Two pieces of feedback that run during play rather than stopping it.
 #
-# The chip shows a small signed adjustment. It appears over the top of the
-# scene beneath its matching labeled circle and takes itself away again.
+# The chip shows a small signed adjustment. It appears just to the left of its
+# matching card in the attribute HUD, so a gain always reads as belonging to
+# that attribute, then takes itself away again.
 #
 # The cluster is the three orbs in the corner of the screen: the same three
 # circles the gain card draws full size, only small. Each one starts almost
@@ -1795,10 +1898,10 @@ screen attribute_gain_card(attribute_id, amount, rank_up=False, rank_down=False)
 transform attribute_tick_appear:
     on show:
         alpha 0.0
-        yoffset gui.scale(-10)
-        linear 0.26 alpha 1.0 yoffset 0
+        xoffset gui.scale(8)
+        linear 0.26 alpha 1.0 xoffset 0
     on hide:
-        ease 0.40 alpha 0.0 yoffset gui.scale(-8)
+        ease 0.40 alpha 0.0 xoffset gui.scale(6)
 
 screen attribute_tick():
     zorder 95
@@ -1807,15 +1910,16 @@ screen attribute_tick():
         if attribute_id in attribute_tick_events:
             $ tick_color = attribute_color(attribute_id)
             $ tick_points = format_signed_points(attribute_tick_events[attribute_id])
+            $ tick_y = attribute_hud_row_center(attribute_id)
 
             frame:
                 at attribute_tick_appear
-                xpos config.screen_width - gui.scale(221 - index * 77)
-                xanchor 0.5
-                ypos gui.scale(98)
+                xpos attribute_hud_card_left() - gui.scale(10)
+                xanchor 1.0
+                ypos tick_y
+                yanchor 0.5
 
-                background Solid("#111820e8")
-                padding (gui.scale(8), gui.scale(4))
+                background Frame("gui/tick_chip_%s.png" % attribute_id, left=gui.scale(10), top=gui.scale(10), right=gui.scale(10), bottom=gui.scale(10), padding=(gui.scale(9), gui.scale(4)))
 
                 text tick_points style "attribute_tick_text" color tick_color
 
@@ -1873,31 +1977,89 @@ screen attribute_hud():
     # Standalone windows keep the scene visible without gameplay UI behind them.
     if show_attribute_hud and not main_menu and not standalone_window_active():
 
-        hbox:
+        vbox:
             at attribute_hud_appear
 
             xalign 1.0
             yalign 0.0
-            xoffset gui.scale(-28)
-            yoffset gui.scale(24)
-            spacing gui.scale(5)
+            xoffset gui.scale(-18)
+            yoffset gui.scale(18)
+            spacing gui.scale(6)
 
             for orb_id in attribute_order:
 
+                $ orb_rank = attribute_rank(orb_id)
+                $ orb_color = attribute_color(orb_id)
+                $ orb_progress = attribute_rank_progress(orb_id)
+                $ orb_earned = attribute_rank_earned(orb_id)
+                $ orb_span = attribute_rank_span(orb_id)
+                $ next_rank_text = attribute_rank_next_text(orb_id)
+
                 fixed:
-                    xsize gui.scale(72)
-                    ysize gui.scale(68)
+                    xysize (gui.scale(178), gui.scale(46))
 
-                    add attribute_ring_displayable(orb_id, attribute_rank_progress(orb_id), 46) xalign 0.5
+                    # Rounded glass panel.
+                    add Frame("gui/hud_panel.png", left=gui.scale(16), top=gui.scale(16), right=gui.scale(16), bottom=gui.scale(16)):
+                        xysize (gui.scale(178), gui.scale(46))
 
+                    # Knot ring: one bead per slice of the current rank, the
+                    # rest left visible so the count to the next rank reads.
+                    fixed:
+                        xpos gui.scale(9)
+                        ypos gui.scale(6)
+                        xysize (gui.scale(34), gui.scale(34))
+
+                        add attribute_ring_displayable(orb_id, orb_progress, 34, knots=20)
+
+                        text "[orb_rank]":
+                            xalign 0.5
+                            yalign 0.5
+                            size gui.scale(15)
+                            bold True
+                            color orb_color
+                            font "DejaVuSans.ttf"
+                            outlines []
+
+                    # Attribute name.
                     text attribute_name(orb_id).upper():
-                        xalign 0.5
-                        ypos gui.scale(51)
-                        size gui.scale(9)
-                        kerning gui.scale(1)
+                        xpos gui.scale(52)
+                        ypos gui.scale(5)
+                        size gui.scale(11)
                         bold True
-                        color "#c5cdd4"
-                        outlines [(gui.scale(1), "#05080de8", 0, gui.scale(1))]
+                        color "#e8eef2"
+                        font "DejaVuSans.ttf"
+                        kerning gui.scale(1)
+                        outlines []
+
+                    # Rank tag, right aligned.
+                    text "RANK [orb_rank]":
+                        xpos gui.scale(166)
+                        xanchor 1.0
+                        ypos gui.scale(6)
+                        size gui.scale(8)
+                        bold True
+                        color orb_color
+                        font "DejaVuSans.ttf"
+                        kerning gui.scale(1)
+                        outlines []
+
+                    # Points put into this rank so far.
+                    text "[format_points(orb_earned)] / [format_points(orb_span)] pts":
+                        xpos gui.scale(52)
+                        ypos gui.scale(19)
+                        size gui.scale(8)
+                        font "DejaVuSans.ttf"
+                        color "#8b98a2"
+                        outlines []
+
+                    # Points still owed to the next rank.
+                    text next_rank_text:
+                        xpos gui.scale(52)
+                        ypos gui.scale(29)
+                        size gui.scale(9)
+                        font "DejaVuSans.ttf"
+                        color attribute_color_alpha(orb_id, 0.92)
+                        outlines []
 
 # --- START LABEL ---
 label start:
@@ -4072,7 +4234,7 @@ label after_school_walk_alone:
     $ wire_unlock("chef")
     # The shop's only broadcast, sent while the phone still has no data. It
     # waits in the queue until the line goes live the next day.
-    $ queue_message("chef", "New bowl. 900 yen. Closed Wednesday.", day="yesterday")
+    $ queue_message("chef", "新メニュー。900円。水曜日は休み。", day="yesterday")
     # Forced closer for the walk route. Finding the shop by getting lost is the
     # Insight beat that matches the run's Nerve and the club's Grace.
     $ reward_attributes_once("walk_first_found", [("insight", "small")], show="card")
@@ -4264,7 +4426,6 @@ label after_school_run:
     scene bg_river_night with walk_fade
 
 
-    $ first_run_started = True
     $ hikari_visits = 1
     # Small, not medium: the three first-afternoon routes should close at a
     # similar weight. Walk and photo use the same size on their forced beat.
@@ -4553,65 +4714,177 @@ label after_school_photo_club:
 ## to the day rather than to the place he ended it.
 
 init python:
+    # The commissioned deck in `images/cards/`. Each pair keeps its story id
+    # (the evening reads it to name the afternoon), but can show any card that
+    # belongs to that memory. Both copies of a pair always share one face, so
+    # the board stays matchable while a replay can deal different art.
+    MEMORY_CARD_VARIANTS = {
+        "station": [
+            ("PLATFORM", "images/cards/platform.png"),
+            ("TRAIN", "images/cards/train.png"),
+            ("GATE", "images/cards/gate.png"),
+            ("CLOCK", "images/cards/clock.png"),
+        ],
+        "student_id": [
+            ("STUDENT", "images/cards/student.png"),
+            ("LECTURE", "images/cards/lecture.png"),
+            ("NOTEBOOK", "images/cards/notebook.png"),
+            ("PHONE", "images/cards/phone.png"),
+        ],
+        "alley": [
+            ("ALLEY", "images/cards/alley.png"),
+            ("VENDING", "images/cards/vending.png"),
+            ("RAIN", "images/cards/rain.png"),
+            ("MOON", "images/cards/moon.png"),
+        ],
+        "ramen_shop": [
+            ("RAMEN", "images/cards/ramen.png"),
+            ("LANTERN", "images/cards/lantern.png"),
+        ],
+        "ramen_bowl": [
+            ("BOWL", "images/cards/bowl.png"),
+        ],
+        "chef": [
+            ("CHEF", "images/cards/chef.png"),
+        ],
+        "river": [
+            ("RIVER", "images/cards/river.png"),
+        ],
+        "running": [
+            ("RUN", "images/cards/run.png"),
+        ],
+        "kitchen": [
+            ("KITCHEN", "images/cards/kitchen.png"),
+            ("TABLE", "images/cards/table.png"),
+            ("TEA", "images/cards/tea.png"),
+        ],
+        "home_wait": [
+            ("HOME", "images/cards/home.png"),
+            ("FAMILY", "images/cards/family.png"),
+            ("BICYCLE", "images/cards/bicycle.png"),
+            ("HOUSE", "images/cards/house.png"),
+        ],
+        "club": [
+            ("CIRCLE", "images/cards/circle.png"),
+            ("CAMERA", "images/cards/camera.png"),
+        ],
+        "sim": [
+            ("MENTOR", "images/cards/mentor.png"),
+        ],
+        "campus": [
+            ("CAMPUS", "images/cards/campus.png"),
+        ],
+        "club_hall": [
+            ("PRINT", "images/cards/print.png"),
+        ],
+    }
+
     def build_first_day_memory_deck(activity):
-        common = [
-            ("station", "The morning platform", "bg_station", "#76c6d9"),
-            ("student_id", "A new student card", "images/ui/student_card.png", "#a9c8a4"),
-            ("lecture", "The first lecture", "bg_lecture_hall", "#d4b77a"),
-            ("home", "The house at night", "bg_home_exterior_night", "#8d9db9"),
-        ]
+        # Six pairs: two moments every route shares, then the four moments
+        # that belong to the afternoon the player actually chose.
+        common = ["station", "student_id"]
 
         if activity == "walk_alone":
-            route = [
-                ("alley", "The wrong turn", "bg_alley", "#c07c56"),
-                ("ramen_shop", "The red-lantern shop", "bg_ramen_shop", "#e38c55"),
-                ("ramen_bowl", "The bowl I finished", "bg_ramen", "#d1a353"),
-                ("chef", "The card on the counter", "images/characters/chef.png", "#b59a79"),
-            ]
+            route = ["alley", "ramen_shop", "ramen_bowl", "chef"]
         elif activity == "walk_hikari":
-            route = [
-                ("river", "The river path", "bg_river", "#65aeb1"),
-                ("running", "Hikari at a run", "images/characters/sister_run.png", "#df8ea5"),
-                ("kitchen", "The kitchen light", "images/backgrounds/bg_kitchen_night.png", "#e8c686"),
-                ("home_wait", "Someone waiting at home", "images/backgrounds/bg_home_inside_night.png", "#8d9db9"),
-            ]
+            route = ["river", "running", "kitchen", "home_wait"]
+        elif activity == "photo_club":
+            route = ["club", "sim", "campus", "club_hall"]
         else:
-            route = [
-                ("club", "The room called Circle", "bg_photo_club", "#67b8d0"),
-                ("sim", "Sim at the door", "images/characters/sim.png", "#86c2d4"),
-                ("campus", "The campus corridor", "bg_campus_interior", "#9aa9bd"),
-                ("club_hall", "The club's hallway", "bg_department_hall", "#b4a68d"),
-            ]
+            # Unknown route: keep the spread playable by falling back to the
+            # photography-club set rather than producing a short, broken board.
+            route = ["club", "sim", "campus", "club_hall"]
 
         cards = []
-        for pair_id, title, art, accent in common + route:
+        for pair_id in common + route:
+            title, art = renpy.random.choice(MEMORY_CARD_VARIANTS[pair_id])
             for copy in range(2):
                 cards.append({
                     "pair": pair_id,
                     "title": title,
                     "art": art,
-                    "accent": accent,
-                    # Portraits crop toward the top of the frame so the card
-                    # shows a face and shoulders instead of a torso slice.
-                    "focus": 0.15 if art.startswith("images/characters/") else 0.5,
+                    "full_face": True,
                 })
 
         return cards
 
 
+init python:
+    class MemoryMatchEngine:
+        def __init__(self, cards):
+            self.cards = cards
+            self.matched = []
+            self.misses = 0
+            self.combo = 0
+            self.first_selection = None
+            self.phase = "preview"   # preview, play, reveal, result
+            self.previewing = True
+            self.reveal_pair = None
+            self.reveal_kind = None
+            self.reveal_new = None
+            self.miss_cap = 5
+
+        def end_preview_face(self):
+            self.previewing = False
+
+        def end_preview(self):
+            self.previewing = False
+            self.phase = "play"
+
+        def select(self, index):
+            if self.phase != "play":
+                return
+            if index in self.matched:
+                return
+            if self.first_selection is None:
+                self.first_selection = index
+            elif self.first_selection == index:
+                # The first card is locked face-up until its twin is chosen.
+                # Re-clicking it must not peek at and then hide the card again.
+                return
+            else:
+                first = self.first_selection
+                second = index
+                self.reveal_pair = [first, second]
+                self.reveal_new = second
+                if self.cards[first]["pair"] == self.cards[second]["pair"]:
+                    self.reveal_kind = "match"
+                    self.matched = self.matched + [first, second]
+                    self.combo += 1
+                else:
+                    self.reveal_kind = "miss"
+                    self.misses += 1
+                    self.combo = 0
+                self.phase = "reveal"
+
+        def finish_reveal(self):
+            self.first_selection = None
+            self.reveal_pair = None
+            self.reveal_kind = None
+            self.reveal_new = None
+            if len(self.matched) >= len(self.cards) or self.misses >= self.miss_cap:
+                self.phase = "result"
+            else:
+                self.phase = "play"
+
+        @property
+        def won(self):
+            return len(self.matched) == len(self.cards)
+
+        @property
+        def pairs_found(self):
+            return len(self.matched) // 2
+
+
 # ---------------------------------------------------------------------------
 # THE FIRST-NIGHT MEMORY SPREAD
 #
-# The old board was a 4x4 grid of landscape photo tiles. This is the same
-# game, rebuilt as a tarot spread: sixteen portrait cards on a velvet table,
-# parchment frames, an engraved back, and the day's own photographs as faces.
-#
-# The screen is driven entirely by the caller. `matched`, `misses` and
-# `reveal_pair` are passed in each turn; the only local state is which card is
-# waiting for its twin. The opening preview is a separate call to this screen:
-# it deals the spread, holds the faces for six seconds, turns them over, and
-# returns. The play screen that follows has no entrance animation, so the deal
-# and the turn-over happen exactly once.
+# Six pairs of the day's own photographs, laid out four across and three down.
+# The board is a tarot spread on a velvet table: parchment frames, an engraved
+# back, and a soft gilded glow when a pair is remembered. The screen owns the
+# whole arc — deal, preview, play, reveal, result — so the board never tears
+# down or rebuilds between turns. A selected card is locked face-up until its
+# twin is chosen; it cannot be toggled back to hide a peek.
 # ---------------------------------------------------------------------------
 
 image memory_table = "images/ui/memory/memory_table.png"
@@ -4620,9 +4893,26 @@ image memory_card_base = "images/ui/memory/memory_card_base.png"
 image memory_card_frame = "images/ui/memory/memory_card_frame.png"
 image memory_glow_gold = "images/ui/memory/memory_glow_gold.png"
 image memory_glow_red = "images/ui/memory/memory_glow_red.png"
+image memory_glow_gold_soft = "images/ui/memory/memory_glow_gold_soft.png"
+image memory_glow_red_soft = "images/ui/memory/memory_glow_red_soft.png"
+image memory_card_shadow = "images/ui/memory/memory_card_shadow.png"
 image memory_spark = "images/ui/memory/memory_spark.png"
 image memory_win_rays = "images/ui/memory/memory_win_rays.png"
 image memory_lose_vignette = "images/ui/memory/memory_lose_vignette.png"
+
+
+## The board is four columns by three rows. These numbers are shared by the
+## layout and the card face, so the two never drift apart.
+define memory_card_w = 133
+define memory_card_h = 190
+define memory_grid_xspacing = 36
+define memory_grid_yspacing = 14
+define memory_card_art_x = 11
+define memory_card_art_y = 11
+define memory_card_art_w = 111
+define memory_card_art_h = 125
+define memory_card_caption_y = 136
+define memory_card_caption_h = 52
 
 
 transform memory_card_rest:
@@ -4640,27 +4930,31 @@ transform memory_card_deal(delay=0.0):
 
 
 transform memory_card_back_in(delay=0.0):
-    alpha 0.0
-    pause delay
-    easeout 0.30 alpha 1.0
-
-
-transform memory_card_hover:
     anchor (0.5, 0.5)
     pos (0.5, 0.5)
-    on hover:
-        easeout 0.12 zoom 1.045 yoffset -3
-    on idle:
-        easeout 0.16 zoom 1.0 yoffset 0
+    xzoom 0.0
+    alpha 0.0
+    pause delay
+    easeout 0.35 alpha 1.0 xzoom 1.0
+
+
+transform memory_card_back_rest:
+    anchor (0.5, 0.5)
+    pos (0.5, 0.5)
 
 
 transform memory_card_face_in:
     anchor (0.5, 0.5)
     pos (0.5, 0.5)
-    on show:
-        alpha 0.0
-        zoom 0.94
-        easeout 0.22 alpha 1.0 zoom 1.0
+    alpha 0.0
+    zoom 0.94
+    xzoom 0.0
+    easeout 0.28 alpha 1.0 zoom 1.0 xzoom 1.0
+
+
+transform memory_card_face_rest:
+    anchor (0.5, 0.5)
+    pos (0.5, 0.5)
 
 
 transform memory_card_miss_shake:
@@ -4675,8 +4969,9 @@ transform memory_card_miss_shake:
 
 transform memory_match_spark:
     alpha 0.0
-    zoom 0.2
-    easeout 0.18 alpha 1.0 zoom 1.0
+    zoom 0.15
+    easeout 0.25 alpha 1.0 zoom 1.2
+    easeout 0.35 alpha 0.0 zoom 1.5
     easeout 0.45 alpha 0.0 zoom 1.8
 
 
@@ -4709,313 +5004,421 @@ transform memory_rays_in:
 
 transform memory_lose_shake:
     xoffset 0
-    linear 0.05 xoffset -5
-    linear 0.07 xoffset 5
-    linear 0.07 xoffset -3
-    linear 0.07 xoffset 3
-    linear 0.07 xoffset 0
+    linear 0.04 xoffset -6
+    linear 0.06 xoffset 6
+    linear 0.06 xoffset -4
+    linear 0.06 xoffset 4
+    linear 0.08 xoffset 0
 
 
-screen day_memory_match(cards, matched, misses, reveal_pair=None, preview=False, reveal_kind=None):
+transform memory_card_lift:
+    on hover:
+        easeout 0.15 yoffset -4 zoom 1.03
+    on idle:
+        easeout 0.15 yoffset 0 zoom 1.0
+
+
+transform memory_selected_pulse:
+    alpha 0.35
+    easeout 0.6 alpha 0.75
+    easeout 0.6 alpha 0.35
+    repeat
+
+
+transform memory_combo_pop:
+    alpha 0.0
+    zoom 0.7
+    easeout 0.22 alpha 1.0 zoom 1.08
+    easeout 0.18 zoom 1.0
+
+
+transform memory_result_in:
+    alpha 0.0
+    yoffset 18
+    easeout 0.35 alpha 1.0 yoffset 0
+
+
+transform memory_match_glow:
+    alpha 0.0
+    zoom 0.92
+    easeout 0.18 alpha 0.95 zoom 1.0
+    pause 0.45
+    easeout 0.55 alpha 0.0 zoom 1.04
+
+
+transform memory_miss_glow:
+    alpha 0.0
+    easeout 0.12 alpha 0.9
+    pause 0.55
+    easeout 0.55 alpha 0.0
+
+
+transform memory_selected_glow:
+    alpha 0.18
+    easeout 0.7 alpha 0.42
+    easeout 0.7 alpha 0.18
+    repeat
+
+
+style memory_eyebrow is default:
+    font "DejaVuSans.ttf"
+    size 10
+    bold True
+    color "#c8a06a"
+    kerning 3
+    outlines []
+
+
+style memory_title is default:
+    font "fonts/KiwiMaru-Medium.ttf"
+    size 26
+    color "#f3eee5"
+    kerning 2
+    outlines [(2, "#060b08", 0, 0)]
+
+
+style memory_meta is default:
+    font "DejaVuSans.ttf"
+    size 9
+    bold True
+    color "#9b8a63"
+    kerning 2
+    outlines []
+
+
+style memory_meta_value is default:
+    font "DejaVuSans.ttf"
+    size 11
+    bold True
+    color "#e7dcc0"
+    outlines []
+
+
+style memory_status is default:
+    font "DejaVuSans.ttf"
+    size 10
+    bold True
+    kerning 2
+    color "#a9b7a4"
+    outlines []
+
+
+style memory_combo is default:
+    font "DejaVuSans.ttf"
+    size 13
+    bold True
+    color "#f0d79a"
+    outlines [(1, "#050a07", 0, 0)]
+
+
+style memory_card_title is default:
+    font "DejaVuSans.ttf"
+    size 11
+    color "#e7dcc0"
+    outlines [(1, "#060b08", 0, 0)]
+
+
+style memory_result_title is default:
+    font "fonts/KiwiMaru-Medium.ttf"
+    size 42
+    kerning 3
+    color "#f4e6bd"
+    outlines [(2, "#0a0f0c", 0, 0)]
+
+
+style memory_result_body is default:
+    font "DejaVuSans.ttf"
+    size 13
+    color "#b9c7b2"
+    outlines []
+
+
+screen day_memory_match(engine):
     modal True
     zorder 100
-    default first_selection = None
-    default previewing = preview
 
-    $ pairs_found = len(matched) // 2
-    $ board_w = 8 * 128 + 7 * 12
+    $ pairs_found = engine.pairs_found
+    $ total_pairs = len(engine.cards) // 2
+    $ miss_cap = engine.miss_cap
+    $ board_w = 4 * memory_card_w + 3 * memory_grid_xspacing
+    $ route_label = ("RAMEN STREET" if any(c.get("pair") == "chef" for c in engine.cards)
+                     else "RIVER PATH" if any(c.get("pair") == "river" for c in engine.cards)
+                     else "PHOTO CIRCLE")
 
-    # The timers live before every conditional child so their position in the
-    # screen tree never changes. The preview holds the faces for six seconds,
-    # then turns them over and returns; the reveal returns after its beat.
-    if preview:
-        timer 6.0 action SetScreenVariable("previewing", False)
-        timer 6.75 action Return(True)
-    elif reveal_kind:
-        timer (1.05 if reveal_kind == "match" else 1.35) action Return(True)
+    if engine.phase == "preview":
+        timer 6.0 action Function(engine.end_preview_face)
+        timer 6.75 action Function(engine.end_preview)
+    elif engine.phase == "reveal":
+        timer (1.3 if engine.reveal_kind == "match" else 1.6) action Function(engine.finish_reveal)
 
     add "memory_table"
+    add Solid("#04070533"):
+        xysize (config.screen_width, config.screen_height)
 
-    # ---------------------------------------------------------------- title --
+    # --- masthead -------------------------------------------------------
     vbox:
-        xalign 0.5
+        xpos 64
         ypos 18
         spacing 2
 
-        text "FIRST NIGHT  ·  MEMORY":
-            xalign 0.5
-            size 10
-            kerning 5
-            color "#b99b5c"
-            outlines [(1, "#050a07", 0, 0)]
+        text ("FIRST NIGHT  ·  MEMORY  ·  " + route_label):
+            style "memory_eyebrow"
 
         text "KEEP THE DAY TOGETHER":
+            style "memory_title"
+
+    # --- counters -------------------------------------------------------
+    vbox:
+        xpos 1216
+        xanchor 1.0
+        ypos 20
+        spacing 7
+
+        hbox:
+            spacing 8
+            text "MEMORIES" style "memory_meta" yalign 0.5
+            for n in range(total_pairs):
+                add Transform(Solid("#e3c887" if n < pairs_found else "#273228"), xysize=(8, 8), rotate=45) yalign 0.5
+            text "[pairs_found] / [total_pairs]" style "memory_meta_value" yalign 0.5
+
+        hbox:
+            spacing 8
+            text "MISSES" style "memory_meta" yalign 0.5
+            for mark in range(miss_cap):
+                add Transform(Solid("#b8503f" if mark < engine.misses else "#273228"), xysize=(9, 9), rotate=45) yalign 0.5
+
+        if engine.combo and engine.combo > 1:
+            hbox:
+                spacing 7
+                text "COMBO" style "memory_meta" yalign 0.5
+                text "×[engine.combo]" style "memory_combo" yalign 0.5 at memory_combo_pop
+
+    # --- one status line, directly above the board ----------------------
+    if engine.phase == "preview":
+        text ("MEMORIZE THE SPREAD" if engine.previewing else "THE DAY TURNS OVER"):
             xalign 0.5
-            size 36
-            font "fonts/KiwiMaru-Medium.ttf"
-            kerning 3
-            color "#efe4c8"
-            outlines [(2, "#0a0f0c", 0, 0)]
+            ypos 78
+            style "memory_status"
+            color "#c8a06a"
+            at memory_pulse
 
         fixed:
             xalign 0.5
-            xysize (360, 12)
-            add Solid("#7a5f27") xpos 0 ypos 5 xysize (142, 1)
-            add Solid("#7a5f27") xpos 218 ypos 5 xysize (142, 1)
-            add Transform(Solid("#e3c887"), xysize=(7, 7), rotate=45) xpos 177 ypos 2
+            ypos 93
+            xysize (board_w, 3)
 
-        text ("Memorize the spread. It turns over in six seconds." if preview
-              else "Find all eight pairs. Three wrong turns and the day fades."):
+            add Solid("#241f12") xysize (board_w, 2) ypos 1
+            add Solid("#d9b96a") xysize (board_w, 2) ypos 1 at memory_preview_drain
+            add Transform(Solid("#e3c887"), xysize=(6, 6), rotate=45) xpos -7 ypos -1
+            add Transform(Solid("#e3c887"), xysize=(6, 6), rotate=45) xpos (board_w - 3) ypos -1
+
+    elif engine.phase == "reveal":
+        text ("REMEMBERED" if engine.reveal_kind == "match" else "THE DAY SLIPS"):
             xalign 0.5
-            size 12
+            ypos 78
+            style "memory_status"
+            color ("#f0d79a" if engine.reveal_kind == "match" else "#e0796a")
+            at memory_banner_in
+
+    elif engine.phase == "play":
+        text "CLICK A CARD, THEN ITS TWIN  ·  THE DAY IS ALREADY STARTING TO BLUR":
+            xalign 0.5
+            ypos 78
+            style "memory_status"
             color "#a9b7a4"
-            outlines [(1, "#050a07", 0, 0)]
 
-    # ------------------------------------------------------------------ hud --
-    hbox:
+    # --- the spread -----------------------------------------------------
+    grid 4 3:
         xalign 0.5
-        ypos 120
-        spacing 28
+        ypos 104
+        xspacing memory_grid_xspacing
+        yspacing memory_grid_yspacing
 
-        hbox:
-            spacing 7
-            text "MEMORIES":
-                size 9
-                kerning 3
-                color "#9b8a63"
-                yalign 0.5
-            for n in range(8):
-                add Transform(Solid("#d9b96a" if n < pairs_found else "#2a3328"), xysize=(7, 7), rotate=45) yalign 0.5
-            text "[pairs_found] / 8":
-                size 10
-                color "#e7dcc0"
-                yalign 0.5
-
-        add Solid("#4a3d22") xysize (1, 16) yalign 0.5
-
-        hbox:
-            spacing 7
-            text "MISMATCHES":
-                size 9
-                kerning 3
-                color "#9b8a63"
-                yalign 0.5
-            for mark in range(3):
-                add Transform(Solid("#b8503f" if mark < misses else "#2a3328"), xysize=(8, 8), rotate=45) yalign 0.5
-
-    # ---------------------------------------------------------------- board --
-    grid 8 2:
-        xalign 0.5
-        ypos 158
-        xspacing 12
-        yspacing 14
-
-        for i in range(len(cards)):
-            $ face_up = previewing or i in matched or i == first_selection or (reveal_pair and i in reveal_pair)
-            $ is_reveal = bool(reveal_pair and i in reveal_pair)
-            $ is_match = bool(is_reveal and reveal_kind == "match")
-            $ is_miss = bool(is_reveal and reveal_kind == "miss")
-            $ delay = (i % 8) * 0.028 + (i // 8) * 0.10
-            $ fresh_face = bool((i == first_selection) or is_reveal)
-            $ card_ats = [memory_card_deal(delay)] if preview else [memory_card_rest]
-            $ back_ats = [memory_card_back_in(delay)] if (preview and not previewing) else [memory_card_rest]
+        for i in range(len(engine.cards)):
+            $ card = engine.cards[i]
+            $ face_up = engine.previewing or i in engine.matched or i == engine.first_selection or (engine.reveal_pair is not None and i in engine.reveal_pair)
+            $ is_reveal = bool(engine.reveal_pair is not None and i in engine.reveal_pair)
+            $ is_match = bool(is_reveal and engine.reveal_kind == "match")
+            $ is_miss = bool(is_reveal and engine.reveal_kind == "miss")
+            $ delay = (i % 4) * 0.04 + (i // 4) * 0.08
+            $ fresh_face = bool((i == engine.first_selection) or (engine.reveal_new is not None and i == engine.reveal_new))
+            $ card_ats = [memory_card_deal(delay)] if engine.phase == "preview" else [memory_card_rest]
+            $ back_ats = [memory_card_back_in(delay)] if (engine.phase == "preview" and not engine.previewing) else [memory_card_back_rest]
             if is_miss:
-                $ card_ats.append(memory_card_miss_shake)
+                $ card_ats = card_ats + [memory_card_miss_shake]
 
             button:
-                xysize (128, 192)
+                xysize (memory_card_w, memory_card_h)
                 background None
-                hover_background None
-                sensitive (not preview and not reveal_pair and i not in matched and i != first_selection)
-                at memory_card_hover
+                hover_background Solid("#ffffff0d")
+                sensitive (engine.phase == "play" and engine.reveal_pair is None and i not in engine.matched and i != engine.first_selection)
                 action [
                     Play("sfx", "audio/SFX/type_click.wav"),
-                    SetScreenVariable("first_selection", i) if first_selection is None else Return((first_selection, i)),
+                    Function(engine.select, i),
                 ]
+                alt card["title"]
+                at memory_card_lift
 
                 fixed:
-                    xysize (128, 192)
+                    xysize (memory_card_w, memory_card_h)
                     at card_ats
 
-                    if i in matched and not is_reveal:
-                        add "memory_glow_gold":
-                            xpos -18
-                            ypos -18
-                            xysize (164, 228)
-                            alpha 0.55
-                    elif is_match:
-                        add "memory_glow_gold":
-                            xpos -18
-                            ypos -18
-                            xysize (164, 228)
-                            at memory_match_spark
-                    elif is_miss:
-                        add "memory_glow_red":
-                            xpos -18
-                            ypos -18
-                            xysize (164, 228)
-                    elif i == first_selection:
-                        add "memory_glow_gold":
-                            xpos -18
-                            ypos -18
-                            xysize (164, 228)
+                    # A soft drop shadow keeps the cards off the table.
+                    add Transform("memory_card_shadow", xysize=(memory_card_w + 24, memory_card_h + 26)):
+                        xpos -12
+                        ypos 8
 
-                    add "memory_card_base":
-                        xysize (128, 192)
+                    if i == engine.first_selection:
+                        add Transform("memory_glow_gold_soft", xysize=(memory_card_w + 34, memory_card_h + 40)):
+                            xpos -17
+                            ypos -20
+                            at memory_selected_glow
+                        add Solid("#e3c887"):
+                            xysize (memory_card_w, 2)
+                            ypos 0
+                        add Solid("#e3c887"):
+                            xysize (memory_card_w, 2)
+                            ypos (memory_card_h - 2)
+                        add Solid("#e3c887"):
+                            xysize (2, memory_card_h)
+                            xpos 0
+                        add Solid("#e3c887"):
+                            xysize (2, memory_card_h)
+                            xpos (memory_card_w - 2)
+                        add Solid("#e3c88710"):
+                            xysize (memory_card_w, memory_card_h)
+                            at memory_selected_pulse
+
+                    if i in engine.matched and not is_reveal:
+                        add Transform("memory_glow_gold_soft", xysize=(memory_card_w + 28, memory_card_h + 34)):
+                            xpos -14
+                            ypos -16
+                            alpha 0.22
+                    elif is_match:
+                        add Transform("memory_glow_gold_soft", xysize=(memory_card_w + 42, memory_card_h + 50)):
+                            xpos -21
+                            ypos -24
+                            at memory_match_glow
+                    elif is_miss:
+                        add Transform("memory_glow_red_soft", xysize=(memory_card_w + 38, memory_card_h + 46)):
+                            xpos -19
+                            ypos -22
+                            at memory_miss_glow
+
+                    add Transform("memory_card_base", xysize=(memory_card_w, memory_card_h))
+
+                    add Solid("#0000001a"):
+                        xysize (memory_card_w, memory_card_h)
+                        ypos 2
 
                     if face_up:
-                        fixed:
-                            xysize (128, 192)
-                            at (memory_card_face_in if fresh_face else memory_card_rest)
+                        if card.get("full_face"):
+                            # The commissioned deck is a finished card: border,
+                            # art, numeral and title are all in the image, so it
+                            # is drawn as the whole face rather than inset into
+                            # the old frame and caption.
+                            add card["art"]:
+                                xysize (memory_card_w, memory_card_h)
+                                fit "fill"
+                                at (memory_card_face_in if fresh_face else memory_card_face_rest)
 
-                            # The viewport is the only thing that clips. The
-                            # inner fixed is larger than the window so the
-                            # photograph can be cropped toward a face.
-                            viewport:
-                                xysize (110, 131)
-                                xpos 9
-                                ypos 9
-                                xinitial 0.5
-                                yinitial cards[i].get("focus", 0.5)
-                                mousewheel False
-                                draggable False
-                                pagekeys False
-                                scrollbars None
-                                fixed:
-                                    xysize (150, 178)
-                                    add cards[i]["art"]:
-                                        xysize (120, 146)
-                                        fit "cover"
-                                        xalign 0.5
-                                        yalign cards[i].get("focus", 0.5)
-
-                            add "memory_card_frame":
-                                xysize (128, 192)
-
-                            if i in matched:
-                                add Solid("#c9a24a16"):
-                                    xpos 9
-                                    ypos 9
-                                    xysize (110, 131)
-
-                            fixed:
-                                xpos 9
-                                ypos 141
-                                xysize (110, 41)
-                                text cards[i]["title"]:
-                                    xalign 0.5
-                                    yalign 0.5
-                                    xsize 110
-                                    text_align 0.5
-                                    size 10
-                                    line_spacing 0
-                                    font "fonts/KiwiMaru-Medium.ttf"
-                                    color "#e7dcc0"
-                                    outlines [(1, "#060b08", 0, 0)]
-
-                            if i in matched:
-                                add "memory_spark":
-                                    xpos 104
-                                    ypos 8
-                                    xysize (16, 16)
-                                    alpha 0.9
+                            if i in engine.matched:
+                                add Solid("#c9a24a10"):
+                                    xysize (memory_card_w, memory_card_h)
 
                             if is_match:
                                 add "memory_spark":
                                     xalign 0.5
                                     yalign 0.5
-                                    xysize (52, 52)
+                                    xysize (54, 54)
                                     at memory_match_spark
+                        else:
+                            fixed:
+                                xysize (memory_card_w, memory_card_h)
+                                at (memory_card_face_in if fresh_face else memory_card_face_rest)
+
+                                viewport:
+                                    xysize (memory_card_art_w, memory_card_art_h)
+                                    xpos memory_card_art_x
+                                    ypos memory_card_art_y
+                                    xinitial 0.5
+                                    yinitial card.get("focus", 0.5)
+                                    mousewheel False
+                                    draggable False
+                                    pagekeys False
+                                    scrollbars None
+                                    fixed:
+                                        xysize (memory_card_art_w + 26, memory_card_art_h + 26)
+                                        add card["art"]:
+                                            xysize (memory_card_art_w + 8, memory_card_art_h + 12)
+                                            fit "cover"
+                                            xalign 0.5
+                                            yalign card.get("focus", 0.5)
+
+                                add Transform("memory_card_frame", xysize=(memory_card_w, memory_card_h))
+
+                                if i in engine.matched:
+                                    add Solid("#c9a24a12"):
+                                        xpos memory_card_art_x
+                                        ypos memory_card_art_y
+                                        xysize (memory_card_art_w, memory_card_art_h)
+
+                                fixed:
+                                    xpos memory_card_art_x
+                                    ypos memory_card_caption_y
+                                    xysize (memory_card_art_w, memory_card_caption_h)
+                                    text card["title"]:
+                                        style "memory_card_title"
+                                        xalign 0.5
+                                        yalign 0.5
+                                        xsize memory_card_art_w
+                                        text_align 0.5
+                                        line_spacing 1
+
+                                if i in engine.matched:
+                                    add "memory_spark":
+                                        xpos (memory_card_w - 20)
+                                        ypos 8
+                                        xysize (14, 14)
+                                        alpha 0.9
+
+                                if is_match:
+                                    add "memory_spark":
+                                        xalign 0.5
+                                        yalign 0.5
+                                        xysize (54, 54)
+                                        at memory_match_spark
                     else:
-                        add "memory_card_back":
-                            xysize (128, 192)
+                        add Transform("memory_card_back", xysize=(memory_card_w, memory_card_h)):
                             at back_ats
 
-    # -------------------------------------------------------- footer / time --
-    if preview:
-        fixed:
-            xalign 0.5
-            ypos 568
-            xysize (board_w, 4)
+    # --- result ---------------------------------------------------------
+    if engine.phase == "result":
+        add Solid("#050806b8")
 
-            add Solid("#241f12") xysize (board_w, 2) ypos 1
-            add Solid("#d9b96a") xysize (board_w, 2) ypos 1 at memory_preview_drain
-            add Transform(Solid("#e3c887"), xysize=(6, 6), rotate=45) xpos -7 ypos -1
-            add Transform(Solid("#e3c887"), xysize=(6, 6), rotate=45) xpos board_w ypos -1
-
-        text ("MEMORIZE THE SPREAD" if previewing else "THE DAY TURNS OVER"):
-            xalign 0.5
-            ypos 580
-            size 9
-            kerning 4
-            color "#b99b5c"
-            at memory_pulse
-
-    elif reveal_kind:
-        fixed:
-            xalign 0.5
-            ypos 574
-            xysize (320, 30)
-            at memory_banner_in
-
-            add Solid("#0a120dcc")
-            add Solid("#c9a24a" if reveal_kind == "match" else "#8e3434") xysize (320, 1)
-            add Solid("#c9a24a" if reveal_kind == "match" else "#8e3434") xysize (320, 1) ypos 29
-
-            text ("REMEMBERED" if reveal_kind == "match" else "THE DAY SLIPS"):
+        if engine.won:
+            add "memory_win_rays":
                 xalign 0.5
-                yalign 0.5
-                size 12
-                kerning 5
-                color ("#f0d79a" if reveal_kind == "match" else "#e0796a")
-
-    else:
-        hbox:
-            xalign 0.5
-            ypos 580
-            spacing 10
-
-            text "MATCH THE MOMENTS":
-                size 9
-                kerning 3
-                color "#b99b5c"
-
-            text "·":
-                size 10
-                color "#6b6046"
-
-            text "Click a card, then its twin. The day is already starting to blur.":
-                size 11
-                color "#a9b7a4"
-
-
-screen memory_result(won):
-    modal True
-    zorder 120
-
-    add "memory_table"
-    add Solid("#05080688")
-
-    if won:
-        add "memory_win_rays":
-            xalign 0.5
-            yalign 0.42
-            xysize (1500, 1500)
-            at memory_rays_in
+                yalign 0.40
+                xysize (1000, 1000)
+                at memory_rays_in
 
         vbox:
             xalign 0.5
-            yalign 0.40
-            spacing 6
-            at memory_banner_in
+            yalign 0.38
+            spacing 8
+            at memory_result_in
 
-            text "THE DAY HOLDS":
-                xalign 0.5
-                size 42
-                font "fonts/KiwiMaru-Medium.ttf"
-                kerning 4
-                color "#f4e6bd"
-                outlines [(2, "#0a0f0c", 0, 0)]
+            if engine.misses == 0:
+                text "PERFECT RECALL":
+                    style "memory_result_title"
+            elif engine.misses <= 3:
+                text "THE DAY HOLDS":
+                    style "memory_result_title"
+            else:
+                text "THE DAY HOLDS":
+                    style "memory_result_title"
+                    color "#e7d9a8"
 
             fixed:
                 xalign 0.5
@@ -5024,40 +5427,28 @@ screen memory_result(won):
                 add Solid("#7a5f27") xpos 184 ypos 5 xysize (116, 1)
                 add Transform(Solid("#e3c887"), xysize=(7, 7), rotate=45) xpos 147 ypos 2
 
-            text "Every moment found its place.":
+            text ("Every moment in its place." if engine.misses == 0
+                  else "A few gaps, but the day is still whole." if engine.misses <= 3
+                  else "The day holds, but only just."):
+                style "memory_result_body"
                 xalign 0.5
-                size 13
-                color "#c9d4bd"
 
-        for k in range(8):
-            add "memory_spark":
-                xpos (640 + (k - 3.5) * 120)
-                ypos (250 + (k % 3) * 120)
-                xysize (18, 18)
-                alpha 0.8
-    else:
-        add "memory_lose_vignette"
+        key "K_RETURN" action Return((engine.won, engine.misses))
+        key "K_SPACE" action Return((engine.won, engine.misses))
 
-        vbox:
+        textbutton "CONTINUE":
             xalign 0.5
-            yalign 0.42
-            spacing 6
-            at memory_lose_shake
-
-            text "THE DAY FADES":
-                xalign 0.5
-                size 38
-                font "fonts/KiwiMaru-Medium.ttf"
-                kerning 4
-                color "#e0a49a"
-                outlines [(2, "#0a0f0c", 0, 0)]
-
-            text "Three moments slipped out of reach.":
-                xalign 0.5
-                size 13
-                color "#b9a9a0"
-
-    timer 2.6 action Return(True)
+            ypos 632
+            background Solid("#111a13dd")
+            hover_background Solid("#1e2b20")
+            padding (46, 12)
+            text_font "DejaVuSans.ttf"
+            text_size 12
+            text_bold True
+            text_kerning 2
+            text_color "#e7dcc0"
+            text_hover_color "#ffffff"
+            action Return((engine.won, engine.misses))
 
 label first_evening_dinner:
 
@@ -5240,35 +5631,56 @@ label first_night_memory:
     play music "audio/Music/dream_sequence.mp3" fadein 2.0
     $ day_memory_cards = build_first_day_memory_deck(first_day_activity)
     $ renpy.random.shuffle(day_memory_cards)
-    $ day_memory_matched = []
-    $ day_memory_misses = 0
+    $ day_memory_engine = MemoryMatchEngine(day_memory_cards)
+    $ print("Memory cards count: " + str(len(day_memory_cards)))
 
-    # The preview is its own screen call. It deals the spread, holds all faces
-    # up for six seconds, then returns so the play screen starts clean.
-    call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, None, True)
+    # A single self-contained screen runs the preview, play, reveals and result.
+    call screen day_memory_match(day_memory_engine)
 
-    while len(day_memory_matched) < len(day_memory_cards) and day_memory_misses < 3:
-        call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, None, False)
-        $ selected_pair = _return
-        $ day_memory_is_match = day_memory_cards[selected_pair[0]]["pair"] == day_memory_cards[selected_pair[1]]["pair"]
-
-        if day_memory_is_match:
-            $ day_memory_matched.extend(selected_pair)
-            $ renpy.sound.play("audio/SFX/memory_restore.wav", channel="sfx")
-            call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, selected_pair, False, "match")
-        else:
-            $ day_memory_misses += 1
-            $ renpy.sound.play("audio/SFX/memory_deviation.wav", channel="sfx")
-            call screen day_memory_match(day_memory_cards, day_memory_matched, day_memory_misses, selected_pair, False, "miss")
-
-    $ day_memory_won = len(day_memory_matched) == len(day_memory_cards)
-    call screen memory_result(day_memory_won)
+    $ day_memory_result = _return
+    $ day_memory_won = day_memory_result[0]
+    $ day_memory_misses = day_memory_result[1]
 
     if day_memory_won:
         "The last two pictures settle into place. For a moment, the whole day makes sense in order."
-        $ reward_attributes_once("first_night_memory_pairs", [("insight", "nudge")], show="auto")
+        if day_memory_misses <= 3:
+            $ reward_attributes_once("first_night_memory_pairs", [("insight", "nudge")], show="auto")
     else:
-        "Three wrong pairs, and the day slips out of order again."
+        "Five wrong pairs, and the day slips out of order again."
+
+    stop music fadeout 2.0
+    return
+
+
+label test_memory_match:
+    scene black with Dissolve(0.8)
+    play music "audio/Music/dream_sequence.mp3" fadein 2.0
+
+    "TEST SEQUENCE: FIRST NIGHT MEMORY"
+    "This is a standalone test of the memory spread."
+    "Choose which first-day route the spread should recall."
+
+    menu:
+        "Walk alone (ramen chef, red-lantern shop)":
+            $ first_day_activity = "walk_alone"
+        "Walk with Hikari (river path, kitchen light)":
+            $ first_day_activity = "walk_hikari"
+        "Photography club with Sim (Circle, campus corridor)":
+            $ first_day_activity = "photo_club"
+
+    $ day_memory_cards = build_first_day_memory_deck(first_day_activity)
+    $ renpy.random.shuffle(day_memory_cards)
+    $ day_memory_engine = MemoryMatchEngine(day_memory_cards)
+    call screen day_memory_match(day_memory_engine)
+
+    $ day_memory_result = _return
+    $ day_memory_won = day_memory_result[0]
+    $ day_memory_misses = day_memory_result[1]
+
+    if day_memory_won:
+        "TEST RESULT: WON with [day_memory_misses] misses."
+    else:
+        "TEST RESULT: LOST with [day_memory_misses] misses."
 
     stop music fadeout 2.0
     return
@@ -5380,9 +5792,9 @@ label first_connection_messages:
     elif arrived_from == "chef":
         hikari "That was your phone. The chef found you."
         $ run_chat("chef", [])
+        mc "(I cannot read a word of it. It is a commercial from a man who has never said more than three words to me.)"
         hikari "An advertisement. You've been a customer for one day."
-        mc "It's the most he's ever said to me."
-        hikari "Then he must want you back."
+        mc "Then he must want me back."
 
     elif arrived_from == "sim":
         hikari "That was your phone. Sim already found you."
@@ -5492,7 +5904,7 @@ label second_school_day:
     hikari "If you need to buy something and don't know where to start, this is usually the place."
     mc "And today?"
     hikari "A cellular plan. You already have a phone; we do not need to buy you another one."
-    hikari "Stay close, and let me do most of the talking. If they ask you something, answer honestly. If they offer an extra, wait until we know what it costs."
+    hikari "Stay close, and let me do most of the talking. If she asks you something, answer honestly. If she offers an extra, wait until we know what it costs."
     mc "Understood."
     hikari "Good. Let's go."
 
@@ -5505,60 +5917,77 @@ label second_school_day:
     mc "(The outside looked enormous. From in here it looks like the outside was only the first room.)"
     hikari "Phones and service are on this floor. We're not shopping for a handset."
     "A staff member with a tablet approaches us."
-    yamada "Welcome to Hamada Denki. Are you looking for a phone today?"
-    hikari "Not a phone. He needs a cellular plan for a device he already owns."
-    yamada "Of course. Is this your first plan in Japan?"
-    if first_day_activity == "walk_alone":
-        mc "Yes. Mostly maps, and a way to check a place's hours before I head out."
-    elif first_day_activity == "walk_hikari":
-        mc "Yes. Mostly maps, and a reliable way to reach my family when plans change."
-    else:
-        mc "Yes. Mostly maps, messages, and the Circle group Sim invited me to."
-    yamada "Then let's compare the student plans before we add anything."
+    yamada "いらっしゃいませ。携帯はお探しですか。"
+    hikari "She is asking if we are looking for a phone."
+    mc "Tell her no phone. A plan for the one I have."
+    hikari "携帯はいらないです。持っている端末の契約をしたいんです。"
+    yamada "そうですね。初めての契約ですか。"
+    hikari "She asks if this is your first plan in Japan."
+    mc "Yes. Maps, mostly. And a way to check a shop's hours before I walk all the way there."
 
     menu:
         "A basic plan is enough for now.":
             $ reward_attributes_once("cellular_plan_modest", [("insight", "micro")], show="auto")
-            mc "A basic plan sounds right. I want to keep the monthly cost predictable."
-            yamada "Then we can start with the student plan and check whether its data allowance fits."
+            mc "A basic plan is enough. I want the monthly cost to be predictable."
+            hikari "基本プランで大丈夫です。毎月の料金を抑えたいです。"
+            yamada "かしこまりました。学生プランから確認しましょう。"
+            hikari "She will start with the student plan and check whether its data allowance fits."
         "I would rather have enough data not to worry about every search.":
             $ reward_attributes_once("cellular_plan_usage", [("nerve", "micro")], show="auto")
             mc "I would rather have enough data not to worry about every search."
-            yamada "We can compare the next tier too, and look at the monthly difference before you decide."
+            hikari "データは多めがいいです。毎回気にしたくないです。"
+            yamada "では、上のプランも比較しましょう。差額を確認してから決めてください。"
+            hikari "She says we can compare the next tier too, and look at the monthly difference before we decide."
         "Could we see the lowest student rate first?":
             $ reward_attributes_once("cellular_plan_student_rate", [("grace", "micro")], show="auto")
             mc "Could we see the lowest student rate first?"
-            yamada "Certainly. Your student ID may qualify you for the student discount."
+            hikari "一番安い学生プランを先に見せてください。"
+            yamada "はい。学生割引があるかもしれません。"
+            hikari "She says yes. There may be a student discount."
 
-    yamada "May I see your student ID?"
+    yamada "学生証を見せてください。"
+    hikari "She needs to see your student ID."
     "I take the card from my wallet and pass it across the counter."
-    yamada "Thank you. This confirms your student discount. The account details you already registered will verify the line."
-    hikari "And this plan is only the monthly data and calls? No handset payment?"
-    yamada "Correct. The phone is yours already. The student plan has a monthly fee; calls are charged only if you use them."
-    hikari "Good. And what are these add-ons?"
-    "He turns the tablet so we can see a list: device insurance, a video service, and extra cloud storage."
-    yamada "All optional. None is needed to activate the line."
+    yamada "ありがとうございます。学生割引が確認できました。"
+    hikari "Thank you. This confirms your student discount. The account details you already registered will verify the line."
+    hikari "そして、このプランは通信料だけで、端末代はかかりませんか。"
+    yamada "はい。携帯はお持ちですから。月額料金だけで、通話は使った分だけです。"
+    hikari "She says yes. The phone is yours already. The plan has a monthly fee; calls are charged only if you use them."
+
+    mc "Good. And what are these add-ons?"
+    hikari "これ、追加のサービスは何ですか。"
+    yamada "これは追加サービスです。"
+    "She turns the tablet so we can see a list: device insurance, a video service, and extra cloud storage."
+    yamada "すべて任意です。契約に必要ありません。"
+    hikari "She says these are all optional. None is needed to activate the line. And that any of them can be cancelled at any time."
+
+    mc "Cancelled? I don't need anything that is only a bonus. I don't need an extra. I don't need an optional."
+    hikari "追加サービスはいりません。オプションも一切なしで。"
+    yamada "かしこまりました。"
+    mc "No extras. No add-ons. None. We are done with the list."
+    hikari "追加は一切なしでお願いします。"
+    yamada "はい。"
 
     menu:
         "No add-ons. Show us the full monthly total.":
             mc "We don't need those. Could you show us the full monthly total before we sign?"
-            hikari "Exactly."
+            hikari "追加サービスなしで、月々の合計を出してください。"
             $ reward_attributes_once("cellular_plan_total", [("insight", "micro")], show="auto")
         "Let's keep it to the student plan and nothing else.":
             mc "Let's keep it to the student plan and nothing else, please."
-            hikari "The basic plan is enough for now."
+            hikari "学生プランだけで、追加は一切なしでお願いします。"
             $ reward_attributes_once("cellular_plan_basic", [("grace", "micro")], show="auto")
         "No extras, thanks.":
             mc "No extras, thanks."
-            yamada "Understood. I'll leave every optional service unchecked."
+            hikari "追加サービスは結構です。"
+            yamada "かしこまりました。追加サービスはすべて外します。"
             $ reward_attributes_once("cellular_plan_decline_extras", [("nerve", "micro")], show="auto")
-
     "Yamada walks us through the monthly fee, the first partial bill, and the cancellation terms."
     "Hikari reads the summary twice. I read it once, then again where she points."
     hikari "No handset, no streaming service, no insurance. Just the plan we agreed on."
     mc "I understand."
     "I sign the form on the tablet. Yamada fits a SIM card into the phone and waits for the network to register."
-    yamada "There. The line is active. You should see the signal now."
+    yamada "電波が入りました。"
     $ cellular_data_active = True
     call screen cellular_connection_phone
     "At the top of the screen, the empty signal indicator fills with bars."
@@ -5599,7 +6028,6 @@ label second_school_day:
     "Their windows are packed with cameras, headphones, game consoles, tiny components, and displays bright enough to compete with the signs above them."
     mc "(We spent all that time in one store, and it still felt like we only saw a corner of it.)"
     "I stop at a display of cameras. The models look almost identical until I read the labels, and then the numbers make them seem even more different."
-    mc "(A month ago, I might have walked past without thinking. Now I keep wondering what I could photograph here.)"
     "A little farther on, I pass a narrow game shop stacked from floor to ceiling with boxes."
     "A few people are studying the shelves with the concentration of students before an exam."
     mc "(Everyone here seems to know exactly what they came for. I wonder if that feeling comes from living here long enough.)"
@@ -5780,43 +6208,45 @@ label second_school_day:
             {"label": "\"I went in. Ordered lunch. Did the spell.\"",
              "send": "I went in. Ordered lunch. Did the spell.",
              "them": ["Good. First-timer rites complete.",
-                      "The kitty drawing better be good."]},
-            {"label": "\"I might have collected a flyer or two.\"",
-             "send": "I might have collected a flyer or two.",
-             "them": ["Honest. I respect it.",
-                      "The cafe will still be there next time."]},
+                      "The photo better be good."]},
+            {"label": "\"I went in. Mostly for lunch, honestly.\"",
+             "send": "I went in. Mostly for lunch, honestly.",
+             "them": ["Mostly.",
+                      "The photo better be interesting.",
+                      "I'll allow it."]},
         ]},
     ])
-    mc "(I went in. I ordered lunch. I did the spell. The last one is going in the notebook.)"
+    mc "(Either way, I went in. That is going in the notebook.)"
     "A group of students passes me, comparing keychains from a capsule machine. I let them go by, then check the station sign."
     "I find the station using the map. This time I check the sign before choosing an entrance."
     scene bg_train_interior at train_ride_shake with walk_fade
     stop music fadeout 0.8
     play music "audio/Music/train.mp3" fadein 1.5
-    "On the train, I open my notebook and write down the phrase I heard at the cafe door: 'okaerinasaimase', welcome home."
-    "Under it, I add a small drawing of a cat with a bow. It comes out less like a cat and more like a dumpling."
+    "On the train, I open my notebook and copy the hiragana I heard at the cafe door: 'okaerinasaimase', welcome back."
+    "Under the word, I add its English meaning and a small drawing of a cat with a bow, like the ketchup cat Aya drew on my omurice."
+    "It comes out less like a cat and more like a dumpling."
     mc "(I'll remember the real one better.)"
     "My phone buzzes against my leg. Hikari asks if I found the station."
     mc "(Right. Cellular. The phone is actually a phone now.)"
     $ run_chat("hikari", [
         {"them": "Did you make it to the station okay?", "options": [
-            {"label": "\"Just got here.\"",
-             "send": "Just got here.",
+            {"label": "\"Just got on the train.\"",
+             "send": "Just got on the train.",
              "them": ["Good."]},
             {"label": "\"Lost again, but I found the exit.\"",
              "send": "Lost again, but I found the exit.",
              "them": ["You have a map now. Use it."]},
         ]},
         {"say": "(photo)", "img": "images/messages/notebook_page.png"},
-        {"them": "That cat looks like it needs help.", "options": [
+        {"them": "The hiragana at the top says okaerinasaimase, right? And is that a cat or a dumpling?", "options": [
             {"label": "\"It's a work in progress.\"",
              "send": "It's a work in progress.",
-             "them": ["Good. You can practice on the train."]},
+             "them": ["Good. You can practice your drawing on the train."]},
             {"label": "\"It's supposed to be a cat.\"",
              "send": "It's supposed to be a cat.",
-             "them": ["Sure it is.", "Practice anyway."]},
-            {"label": "\"I'll send you the real one later.\"",
-             "send": "I'll send you the real one later.",
+             "them": ["Sure it is.", "Practice your drawing anyway."]},
+            {"label": "\"I'll send you the finished one later.\"",
+             "send": "I'll send you the finished one later.",
              "them": ["I'll hold you to that."]},
         ]},
     ])
@@ -5830,7 +6260,7 @@ label second_school_day:
     scene bg_nakanostation_night with walk_fade
     $ night_street()
 
-    "The station is emptying out. The last of the office crowd goes down the stairs ahead of me, and the lights over the ticket gate make everything look newly washed."
+    "The station is emptying out. The last of the office crowd goes down the stairs ahead of me, and the lights turn off gradually."
     "I know the turn out of the station now. I do not have to stop and check the map."
     mc "(That is one thing I can do here. It is not a small thing.)"
 
@@ -6076,7 +6506,7 @@ label free_afternoon:
 
     # Overnight and between-visit texts arrive here if the line is live.
     $ flush_pending_messages()
-    $ place = renpy.call_screen("location_hub", places=confidant_order + ["walk_hikari", "walk_alone"])
+    $ place = renpy.call_screen("location_hub", places=hub_destination_order())
 
     # The evening reads this to remember where the afternoon went. The run flag
     # is cleared first so a previous Hikari run cannot leak into another row.
@@ -6093,10 +6523,38 @@ label free_afternoon:
         jump confidant_visit_aya
     elif place == "hana":
         jump confidant_visit_hana
+    elif place == "fortune":
+        jump confidant_visit_fortune
     elif place == "walk_hikari":
         jump confidant_visit_hikari
     elif place == "walk_alone":
         jump afternoon_walk_alone
+    elif place == "library":
+        jump city_row_library
+    elif place == "river":
+        jump city_row_river
+    elif place == "harajuku":
+        jump city_row_harajuku
+    elif place == "karaoke":
+        jump city_row_karaoke
+    elif place == "night_market":
+        jump city_row_night_market
+    elif place == "combini":
+        jump city_row_combini
+    elif place == "odaiba":
+        jump city_row_odaiba
+    elif place == "yokohama":
+        jump city_row_yokohama
+    elif place == "ueno":
+        jump city_row_ueno
+    elif place == "shibuya":
+        jump city_row_shibuya
+    elif place == "shimokitazawa":
+        jump city_row_shimokitazawa
+    elif place == "omotesando":
+        jump city_row_omotesando
+    elif place == "tanaka":
+        jump tanaka_shift
 
     # None, or anything the hub should not have offered: the afternoon is his
     # to spend elsewhere, so the day simply continues.
@@ -6154,6 +6612,8 @@ label saturday_off:
     "She says it flat, which is how you can tell she means it."
 
     scene bg_school_gate with walk_fade
+    stop music fadeout 2.0
+    play music "audio/Music/school.mp3" fadein 3.0
     "Saturday campus is a different building. Fewer people, older light,"
     "the kind of quiet that has weight to it."
     "Friday's plan held: the library, the studying, the handout."
@@ -6208,6 +6668,8 @@ label library_search:
 
 label reading_club_first:
     scene bg_library with walk_fade
+    stop music fadeout 2.0
+    play music "audio/Music/library.mp3" fadein 3.0
 
     "The rules turn out to be two rules, delivered by a student at the nearest table,"
     "who has decided I am harmless enough to explain things to."
@@ -6253,25 +6715,45 @@ label reading_club_first:
     "She says it with a small, unbothered laugh, the way you laugh about weather."
     mc "(I write it down anyway. Hana. That's her name now, whether she wants it to be or not.)"
 
+    "Halfway through the hour, something small lands at the edge of my table."
+    "A slim, older book, spine out, square to the edge, like it was placed there by someone who did not want to be seen doing it."
+    "I look up. Hana is at the end of the aisle with a stack of returns against her chest."
+    "Our eyes meet. She looks away first."
+    "Then she sets the book a little closer to me, like she is still deciding whether I am allowed to have it."
+    "She is gone through the side door before I can answer."
+    mc "(Did she mean to leave it? Was she listening to me talk about the Haiku? Did she even know I was here?)"
+    "I am happy and confused at once."
+    quiet_student "That's her book. She never lends anything."
+    mc "She left it on my table."
+    quiet_student "I know. Don't read too much into it. Or read exactly enough into it. With Hana, those are the same thing."
+
     "The hour ends the way it said it would, without anyone announcing it. Pages close. Chairs scrape."
     "People gather their things."
-    "And then she passes my table."
-    "The girl from the far wall, Hana, walks the aisle between the desks with a book hugged to her chest,"
-    "and for one unguarded second she is simply *there*:"
-    "same height as the shelves she moves between, breathing like everyone else."
-    "She sets a slim, older volume on the desk beside my elbow. Square to the edge. Deliberate."
-    "Then she is gone through the side door before anyone can look up."
-    "I look toward the door. There is no one there."
-    "The ceiling fan ticks. Somewhere, a page turns."
-    "I don't know her. I don't know why she left a book on my desk."
-    "I only know she didn't want me to see her do it."
-    "I leave it where it is. Whatever it is, it isn't mine to take."
-    "I slide the haiku sheets into my bag. Then I pack up slowly, like the room might object."
+    "I should leave the book. But it feels wrong to keep something that fell into my lap."
+    "I pick it up and stand."
+    "A girl rounds the shelf with a stack of returns, and she sees the book in my hands."
+    "She goes still."
+    "Her eyes go to the side door, then back to the book, then to me."
+    "She changes direction so fast her shoe catches a chair leg."
+    "Books spill. A stool scrapes."
+    "The slim volume hits the floor, and something small slides out of the front cover face-up."
+    "A handmade card. The letters are careful and too small, like they were written by somebody who did not want to be interrupted."
+    "On it: Hana — volunteer, student library desk. Reading club. @hana. Only if you actually read the rules."
+    "A square WIRE code is printed beside the words."
+    mc "(A contact. Not a name on a badge. A way to reach her.)"
+    "I bend to pick up the book. When I straighten, she is already gone."
+    "I scan the little square code before I leave, still not sure I am allowed."
 
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 1)
     $ hana_affection += 1
-    $ remember("hana", "watched her flee the reading room on his first visit")
+    $ remember("hana", "left her book and a handmade WIRE card")
     $ wire_unlock("hana")
+    $ queue_message("hana", "The book... you have it now. I... I couldn't take it back. I'm sorry. It was... it was mine. But maybe... maybe that's okay.", day="yesterday")
+
+    "Hana's name settles onto the list. The profile says volunteer student librarian."
+    "The note under it says books before words."
+    "I still have her book. I don't know if I earned it or borrowed it."
+    "I slide the haiku sheets into my bag, then pack up slowly, like the room might object."
     $ reward_attributes_once("reading_club_first", [("grace", "micro")], show="auto")
 
     scene bg_campus_interior with walk_fade
@@ -6287,7 +6769,7 @@ label reading_club_first:
              "send": "Define alive.",
              "them": ["That is not an answer.", "Are you on your way back?"]},
         ]},
-        {"them": "(photo)", "img": "images/backgrounds/bg_nightfood.png"},
+        {"them": "(photo)", "img": "images/backgrounds/bg_sukiyaki_prep.png"},
         {"them": "Sukiyaki tonight. Mom's already arguing with Dad about the broth.", "options": [
             {"label": "\"It looks incredible.\"",
              "send": "It looks incredible.",
@@ -6296,7 +6778,7 @@ label reading_club_first:
              "send": "Teach me to make it.",
              "them": ["You'll be on potato duty. It's the only job with no way to fail."]},
         ]},
-        {"them": "Don't take the long way home. The trains stop running at eleven and Dad will notice if you're late.", "options": [
+        {"them": "Don't take the long way home. Dad will notice if you're late.", "options": [
             {"label": "\"I'm heading back now.\"",
              "send": "I'm heading back now.",
              "them": ["Good.", "See you at dinner."]},
@@ -6306,26 +6788,31 @@ label reading_club_first:
         ]},
     ])
     mc "(She has never once said 'come straight home' without meaning it literally and completely.)"
+    stop music fadeout 2.0
 
     # She said come straight home. I take a different route instead, which is not
     # technically disobeying anything, and the neighborhood obliges by getting
     # worse at being a neighborhood with every turn.
-    "The map puts me on a street I've never seen, and every turn after that is a guess."
-    "Fewer students, more shutters, the kind of street that only exists after the shops that serve them"
-    "have gone home."
-    scene bg_alley with walk_fade
-    "I pass a doorway with a cloth over it and a small wolf painted on the sign."
+    scene bg_lupins_alley_night with walk_fade
+    "The map has stopped helping me. Every street looks like the last one until the street gives up entirely."
+    "I do not know where I am. I only know this is not the way home."
+    "The shops are closed early, the signs are tired, the lights are the same pale blue everywhere."
+    "A combini sign missing a character. A shuttered cleaner's. A wall of bicycles that do not belong to anyone."
+    "Then there is a shop that does not belong to this street at all."
+    "No menu board. No vending machine. No students deciding whether to hurry."
+    "Only a low door with a cloth over it, and a small wolf painted on the sign beside it."
     "The paint is faded but deliberate, the kind of sign made by someone who cares about it."
-    mc "(A bar, maybe. Or a shrine. Or a noticeboard with ambitions.)"
-    "Inside is warm in a way the street is not, amber light on polished wood, low jazz,"
-    "the smell of citrus peel and whiskey."
+    mc "(A bar. A shrine. A rumor with good paint.)"
+    "I stop under the sign because I have no map left to argue with."
+    "I mean to look. Only look. Maybe until I can admit I am lost."
+    "Curiosity does not wait for permission. By the time I blink, the cloth is behind me and I am inside."
     jump lupins_den_first
 
 
 label lupins_den_first:
     scene bg_lupins_den with walk_fade
-
-    "It is a narrow room. Patrons sit in quiet clusters along the counter, a fox, a rabbit,"
+    play music "audio/Music/lupins_den.mp3" fadein 3.0
+    "The room is narrow. Patrons sit in quiet clusters along the counter, a fox, a rabbit,"
     "a plain white face, all in partial masks, none of them talking to each other."
     "The air smells of citrus peel and whiskey. Somewhere a glass is set down too gently,"
     "like it costs something to make noise here."
@@ -6338,6 +6825,12 @@ label lupins_den_first:
     "like it happens every night."
     "After a while he sets a glass of water in front of me. I didn't order anything."
     "I didn't order anything from anyone, there is no menu I can read."
+    "I sit there long enough to feel foolish. Every instinct says I should turn around now."
+    bar_master "Easy. You look lost."
+    "It comes out in fluent English, unhurried and warm, like he has said it a hundred times to people who needed to hear it."
+    mc "(I had braced for Japanese. Or for silence. Not for this.)"
+    "He does not look up while he says it, like the words are only there to keep me from leaving."
+    bar_master "Curiosity is allowed in here. So is being lost. You don't have to know where you belong yet."
 
     menu:
         "\"...Thanks.\"":
@@ -6357,20 +6850,28 @@ label lupins_den_first:
     "which somehow feels like the polite thing to do here."
     "Before I leave, the wolf says one more thing, still not looking up,"
     bar_master "The water's on the house. The conversation isn't. But you're welcome to it."
-    "I don't know what that means. I don't think I'm supposed to."
+    "He says it like the door is staying open, not like a test."
     "On the counter, a small wooden bowl with a card beside it,"
     "something about leaving a note for the Master. I don't use it. But I remember it exists."
     "Like a door I could knock on next time."
-    "I leave a little lighter than I arrived, and with one question I can't shake:"
-    "what do people talk about in a place where nobody has to show their face?"
+    "Beside it, a small black card with a square WIRE code printed on it."
+    bar_master "If you come back, this is how you knock."
+    mc "That's a QR code?"
+    bar_master "It's a door with better manners."
+    "I don't know what to call the feeling by the time I reach the street."
+    "It is not relief exactly. It is closer to being let in somewhere."
+    "I go home."
 
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 1)
     $ orson_affection += 1
-    $ remember("orson", "found Lupin's Den on a wrong turn home from the library")
-    $ wire_unlock("orson")
+    $ remember("orson", "found Lupin's Den after getting lost on the way home and took the WIRE card")
     $ reward_attributes_once("lupins_den_first", [("nerve", "micro")], show="auto")
 
-    scene bg_alley with walk_fade
+    scene bg_lupins_alley_night with walk_fade
+    "In my pocket, the black card is still there. I take it out under the streetlight."
+    "I open WIRE and hold the square code under the camera."
+    $ wire_unlock("orson")
+    "Orson's name settles onto the list, next to Hikari's."
     "The street outside is the same street, but I am seeing it differently now,"
     "like the bar added a layer to it that wasn't there before."
     jump home_sukiyaki
@@ -6384,6 +6885,8 @@ label home_sukiyaki:
     mc "(They waited up.)"
 
     scene bg_sukiyaki with walk_fade
+    play music "audio/Music/room_night.mp3" fadein 1.5
+    play ambient "audio/SFX/boil.mp3" fadein 2.0
     "Inside, the table is set for four, and in the middle of it a pot is still steaming, sukiyaki,"
     "the sweet-soy broth gone glossy, beef slices fanned on a plate,"
     "mountains of vegetables waiting their turn."
@@ -6415,7 +6918,8 @@ label home_sukiyaki:
     "and the steam does the talking for all of us."
     "That is enough. That is more than enough."
 
-    scene bg_room_night with stair_fade
+    stop ambient fadeout 1.5
+    scene bg_room_bed_night with stair_fade
     $ room_ambient(True)
     "Upstairs, the house winds down the way it always does, father's newspaper, mother's tea things,"
     "Hikari's footsteps on the stairs that creak under her anyway."
@@ -6445,7 +6949,7 @@ label sunday_morning:
 
     $ flush_pending_messages()
 
-    scene bg_room_day with Dissolve(1.5)
+    scene bg_room_bed_day with Dissolve(1.5)
     $ room_ambient(False)
 
     "Sunday arrives the way Sundays do, late, and without apology."
@@ -6455,9 +6959,15 @@ label sunday_morning:
     mc "a bar full of masks, sukiyaki. It took one day to become the best day I've had here.)"
 
     scene bg_kitchen with walk_fade
+    "The kitchen is doing its Sunday version: everybody in the clothes they wear when nobody has to be anywhere."
     mother "You're up. Good. There's rice if you want it."
     father "The city can wait until Monday. So can you, apparently."
-    hikari "Dad."
+    mc "(Whoa. Since when does Tetsuo own clothes that aren't work clothes?)"
+    mc "(First time I've seen him not in the suit. He looks almost... relaxed. Okay, that was funny. Do not laugh.)"
+    father "It's Sunday. My one day off. Let me relax, at least on Sundays."
+    mother "He's been looking forward to it since Friday. Look at this kitchen—"
+    mother "even your father is in his Sunday clothes. It's the house uniform for the one day nobody has to be anywhere."
+    hikari "Sundays we take it easy. We stay home, or if we go out, we go together."
     mother "Hikari's been waiting for you since seven. There's something on the table."
     "On the table: the haiku handout from Saturday, a pencil,"
     "and a look on Hikari's face that I have learned to recognize."
@@ -6469,7 +6979,7 @@ label sunday_morning:
     mc "(The politeness era is over.)"
     hikari "Three questions. The handout. If you get them wrong I'll pretend it was a warm-up."
 
-    scene bg_home_day with walk_fade
+    scene bg_quiz with walk_fade
     "We move to the low table in the front room. Father retreats to his newspaper with the specific"
     "dignity of a man who has decided this is not his problem."
     "I open the handout. Kigo lists, example poems, the works,"
@@ -6573,20 +7083,11 @@ label sunday_morning:
     else:
         "Four names now. Hikari at the top, where she has always been. Aya from before."
         "And at the bottom, two new ones."
-    "Hana: one tick out of seven. Orson: one tick out of seven."
-    mc "(Two people I met yesterday are already rows in my phone. The app counts things faster than I do.)"
-    "I open Hana's profile. The note says she shelves returns and never quite says anything. Underneath:"
-    "one memory, that she fled a room I was sitting in."
-    mc "(I didn't say anything to her. I didn't do anything. The app still counted it, because I was there."
-    mc "I think that's the whole point of the thing.)"
-    "Orson's note is drier: Lupin's Den, the water's on the house."
-    "One memory, a wrong turn home from the library."
-    mc "(A bar I walked into by accident is now a contact."
-    mc "I don't know whether to be flattered or concerned.)"
     "I put the phone down. The house is quiet in the way it gets when everyone's doing their own separate"
     "Sunday."
 
     scene bg_kitchen_night with walk_fade
+    $ room_ambient(True)
     "Dinner is earlier than usual, which Mother insists is a Sunday rule she just invented."
     mother "Eat. Tomorrow is a school day and I can already see the tired in your posture."
     father "It's one day. He survived the airport."
@@ -6595,7 +7096,6 @@ label sunday_morning:
     "Nobody argues with that. I eat."
 
     scene bg_room_night with stair_fade
-    $ room_ambient(True)
     "Upstairs, my room is exactly where I left it, except the receipt is still on the desk,"
     "and so is the haiku handout, which I don't remember putting there."
     "I must have carried it up without deciding to."
@@ -6665,8 +7165,7 @@ label monday_lecture:
     scene bg_lecture_hall with walk_fade
 
     "The professor does not do a warm-up. He does not do attendance."
-    "He starts mid-sentence, the way a man starts when he has already said the important part in his"
-    "head."
+    "He starts mid-sentence, the way a man starts when he has already said the important part in his head."
     professor "Today we finish the unit. Kigo, the seasonal word, is not decoration. It is the poem's climate."
     professor "A haiku without one is just three lines that happen to be short."
     "He writes on the board: old pond. Stillness. Then, in a different hand: frog."
@@ -6733,7 +7232,7 @@ label monday_lecture:
 
     if monday_quiz_score == 3:
         mc "(Three for three. Hikari's quiz was real training.)"
-        mc "I should tell her. No — she'll find out. She always does."
+        mc "I should tell her. No, she'll find out. She always does."
         $ remember("professor", "answered all three quiz questions correctly")
     elif monday_quiz_score == 2:
         if not monday_q1_correct:
@@ -6749,44 +7248,84 @@ label monday_lecture:
         else:
             mc "Hikari is going to have something to say about this."
 
+    $ last_afternoon_place = None
+    $ last_afternoon_was_run = False
+    $ day6_ate_out = False
+    $ day6_dinner_declined = False
+
     "Hikari has afternoon seminar. I have nothing until dinner,"
     "which is the first unstructured hour this week that isn't an errand."
-    "I could go back to the library. I could find the reading room again and see if the girl with the"
-    "badge is there. I could do neither and just walk."
-    menu:
-        "Walk the campus until it stops feeling like a map.":
-            "I take the long way around the pond, the real pond, not the one in the poem,"
-            "and let the Saturday leg muscles do the work."
-            "The reading room's corridor passes on my left. The door has no sign, exactly like she said."
-            "I don't go in. Whatever she left on that desk was for a Saturday. Today is Monday."
-            mc "(I'm learning the shape of this place. That's what the afternoons are for.)"
-            # Going without a destination is its own small act of nerve.
-            $ reward_attributes_once("monday_walk_campus", [("nerve", "micro")], show="auto")
-        "Go back to the library and finish the handout properly.":
-            "I go back to the third floor, east wing, and find the door without needing the smell of green tea"
-            "this time."
-            "The room is emptier than Saturday. The low tables, the blinds, the fan, all exactly as described."
-            "I read the kigo list until the words stop being a list and start being a weather report."
-            mc "(Somewhere in this building is a girl made of held breath. Today she is not here.)"
-            mc "The room is just a room, and that is fine, it means she has a life somewhere that isn't this one."
-            $ reward_attributes_once("monday_library", [("insight", "micro")], show="auto")
-        "Check the phone. Hikari is asking how the quiz went.":
+
+    if first_day_activity == "photo_club":
+        "Sim's room is upstairs and the reading room is Saturday's. Today the city is the only door left."
+        $ day6_route = ""
+        menu:
+            "Take the wrong train line home." :
+                mc "(The quiz is done. The afternoon is not. Let's see where the long way goes.)"
+                $ day6_route = "chef_train"
+                $ reward_attributes_once("day6_wrong_train", [("insight", "micro")], show="auto")
+            "Message Hikari and ask what she's doing." :
+                mc "(She has seminar. She always has seminar. But she answers faster than she should.)"
+                $ day6_route = "hikari_run"
+                $ reward_attributes_once("day6_message_hikari", [("grace", "micro")], show="auto")
+            "Buy a snack at the combini, then take the long way home." :
+                mc "(One errand. One wrong turn. This city is very good at both.)"
+                $ day6_route = "chef_combini"
+                $ reward_attributes_once("day6_combini_long", [("nerve", "micro")], show="auto")
+        if day6_route == "chef_train":
+            $ day6_chef_route = "train"
+            call day6_walk_home_chef
+        elif day6_route == "chef_combini":
+            $ day6_chef_route = "combini"
+            call day6_walk_home_chef
+        elif day6_route == "hikari_run":
             $ run_chat("hikari", [
-                {"them": "How'd the quiz go?", "options": [
-                    {"label": "\"Three for three. Your training worked.\"",
-                     "send": "Three for three. Your training worked.",
-                     "them": ["Good. That's the easy one out of the way.", "Don't let it go to your head. Midterms are longer."]},
-                    {"label": "\"The pond was a trick.\"",
-                     "send": "The pond was a trick.",
-                     "them": ["It wasn't a trick. The pond is the setting. The frog is the kigo.", "Read the handout again tonight."]},
-                    {"label": "\"I blacked out.\"",
-                     "send": "I blacked out.",
-                     "them": ["Then you should be home studying, not texting me.", "I'm telling Dad you ran away."]},
+                {"them": "You alive?", "options": [
+                    {"label": "\"Alive. Just out of the quiz.\"",
+                     "send": "Alive. Just out of the quiz.",
+                     "them": ["Good.", "Come home.", "Wear something you can move in."]},
+                    {"label": "\"At the library.\"",
+                     "send": "At the library.",
+                     "them": ["The library can wait.", "Come home. Now."]},
                 ]},
             ])
-            mc "(She knows. She always knows. The only question is whether she says it first or makes me say it.)"
-            # Staying in the conversation instead of disappearing into the day.
-            $ reward_attributes_once("monday_phone_hikari", [("grace", "micro")], show="auto")
+            call hikari_first_run
+    elif first_day_activity == "walk_alone":
+        "The chef's card is in my pocket. Hikari's name is already at the top of WIRE."
+        "My phone buzzes before I can decide anything."
+        $ run_chat("hikari", [
+            {"them": "What are you doing this afternoon?", "options": [
+                {"label": "\"Nothing. Seminar ended early.\"",
+                 "send": "Nothing. Seminar ended early.",
+                 "them": ["Good.", "Come home. I have a question."]},
+                {"label": "\"The handout. Again.\"",
+                 "send": "The handout. Again.",
+                 "them": ["The handout can wait.", "Come home. Now."]},
+                {"label": "\"Missing the river?\"",
+                 "send": "Missing the river?",
+                 "them": ["You noticed.", "Wear something you can move in."]},
+            ]},
+        ])
+        mc "(She didn't say run. She said come home and wear something you can move in. That is the same thing.)"
+        call hikari_first_run
+    else:
+        "Hikari ran with me on day one. Today the river can wait; the city cannot."
+        "I have one afternoon and one rule: one place, then home."
+        $ day6_chef_route = ""
+        menu:
+            "Walk home alone and take the long way." :
+                mc "(No Hikari. No club. Just the streets and whatever they decide to give me.)"
+                $ day6_chef_route = "train"
+                $ reward_attributes_once("day6_solo_long", [("nerve", "micro")], show="auto")
+            "Message Hikari, then leave before she answers." :
+                mc "(She will say seminar. I will say I know. Then I will take the long way anyway.)"
+                $ day6_chef_route = "message"
+                $ reward_attributes_once("day6_solo_message", [("grace", "micro")], show="auto")
+            "Follow the river path home without her." :
+                mc "(The path she runs. I know where it starts. I do not know where it ends.)"
+                $ day6_chef_route = "river"
+                $ reward_attributes_once("day6_solo_river", [("insight", "micro")], show="auto")
+        call day6_walk_home_chef
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
@@ -6806,8 +7345,41 @@ label monday_lecture:
     hikari "It was a good question."
     "The soup is hot. The rice is warm. Outside, the city does its Monday thing, trains, neon,"
     "the particular hum of a week starting."
-    "I eat. I answer questions about my day that aren't questions."
-    "I let the house hold me the way it does on nights like this."
+    if last_afternoon_was_run:
+        hikari "I'm so hungry I could eat the pot."
+        mc "Same. I didn't know running could feel this much like dying."
+        mother "Then eat like you mean it."
+    if last_afternoon_was_run:
+        "We eat like the train is already leaving. Hikari finishes first and still looks like she could go again."
+    elif day6_ate_out:
+        mc "(I am still full. That bowl was enormous. But Mother kept this warm, and they waited for me.)"
+        menu:
+            "Be honest. Tell them you're still full from the ramen." :
+                mc "I... I actually just had ramen on the way home. I'm still full."
+                "The table goes quiet for a second. Mother looks at the soup, then at me."
+                father "Where?"
+                mc "A little place near the station. I got a little lost."
+                hikari "You got lost *again*."
+                father "..."
+                father "I'm glad you found somewhere to eat. But when this family sits down, we eat together."
+                mother "There's rice in the pot. If you get hungry later."
+                $ day6_dinner_declined = True
+                $ reward_attributes_once("day6_dinner_declined", [("nerve", "micro")], show="auto")
+                $ remember("father", "told him he was still full from ramen on Monday")
+                $ remember("hikari", "teased him for getting lost again")
+            "Say you're starving, and sit down to eat with them." :
+                mc "I'm starving, actually. I'll eat."
+                $ reward_attributes_once("day6_dinner_covered", [("grace", "small")], show="auto")
+                $ add_affection("father", 1)
+                $ remember("father", "ate dinner with the family even though he was still full")
+                $ remember("hikari", "let him hide being too full")
+        if day6_dinner_declined:
+            "I push the bowl away and let the soup go cold. Father does not say anything else."
+        else:
+            "I eat like I mean it, which is a performance, but the rice is good and nobody checks."
+    else:
+        "I eat. I answer questions about my day that aren't questions."
+        "I let the house hold me the way it does on nights like this."
 
     scene bg_room_night with stair_fade
     $ room_ambient(True)
@@ -6825,22 +7397,112 @@ label monday_lecture:
     jump tuesday_morning
 
 
+label day6_walk_home_chef:
+    stop music
+    scene bg_alley_night with walk_fade
+    if day6_chef_route == "message":
+        "I check Hikari's last message before I leave: 'Seminar. Don't wait.' Then I take the long way anyway."
+    elif day6_chef_route == "river":
+        "I follow the river path as far as it goes, then cut back through the backstreets."
+    elif day6_chef_route == "combini":
+        "I stop at the combini for a snack, then take the long way home on purpose."
+    else:
+        "I take the wrong train line on purpose, or what turns out to be the wrong one."
+    "One turn too many. The street gets narrower. No mirrors on the poles, no cat on any window."
+    "The phone has a map on it. No signal. I put it back."
+    "The sun goes down off the roofs while I walk. The lights on the poles come on in a line."
+    "The shops stop looking like they are for passers-by."
+    mc "(It is getting dark. It was supposed to take eleven minutes.)"
+    "And then I smell it."
+    mc "(Pork and soy, and something that has been simmering all day.)"
+    $ day6_ate_out = True
+    call confidant_visit_chef
+    return
+
+
+label hikari_first_run:
+    $ last_afternoon_place = "walk_hikari"
+    $ last_afternoon_was_run = True
+    scene bg_home_exterior_day with walk_fade
+    "I get home with the afternoon still mine. Hikari is waiting in the front room, phone face-down, like she has already decided something."
+    hikari "You're early."
+    mc "Seminar ended early."
+    hikari "Good. I have a question."
+    hikari "Do you want to go for a run?"
+    mc "Where?"
+    hikari "The river. The path along the water. You have not run it yet."
+    mc "(She is offering the thing she does not offer people. I am not going to pretend I didn't notice.)"
+    hikari "I'm going to change. Meet me in the front yard. Don't take an hour."
+
+    scene black with Dissolve(1.5)
+    mc "(Upstairs, the trainers are where I left them. Nobody is going to tell me not to.)"
+    scene bg_home_exterior_day with walk_fade
+    $ hikari_run = True
+    "She is outside at the bottom of the steps, arms crossed, weight on one foot."
+    hikari "Four minutes."
+    mc "You didn't time me."
+    hikari "I always time you."
+
+    scene bg_river with walk_fade
+    play music "audio/Music/(shibuya night?) rain_at_the_crossing.mp3" fadein 2.0
+    "The path along the water goes further than I can see. A fence, a row of trees, vending machines lit like aquariums."
+    hikari "You remember the route?"
+    mc "The fence, the trees, the machines. That's all I have."
+    hikari "That's enough. The rest you learn by running it."
+    "She goes. Slow, she says, and then she doesn't."
+    "Twenty minutes later I am at the second bridge with my hands on my thighs and she is not out of breath."
+    mc "(My legs are arguing. Hers are not. That is the whole difference between us.)"
+
+    hikari "You're not unfit. You're just new. Those are different things and it's rude to confuse them."
+    "We sit on the wall. She buys two cans without asking and hands me one."
+    menu:
+        "This is the only hour that's yours?" :
+            mc "This is the only hour that's yours?"
+            hikari "It's the only hour of the day that's mine. Don't make it weird."
+            $ reward_attributes_once("hikari_first_run_why", [("insight", "micro")], show="auto")
+        "Why the river?" :
+            mc "Why the river?"
+            hikari "Because it goes one way and comes back the same way and it never asks me anything."
+            $ reward_attributes_once("hikari_first_run_river", [("grace", "micro")], show="auto")
+        "Same time next week?" :
+            mc "Same time next week?"
+            hikari "If you can keep up."
+            mc "(She says it like a challenge. It is an invitation.)"
+            $ reward_attributes_once("hikari_first_run_next", [("nerve", "micro")], show="auto")
+
+    "We walk back. She talks less on the way back. Not nothing. Less."
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    "At the gate she stops with her key in her hand."
+    hikari "Same time next week?"
+    mc "Same time next week."
+    hikari "Good. I wasn't asking."
+    scene bg_home_night with walk_fade
+    $ hikari_run = False
+    $ hikari_visits = max(hikari_visits, 1)
+    $ reward_attributes_once("run_first_river", [("nerve", "small")], show="card")
+    $ add_affection("sister", 1)
+    $ remember("hikari", "ran the river path with her after the quiz")
+    return
+
+
 ################################################################################
-## ACT TWO, ELEVENTH BEAT: THE FIRST HUB DAY
+## ACT TWO, ELEVENTH BEAT: THE FORCED SECOND-CONFIDANT DAY
 ################################################################################
 ##
-## Tuesday, April 14. The first day the story hands the afternoon to the hub:
-## morning at the house, the lecture, `free_afternoon`, then dinner and the
-## room. Every later hub day is this shape with different content.
+## Tuesday, April 14. The first day after the opening fork: morning at the
+## house, the lecture, then a forced meeting with whichever of Sim, Chef, or
+## Hikari's first run is still unmet. Day 8 is where `free_afternoon` begins.
 ##
-## `last_afternoon_place` is written by `free_afternoon` so the evening can
+## `last_afternoon_place` is still written before the visit so the evening can
 ## carry the afternoon home, the way the treatment's "Rhythm of Days" asks.
 
 label tuesday_morning:
-    # Day 7: Tuesday, April 14. The first hub afternoon.
+    # Day 7: Tuesday, April 14. The forced second-confidant afternoon.
     $ set_story_day(7)
     call day_transition
     $ last_afternoon_place = None
+    $ last_afternoon_was_run = False
 
     $ flush_pending_messages()
 
@@ -6982,27 +7644,74 @@ label tuesday_lecture:
     scene bg_campus_interior with walk_fade
     "Hikari has seminar until five. The afternoon is a door with nothing written on it."
     mc "(One place. That is the rule I have given myself. One place, and then home.)"
-    call free_afternoon
+    $ day7_missing = ""
+    if confidant_visits.get("sim", 0) <= 0:
+        $ day7_missing = "sim"
+        $ last_afternoon_place = "sim"
+        $ last_afternoon_was_run = False
+    elif confidant_visits.get("chef", 0) <= 0:
+        $ day7_missing = "chef"
+        $ last_afternoon_place = "chef"
+        $ last_afternoon_was_run = False
+    elif hikari_visits <= 0:
+        $ day7_missing = "hikari"
+    if day7_missing == "sim":
+        call day7_sim_campus
+    elif day7_missing == "chef":
+        call day7_missing_chef
+    elif day7_missing == "hikari":
+        call day7_missing_hikari
+    else:
+        # Defensive only. Day 2 plus Day 6 always leave one of the three unmet,
+        # so normal play never reaches this branch.
+        call free_afternoon
 
     # Every visit and every walk returns here. `last_afternoon_place` is the
     # hub row that was picked, or None for Head Home.
+    #
+    # If Hikari ran the river path with him, she was not waiting at home. They
+    # come through the door together, and she takes the blame for the two of
+    # them instead of letting Mother aim it at him alone.
+    $ day7_walked_with_hikari = bool(last_afternoon_place == "walk_hikari")
     scene bg_home_night with walk_fade
     $ room_ambient(True)
     "The house is warm the way it is when someone has been cooking for a while."
-    "I leave my shoes by the door and follow the smell to the kitchen."
+    if day7_walked_with_hikari:
+        if last_afternoon_was_run:
+            "Hikari comes in behind me, still in her running clothes, and leaves her shoes where they fall."
+        else:
+            "Hikari comes in behind me and leaves her shoes where they fall, the way she does when we walk home together."
+        "We follow the smell to the kitchen together."
+    else:
+        "I leave my shoes by the door and follow the smell to the kitchen."
 
     scene bg_kitchen_night with walk_fade
     "Mother is ladling something into four bowls. Father is setting the table with the careful imprecision of a man who has been told to help."
-    mother "There you are. Wash your hands."
-    hikari "You're late."
-    mc "I'm not late. Dinner is early."
-    hikari "Dinner is on time. You're late."
-    "I wash my hands. The water is warm."
+    if day7_walked_with_hikari:
+        mother "There you are. You're late."
+        hikari "We're late. Sorry."
+        mc "(She gets there before I can. She is not going to let me be the only one standing in it.)"
+        mother "Dinner is on time."
+        hikari "We know. That's what sorry means."
+        if last_afternoon_was_run:
+            hikari "And it's not his fault. The river loop is longer than I said it was. I kept going."
+        else:
+            hikari "And it's not his fault. I took the long way and made him follow."
+        mother "..."
+        mother "Then both of you wash your hands."
+        "We wash our hands side by side. The water is warm."
+    else:
+        "Hikari is already at the table, her chopsticks still in their paper, waiting with the family."
+        mother "There you are. Wash your hands."
+        hikari "You're late."
+        mc "I'm not late. Dinner is early."
+        hikari "Dinner is on time. You're late."
+        "I wash my hands. The water is warm."
     mother "Where did you go?"
 
     if last_afternoon_place == "chef":
-        mc "The ramen shop. The same stool. The same bowl."
-        mc "(He remembered what I ordered. He did not make a thing of it. That was the whole welcome.)"
+        mc "The ramen shop. He put a bowl down and watched me eat it."
+        mc "(I do not know what it was. I finished all of it.)"
     elif last_afternoon_place == "aya":
         mc "The maid cafe. She remembered the order before I said it."
         mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
@@ -7013,7 +7722,8 @@ label tuesday_lecture:
         mc "Lupin's Den. The bar was empty enough to hear the ice."
         mc "(He taught me a phrase I am still turning over.)"
     elif last_afternoon_place == "sim":
-        mc "The photography club. Sim made us photograph the same wall until it stopped being a wall."
+        mc "The photography club. Sim put a camera in my hands before he knew my name."
+        mc "(I took one photograph. He looked at it longer than it deserved.)"
     elif last_afternoon_place == "walk_hikari":
         if last_afternoon_was_run:
             mc "The river path. She ran the whole way and barely looked at the water."
@@ -7039,7 +7749,10 @@ label tuesday_lecture:
     mc "Two weeks. Essays. A practical."
     father "Then you have two weeks."
     mc "That's what two weeks means."
-    hikari "He's been like this all day."
+    if day7_walked_with_hikari:
+        hikari "He's been like this all afternoon."
+    else:
+        hikari "He's been like this all day."
     father "It is a useful thing to be like."
     "Nobody argues with that. We eat."
 
@@ -7113,6 +7826,66 @@ label tuesday_lecture:
     jump wednesday_morning
 
 
+label day7_sim_campus:
+    scene bg_campus_interior with walk_fade
+    "The lecture hall empties in both directions. I take the long way around the courtyard because the short way is where the smokers are."
+    "Near the far benches, a cluster of people has stopped walking. Cameras up. A boy is lying on the grass with a phone over his face. Nobody is posing. Everybody is looking."
+    mc "(Photography club. It has to be. Nobody else in this building shoots like that.)"
+    "I slow down. They slow down. One of them looks up first."
+    sim "You're not in the club."
+    mc "No. I was just—"
+    sim "You're looking like you know where it is."
+    mc "I don't. I was looking at them."
+    sim "Good. Most people look at the cameras. You're looking at the light."
+    $ reward_attributes_once("day7_sim_campus_light", [("insight", "micro")], show="auto")
+    "He is older than the students around him, with a camera strap over one shoulder and the calm of a man who has been the youngest person in a room for a long time."
+    sim "Sim. I run Circle."
+    mc "The photography club."
+    sim "Circle. The photography club is what the timetable calls us."
+    mc "I didn't know I was looking for it until I stopped."
+    sim "That is the same thing, said properly."
+    sim "We usually meet Thursdays. This week half the club called off and the attendance was terrible, so we moved it to Tuesday. Special session. Don't tell the department."
+    mc "Why tell me?"
+    sim "Because you looked like you were looking for it. That is the whole recruitment policy."
+    "He turns and walks toward the studio room at the end of the corridor, camera still in hand."
+    sim "Come on. The others are setting up. You can watch, or you can stand there looking mysterious."
+    $ sim_campus_intro = True
+    call sim_visit_01
+    $ sim_campus_intro = False
+    return
+
+
+label day7_missing_chef:
+    scene bg_campus_interior with walk_fade
+    "Hikari has seminar until five. The afternoon is a door with nothing written on it."
+    "On the way out of the lecture hall, the wind changes. It brings the smell of a kitchen from somewhere down the hill."
+    mc "(Pork. Soy. Somebody has been at the pots since morning.)"
+    "I tell myself I am only walking home. The street gets narrower. The lights come on. And then the smell is a doorway."
+    mc "(It is not a decision. It is a door.)"
+    $ last_afternoon_place = "chef"
+    $ last_afternoon_was_run = False
+    call confidant_visit_chef
+    return
+
+
+label day7_missing_hikari:
+    scene bg_campus_interior with walk_fade
+    "Hikari has seminar until five, but my phone buzzes before I reach the gate."
+    $ run_chat("hikari", [
+        {"them": "Where are you?", "options": [
+            {"label": "\"Still on campus.\"",
+             "send": "Still on campus.",
+             "them": ["Good.", "Come home.", "Wear something you can move in."]},
+            {"label": "\"Heading home.\"",
+             "send": "Heading home.",
+             "them": ["Then turn around.", "Come home. Now."]},
+        ]},
+    ])
+    mc "(She did not say run. She said come home and wear something I can move in. That is the same thing.)"
+    call confidant_visit_hikari
+    return
+
+
 ################################################################################
 ## THE HUB'S TWO WALKS
 ################################################################################
@@ -7161,7 +7934,7 @@ label afternoon_walk_hikari:
     # behind it, just the fact she has already placed.
     hikari "You keep saying you need a job."
     mc "I meant it. I meant it the way I meant the ramen plan."
-    hikari "Then I'm not going to stop you from meaning it. There's a convenience store next to the ramen shop that's hiring. They're handing out tissues today - little white packets with the shop's mark on them, one per street. Real campaign. Small. Stupid. Perfect."
+    hikari "Then I'm not going to stop you from meaning it. There's a convenience store next to the ramen shop that's hiring. They're handing out tissues today, little white packets with the shop's mark on them, one per street. Real campaign. Small. Stupid. Perfect."
     mc "A job that is handing out tissues."
     hikari "A job that is being a person in public. You don't need good Japanese. The customers are mostly foreign like you, and the rest are just tired. The pay is good. And the city pays you for standing. That's the part nobody puts on the flyer."
 

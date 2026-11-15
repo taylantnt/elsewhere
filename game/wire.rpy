@@ -42,7 +42,7 @@
 ## The order the roster lists people in. It is fixed rather than
 ## most-recent-first so that the list does not reshuffle itself every time
 ## somebody is added, which is how a real contact list behaves.
-define wire_order = ["hikari", "chef", "sim", "aya", "hana", "orson"]
+define wire_order = ["hikari", "chef", "sim", "aya", "hana", "orson", "murakami", "tanaka"]
 
 define wire_contacts = {
 
@@ -68,9 +68,8 @@ define wire_contacts = {
         "color": "#d2793a",
         "photo": "images/characters/chef.png",
         "photo_crop": (0.25, 0.005, 0.48, 0.32),
-        # His story runs one visit past the usual seven: the eighth is the
-        # closed shop, the end of his arc.
-        "total": 8,
+        # The meter follows confidant_visit_totals: eight visits, the last one
+        # the closed shop.
     },
 
     "sim": {
@@ -95,26 +94,55 @@ define wire_contacts = {
     "hana": {
         "name": "Hana",
         "handle": "@hana",
-        # The badge said her name before she ever did. What the app knows about
-        # her so far is exactly what he knows: she shelves returns, and she ran.
-        "note": "Shelves returns. Never quite says anything.",
+        # The card she dropped was handmade and slightly bossy about the rules.
+        # What the app knows about her so far is exactly what he knows: she
+        # shelves returns, and she left him a book and a way to reach her.
+        "note": "Books before words.",
         "color": "#98fb98",
         "photo": "images/characters/hana.png",
         "photo_crop": (0.25, 0.0, 0.50, 0.333),
-        # Her story also runs one visit past the usual seven: the eighth is the
-        # empty reading room, the end of her arc.
-        "total": 8,
+        # The meter follows confidant_visit_totals: eight visits, the last one
+        # the empty reading room.
     },
 
     "orson": {
         "name": "Orson",
         "handle": "@lupinsden",
         # He never gave his name either, and neither did the place. What he did
-        # give is a glass of water and a door he said was open.
+        # give is a glass of water, a door he said was open, and a card with a
+        # better way to knock.
         "note": "Lupin's Den. The water's on the house.",
         "color": "#a9a9a9",
         "photo": "images/characters/orson.png",
         "photo_crop": (0.25, 0.0, 0.50, 0.333),
+    },
+
+    "murakami": {
+        "name": "Murakami",
+        "handle": "@murakami",
+        # Not a confidant and never going to be one of the seven-visit chains:
+        # she is the elective, and the phone only knows her as the woman who
+        # hands out homework. The meter counts lessons, not visits.
+        "note": "Read the page. Bring a question you cannot answer.",
+        "color": "#c9b38a",
+        "photo": "images/characters/teacher2.png",
+        "photo_crop": (0.25, 0.0, 0.50, 0.333),
+        "progress": ("murakami_lessons",),
+        "total": 8,
+    },
+
+    "tanaka": {
+        "name": "Tanaka",
+        "handle": "@tanaka",
+        # The name on the badge, and the only name he gives. The meter counts
+        # teaching shifts, not visits, because the job is the relationship.
+        # Seven shifts, and then the work simply repeats.
+        "note": "Night shift. Ask about the point card.",
+        "color": "#b8c4c8",
+        "photo": "images/characters/combini_worker.png",
+        "photo_crop": (0.25, 0.0, 0.50, 0.333),
+        "progress": ("tanaka_story",),
+        "total": 7,
     },
 }
 
@@ -168,6 +196,11 @@ init python:
 
     def wire_total(contact_id):
         """How many visits this contact's meter is drawn against."""
+        # The five confidants all run to eight: seven numbered visits and the
+        # repeatable epilogue. Murakami and Tanaka keep their own totals because
+        # their meters count lessons and shifts rather than confidant visits.
+        if contact_id in confidant_visit_totals:
+            return confidant_visit_totals[contact_id]
         return wire_contacts.get(contact_id, {}).get("total", confidant_visits_total)
 
     def wire_unlock(contact_id):

@@ -4,14 +4,16 @@
 ##
 ## Hikari is the host sister and the one person who stays. Her arc is not one of
 ## the five confidant chains in locations.rpy: it is the recurring river run,
-## tracked by `hikari_visits` and `sister_affection`. The first run is written
-## into `after_school_run` in script.rpy (Day 2) and must not be duplicated
-## here. This file holds the other six beats, visits 2 through 7.
+## tracked by `hikari_visits` and `sister_affection`. The Day 2 first run is
+## written into `after_school_run` in script.rpy; players who skipped it get the
+## shorter `hikari_first_run` fallback from Day 6 or the hub. This file holds
+## visits 2 through 7.
 ##
 ## The hub's "Walk home with Hikari" row routes to `confidant_visit_hikari`,
-## which reads the visit count and jumps to the next run. After the seventh run
-## the row falls back to the ordinary walk home (`afternoon_walk_hikari`), so
-## the place never runs out of something to do.
+## which reads the visit count and jumps to the next run. Before the first run
+## it plays `hikari_first_run`; after the seventh run the row falls back to the
+## ordinary walk home (`afternoon_walk_hikari`), so the place never runs out of
+## something to do.
 ##
 ## The seven beats are the ones in story_treatment.md, "The Run Becomes
 ## Recurring": the route, the evening he keeps up, the night neither of them
@@ -26,9 +28,10 @@
 
 label confidant_visit_hikari:
     if hikari_visits <= 0:
-        # The first run belongs to Day 2. If it was skipped, the ordinary walk
-        # home is the honest fallback.
-        jump afternoon_walk_hikari
+        # The first run belongs to Day 2, with Day 6 and the hub as the safety
+        # net for players who chose another first afternoon. Until `hikari_visits`
+        # is at least 1, her row plays that first run instead of the ordinary walk.
+        jump hikari_first_run
     elif hikari_visits == 1:
         jump hikari_visit_02
     elif hikari_visits == 2:

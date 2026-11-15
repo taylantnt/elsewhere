@@ -54,7 +54,7 @@ label dream_day_two_cellular_maid:
     stop music fadeout 2.0
     pause 1.2
 
-    play music "audio/Music/dream sequence.wav" fadein 3.0
+    play music "audio/Music/dream_sequence.mp3" fadein 3.0
 
     show screen dream_static
     pause 1.0

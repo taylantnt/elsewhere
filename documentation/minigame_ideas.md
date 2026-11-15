@@ -2,10 +2,12 @@
 
 ## In the current opening
 
-**Day-memory pairs** — The first night turns eight images from the player's
-chosen first-day route into a 4×4 matching board. The cards are previewed briefly;
-the player wins by finding all pairs before three mismatches. A win grants
-0.3 Insight once. A miss changes only the reflection, not the story path.
+**Day-memory pairs** — The first night turns six images from the player's
+chosen first-day route into a 4×3 matching board. The cards are previewed briefly;
+the player wins by finding all pairs before five mismatches. Finding them
+within three keeps the day sharp enough to grant 0.3 Insight; a messier
+win still holds, but pays nothing. A miss changes only the reflection,
+not the story path.
 
 ## Good candidates for later scenes
 

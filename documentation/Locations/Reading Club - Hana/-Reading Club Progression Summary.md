@@ -1,11 +1,12 @@
 Progression Summary
-    •    1: First meeting; player notices her shelving books, she avoids eye contact and flees. Silent curiosity begins.
-    •    2: She lingers while placing a book near the player; name revealed from her badge, mystery deepens.
+    •    1: First meeting; player notices her shelving books, she avoids eye contact and flees. She leaves a personal book, then drops a handmade WIRE card when he tries to return it.
+    •    2: Player returns the book properly; Hana takes it back with both hands. The book's dedication reveals why she keeps it close.
     •    3: Hana whispers an inaudible greeting, panics, and runs away—interest is clear but her shyness overwhelms her.
     •    4: She approaches with an art book, freezes, retreats—her hidden passion begins to show.
     •    5: Shared silence at the same table; leaves a small note of gratitude behind. First real connection.
     •    6: Hana opens up—confesses loneliness, parental pressure to study law, secret love for art; shows her sketchbook.
     •    7: Resolution; she tells parents the truth, reconciliation follows. Farewell gift: a handmade art charm, symbol of trust and courage.
+    •    8: Closed room; Hana is gone for art school. The protagonist returns to the empty club and sends one last WIRE message.
 
 
 
@@ -15,14 +16,17 @@ Progression Summary
     •    The player notices a girl shelving books in the back. She glances at the player for a split second, then quickly avoids eye contact and rushes away.
     •    Player whispers to the student: “Who’s that?”
     •    Student shrugs: “Oh, Hana? She volunteers here. Doesn’t really… talk. Every time someone tries, she runs off. But she’s always around.”
-    •    The scene ends with Hana briefly passing by your desk, silently placing a book down nearby before hurrying off.
+    •    Midway through the hour, a slim older book appears on the player’s table. Hana is seen nearby, but it is unclear whether she meant to leave it, was listening, or simply could not help herself.
+    •    When the hour ends, the player tries to return the book. Hana sees it in their hands, panics, changes direction, and spills books; her personal book hits the floor and a handmade WIRE card slides out.
+    •    The card gives her name and role — volunteer, student library desk — plus a square WIRE code. Scanning it adds Hana to WIRE properly.
+    •    The player keeps the book until the next meeting; a shy WIRE message arrives later saying she could not take it back.
 
-Encounter 2 – Observation
+Encounter 2 – The Return
 
-Hana continues to orbit quietly.
-    •    While you’re reading, Hana deliberately places a book close to you. This time, she lingers for a second before walking away.
-    •    Camera pans to her badge: Hana.
-    •    If you try to say “Thanks”, she bows quickly but doesn’t speak.
+Hana’s book turns out to be personal, not borrowable.
+    •    The player brings *A Child's Garden of Verses* back to the reading room, meaning to return it properly.
+    •    The flyleaf dedication — “when the house gets too loud… you are allowed to be small” — explains why she keeps it close.
+    •    Player chooses between saying it directly or setting the book down and letting her choose. Either way, Hana takes it with both hands, bows, and walks away without running.
     •    The side character at the table whispers: “See? She’s like a ghost. Shows up, disappears. Honestly don’t think she has any friends.”
 
 Encounter 3 – Tiny Spark
@@ -73,3 +77,11 @@ The resolution of her arc.
     •    Hana: “…You gave me courage. Without you, I… I’d still be hiding.”
     •    She hands you a small handmade charm — a tiny cloth strap with a brush-and-palette stitched in thread.
     •    “For you… so you don’t forget me. Like… you carried my dream, when I couldn’t.”
+
+Encounter 8 – The Empty Room
+
+The club remains, but Hana does not.
+    •    The protagonist returns to the reading room after Hana has left for art school.
+    •    A different volunteer shelves the returns; the side character says Hana stopped coming.
+    •    The protagonist keeps the rain-window drawing, the folded note, and the brush-and-palette charm.
+    •    He can leave quietly or send Hana one last WIRE message. Either way, the room is just a room now — but for months it was hers.

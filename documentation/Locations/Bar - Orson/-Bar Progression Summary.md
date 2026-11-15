@@ -1,7 +1,7 @@
 
 Progression Summary – Furry Bar (Orson)
 
-    •    1: Awkward first visit, shy player, Orson observes quietly.
+    •    1: Lost first visit, shy player, Orson offers a quiet welcome.
     •    2: Light talk, explains masks = freedom, first advice.
     •    3: Shares bar stories, reflections on Japan’s duality.
     •    4: Hints at his past, talks identity & belonging.
@@ -10,10 +10,10 @@ Progression Summary – Furry Bar (Orson)
     •    7: Farewell, bar closing, gratitude, parting wisdom.
 
 Encounter 1 – First Visit
-    •    Player is nervous and shy.
-    •    Orson greets but doesn’t push conversation; he mostly observes.
-    •    Player notices the strange but welcoming vibe of the bar.
-    •    Theme: Introduction to the world of masks, anonymity, and observing without pressure. 
+    •    Player is lost, nervous, and only meant to look through the door.
+    •    Curiosity carries them inside; Orson notices and offers quiet reassurance in fluent English.
+    •    Player notices the strange but welcoming vibe of the bar and takes a WIRE card on the way out.
+    •    Theme: Introduction to the world of masks, anonymity, and belonging without pressure. 
 
 Encounter 2 – Breaking the Ice
     •    Orson initiates small talk, asking where the player is from.

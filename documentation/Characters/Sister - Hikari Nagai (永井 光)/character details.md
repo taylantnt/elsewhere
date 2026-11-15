@@ -36,7 +36,7 @@ Hikari's arc is not a numbered 1–7 chain like the location characters. It is a
 
 The parallel arc's Act 2 spine is the recurring river run. The first run is the
 Day 2 afternoon fork (`after_school_run` in `script.rpy`); visits 2–7 live in
-`game/hikari.rpy` and are routed by `confidant_visit_hikari` from the hub's
+`game/confidant_visits/hikari.rpy` and are routed by `confidant_visit_hikari` from the hub's
 "Walk home with Hikari" row. `hikari_visits` counts the runs and feeds the WIRE
 progress meter; `sister_affection` carries the relationship. The seven beats:
 

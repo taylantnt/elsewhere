@@ -7,7 +7,7 @@ is not the host sister, not the translator, not the person who knows where
 everything is. It is the one place she is allowed to be tired.
 
 The first run is written in `after_school_run` (`game/script.rpy`); visits 2–7
-live in `game/hikari.rpy`. The hub's **Walk home with Hikari** row
+live in `game/confidant_visits/hikari.rpy`. The hub's **Walk home with Hikari** row
 (`walk_hikari`) routes through `confidant_visit_hikari`, which plays the next
 run or falls back to the ordinary walk home (`afternoon_walk_hikari`) when the
 first run was skipped or the chain is finished.
@@ -78,6 +78,6 @@ beat as the last run. The twelve menus are M61–M66 in
 ## Current Build
 
 Only visit 2 is reachable now: the first run is the Day 2 afternoon fork, and
-the Day 7 hub is the first hub day. Visits 3–7 are written and wired, waiting
-for later hub days. The ordinary walk home remains available after visit 7, so
+Day 7 can force `hikari_first_run` when Hikari is the missing first-week
+confidant. Visits 3–7 are written and wired, waiting for hub days from Day 8. The ordinary walk home remains available after visit 7, so
 the Hikari row never runs out of something to do.

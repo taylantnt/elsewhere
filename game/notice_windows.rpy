@@ -11,7 +11,7 @@ init -1 python:
         return any(renpy.get_screen(name) is not None for name in (
             "hint_card", "notice_page", "notice_confirm", "notice_name",
             "location_hub", "attribute_gain_card", "airport_phone",
-            "day_transition_screen",
+            "day_transition_screen", "day_memory_match",
         ))
 
     def cinematic_departure():

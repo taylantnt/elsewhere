@@ -23,7 +23,7 @@
 ## Backstory
 Aya studied abroad briefly (Canada or Australia) and loved the freedom of it. Coming home reminded her of how much pressure there is to fit into a prescribed role. Her parents consider the café job frivolous, and she has never told them what she actually wants. She quietly tests her dreams in the margins of her life.
 
-## Confidant Arc (Interactions 1–7)
+## Confidant Arc (Interactions 1–8)
 | # | Beat |
 | :--- | :--- |
 | 1 | First visit. The maid-café concept confuses the protagonist; she carries the whole interaction. "Please come back!" |
@@ -33,11 +33,12 @@ Aya studied abroad briefly (Canada or Australia) and loved the freedom of it. Co
 | 5 | Vulnerability. She's thinking about quitting; her parents disapprove. "When I talk with you, I feel a little braver." |
 | 6 | Resolve. She auditioned for something — applying alone made her feel alive. |
 | 7 | **Farewell.** She says this may be the last time. She drops the persona and gives her real name: **Shiori**. |
+| 8 | **Epilogue: the same omurice.** The café is open and a new maid serves the usual table. Aya trained her from notes, so the cat, the spell and the bow are all correct. The routine is identical and the warmth is not. Repeats on every later visit. |
 
 ## How Her Arc Ends (The Departure Theme)
 She chooses the unsafe thing. She leaves the café to chase her dream, and the protagonist cannot follow her into that next life.
 
-**In-game consequence**: after Interaction 7 the Maid Cafe can still be visited, but **no one there treats the protagonist the way Aya did**. The room is the same, the warmth is absent. `aya_affection` is locked.
+**In-game consequence**: after Interaction 7 the Maid Cafe can still be visited, but **no one there treats the protagonist the way Aya did**. The room is the same, the routine is the same, the warmth is absent. `aya_affection` is locked. The eighth visit is the repeatable epilogue with the new maid.
 
 ## What She Symbolises in the Simulation
 Aya is the first argument for leaving the comfortable version of your life. Her line — *"staying here forever would've been safe, and I don't want to be safe anymore"* — is the thesis statement for the "Escape" ending.

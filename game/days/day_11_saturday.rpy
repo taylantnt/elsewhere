@@ -14,8 +14,8 @@ label saturday_recovery:
 
     "Saturday. The house is quiet in a different way. No train, no clock ticking in anybody's head."
     "I wake before the rest of the house, which is new. I lie there and listen to it not waking up."
-    mc "(The elective continues today. Not in a classroom. Murakami said to meet him at the station.)"
-    mc "(He did not say which station. He said the one with the clock.)"
+    mc "(The elective continues today. Not in a classroom. Murakami said to meet her at the station.)"
+    mc "(She did not say which station. She said the one with the clock.)"
 
     "My phone buzzes once on the desk."
 
@@ -92,8 +92,8 @@ label saturday_recovery:
             mc "(That last one lands harder than the other two.)"
             $ reward_attributes_once("day11_kitchen_mottainai", [("nerve", "micro")], show="auto")
 
-    hikari "You're going to be late for your book man."
-    mc "He said the station with the clock."
+    hikari "You're going to be late for your book woman."
+    mc "She said the station with the clock."
     hikari "They all have clocks."
     mc "Then I'll find the one with the right clock."
     hikari "That is the most you thing you have ever said."
@@ -113,7 +113,7 @@ label saturday_recovery:
     murakami "All stations have clocks. I wanted to see which one you would choose."
     mc "That is not a fair test."
     murakami "It is not a test. It is a habit. You chose the one you knew."
-    "He turns and walks toward the platform. I follow."
+    "She turns and walks toward the platform. I follow."
 
     scene bg_platform with walk_fade
     "The Saturday platform is full of families and tourists and people carrying bags with other people's weekends in them."
@@ -130,21 +130,21 @@ label saturday_recovery:
     mc "The past?"
     murakami "Used books. Every one of them has been read by someone who is not you. That is the whole point."
     murakami "A new book is a promise. A used book is a conversation."
-    "He takes a small notebook out of his bag and writes something down. He does not show me what."
+    "She takes a small notebook out of her bag and writes something down. She does not show me what."
 
     menu:
-        "Ask what he wrote.":
+        "Ask what she wrote.":
             mc "What did you write?"
             murakami "A sentence for you. You will get it at the end of the day, if you deserve it."
             mc "That is not how homework works."
             murakami "It is how this homework works."
             $ reward_attributes_once("day11_train_note", [("insight", "micro")], show="auto")
-        "Ask why he teaches an elective nobody takes.":
+        "Ask why she teaches an elective nobody takes.":
             mc "Why do you teach a course nobody takes?"
             murakami "Someone took it. You."
             mc "Before me."
             murakami "Before you, the course was a room with a chair in it. I taught the chair."
-            "He says it without self-pity. It is simply the weather."
+            "She says it without self-pity. It is simply the weather."
             $ reward_attributes_once("day11_train_course", [("nerve", "micro")], show="auto")
         "Watch the old man with the magnifying glass.":
             "The old man turns the page with one finger. The magnifying glass moves across the paper like a small sun."
@@ -161,11 +161,11 @@ label saturday_recovery:
     murakami "Cities are made of what people needed once."
 
     scene bg_library with walk_fade
-    "The shop he chooses is narrow and deep, with shelves that go up past the ceiling and a ladder on a rail."
+    "The shop she chooses is narrow and deep, with shelves that go up past the ceiling and a ladder on a rail."
     "An old woman behind the counter does not look up from her ledger."
-    "Murakami walks to a shelf in the back as if he has done it a thousand times."
+    "Murakami walks to a shelf in the back as if she has done it a thousand times."
     murakami "Sit. There is a stool."
-    "I sit. He pulls three books from the shelf and sets them on the counter in front of me."
+    "I sit. She pulls three books from the shelf and sets them on the counter in front of me."
 
     "The first is thin and blue. The second is thick and brown. The third has no cover at all."
     murakami "Natsume Sōseki. Kokoro. A man who cannot say the thing he means until it is too late."
@@ -175,7 +175,7 @@ label saturday_recovery:
     murakami "It is a conversation. Sōseki asks whether you can know another person. Kawabata asks whether you can love one. Tanizaki asks whether you can see one."
     murakami "They are all asking the same question in different rooms."
 
-    "He opens Snow Country to a page near the beginning and reads a sentence aloud. The Japanese is slow and clean."
+    "She opens Snow Country to a page near the beginning and reads a sentence aloud. The Japanese is slow and clean."
     murakami "The train came out of the long tunnel into the snow country. The night was white."
     mc "(The sentence is simple. It is also a whole world. I do not know how it does that.)"
     murakami "The white is not a color. It is an absence. The book is about people who cannot fill the absence."
@@ -187,7 +187,7 @@ label saturday_recovery:
             mc "Why a used book? Why not a new one?"
             murakami "A new book is a window. A used book is a window with someone else's fingerprints on it."
             murakami "You can see what they underlined. You can see where they stopped."
-            "He opens the brown book. There is a pencil mark in the margin, faint and old."
+            "She opens the brown book. There is a pencil mark in the margin, faint and old."
             murakami "Someone was here. That is all a book is. A room someone else has been in."
             $ reward_attributes_once("day11_lesson_used", [("insight", "micro")], show="auto")
         "Ask about ichigo ichie.":
@@ -201,26 +201,32 @@ label saturday_recovery:
             mc "Is Tanizaki right? About the dark?"
             murakami "He is right about the beauty. He is wrong about the reason."
             murakami "He thought the dark was a Japanese thing. It is a human thing. Everyone looks better in a room they cannot quite see."
-            "He closes the book and sets it down."
+            "She closes the book and sets it down."
             murakami "Do not believe a writer who tells you what a country is. Believe the country."
             $ reward_attributes_once("day11_lesson_tanizaki", [("nerve", "micro")], show="auto")
 
-    "The old woman behind the counter finally looks up. She says something to Murakami. He answers. She nods and goes back to her ledger."
+    "The old woman behind the counter finally looks up. She says something to Murakami. Murakami answers. The old woman nods and goes back to her ledger."
+    "A minute later she says it again. The same words. The same nod."
+    murakami "She does that."
+    mc "Does what?"
+    murakami "Repeats herself. She is old."
+    mc "(She does not look at me when she says it.)"
     murakami "She says you have good posture for a foreigner."
     mc "Is that a compliment?"
     murakami "It is an observation. In this shop, that is a compliment."
-    "He buys the thin blue book and hands it to me."
+    "She buys the thin blue book and hands it to me."
+    $ murakami_lessons = max(murakami_lessons, 2)
     murakami "Kokoro. Read the first page. Bring me one sentence you do not understand."
     mc "You keep giving me homework."
     murakami "That is what a teacher is. A person who gives you the thing you will need later."
-    "He puts the other two books back on the shelf. The ladder creaks as he reaches."
+    "She puts the other two books back on the shelf. The ladder creaks as she reaches."
 
     scene bg_station with walk_fade
     "We take the train back in the early afternoon. The car is emptier now. The families have gone home."
     murakami "You did well today."
     mc "I sat on a stool and listened."
     murakami "That is most of it."
-    "He gets off two stops before mine. He does not say goodbye. He says, without turning:"
+    "She gets off two stops before mine. She does not say goodbye. She says, without turning:"
     murakami "Read the page."
     "The doors close. The train goes on."
 
@@ -229,61 +235,20 @@ label saturday_recovery:
     mc "(One place. That is the rule I have given myself. One place, and then home.)"
     call free_afternoon
 
-    scene bg_home_night with walk_fade
-    $ room_ambient(True)
-    "The house is warm the way it is when someone has been cooking for a while."
-    "I leave my shoes by the door, turned around, and follow the smell to the kitchen."
-
-    scene bg_kitchen_night with walk_fade
-    "Mother is ladling something into four bowls. Father is setting the table with the careful imprecision of a man who has been told to help."
-    mother "There you are. Wash your hands."
-    hikari "You're late."
-    mc "I'm not late. Dinner is early."
-    hikari "Dinner is on time. You're late."
-    "I wash my hands. The water is warm."
-    mother "Where did you go?"
-
-    if last_afternoon_place == "chef":
-        mc "The ramen shop. The broth had been going since morning."
-        mc "(He did not make a thing of it. That was the whole welcome.)"
-    elif last_afternoon_place == "aya":
-        mc "The maid cafe. She remembered the order before I said it."
-        mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
-    elif last_afternoon_place == "hana":
-        mc "The reading room. She was there. She stayed."
-        mc "(We did not talk much. It was enough.)"
-    elif last_afternoon_place == "orson":
-        mc "Lupin's Den. The bar was empty enough to hear the ice."
-        mc "(He taught me a phrase I am still turning over.)"
-    elif last_afternoon_place == "sim":
-        mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
-    elif last_afternoon_place == "walk_hikari":
-        mc "I walked home with Hikari. We took the long way."
-        hikari "You took the long way. I followed."
-        mc "That's not how I remember it."
-        hikari "That's because you were busy being right."
-    elif last_afternoon_place == "walk_alone":
-        mc "Nowhere. I walked until the light changed, and then I walked home."
-        father "Nowhere is a place. Just not a destination."
-        mc "(That is either wisdom or a warning. I am not sure which.)"
-    else:
-        mc "Nowhere. I came straight home."
-        mother "Good. Eat."
-        mc "(She does not ask why. I am grateful for that.)"
+    call dinner_open
 
     father "And the book?"
     mc "Kokoro. Sōseki. I have to read the first page."
     father "Then read it before you sleep. A book read before sleep stays in the body."
     mc "(That is either wisdom or a warning. I am starting to think they are the same thing in this house.)"
 
+    call dinner_close
+
     scene bg_room_night with stair_fade
     $ room_ambient(True)
     "Upstairs, I open Kokoro to the first page. The Japanese is hard. The English in my head is harder."
-    "A knock at the door. Hikari, with two cups of tea and her own notes under her arm."
-    hikari "I'm not staying. I'm just making sure you're not staring at the wall."
-    mc "I was staring at Sōseki."
-    hikari "Same thing."
-    "She sets the tea down and sits on the floor with her back against the bed."
+    $ night_desk_line = "Sōseki"
+    call night_open
 
     menu:
         "Read her the sentence I don't understand.":
@@ -291,6 +256,7 @@ label saturday_recovery:
             hikari "Again. The last word."
             "I say it again. It is still wrong. She says it once, slowly, and I say it after her."
             mc "(The word is mine now. Not borrowed. Mine.)"
+            $ remember("hikari", "read her the Kokoro sentence he could not understand, and she made him say the last word until it was his")
             $ reward_attributes_once("day11_night_read", [("grace", "micro")], show="auto")
         "Ask her what wabi-sabi means to her.":
             mc "Wabi-sabi. What does it mean to you? Not the dictionary."
@@ -298,18 +264,26 @@ label saturday_recovery:
             mc "Why?"
             hikari "Because someone used it. Because it has a history I can hold."
             mc "(She turns her cup so the chip faces her. She does not hide it.)"
+            $ remember("hikari", "asked what wabi-sabi means to her, and she said she likes the chipped bowl better")
             $ reward_attributes_once("day11_night_wabi", [("insight", "micro")], show="auto")
         "Tell her I want to stay in Japan.":
             mc "I think I want to stay. After the year. I don't know how to say it yet."
             hikari "Then don't say it yet."
             mc "That's not an answer."
             hikari "It's the answer I have. Stay long enough to mean it."
+            $ remember("hikari", "told her he thinks he wants to stay in Japan after the year")
             $ reward_attributes_once("day11_night_stay", [("nerve", "micro")], show="auto")
 
-    "She takes her cup and leaves the door open a hand's width."
-    "I listen to her go down the stairs, then the house settle into its night sounds."
+    call night_close
+
     "The book is still open. The tea is still warm."
     "Tomorrow is Sunday. The last day of the first week of the elective."
+
+    # Murakami's only text of the week. She asks exactly one thing, and it is
+    # the thing the lesson was for. The Sunday trip answers it.
+    if "murakami" in wire_unlocked:
+        $ queue_message("murakami", "Did you read the page?")
+        mc "(Four times. I do not tell her that yet.)"
 
     stop music fadeout 2.0
     scene black with Dissolve(1.5)

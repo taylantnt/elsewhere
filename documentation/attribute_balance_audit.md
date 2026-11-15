@@ -1,6 +1,6 @@
 # Attribute Balance Audit — Elsewhere
 
-Scope: all active `reward_attributes_once` calls in `game/script.rpy`, `game/chef.rpy`, `game/sim.rpy`, `game/aya.rpy`, `game/hana.rpy`, and `game/orson.rpy`, through the end of Day 6 (`monday_lecture`). Excluded: `game/quiz.rpy` L23 (commented out), `attribute_test_rank_up` (L592, dev shortcut), and the archived board in `dream_archive.rpy` L430.
+Scope: all active `reward_attributes_once` calls in `game/script.rpy`, `game/confidant_visits/chef.rpy`, `game/confidant_visits/sim.rpy`, `game/confidant_visits/aya.rpy`, `game/confidant_visits/hana.rpy`, and `game/confidant_visits/orson.rpy`, through the end of Day 6 (`monday_lecture`). Excluded: `game/quiz.rpy` L23 (commented out), `attribute_test_rank_up` (L592, dev shortcut), and the archived board in `dream_archive.rpy` L430.
 
 Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0.5, medium = 1.0. Rank thresholds (cumulative): 0 / 2 / 5 / 9.5 / 15.
 
@@ -113,7 +113,7 @@ Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0
 | 6535 | `monday_quiz_q2` | Insight micro (0.2) |
 | 6550 | `monday_quiz_q3` | Insight micro (0.2) |
 
-### `game/chef.rpy`
+### `game/confidant_visits/chef.rpy`
 
 | Line | Flag | Reward |
 |---:|---|---|
@@ -171,7 +171,7 @@ Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0
 | 680 | `chef_visit_closed_sit` | Insight micro (0.2) |
 | 690 | `chef_visit_closed_close` | Grace small (0.5) |
 
-### `game/sim.rpy`
+### `game/confidant_visits/sim.rpy`
 
 | Line | Flag | Reward |
 |---:|---|---|
@@ -210,7 +210,7 @@ Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0
 | 509 | `sim_visit_07_future` | Nerve micro (0.2) |
 | 523 | `sim_visit_07_close` | Grace small (0.5) |
 
-### `game/aya.rpy`
+### `game/confidant_visits/aya.rpy`
 
 | Line | Flag | Reward |
 |---:|---|---|
@@ -277,7 +277,7 @@ Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0
 | 575 | `aya_visit_07_perfect` | Nerve micro (0.2) |
 | 597 | `aya_visit_07_close` | Grace small (0.5) |
 
-### `game/hana.rpy`
+### `game/confidant_visits/hana.rpy`
 
 | Line | Flag | Reward |
 |---:|---|---|
@@ -316,7 +316,7 @@ Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0
 | 448 | `hana_visit_closed_message` | Nerve micro (0.2) |
 | 457 | `hana_visit_closed_close` | Grace small (0.5) |
 
-### `game/orson.rpy`
+### `game/confidant_visits/orson.rpy`
 
 | Line | Flag | Reward |
 |---:|---|---|
@@ -543,7 +543,7 @@ M55–M60 plus the confidant visit reward tables. See
 
 ## Follow-up — 2026-11-09 (Hikari run chain)
 
-The six new river-run visits (`hikari_visit_02`–`07` in `game/hikari.rpy`)
+The six new river-run visits (`hikari_visit_02`–`07` in `game/confidant_visits/hikari.rpy`)
 follow the same rule as the rest of the pass: each of the twelve menus has one
 option per attribute at micro size. The forced close rewards rotate Grace (v2),
 Insight (v3), Nerve (v4), Grace (v5), Insight (v6), and Insight small (v7). The
@@ -558,8 +558,8 @@ progression summary is under `documentation/Locations/Night run - Hikari/`.
 ## Follow-up — 2026-11-10 (Days 8–12 and the hub first visits)
 
 Scope: `game/days/day_8_wednesday.rpy` … `day_12_sunday.rpy`, plus the new
-`chef_visit_01` and `sim_visit_01` first-visit scenes in `game/chef.rpy` and
-`game/sim.rpy`.
+`chef_visit_01` and `sim_visit_01` first-visit scenes in `game/confidant_visits/chef.rpy` and
+`game/confidant_visits/sim.rpy`.
 
 - **Days 8–12 are deliberately even.** Each day pays one micro reward per
   attribute across its three kitchen/class/night menus, and each travel menu

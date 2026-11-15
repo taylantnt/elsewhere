@@ -55,7 +55,7 @@ label friday_morning:
     "She sits on the edge of my desk, which she has never done before."
     hikari "Look at the Japanese course. The one at the bottom."
     mc "Japanese."
-    hikari "It is taught by a man named Murakami. Nobody knows where he came from. He has been here longer than the building."
+    hikari "It is taught by a woman named Murakami. Nobody knows where she came from. She has been here longer than the building."
     mc "That is not a real answer."
     hikari "It is the only answer anyone has."
     "She taps the paper once and stands up."
@@ -135,7 +135,9 @@ label friday_morning:
     "A wall of shoulders. A forest of straps. Everyone facing the same direction, like a photograph of a crowd."
     "A student beside me is asleep against the door, his bag between his feet, his face perfectly unguarded."
     "An announcement asks us to refrain from phone calls. Nobody was making one."
-    "The English announcement comes after the Japanese, slower, as if it is reading from a different script."
+    "The English announcement follows the Japanese. This morning it is not a translation. It is a second take."
+    "Then it says the next station is the one we just left. It says it again, in English, in my voice."
+    mc "(I look around. Nobody else has heard it.)"
     hikari "You're doing the thing again."
     mc "I'm always doing the thing."
     hikari "At least you know now."
@@ -171,25 +173,25 @@ label friday_morning:
     scene bg_department_hall with walk_fade
     "The second floor has been turned into a market. Tables along both walls, banners on the pillars, students handing out paper."
     "Every table is selling the same thing: a version of the future."
-    "At the end of the hall, one table has no banner. A stack of books, a single chair, and a man in a grey cardigan."
-    "He is not handing out paper. He is reading."
+    "At the end of the hall, one table has no banner. A stack of books, a single chair, and a woman in a grey cardigan."
+    "She is not handing out paper. She is reading."
 
     scene bg_department_hall with walk_fade
-    "I walk toward him because there is nothing else at the table to walk toward."
+    "I walk toward her because there is nothing else at the table to walk toward."
     murakami "You are the one who reads on the train."
     mc "...How do you know that?"
     murakami "You have the look. The book is in your bag and your eyes are still in it."
-    "He closes his book. The cover is plain. The title is in a script I cannot read yet."
+    "She closes her book. The cover is plain. The title is in a script I cannot read yet."
     murakami "Murakami. The Japanese course. You have read the paper."
     mc "I have read the paper."
     murakami "Then you know it is an elective. You know it is not required. You know it will not make you rich."
     mc "The paper did not say that last part."
     murakami "The paper is optimistic."
-    "He says it without smiling. Then he does smile, briefly, as if he has decided I can be trusted with the joke."
+    "She says it without smiling. Then she does smile, briefly, as if she has decided I can be trusted with the joke."
     murakami "The language is not a subject. It is a country you walk into. I can show you the road, but you have to walk."
     mc "And if I get lost?"
     murakami "Then you will be lost in a country. That is better than being lost in a corridor."
-    "He slides a sheet across the table. It is not a form. It is a page of characters."
+    "She slides a sheet across the table. It is not a form. It is a page of characters."
     murakami "Before you choose, look at this."
 
     "The page has three columns. On the left, Chinese characters. In the middle, characters that look like them but looser. On the right, curves."
@@ -208,7 +210,7 @@ label friday_morning:
         "Take the course. The Japanese course. With Murakami.":
             mc "Then I will take the Japanese course. With you."
             murakami "Good."
-            "He writes my name on the sheet in three scripts. The third one is hiragana. It looks like a small, careful drawing."
+            "She writes my name on the sheet in three scripts. The third one is hiragana. It looks like a small, careful drawing."
             murakami "This is your name in the women's hand. It suits you."
             mc "(I do not know what that means. I write it down anyway.)"
             $ japanese_fluency = min(5, japanese_fluency + 1)
@@ -217,24 +219,29 @@ label friday_morning:
             mc "Why was the borrowed language the serious one?"
             murakami "Because seriousness is always borrowed. It is the accent of whoever held the power last."
             murakami "Japan borrowed China the way every country borrows a parent. Then it made something the parent could not have made."
-            mc "(He says it like a fact about language. It lands like a fact about me.)"
+            mc "(She says it like a fact about language. It lands like a fact about me.)"
             murakami "Take the course. You are already asking the right questions."
             $ japanese_fluency = min(5, japanese_fluency + 1)
             $ reward_attributes_once("day10_elective_ask", [("nerve", "micro")], show="auto")
-        "Ask about his name. Murakami.":
+        "Ask about her name. Murakami.":
             mc "Murakami. Like the novelist?"
             murakami "Like the novelist. Like the village. Like a dozen men in this city."
             murakami "A name is not a self. It is a coat. You will learn that too."
-            mc "(He says it lightly. I file it away.)"
+            mc "(She says it lightly. I file it away.)"
             murakami "Take the course. You can decide what to call me later."
             $ japanese_fluency = min(5, japanese_fluency + 1)
             $ reward_attributes_once("day10_elective_name", [("grace", "micro")], show="auto")
 
-    "He writes a line on the back of the sheet and pushes it across the table."
+    "She writes a line on the back of the sheet and pushes it across the table."
+    $ murakami_lessons = max(murakami_lessons, 1)
     murakami "Homework. Before Monday. Copy this line ten times. Do not look up what it means."
     mc "Why not?"
     murakami "Because meaning is the last thing you learn. First you learn the shape. The hand remembers before the head does."
-    "He goes back to his book. The fair goes on around him. Nobody else comes to the table."
+    "She goes back to her book. The fair goes on around her. Nobody else comes to the table."
+
+    # The course becomes a line in the phone. She does not explain the app and
+    # does not look up when it buzzes; she was probably on here already.
+    $ wire_unlock("murakami")
 
     scene bg_campus_interior with walk_fade
     "Hikari is waiting by the stairs with two paper cups of tea."
@@ -248,72 +255,31 @@ label friday_morning:
     mc "(One place. That is the rule I have given myself. One place, and then home.)"
     call free_afternoon
 
-    scene bg_home_night with walk_fade
-    $ room_ambient(True)
-    "The house is warm the way it is when someone has been cooking for a while."
-    "I leave my shoes by the door, turned around, and follow the smell to the kitchen."
-
-    scene bg_kitchen_night with walk_fade
-    "Mother is ladling something into four bowls. Father is setting the table with the careful imprecision of a man who has been told to help."
-    mother "There you are. Wash your hands."
-    hikari "You're late."
-    mc "I'm not late. Dinner is early."
-    hikari "Dinner is on time. You're late."
-    "I wash my hands. The water is warm."
-    mother "Where did you go?"
-
-    if last_afternoon_place == "chef":
-        mc "The ramen shop. The broth had been going since morning."
-        mc "(He did not make a thing of it. That was the whole welcome.)"
-    elif last_afternoon_place == "aya":
-        mc "The maid cafe. She remembered the order before I said it."
-        mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
-    elif last_afternoon_place == "hana":
-        mc "The reading room. She was there. She stayed."
-        mc "(We did not talk much. It was enough.)"
-    elif last_afternoon_place == "orson":
-        mc "Lupin's Den. The bar was empty enough to hear the ice."
-        mc "(He taught me a phrase I am still turning over.)"
-    elif last_afternoon_place == "sim":
-        mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
-    elif last_afternoon_place == "walk_hikari":
-        mc "I walked home with Hikari. We took the long way."
-        hikari "You took the long way. I followed."
-        mc "That's not how I remember it."
-        hikari "That's because you were busy being right."
-    elif last_afternoon_place == "walk_alone":
-        mc "Nowhere. I walked until the light changed, and then I walked home."
-        father "Nowhere is a place. Just not a destination."
-        mc "(That is either wisdom or a warning. I am not sure which.)"
-    else:
-        mc "Nowhere. I came straight home."
-        mother "Good. Eat."
-        mc "(She does not ask why. I am grateful for that.)"
+    call dinner_open
 
     father "And the elective?"
     mc "Japanese. The course with Murakami."
     father "Murakami."
-    mc "You know him?"
-    father "I know the name. He was here when I was here. He is still here."
-    mc "What is he like?"
+    mc "You know her?"
+    father "I know the name. She was here when I was here. She is still here."
+    mc "What is she like?"
     father "Quiet. Dangerous."
     mc "Dangerous?"
-    father "He makes people leave the country they were born in. Sometimes without moving."
+    father "She makes people leave the country they were born in. Sometimes without moving."
     mc "(That is either a warning or the best endorsement I have ever heard.)"
     hikari "Dad."
     father "I am being helpful."
-    mother "You are being ominous."
-    father "It is the same thing, in this house."
+
+    call dinner_close
 
     scene bg_room_night with stair_fade
     $ room_ambient(True)
     "Upstairs, the sheet with the three scripts is on the desk."
     "I copy the line ten times. The first three are terrible. The fourth is less terrible. The tenth looks like a word."
-    "A knock at the door. Hikari, with two cups of tea and her own notes under her arm."
-    hikari "I'm not staying. I'm just making sure you're not staring at the wall."
-    mc "I was copying the line."
-    hikari "Same thing."
-    "She sets the tea down and sits on the floor with her back against the bed."
+    $ murakami_homework_done = True
+
+    $ night_desk_line = "the line"
+    call night_open
 
     menu:
         "Show her the tenth line.":
@@ -323,6 +289,7 @@ label friday_morning:
             hikari "It's not bad. The stroke order is wrong on the second character."
             "She takes the pen and writes it again, slower, so I can see the order."
             mc "(The hand remembers before the head does. Murakami was right.)"
+            $ remember("hikari", "showed her the tenth copy of Murakami's line, and she corrected the stroke order")
             $ reward_attributes_once("day10_night_line", [("grace", "micro")], show="auto")
         "Ask her what onnade means to her.":
             mc "Murakami says hiragana used to be called onnade. Women's hand."
@@ -330,16 +297,18 @@ label friday_morning:
             mc "Does it bother you?"
             hikari "It bothers me that it took a name to make it serious. The writing was always the writing."
             mc "(She says it like a door closing.)"
+            $ remember("hikari", "asked what onnade means to her, and she said the writing was always the writing")
             $ reward_attributes_once("day10_night_onnade", [("insight", "micro")], show="auto")
         "Tell her I'm nervous about the course.":
             mc "I'm nervous about the course. What if I'm bad at it?"
             hikari "You'll be bad at it."
             mc "That's not comforting."
             hikari "It's not meant to be. You'll be bad at it, and then you'll be less bad at it. That's the whole thing."
+            $ remember("hikari", "admitted he was nervous about Murakami's course, and she told him he would be bad at it and then less bad")
             $ reward_attributes_once("day10_night_nervous", [("nerve", "micro")], show="auto")
 
-    "She takes her cup and leaves the door open a hand's width."
-    "I listen to her go down the stairs, then the house settle into its night sounds."
+    call night_close
+
     "The sheet is still open. The tea is still warm."
     "Tomorrow is Saturday. No train to school. A different kind of day."
 

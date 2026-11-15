@@ -314,7 +314,19 @@ screen phone_title():
         text "ELSEWHERE" style "title_logo":
             xalign 0.5
             yalign 0.39
-        textbutton _("Start Game"):
+        # The title screen is a soft wall, not a foyer: any press on it raises
+        # the phone, so the player never has to hunt for the menu. New Game is
+        # then a deliberate choice inside the handset, not a side effect of a
+        # stray click. The full-screen button catches every touch, the
+        # textbutton and the return/enter keys cover the same action for the
+        # input paths that bypass it.
+        fixed:
+            xysize (config.screen_width, config.screen_height)
+            button:
+                action Function(menu_phone_begin)
+                xfill True
+                yfill True
+        textbutton _("Press any Button"):
             style "phone_start"
             xalign 0.5
             yalign 0.72
@@ -426,32 +438,43 @@ screen phone_files(title):
                     value page_name_value
                     length 24
             hbox:
+                xalign 0.5
                 spacing gui.scale(4)
                 textbutton "<" style "phone_small_button" action FilePagePrevious()
                 if config.has_autosave:
                     textbutton "A" style "phone_small_button" action FilePage("auto")
                 if config.has_quicksave:
                     textbutton "Q" style "phone_small_button" action FilePage("quick")
-                textbutton ">" style "phone_small_button" action FilePageNext(max=gui.file_page_count)
-            vpgrid:
-                cols gui.file_page_count
-                xalign 0.5
-                spacing gui.scale(3)
                 for page in range(1, gui.file_page_count + 1):
                     textbutton "[page]" style "phone_page_button" action FilePage(page)
+                textbutton ">" style "phone_small_button" action FilePageNext(max=gui.file_page_count)
             for slot in range(1, gui.file_slot_cols * gui.file_slot_rows + 1):
                 button:
                     style "phone_save_button"
                     action MenuFileSlot(slot)
                     key "save_delete" action FileDelete(slot)
                     vbox:
-                        spacing gui.scale(6)
-                        add FileScreenshot(slot):
-                            xysize (gui.scale(210), gui.scale(118))
-                        text _("Slot [slot]") style "phone_row_text"
-                        text FileTime(slot, format=_("%Y-%m-%d  %H:%M"), empty=_("Empty")) style "phone_detail"
-                        if FileSaveName(slot):
-                            text FileSaveName(slot) style "phone_detail"
+                        xfill True
+                        spacing gui.scale(5)
+                        if FileLoadable(slot):
+                            add FileScreenshot(slot):
+                                xysize (gui.scale(210), gui.scale(118))
+                                xalign 0.5
+                        else:
+                            fixed:
+                                xysize (gui.scale(210), gui.scale(118))
+                                xalign 0.5
+                                add Solid("#0d1419")
+                                text "EMPTY":
+                                    font "DejaVuSans.ttf"
+                                    size gui.scale(11)
+                                    kerning gui.scale(2)
+                                    color "#55636d"
+                                    outlines []
+                                    xalign 0.5
+                                    yalign 0.5
+                        text save_slot_label(slot) style "phone_save_title"
+                        text FileTime(slot, format=_("%Y-%m-%d  %H:%M"), empty=_("No save data")) style "phone_detail"
                 if FileLoadable(slot):
                     textbutton _("Delete"):
                         style "phone_small_button"
@@ -461,8 +484,6 @@ screen phone_files(title):
                     textbutton _("Upload Sync") style "phone_small_button" action UploadSync()
                 else:
                     textbutton _("Download Sync") style "phone_small_button" action DownloadSync()
-    key "save_page_prev" action FilePagePrevious()
-    key "save_page_next" action FilePageNext()
 
 screen phone_preferences():
     use game_menu(_("Settings")):
@@ -584,9 +605,9 @@ screen phone_attributes():
                             add attribute_ring_displayable(attribute_id, orb_progress, 76)
                             text "[orb_rank]":
                                 font "DejaVuSans.ttf"
-                                size gui.scale(26)
+                                size gui.scale(30)
                                 bold True
-                                color "#f4eee4"
+                                color orb_color
                                 xalign 0.5
                                 yalign 0.5
                         vbox:
@@ -794,7 +815,7 @@ style phone_small_button_text is phone_detail:
     insensitive_color "#686257"
 
 style phone_page_button is phone_small_button:
-    xsize gui.scale(42)
+    xsize gui.scale(36)
 
 style phone_option is phone_row:
     background Solid("#ffffff08")
@@ -804,8 +825,15 @@ style phone_option_text is phone_row_text:
     selected_color "#e7c08d"
 
 style phone_save_button is phone_option:
+    xfill True
     padding (gui.scale(8), gui.scale(10))
-    ysize gui.scale(212)
+    ysize gui.scale(190)
+    background Solid("#141c22")
+    hover_background Solid("#1a282d")
+
+style phone_save_title is phone_body:
+    size gui.scale(15)
+    color "#e8eef2"
 
 style phone_item is phone_option:
     xsize gui.scale(110)

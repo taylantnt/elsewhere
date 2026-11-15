@@ -3,12 +3,13 @@
 Current code snapshot: November 7, 2026.
 
 This is an editable checklist of the current story choice menus kept here —
-M01–M54, the retired weekend-plan menu (M47), the retired camera menu (M31),
-the walk-alone still-full fork (M35A), M55–M60 for the first hub day
-(Tuesday, Day 7), and the Days 8–12 beats — including every answer with no
-attribute reward. The current
+M01–M54, the Monday dinner still-full fork (M54A), the retired weekend-plan
+menu (M47), the retired camera menu (M31), the walk-alone still-full fork
+(M35A), M55–M57 for Tuesday's forced day, M57A for the forced-afternoon reward,
+and M58–M60 for the hub walks and generic hub day, plus the Days 8–12 beats —
+including every answer with no attribute reward. The current
 live reward groups are E02–E08 plus the archived E01 board; the five confidant
-chains' visits 2–7 are summarised in the **Confidant Visit Rewards** section
+chains' visits 2–8 are summarised in the **Confidant Visit Rewards** section
 below; non-dialogue rewards are listed separately. Unwritten future scenes and
 the developer rank-up shortcut are not story rewards.
 
@@ -676,9 +677,24 @@ day, the afternoon is unstructured after the quiz.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M54.01 | Walk the campus until it stops feeling like a map. | Nerve +0.2 | Pays via flag `monday_walk_campus`; learning the place's shape without a plan. |
-| M54.02 | Go back to the library and finish the handout. | Insight +0.2 | Pays via flag `monday_library`; reading the kigo list until it becomes a weather report. |
-| M54.03 | Check the phone. Hikari is asking how the quiz went. | Grace +0.2 | Pays via flag `monday_phone_hikari`; staying in the conversation. |
+| M54.01 | Photo-club route: take the wrong train line home. | Insight +0.2 | Pays via flag `day6_wrong_train`; the long way finds the ramen shop. |
+| M54.02 | Photo-club route: message Hikari and ask what she's doing. | Grace +0.2 | Pays via flag `day6_message_hikari`; her invite becomes the first run. |
+| M54.03 | Photo-club route: buy dinner at the combini, then take the long way home. | Nerve +0.2 | Pays via flag `day6_combini_long`; the errand still ends at the ramen shop. |
+| M54.04 | Hikari-first route: walk home alone and take the long way. | Nerve +0.2 | Pays via flag `day6_solo_long`; all three solo routes reach the ramen shop. |
+| M54.05 | Hikari-first route: message Hikari, then leave before she answers. | Grace +0.2 | Pays via flag `day6_solo_message`. |
+| M54.06 | Hikari-first route: follow the river path home without her. | Insight +0.2 | Pays via flag `day6_solo_river`. |
+| M54.07 | Chef-first route: answer Hikari's WIRE chat. | — | No separate menu flag; `hikari_first_run` pays the first-run Nerve once. |
+
+### M54A. Monday Dinner Still-Full Fork
+
+Source: [`monday_lecture`](../game/script.rpy). Only appears when `day6_ate_out`
+is true (the Day 6 ramen route). The Hikari-run route instead gets the hungry
+run beat and no fork.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M54A.01 | Be honest. Tell them you're still full from the ramen. | Nerve +0.2 | Sets `day6_dinner_declined`; father repeats the dinner-time rule; Hikari teases him for getting lost again. |
+| M54A.02 | Say you're starving, and sit down to eat with them. | Grace +0.5 | Pays via flag `day6_dinner_covered`; he covers being too full and eats anyway. |
 
 ### M55. Tuesday Breakfast
 
@@ -714,12 +730,24 @@ Context: before sleep, kigo list and the midterm.
 | M57.02 | Ask her about her seminar. | Grace +0.2 | Pays via flag `tuesday_study_seminar`; asking the question nobody asks. |
 | M57.03 | Tell her I'm scared of the midterm. | Nerve +0.2 | Pays via flag `tuesday_study_scared`; admitting the fear. |
 
+### M57A. Day 7 Forced Afternoon
+
+Source: [`tuesday_lecture`](../game/script.rpy), `day7_sim_campus` /
+`day7_missing_chef` / `day7_missing_hikari`.
+
+Context: Tuesday closes the first-week introductions; the afternoon is forced
+to whichever of Sim, Chef, or Hikari's first run is still unmet.
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M57A.01 | Sim campus greeting: "You're looking at the light." | Insight +0.2 | Pays via flag `day7_sim_campus_light`; noticing the shot instead of the cameras. |
+| M57A.02 | Missing Chef lead-in / Missing Hikari WIRE chat. | — | No separate menu reward; the visit labels pay their own first-meeting rewards. |
+
 ## The Hub Walks
 
 ### M58. The Hub Walk: With Hikari
 
-Source: [`afternoon_walk_hikari`](../game/script.rpy), label at the end of the
-Day 7 block.
+Source: [`afternoon_walk_hikari`](../game/script.rpy), hub walk label.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
@@ -729,8 +757,7 @@ Day 7 block.
 
 ### M59. The Hub Walk: Alone
 
-Source: [`afternoon_walk_alone`](../game/script.rpy), label at the end of the
-Day 7 block.
+Source: [`afternoon_walk_alone`](../game/script.rpy), hub walk label.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
@@ -738,12 +765,13 @@ Day 7 block.
 | M59.02 | Sit on the wall where the old men play shogi. | Grace +0.2 | Pays via flag `hub_walk_alone_shogi`. |
 | M59.03 | Take the street that looks wrong. | Nerve +0.2 | Pays via flag `hub_walk_alone_wrong`. |
 
-### M60. The Tuesday Hub Day
+### M60. The Hub Day
 
-Source: [`tuesday_morning`](../game/script.rpy) through `free_afternoon`.
+Source: [`free_afternoon`](../game/script.rpy), reached from a hub day such as
+`day_8_wednesday`.
 
-Context: Day 7 is the first hub day; the hub routes into the visit labels and
-the two walks.
+Context: the hub opens on Day 8; Day 7 is forced to the last first-week
+confidant. The hub routes into the visit labels and the two walks.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
@@ -752,7 +780,7 @@ the two walks.
 
 ### M61. Hikari's River Run 2 — The Route
 
-Source: [`hikari_visit_02`](../game/hikari.rpy).
+Source: [`hikari_visit_02`](../game/confidant_visits/hikari.rpy).
 
 Context: she runs the route from memory, naming the vending machines. He notices
 she does not look at the river for long.
@@ -778,7 +806,7 @@ not just likes it.
 
 ### M62. Hikari's River Run 3 — The Evening He Keeps Up
 
-Source: [`hikari_visit_03`](../game/hikari.rpy).
+Source: [`hikari_visit_03`](../game/confidant_visits/hikari.rpy).
 
 Context: she changed at school and takes him straight to the river. He matches
 her pace for ten minutes; she is surprised enough to say so.
@@ -804,7 +832,7 @@ when she is not performing.
 
 ### M63. Hikari's River Run 4 — The Night Neither Of Them Says Anything
 
-Source: [`hikari_visit_04`](../game/hikari.rpy).
+Source: [`hikari_visit_04`](../game/confidant_visits/hikari.rpy).
 
 Context: they walk home, change without a word, and run in silence. On the
 second bridge she admits she does not know where the performance ends.
@@ -830,7 +858,7 @@ the silence.
 
 ### M64. Hikari's River Run 5 — The Rain
 
-Source: [`hikari_visit_05`](../game/hikari.rpy).
+Source: [`hikari_visit_05`](../game/confidant_visits/hikari.rpy).
 
 Context: the bridge in the rain, the amado, and the first true thing she says
 about the house. She asks whether the street looks right to him.
@@ -856,7 +884,7 @@ let go until the gate.
 
 ### M65. Hikari's River Run 6 — The Part Of The River She Keeps
 
-Source: [`hikari_visit_06`](../game/hikari.rpy).
+Source: [`hikari_visit_06`](../game/confidant_visits/hikari.rpy).
 
 Context: she takes him to a part of the river he has never seen, where a
 vending machine with no cable still hums. She says she comes here when the
@@ -883,7 +911,7 @@ house; it is the thing she is running from.
 
 ### M66. Hikari's River Run 7 — The Last Run
 
-Source: [`hikari_visit_07`](../game/hikari.rpy).
+Source: [`hikari_visit_07`](../game/confidant_visits/hikari.rpy).
 
 Context: she is faster than she has ever been. At the second bridge she asks
 whether they have done this before, then asks him to remember a promise.
@@ -910,10 +938,12 @@ sets `hikari_run_finished = True`.
 
 ## Confidant Visit Rewards
 
-The five confidant chains are told in visits. Chef and Hana are the two
-documented eight-visit exceptions — their eighth is the closed place, the end of
-the arc — and every close reward below is now one micro (0.2) sized and rotated
-across Insight, Grace and Nerve instead of paying Grace twice in a row.
+The five confidant chains are told in seven numbered visits, followed by a
+repeatable eighth **epilogue** at the same place. The epilogue's bookkeeping
+(affection, memory, message) runs only on the first pass, so replaying it cannot
+farm relationship points; its choice rewards use `reward_attributes_once` like
+every other hub scene. Every close reward below is one micro (0.2) sized and
+rotated across Insight, Grace and Nerve instead of paying Grace twice in a row.
 
 ### Chef — the Ramen Shop (visits 2–8)
 
@@ -925,9 +955,9 @@ across Insight, Grace and Nerve instead of paying Grace twice in a row.
 | 5 | Introduce her (Grace), discover it (Insight), tell her what to order (Nerve); clean (Grace), work too hard (Insight), retire (Insight) | Grace micro |
 | 6 | Ask how long (Insight), ask what he is working on (Insight), tell him it takes time (Grace); Kenta (Insight), watch (Grace), explain (Insight) | Insight micro |
 | 7 | Good (Grace), needs more time (Insight), reminds him of the first bowl (Grace); refuse (Grace), promise (Grace), meaning (Insight); close the shop (Insight), Kenta (Grace), stay (Nerve) | Nerve micro |
-| Closed | Leave quietly (Grace), write him a message (Nerve), sit at the counter (Insight) | Grace micro |
+| Epilogue | Leave quietly (Grace), write him a message (Nerve), sit at the counter (Insight) | Grace micro |
 
-### Sim — the Photography Club (visits 2–7)
+### Sim — the Photography Club (visits 2–8)
 
 | Visit | Answered choices (reward) | Close reward |
 |---|---|---|
@@ -937,8 +967,9 @@ across Insight, Grace and Nerve instead of paying Grace twice in a row.
 | 5 | Honest (Insight), real (Grace), what made you keep going (Nerve) | Grace micro |
 | 6 | Validate (Grace), future (Insight), fear (Nerve); room not for the magazine (Grace), need time (Nerve), what if the magazine disappeared (Insight) | Insight micro |
 | 7 | Accept (Grace), stay (Nerve), carry (Insight); promise (Grace), meaning (Grace), future (Nerve) | Nerve micro |
+| Epilogue | Help carry the box (Grace), ask who might take over (Insight), look through the prints (Nerve) | Grace micro |
 
-### Aya — the Maid Cafe (visits 2–7)
+### Aya — the Maid Cafe (visits 2–8)
 
 | Visit | Answered choices (reward) | Close reward |
 |---|---|---|
@@ -948,20 +979,21 @@ across Insight, Grace and Nerve instead of paying Grace twice in a row.
 | 5 | What would you do instead (Insight), parents (Grace), carrying (Nerve); doing (Grace), bravery (Nerve), what would make you stay (Insight) | Grace micro |
 | 6 | Audition (Nerve), kind (Insight), different (Grace); felt (Insight), again (Nerve), proud (Grace); more? (Insight), show someone (Nerve), already good (Grace); both (Grace), brave (Nerve) | Insight micro |
 | 7 | Leaving (Insight), happened (Nerve), sorry (Grace); proud (Grace), braver (Nerve), miss (Grace); treasure (Grace), perfect (Nerve) | Nerve micro |
+| Epilogue | Tell her it is good (Grace), ask about Aya (Insight), eat in silence (Nerve) | Insight micro |
 
 ### Hana — the Reading Club (visits 2–8)
 
 | Visit | Answered choices (reward) | Close reward |
 |---|---|---|
-| 2 | Thanks for the book (Grace), watch quietly (Insight) | Grace micro |
+| 2 | "Hana... this is yours. I should give it back." (Grace), set it on the table and let her come to it (Insight) | Grace micro |
 | 3 | What? Sorry (Grace), wait silently (Insight) | Insight micro |
 | 4 | Get up and pull a matching art book (Nerve), stay where I am (Grace) | Nerve micro |
 | 5 | Don't say anything. Just read (Grace), pretend not to notice (Insight) | Grace micro |
 | 6 | Take your time (Grace), I'm listening (Insight); tell them how you feel (Nerve), incredible (Grace) | Insight micro |
 | 7 | You told them (Insight), you talked to your parents (Grace); so what happens now (Insight), then you did win (Grace); won't forget you (Grace), means a lot to me (Nerve) | Nerve micro |
-| Closed | Leave quietly (Grace), message her (Nerve) | Grace micro |
+| Epilogue | Leave quietly (Grace), message her (Nerve) | Grace micro |
 
-### Orson — Lupin's Den (visits 2–7)
+### Orson — Lupin's Den (visits 2–8)
 
 | Visit | Answered choices (reward) | Close reward |
 |---|---|---|
@@ -971,11 +1003,12 @@ across Insight, Grace and Nerve instead of paying Grace twice in a row.
 | 5 | Thanks that helps (Grace), still feels hard (Nerve) | Grace micro |
 | 6 | Keep showing up (Nerve), still scared (Grace) | Insight micro |
 | 7 | Miss this place (Grace), carry it with me (Nerve) | Nerve micro |
+| Epilogue | Leave the wolf where it is (Grace), look through the window (Insight), sit on the step (Nerve) | Grace micro |
 
 ### Hikari — the River Run (visits 2–7)
 
 The first run is `after_school_run` (M27–M29); the other six are in
-`game/hikari.rpy`. Hikari is not one of the five confidant chains — the run is
+`game/confidant_visits/hikari.rpy`. Hikari is not one of the five confidant chains — the run is
 tracked by `hikari_visits` — but the reward shape is the same: every menu pays
 one attribute per option at micro size, and the close rewards rotate Grace /
 Insight / Nerve. The final run closes at **Insight small (0.5)** because the
@@ -1055,7 +1088,7 @@ Source: [`reading_club_first`](../game/script.rpy).
 
 | ID | Outcome / Action | Reward (editable) | Notes |
 |---|---|---|---|
-| E07.01 | Survive the reading club's first hour. | Grace +0.2 | Flag `reading_club_first`; `confidant_visits["hana"] = 1`, `hana_affection` +1, memory logged, `wire_unlock("hana")`. |
+| E07.01 | Survive the reading club's first hour and pick up the dropped WIRE card. | Grace +0.2 | Flag `reading_club_first`; `confidant_visits["hana"] = 1`, `hana_affection` +1, memory logged, `wire_unlock("hana")` earned by the card. |
 
 ### E08. Lupin's Den First Visit
 

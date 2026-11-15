@@ -1,7 +1,7 @@
 # Calendar, Dates, and Location Hours
 **Document type:** As-implemented reference
 **Covers:** `game/calendar.rpy`, the date chip, the phone Calendar app, and weekly opening rules
-**Status:** Built; dates are canonical from the airport through Sunday, Day 12
+**Status:** Built; dates are canonical from the airport through Tuesday, Day 14
 
 > This is the document to check before writing a line that names a day or a date.
 > The script does not infer dates from scene order. Each day label pins the
@@ -25,6 +25,8 @@
 | Day 10 | Friday, April 17 | `friday_morning` |
 | Day 11 | Saturday, April 18 | `saturday_recovery` |
 | Day 12 | Sunday, April 19 | `sunday_practice` |
+| Day 13 | Monday, April 20 | `monday_asakusa` |
+| Day 14 | Tuesday, April 21 | `tuesday_week_two` |
 
 The year is an internal anchor only. The HUD and the phone Calendar show the
 weekday and month/day; `2026` exists so month lengths and weekdays are real.
@@ -125,8 +127,11 @@ Days are `Monday = 0` through `Sunday = 6`.
 | `hana` | Reading Club | Open **Monday to Saturday** | Campus reading room; closed Sunday. |
 | `aya` | Maid Cafe | Open daily | No written closure. |
 | `orson` | Lupin's Den | Open daily | No written closure. |
-| `walk_hikari` | Walk home with Hikari | Always available | Not a scheduled place; plays the next river run when one is waiting, otherwise the ordinary walk. |
+| `walk_hikari` | Walk home with Hikari | Always available | Not a scheduled place; plays the next river run when one is waiting, the first run if it was skipped, otherwise the ordinary walk. |
 | `walk_alone` | Walk home alone | Always available | Not a scheduled place. |
+| `fortune` | Asakusa: The Fortune Teller | Always available once `fortune_arc_started` | A three-card limited confidant, not a seven-visit arc. |
+| `tanaka` | Combini: Night Shift | Always available once `combini_job_unlocked` | A job row, not a confidant; shifts are tracked by `tanaka_story`. |
+| city rows | Library, river, Harajuku, karaoke, night market, combini, Odaiba, Yokohama, Ueno, Shibuya, Shimokitazawa, Omotesando | No entry, so open every day | The city does not close. |
 
 Each entry has three fields:
 
@@ -147,8 +152,9 @@ consider that place closed. The schedule only governs the free-afternoon hub
 (`free_afternoon` / `location_hub`) after the introductions.
 
 `destination_state()` in `game/locations.rpy` checks hours before the visit
-cap, so a ready place can still be `closed_today`. Story completion
-(`closed`) wins over hours.
+cap, so a ready place can still be `closed_today`. The five confidants' eighth
+epilogue is checked before hours and before the cap, so a finished arc stays
+visitable on any day. Story completion (`closed`) wins over hours.
 
 ---
 
