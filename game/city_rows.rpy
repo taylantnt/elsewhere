@@ -87,6 +87,7 @@ label city_row_river:
 
 label city_row_harajuku:
     $ phone_map_visit("harajuku")
+    play music "audio/Music/harajuku.mp3" fadein 2.0
     scene bg_harajuku with walk_fade
     "Takeshita Street is a river of people dressed like they are all going to different parties."
     "A girl in platform boots argues with a boy in a school uniform. A tourist photographs a crepe like it is a monument."

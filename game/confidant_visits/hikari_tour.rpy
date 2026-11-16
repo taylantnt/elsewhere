@@ -162,6 +162,7 @@ label hikari_tour:
 
 label hikari_tour_harajuku:
     $ hikari_kawaii = False
+    play music "audio/Music/harajuku.mp3" fadein 2.0
     scene bg_harajuku with walk_fade
     "The train lets us out into a crowd that looks dressed for a different country."
     "Then we turn a corner, the street narrows, and the colours arrive all at once. Pink, yellow, stripes, lace, a girl in a skirt the size of a small building."
