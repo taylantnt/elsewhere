@@ -418,7 +418,7 @@ label hana_visit_07:
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 7)
     $ remember("hana", "she told her parents the truth and gave him a handmade art charm before leaving")
     $ wire_contacts["hana"]["name"] = "Hana"
-    $ queue_message("hana", "I did it. I told them. They were angry, then they listened, then they understood. I'm going to art school. Thank you for believing in me when I couldn't.", day="yesterday")
+    $ queue_message("hana", "I... I told them. They listened. I'm... going to art school. Thank you.", day="yesterday")
     $ reward_attributes_once("hana_visit_07_close", [("nerve", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade

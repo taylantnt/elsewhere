@@ -147,8 +147,8 @@ label chef_visit_01:
         "Ask what gives it the smoky flavour.":
             mc "The pork? Is that where the smoky taste comes from?"
             "He taps the edge of the grill with his ladle."
-        "Smile and keep eating.":
-            "I nod with the spoon still in my hand. He turns back to the stove."
+        "Point at the bottle and wait for him to name it.":
+            "I point at the bottle with the spoon. He says the word again, slower this time, and watches to see if I got it."
 
     "He snorts. A small sound, killed immediately. Something in his face moves for a quarter of a second before he turns back to the pots."
     "He says nothing else. I slurp, badly, and get broth on the counter, and he does not comment."
@@ -184,13 +184,13 @@ label chef_visit_01:
     "He has been looking at the phone on the counter since I put the money down."
     chef "「WIRE、やってるか」"
     "Two English sounds, dropped into a Japanese sentence, at the exact volume of the pots."
-    mc "(I caught the whole thing. I have no idea how.)"
+    mc "(I caught the English sounds and none of the Japanese. I nod anyway.)"
     mc "Yeah. Hikari put it on here. My host sister. She set the whole thing up before I landed."
     "He grunts, which is what he does instead of a nod."
     "Then he turns a small laminated card round on the counter so that it is facing me."
     "A black square made out of smaller black squares. Under it, six words in English, in handwriting that is not his."
     chef "「読め」"
-    mc "(Read it. That one is no mystery either. I am learning to read this room instead of the language.)"
+    mc "(He wants me to scan it. I know the gesture without knowing the word.)"
     "I hold the phone over the card. The app takes it without asking me anything, and puts a name on the list."
     mc "So I know if you're shut before I walk down here for nothing."
     "He turns the card back round and goes to the pots, which is the conversation over."
@@ -242,9 +242,9 @@ label chef_visit_02:
         "Ask what he's making today.":
             mc "Sumimasen. What are you making today?"
             chef "豚骨。"
-            mc "(Tonkotsu. Pork bone broth. He said it slowly, like he knew I wouldn't know.)"
+            mc "(A word I half-know, said slowly for my benefit. The broth, I think.)"
             chef "朝から。"
-            mc "(Since morning. It takes all day.)"
+            mc "(Something about the morning. The gesture says the rest: all day.)"
             $ reward_attributes_once("chef_visit_02_ask", [("insight", "micro")], show="auto")
         "Watch him work silently.":
             "I watch the way he moves. Every motion has a purpose. He does not waste time, but he does not rush."
@@ -284,7 +284,7 @@ label chef_visit_02:
     chef "水曜、休み。"
     mc "(Wednesday, closed. The shop's card said so the first night. One day a week this man refuses to work, and he wants me to remember which one.)"
     chef "休むのも、仕事だ。"
-    mc "(Resting is also work. That is a sentence I will remember.)"
+    mc "(Rest and work, in the same sentence. He says it like a rule. I will ask Hikari what he meant.)"
     $ chef_affection += 1
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 2)
@@ -317,7 +317,7 @@ label chef_visit_03:
     "Chef overhears. He does not interrupt, but his mouth curves at the corner."
 
     menu:
-        "Help them order.":
+        "Tell them the second line, then let them taste why.":
             mc "The second line is the house special. It's what most people get."
             student1 "Oh, thanks! You speak English?"
             mc "Yeah. I'm also not from here."
@@ -345,7 +345,7 @@ label chef_visit_03:
     mc "(Special. He made me something different.)"
     mc "For me?"
     chef "英語、教えた。"
-    mc "(You taught them English. That was his reason. I helped, so I get an egg.)"
+    mc "(Something about English, and students. I helped, and there is an egg. I take the win.)"
 
     menu:
         "I was just being helpful.":
@@ -356,16 +356,16 @@ label chef_visit_03:
         "I like watching people find good food.":
             mc "I like watching people find good food. It feels like sharing a secret."
             chef "秘密じゃない。"
-            mc "(It's not a secret. This is a shop, not a conspiracy.)"
+            mc "(He says it isn't a secret. I know that much. The rest is his face.)"
             chef "でも、嬉しい。"
-            mc "(But it makes him happy. That is the part he will say out loud.)"
+            mc "(Something about being glad. That word I know.)"
             $ reward_attributes_once("chef_visit_03_share", [("insight", "micro")], show="auto")
         "Did you see them enjoying it?":
             mc "Did you see them enjoying it?"
             chef "見てた。"
-            mc "(He was watching. Of course he was watching.)"
+            mc "(He says he was watching. I can tell from the way he says it.)"
             chef "最初、分からない。後、分かる。"
-            mc "(At first, they don't understand. Later, they do. That is how ramen works. That is how Japan works.)"
+            mc "(Something about before and after, and understanding. He says it like it is how the world works. I will ask Hikari.)"
             $ reward_attributes_once("chef_visit_03_understand", [("insight", "micro")], show="auto")
 
     "I eat the egg. It is perfect in the way that makes you angry at every other egg you have ever eaten."
@@ -411,23 +411,23 @@ label chef_visit_04:
         "Did you change the recipe?":
             mc "This recipe is different from what you make now."
             chef "毎日、変える。"
-            mc "(Every day, I change it. A little. Not much, but a little.)"
+            mc "(Every day, he says. A little. That much I can follow.)"
             chef "同じじゃ、つまらない。"
-            mc "(If it's the same, it's boring. That is why the broth is never exactly the same twice.)"
+            mc "(Same, boring. Two words I know. He says the rest with a shake of the ladle.)"
             $ reward_attributes_once("chef_visit_04_change", [("insight", "micro")], show="auto")
         "What are you trying to improve?":
             mc "What are you trying to improve?"
             chef "バランス。"
-            mc "(Balance. Salt, richness, depth. The things you cannot measure with a thermometer.)"
+            mc "(Balance. That word I know. The rest is in how he tastes the spoon.)"
             chef "昨日、濃かった。今日、薄くする。"
-            mc "(Yesterday, it was too strong. Today, I make it lighter. He corrects himself constantly.)"
+            mc "(Yesterday, today. Stronger, lighter. I understand the shape of it, not the sentence.)"
             $ reward_attributes_once("chef_visit_04_improve", [("insight", "micro")], show="auto")
         "How long have you been making ramen?":
             mc "How long have you been making ramen?"
             chef "三十年。"
-            mc "(Thirty years. He says it without pride, like saying he has been breathing for thirty years.)"
+            mc "(Thirty years. The number I understand. The rest is in his face.)"
             chef "まだ、分からない。"
-            mc "(I still don't understand it. After thirty years, he still does not claim to know ramen.)"
+            mc "(Still don't understand, he says. After thirty years. Kenta writes it down.)"
             $ reward_attributes_once("chef_visit_04_time", [("grace", "micro")], show="auto")
 
     "Chef takes the notebook back and turns to a blank page."
@@ -435,40 +435,40 @@ label chef_visit_04:
     "Taste, aroma, color. The three things a bowl must have."
 
     chef "味は、一番大事。"
-    mc "(Taste is the most important. That is obvious.)"
+    mc "(Taste, first. I can read the character in the notebook even if I can't follow the sentence.)"
     chef "でも、香も大事。色も大事。"
-    mc "(But aroma is also important. Color is also important. People eat with their eyes first.)"
+    mc "(He points at the other two characters. Aroma, color. The notebook does the translating.)"
 
     menu:
         "What about the texture?":
             mc "What about the texture? The way the noodles feel?"
             chef "喉で食べる。"
-            mc "(You eat with the throat. The sensation of swallowing is part of the taste.)"
+            mc "(He touches his throat. I understand the gesture, not the sentence.)"
             chef "喉が満足する。"
-            mc "(The throat must be satisfied. That is why the noodles are cooked just so.)"
+            mc "(He touches his throat again. The noodles, I think. I am guessing.)"
             $ reward_attributes_once("chef_visit_04_texture", [("insight", "micro")], show="auto")
         "What about the temperature?":
             mc "And the temperature? The heat?"
             chef "熱すぎない。冷たすぎない。"
-            mc "(Not too hot. Not too cold. There is a temperature where the flavors sing.)"
+            mc "(Not too hot. Not too cold. Those two I understand. The rest is in his hands.)"
             chef "体温に近い。"
-            mc "(Close to body temperature. That is the warmth that makes you want to stay.)"
+            mc "(Something about body temperature. He touches his own wrist. I think I follow.)"
             $ reward_attributes_once("chef_visit_04_temp", [("insight", "micro")], show="auto")
         "What makes a bowl perfect?":
             mc "What makes a bowl perfect?"
             chef "完璧なんてない。"
-            mc "(There is no such thing as perfect. He says it with absolute certainty.)"
+            mc "(No such thing as perfect. I know that word, and I know his face when he says it.)"
             chef "でも、頑張る。"
-            mc "(But I try. That is the part that matters. The trying, not the arriving.)"
+            mc "(Then something about trying. He taps the notebook. That much I can see.)"
             $ reward_attributes_once("chef_visit_04_perfect", [("grace", "micro")], show="auto")
 
     "Chef closes the notebook and sets it on the shelf beside the stove."
     "He stands up and goes to the pots. He has not made ramen for me today, but he has made me understand why the ramen is the way it is."
 
     chef "今日、作らない。"
-    mc "(Today, I'm not making any. It is a day for thinking, not for cooking.)"
+    mc "(No cooking today, he says. The notebook is open. I think that is the reason.)"
     chef "明日、来て。"
-    mc "(Come tomorrow. The broth will be better for the thinking.)"
+    mc "(Tomorrow. I know that one. He points at the pots, and I understand the rest.)"
 
     mc "I'll be here."
     chef "おう。"
@@ -533,39 +533,39 @@ label chef_visit_05:
     "For the first time, I see that he is older than I thought. The gray in his hair is not decoration."
 
     chef "疲れた。"
-    mc "(Tired. He admits it, which is not the same as complaining.)"
+    mc "(Tired. That word I know. He says it without complaining.)"
     mc "You should rest."
     chef "後で。"
-    mc "(Later. There is still cleaning to do. Still prep for tomorrow.)"
+    mc "(Later. He points at the pots. There is always more to do.)"
 
     menu:
         "Can I help clean?":
             mc "Can I help clean? I can wipe the counter."
             chef "客は、食べるだけ。"
-            mc "(Customers just eat. That is the rule. He is firm about it.)"
+            mc "(Customers eat. I know those words. The rest is in his face — this is not a debate.)"
             chef "でも、ありがとう。"
-            mc "(But thank you. The offer meant something, even if he cannot accept it.)"
+            mc "(Thank you — that word I know. He cannot accept, and the refusal is kind.)"
             $ reward_attributes_once("chef_visit_05_help", [("grace", "micro")], show="auto")
         "You work too hard.":
             mc "You work too hard. Even for something you love."
             chef "好きだから、楽しい。"
-            mc "(Because I like it, it is fun. That is his logic. Work you love is not work.)"
+            mc "(Something about liking it, and fun. I do not follow the logic, but he looks happy.)"
             chef "でも、体、言う。"
-            mc "(But the body speaks. He listens to his body. That is why he rests two days a week.)"
+            mc "(He touches his chest, then holds up two fingers. Two days. The rest I infer.)"
             $ reward_attributes_once("chef_visit_05_hard", [("insight", "micro")], show="auto")
         "Do you ever think about retiring?":
             mc "Do you ever think about retiring?"
             chef "ない。"
-            mc "(No. He says it without hesitation.)"
+            mc "(No. That one I know.)"
             chef "止まったら、死ぬ。"
-            mc "(If I stop, I die. Not literally, but spiritually. The ramen is the reason he gets up.)"
+            mc "(Stop, die. Two words I know, said together. The rest is in the way he says it.)"
             $ reward_attributes_once("chef_visit_05_retire", [("insight", "micro")], show="auto")
 
     "Chef brings me a bowl. It is the regular bowl, but there is something different about it today."
     "The broth is richer. The noodles are springier. It is the bowl of a man who found his rhythm and rode it."
 
     chef "今日、いいだった。"
-    mc "(Today was good. He is satisfied with the day.)"
+    mc "(Good, he says, and looks at the empty bowls. I understand that much.)"
     mc "The shop was full."
     chef "うん。"
     mc "(Yeah. He nods, once, the way he does when he has nothing more to say.)"
@@ -591,33 +591,33 @@ label chef_visit_06:
     "The young man is watching Chef with terrified reverence."
 
     chef "これ、弟子。"
-    mc "(This is my apprentice. He says it like it is the most natural thing in the world.)"
+    mc "(He introduces the boy with one word. Kenta bows, so I know what it meant.)"
     chef "名前、健太。"
-    mc "(His name is Kenta.)"
+    mc "(Kenta. The name I have heard him say before.)"
 
     "Kenta bows. Too deeply. Too quickly."
     kenta "Nice to meet you. I mean—はじめまして。"
     chef "もっと、緩く。"
-    mc "(More relaxed. Chef corrects him gently. Ramen does not need ceremony.)"
+    mc "(Something about being looser. Kenta straightens less. I copy him.)"
 
     menu:
         "Ask how long he's been learning.":
             mc "How long have you been learning?"
             kenta "Three weeks. I have so much to learn."
             chef "一生、かかる。"
-            mc "(It takes a lifetime. Chef says it without discouragement. Just truth.)"
+            mc "(A long time, he says. Not unkindly. Kenta nods like he already knew.)"
             $ reward_attributes_once("chef_visit_06_learn", [("insight", "micro")], show="auto")
         "Ask what he's working on.":
             mc "What are you working on today?"
             kenta "Chopping green onions. Chef says my rhythm is wrong."
             chef "リズム、全部。"
-            mc "(Rhythm is everything. In the knife, in the broth, in the life.)"
+            mc "(Rhythm. That word I know from the knife. He says it like it covers everything.)"
             $ reward_attributes_once("chef_visit_06_work", [("insight", "micro")], show="auto")
         "Tell him it takes time.":
             mc "It takes time. I've been coming for months and I still don't understand half of what he says."
             kenta "That makes me feel better."
             chef "時間、かかる。急ぐな。"
-            mc "(It takes time. Don't rush. That is the only lesson Chef thinks matters today.)"
+            mc "(Time, and not rushing. I know those two words now. The rest is in how he says it.)"
             $ reward_attributes_once("chef_visit_06_time", [("grace", "micro")], show="auto")
 
     "Chef stands up and goes to the pots."
@@ -634,7 +634,7 @@ label chef_visit_06:
             mc "Kenta, you can't write everything down. Some of this you have to feel."
             kenta "But if I don't write it, I'll forget."
             chef "忘れる、いい。"
-            mc "(Forgetting is fine. What you remember is what matters. What you forget was not the point.)"
+            mc "(Something about forgetting and remembering. Kenta writes it down. I copy him.)"
             $ reward_attributes_once("chef_visit_06_forget", [("insight", "micro")], show="auto")
         "Watch Chef, not the notebook.":
             "I want to tell him to look up, but I don't. He has to learn that himself."
@@ -643,34 +643,34 @@ label chef_visit_06:
         "Chef, explain what you're doing.":
             mc "Chef, explain what you're doing. For him."
             chef "説明できない。"
-            mc "(I can't explain it. He is not being difficult. He is being honest.)"
+            mc "(He says he cannot explain. The shrug says the rest.)"
             chef "感じるしかない。"
-            mc "(You can only feel it. Language is not the right tool for this.)"
+            mc "(Something about feeling it instead. He touches his chest. I think that is it.)"
             $ reward_attributes_once("chef_visit_06_explain", [("insight", "micro")], show="auto")
 
     "The bowl is finished. Chef sets it in front of me."
     "It is perfect. Not just good. Perfect in the way that makes you angry at every other bowl you have ever eaten."
 
     chef "食べて。"
-    mc "(Eat. He is not asking. He is testing.)"
+    mc "(Eat. That one I know. He is not asking.)"
 
     "I eat. The broth is deeper than before. The noodles have a spring that feels alive."
     "This is not just ramen. This is Chef, distilled into a bowl."
 
     chef "どう？"
-    mc "(How is it? He is asking, but this time he is also asking Kenta to listen to the answer.)"
+    mc "(How is it? I know that question. He looks at Kenta when he asks.)"
     mc "It's... it's the best one you've ever made me."
     chef "ああ。"
     "He nods, once, satisfied with the truth."
 
     chef "健太、聞いた？"
-    mc "(Kenta, did you hear? The truth matters more than the recipe.)"
+    mc "(He says Kenta's name. Kenta listens. I cannot follow the rest.)"
     kenta "I heard."
 
     chef "一番大事なのは、客の顔。"
-    mc "(The most important thing is the customer's face. Not the bowl. The person eating it.)"
+    mc "(Something about the customer's face. He points at me. I think I understand.)"
     chef "顔、見れば、分かる。"
-    mc "(If you watch the face, you understand. That is the only feedback that matters.)"
+    mc "(Then he points at my face again. The lesson is in the gesture.)"
     $ chef_affection += 1
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 6)
@@ -694,7 +694,7 @@ label chef_visit_07:
     "Chef sees me and points to the counter. The regular seat. The one that has developed my memory."
 
     chef "いつもの？"
-    mc "(The usual? He is asking, but he already knows the answer.)"
+    mc "(The usual. He asks it of Kenta, not me. I know the shape of the question.)"
     mc "Hai. The usual."
 
     "Kenta nods and goes to the pots. Chef watches him, hands clasped, eyes focused."
@@ -704,7 +704,7 @@ label chef_visit_07:
     "The broth is good. Not perfect, but good. The noodles are firm. The egg is runny in the right way."
 
     chef "どう？"
-    mc "(How is it? He is asking me to judge Kenta's work.)"
+    mc "(How is it? I know that much. He waits for my answer.)"
 
     menu:
         "It's good. He's learning.":
@@ -712,21 +712,21 @@ label chef_visit_07:
             chef "ああ。"
             mc "(Yeah. He nods, satisfied with the praise.)"
             chef "まだ、遠い。でも、進んでる。"
-            mc "(Still far. But progressing. That is enough for now.)"
+            mc "(Far, he says, and then something about getting closer. Kenta nods. I think that is praise.)"
             $ reward_attributes_once("chef_visit_07_good", [("grace", "micro")], show="auto")
         "It needs more time.":
             mc "It needs more time. The rhythm isn't quite there yet."
             chef "そうか。"
-            mc "(I see. He does not defend Kenta. He accepts the criticism as truth.)"
+            mc "(He does not defend him. That much I can see without the words.)"
             chef "健太、聞いた？"
-            mc "(Kenta, did you hear? The truth is the only way to learn.)"
+            mc "(Kenta's name again. He says it like a lesson. Kenta listens.)"
             $ reward_attributes_once("chef_visit_07_time", [("insight", "micro")], show="auto")
         "It reminds me of your first bowl for me.":
             mc "It reminds me of the first bowl you made me. Simpler, but honest."
             chef "いい評価だ。"
-            mc "(That is a good evaluation. He smiles, just a little.)"
+            mc "(He smiles. Kenta is good. I think that is what he said.)"
             chef "正直、一番。"
-            mc "(Honesty is first. That is what he has been teaching all along.)"
+            mc "(Honest, he says. One word I know. He has been saying it all week.)"
             $ reward_attributes_once("chef_visit_07_honest", [("grace", "micro")], show="auto")
 
     "Chef reaches under the counter and takes out a small wrapped package."
@@ -740,31 +740,31 @@ label chef_visit_07:
     "Heart. Or spirit. Or mind. The word means all of them at once."
 
     chef "私の、昔。"
-    mc "(Mine, from before. He used these when he was young.)"
+    mc "(Before, he says, and shows me the wood. I understand the gesture.)"
     chef "今、あなたの。"
-    mc "(Now, they are yours.)"
+    mc "(He puts them in my hand. I do not need the words for that.)"
 
     menu:
         "I can't take these. They're yours.":
             mc "I can't take these. They're yours. They have your history in them."
             chef "使わないと、死ぬ。"
-            mc "(If they're not used, they die. Chopsticks need hands the way ramen needs customers.)"
+            mc "(Something about using them, or losing them. He gives me a small look. I will use them.)"
             chef "あなたの手で、生きる。"
-            mc "(They will live in your hands. That is the gift. Not the wood. The life.)"
+            mc "(He taps my hand, then the chopsticks. That is the whole sentence, I think.)"
             $ reward_attributes_once("chef_visit_07_refuse", [("grace", "micro")], show="auto")
         "I will use them well.":
             mc "I will use them well. I promise."
             chef "約束、いらない。"
-            mc "(You don't need to promise. The using is the promise.)"
+            mc "(No promise, he says. He points at the chopsticks. Use them. I understand.)"
             chef "ただ、来て。"
-            mc "(Just come. That is all he asks. Return, and the chopsticks will have a purpose.)"
+            mc "(Come, he says. That word I know. The rest is in the way he holds the door.)"
             $ reward_attributes_once("chef_visit_07_promise", [("grace", "micro")], show="auto")
         "What does the character mean?":
             mc "What does 心 mean? Heart? Spirit?"
             chef "全部。"
-            mc "(All of it. Heart, spirit, mind. The part of you that eats.)"
+            mc "(He taps the 心 on the box, then his own chest. I cannot read all of it, but I know which part he means.)"
             chef "食事は、心だ。"
-            mc "(A meal is the heart. That is what he believes. Cooking is not technique. It is spirit.)"
+            mc "(Heart again, and cooking. I know those two words. The rest is in how he says it.)"
             $ reward_attributes_once("chef_visit_07_meaning", [("insight", "micro")], show="auto")
 
     "I take the chopsticks. The wood is warm from his pocket."
@@ -782,44 +782,44 @@ label chef_visit_07:
     "Then he sets his bowl down. Whatever he was performing for Kenta is over."
 
     chef "実は、言いたいことがある。"
-    mc "(There's something I need to tell you. He says it to the pot, not to me. That is how he says the important things.)"
+    mc "(Something he needs to say. I do not follow the words, but he says them to the pot, not to me. That is how he says the important things.)"
 
     chef "店、閉める。"
-    mc "(The shop... closes? The word lands harder than it should. The lantern is going out.)"
+    mc "(店. Shop. That word I know. The rest I read in his face, and in the lantern going out.)"
 
     menu:
         "Close the shop? Why?":
             mc "You're closing the shop? Why?"
             chef "実家、帰る。"
-            mc "(I'm going back to my family home. His parents are getting old. Someone has to be there.)"
+            mc "(Family, he says. Parents. Old. Three words I know, and the way he says them is enough.)"
             chef "跡継ぎ、いない。"
-            mc "(No one to take over. Kenta is still learning — the shop needs more than he has yet.)"
+            mc "(No one, he says. He looks at Kenta, then at the pots. I understand the shape of it.)"
             $ reward_attributes_once("chef_visit_07_why", [("insight", "micro")], show="auto")
         "What about Kenta? He's your apprentice.":
             mc "What about Kenta? He's your apprentice."
             chef "健太は、いい子だ。"
-            mc "(Kenta is a good boy. He says it like a verdict and a blessing at once.)"
+            mc "(Kenta's name, and a word I think means good. He says it like a verdict.)"
             chef "でも、まだ早い。"
-            mc "(But it's still too early. Thirty years of instinct cannot be handed over in three months.)"
+            mc "(Something about too early. Kenta's face falls, so I understand.)"
             $ reward_attributes_once("chef_visit_07_kenta", [("grace", "micro")], show="auto")
         "Can't you stay until he learns more?":
             mc "Can't you stay? Just until he learns more?"
             chef "無理だ。"
-            mc "(I can't. He says it without anger, only fact. Parents first. Broth second.)"
+            mc "(No, he says. Without anger. He looks at the door, and I think I know why.)"
             chef "親が、待ってる。"
-            mc "(My parents are waiting. That is the whole of it.)"
+            mc "(Parents. Waiting. Two words I know, and enough.)"
             $ reward_attributes_once("chef_visit_07_stay", [("nerve", "micro")], show="auto")
 
     kenta "Sensei...?"
     chef "お前の道を、行け。ラーメンは、お前を待ってる。"
-    mc "(Walk your own road. The ramen will be waiting for you. He means it as comfort, not promise.)"
+    mc "(He says it to Kenta. I cannot work out the words.)"
     kenta "...Hai."
     "Kenta's shoulders drop. He understood before I did."
 
     chef "あなたにも、来てほしい。"
-    mc "(I want you to come too. The last request. Not an order.)"
+    mc "(He says my name in among the Japanese. I understand that I am being asked for something.)"
     chef "最後の一杯、食べていけ。"
-    mc "(Eat your last bowl before you go. That is all he asks.)"
+    mc "(Eat, he says. And one word I know: last. The bowl is set in front of me.)"
 
     "I finish the bowl. It is the best he has ever made me, and it is the last."
     "The steam rises between us like it always does. Today I can see all the way through it."

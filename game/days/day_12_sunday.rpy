@@ -20,8 +20,9 @@ label sunday_practice:
     "My phone buzzes once on the desk."
 
     if "orson" in wire_unlocked:
+        $ orson_morning = "The window's dark. The wolf's still up. Take care." if confidant_visits.get("orson", 0) >= 7 else "The bar is open tonight. The water is still on the house."
         $ run_chat("orson", [
-            {"them": "The bar is open tonight. The water is still on the house.", "options": [
+            {"them": orson_morning, "options": [
                 {"label": "\"I might come by.\"",
                  "send": "I might come by.",
                  "them": ["Might is a door.", "Walk through it or don't."]},
@@ -57,10 +58,10 @@ label sunday_practice:
     "She hands me a cup and sits on the edge of the desk."
     hikari "You're different."
     mc "I'm the same."
-    hikari "You're the same and you're different. It's annoying."
+    hikari "You're the same and you're different. That's the whole thing."
     mc "What's different?"
     hikari "You turn your shoes around. You make tea. You read on the train instead of staring at the map."
-    hikari "You're becoming a person who lives here. It's very inconvenient for my theory that you're a guest."
+    hikari "You're becoming a person who lives here. And I'm glad you are."
     mc "(She says it to the cup, not to me. It lands anyway.)"
     $ add_affection("sister", 1)
 
@@ -292,13 +293,13 @@ label sunday_practice:
         "Ask her what happens next week.":
             mc "What happens next week?"
             hikari "More classes. More trains. More of the same, only harder."
-            mc "That's not an answer."
+            mc "That's an answer I don't like yet."
             hikari "It's the answer I have. The same only harder is how you get good at something."
             $ remember("hikari", "asked what happens next week, and she said the same only harder")
             $ reward_attributes_once("day12_night_next", [("insight", "micro")], show="auto")
-        "Say nothing. Drink the tea.":
-            "I do not say anything. The tea is hot and the room is quiet."
-            "Hikari does not fill the silence. She has learned that I do not need her to."
+        "Turn the chipped bowl so the chip faces me.":
+            "I turn the bowl a quarter turn. The chip faces me. Hikari does not comment."
+            "The tea is hot and the room is quiet. She has learned that I do not need her to fill it."
             mc "(Some things do not need a sentence. This is one of them.)"
             $ remember("hikari", "drank the tea in silence on the last night of the week")
             $ reward_attributes_once("day12_night_quiet", [("nerve", "micro")], show="auto")

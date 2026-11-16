@@ -20,17 +20,31 @@ label saturday_recovery:
     "My phone buzzes once on the desk."
 
     if "hana" in wire_unlocked:
-        $ run_chat("hana", [
-            {"them": "The reading room is open today.", "options": [
-                {"label": "\"I'll come by if I can.\"",
-                 "send": "I'll come by if I can.",
-                 "them": ["The door with no sign.", "You know it now."]},
-                {"label": "\"I have a class this morning.\"",
-                 "send": "I have a class this morning.",
-                 "them": ["Then after.", "The room keeps its hours. So do I."]},
-            ]},
-        ])
-        mc "(She texts in full stops. Every sentence is a small closed door that she has decided to leave open.)"
+        # After her farewell she does not invite him back to the reading room.
+        # The club is no longer the place she is heading toward.
+        if confidant_visits.get("hana", 0) >= 7:
+            $ run_chat("hana", [
+                {"them": ["...I started the application.", "The... the art school one. I think. Maybe."], "options": [
+                    {"label": "\"That's wonderful.\"",
+                     "send": "That's wonderful.",
+                     "them": ["Thank you... don't tell anyone yet. I want to... to say it first. Properly."]},
+                    {"label": "\"I'm glad you told me.\"",
+                     "send": "I'm glad you told me.",
+                     "them": ["You kept... showing up. That's why I could. ...Sorry. That was a long sentence."]},
+                ]},
+            ])
+        else:
+            $ run_chat("hana", [
+                {"them": ["...Um. The reading room.", "It's... open today. I thought... maybe."], "options": [
+                    {"label": "\"I'll come by if I can.\"",
+                     "send": "I'll come by if I can.",
+                     "them": ["...Okay. I'll be... near the art books.", "Don't... don't worry if you can't."]},
+                    {"label": "\"I have a class this morning.\"",
+                     "send": "I have a class this morning.",
+                     "them": ["Oh. ...That's fine. After, then. If... if you want.", "I'll just... I'll be here."]},
+                ]},
+            ])
+        mc "(She writes the way she speaks. I am learning to read the pauses.)"
     else:
         $ run_chat("hikari", [
             {"them": "You're up. On a Saturday. Who are you?", "options": [
@@ -92,11 +106,11 @@ label saturday_recovery:
             mc "(That last one lands harder than the other two.)"
             $ reward_attributes_once("day11_kitchen_mottainai", [("nerve", "micro")], show="auto")
 
-    hikari "You're going to be late for your book woman."
+    hikari "Murakami's waiting. Don't keep her."
     mc "She said the station with the clock."
     hikari "They all have clocks."
     mc "Then I'll find the one with the right clock."
-    hikari "That is the most you thing you have ever said."
+    hikari "Then you'll find it. I know you will."
     mother "Take an umbrella."
     mc "It is not raining."
     mother "Take the umbrella."
@@ -269,7 +283,7 @@ label saturday_recovery:
         "Tell her I want to stay in Japan.":
             mc "I think I want to stay. After the year. I don't know how to say it yet."
             hikari "Then don't say it yet."
-            mc "That's not an answer."
+            mc "That's an answer I don't like yet."
             hikari "It's the answer I have. Stay long enough to mean it."
             $ remember("hikari", "told her he thinks he wants to stay in Japan after the year")
             $ reward_attributes_once("day11_night_stay", [("nerve", "micro")], show="auto")

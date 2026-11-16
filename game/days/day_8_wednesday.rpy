@@ -21,11 +21,18 @@ label wednesday_morning:
     "My phone buzzes against the desk."
 
     if "chef" in wire_unlocked:
-        $ run_chat("chef", [
-            {"them": "今日は来るな。水曜日は休み。"},
-            {"them": "コンビニのパンで済ませるな。ちゃんと食え。"},
-        ])
-        mc "(A man who closes his shop on a Wednesday and texts a customer to make sure he eats. I cannot read a word of it. I read the shape of it: a day off, a bowl, a warning. That is the whole man, I think.)"
+        if confidant_visits.get("chef", 0) >= 7:
+            $ run_chat("chef", [
+                {"them": "店は閉めた。箸は、使え。"},
+                {"them": "どこでも、ちゃんと食え。"},
+            ])
+            mc "(I cannot read the words. I know a day off when I see one, and I know a goodbye when I feel one.)"
+        else:
+            $ run_chat("chef", [
+                {"them": "今日は来るな。水曜日は休み。"},
+                {"them": "コンビニのパンで済ませるな。ちゃんと食え。"},
+            ])
+            mc "(He closes his shop on a Wednesday and still texts to make sure I eat. I cannot read a word of it. I read the shape: a day off, a bowl, a warning. That is the whole man, I think.)"
     else:
         $ run_chat("hikari", [
             {"them": "You're awake. I can hear you moving.", "options": [
@@ -46,7 +53,7 @@ label wednesday_morning:
     mc "Those aren't mutually exclusive."
     hikari "They are in this house."
     "She leans in the doorway with her bag already on her shoulder."
-    hikari "Look at you. Dressed, upright, not confused about which day it is."
+    hikari "Look at you. Up and dressed and ready to go."
     mc "It's Wednesday."
     hikari "It's Wednesday. He knows the days now."
     mc "(She says it like a teacher marking a paper. She is pleased. She is trying not to be.)"
@@ -121,18 +128,18 @@ label wednesday_morning:
     menu:
         "The one on the left. Local train.":
             mc "The one on the left. Local."
-            hikari "Good. You were listening."
+            hikari "That's it. The local stops at our station."
             $ reward_attributes_once("day8_platform_right", [("insight", "micro")], show="auto")
         "The one on the right. Rapid train.":
             mc "The one on the right. Rapid."
-            hikari "Other one. The rapid skips our stop."
-            hikari "You'll remember it next time. That's what next times are for."
+            hikari "The local, then. The rapid skips our stop."
+            hikari "That's what first times are for. You'll know it by tomorrow."
             $ reward_attributes_once("day8_platform_wrong", [("nerve", "micro")], show="auto")
 
     scene bg_station with walk_fade
     "The station at seven-thirty is a machine that has already decided everything."
     "People move through the gates in a stream, card after card, beep after beep."
-    hikari "IC card. Don't fumble it at the gate. The person behind you has a train to catch."
+    hikari "IC card. Tap it at the gate and keep moving. The person behind you has a train to catch."
     mc "Everyone has a train to catch."
     hikari "Everyone here has the same train to catch. That's the difference."
 
@@ -146,11 +153,11 @@ label wednesday_morning:
     "A man in a suit is asleep standing up, his hand through the strap, his face perfectly calm."
     "A woman reads a paperback with a plain paper cover, the way you would cover a book you did not want anyone to see."
     mc "(Nobody is looking at anybody. Everybody knows exactly where everybody is.)"
-    hikari "You're doing the thing."
+    hikari "You're doing your thing."
     mc "What thing?"
-    hikari "The thing where you look at everyone and think about it."
+    hikari "Watching the car. Working out how everybody fits."
     mc "Is that a problem?"
-    hikari "No. It's just noticeable."
+    hikari "No. It's how you learn a place. I do it too."
 
     menu:
         "Ask why nobody is talking.":

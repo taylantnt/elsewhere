@@ -1,0 +1,819 @@
+################################################################################
+## HIKARI TOURS — MESSAGE HIKARI AND UNLOCK THE CITY
+################################################################################
+##
+## Foundation for the "Message Hikari" hub row. The flow is:
+##
+##   1. He texts her and asks whether she is free after class.
+##   2. She offers to show him somewhere he has not been.
+##   3. She picks a locked city destination from `hikari_tour_spots`.
+##   4. The matching `hikari_tour_<place>` label plays.
+##   5. That label calls `unlock_hikari_tour_destination(place)`.
+##
+## After the first tour, the place's hub row becomes travelable on its own and
+## the ordinary `city_row_<place>` scene plays without Hikari. The tour is a
+## one-time introduction, not a companion who follows him forever.
+##
+## Yokohama was the first tour written; Harajuku: Takeshita Street is the second.
+## Only tours in `hikari_tour_written` are offered, so Message Hikari never sends
+## the player into a placeholder. Add the next place id there when its scene is
+## ready; the picker then chooses randomly among whatever is still locked and
+## written. Each label ends by unlocking its place for the generic solo row.
+
+
+label hikari_tour:
+    $ last_afternoon_was_run = False
+    $ last_afternoon_hikari_tour = False
+
+    $ tour_available = [p for p in hikari_tour_available_spots() if p in hikari_tour_written]
+    if tour_available:
+        $ tour_spot = renpy.random.choice(tour_available)
+    else:
+        $ tour_spot = None
+
+    if not tour_spot:
+        $ run_chat("hikari", [
+            {"them": [
+                "Actually, I'm out of places to show you.",
+                "You have seen more of this city than I have.",
+            ], "options": [
+                {"label": "Then let's just walk home.",
+                 "send": "Then let's just walk home."},
+            ]},
+            {"them": "Deal."},
+        ])
+        scene bg_home_exterior_night with walk_fade
+        $ night_street()
+        $ last_afternoon_place = "walk_hikari"
+        $ last_afternoon_was_run = False
+        return
+
+    $ last_afternoon_place = tour_spot
+    $ last_afternoon_hikari_tour = True
+
+    if tour_spot == "yokohama":
+        # The hunger is the hook. She does not offer a tour first; she offers
+        # dinner, and the tour is what happens on the way to it.
+        $ run_chat("hikari", [
+            {"options": [
+                {"label": "Hey Hikari. Are you free after class?",
+                 "send": "Hey Hikari. Are you free after class?",
+                 "them": [
+                     "Seminar ends at four. Why?",
+                     "Do you have food?",
+                 ]},
+            ]},
+            {"them": [
+                "Because I am starving.",
+                "There is a place in Yokohama. Chinatown.",
+                "Gyoza. Shoronpo. Ramen. The real thing.",
+                "Do you want me to show you?",
+            ], "options": [
+                {"label": "Show me the gyoza.",
+                 "send": "Show me the gyoza."},
+                {"label": "I thought you were showing me Yokohama.",
+                 "send": "I thought you were showing me Yokohama."},
+            ]},
+            {"them": [
+                "I am showing you Yokohama.",
+                "The gyoza is the important part.",
+                "Meet me at the station. Do not eat lunch.",
+            ]},
+        ])
+    elif tour_spot == "harajuku":
+        # The fashion is the hook. She explains just enough to make him curious,
+        # then turns it into a walk, because the street is the point.
+        $ run_chat("hikari", [
+            {"options": [
+                {"label": "Hey Hikari. Are you free after class?",
+                 "send": "Hey Hikari. Are you free after class?",
+                 "them": [
+                     "Seminar ends at four.",
+                     "Have you heard of kawaii fashion?",
+                 ]},
+            ]},
+            {"them": [
+                "It is not just cute. It is a whole way of dressing.",
+                "Layers. Skirts over trousers. Colours that should not work together.",
+                "Lace and plastic and a ribbon where a ribbon has no business being.",
+            ], "options": [
+                {"label": "What is that?",
+                 "send": "What is that?",
+                 "them": ["I will show you. That is easier than explaining."]},
+                {"label": "Do people actually wear that?",
+                 "send": "Do people actually wear that?",
+                 "them": ["You have no idea.", "That is why we are going."]},
+            ]},
+            {"them": [
+                "Takeshita Street. The weather is nice and the light is good.",
+                "Meet me at the station after seminar.",
+                "Do not dress normally. I am warning you now.",
+            ]},
+        ])
+    else:
+        $ run_chat("hikari", [
+            {"options": [
+                {"label": "Hey Hikari. Are you free after class?",
+                 "send": "Hey Hikari. Are you free after class?",
+                 "them": [
+                     "I have seminar until four.",
+                     "Why? Did you want to do something?",
+                 ]},
+            ]},
+            {"them": "I could show you somewhere you have not been yet.", "options": [
+                {"label": "Yes, please.",
+                 "send": "Yes, please."},
+                {"label": "If you're offering.",
+                 "send": "If you're offering."},
+            ]},
+            {"them": [
+                "Then it's settled.",
+                "I pick the place. Meet me at the station.",
+            ]},
+        ])
+
+    scene bg_station with walk_fade
+    "Hikari is already waiting by the ticket gate, arms crossed, pretending she has not been checking the time."
+    hikari "You're late. I got here early and now I can't stop noticing."
+    mc "You said after class."
+    hikari "You're here. That's close enough."
+    if tour_spot == "yokohama":
+        hikari "Rule one. We do not eat at the first shop."
+        mc "Why not?"
+        hikari "Because the first shop is for tourists. Rule two. If someone shouts at you, nod. Do not apologise."
+        mc "(This is either a tour or a warning.)"
+    elif tour_spot == "harajuku":
+        hikari "Rule one. We look at everything. We buy nothing until the third shop."
+        mc "Why the third?"
+        hikari "The first two are for people who photograph themselves. The third is for people who actually wear it."
+        mc "(She has a rule for everything. Most of them turn out to be true.)"
+    hikari "Come on. I want to get there before the line."
+    "She turns before I can ask where we are going. I follow her."
+
+    $ renpy.jump("hikari_tour_" + tour_spot)
+
+
+## --- THE TOUR SCENES ---------------------------------------------------------
+##
+## Yokohama is the written tour. The rest are still placeholders: Hikari arrives
+## with him, introduces the place, and the unlock happens at the end. Replace
+## the placeholder lines and add choices/rewards there when those scenes are
+## written. The message flow, picker, unlock, and solo fallback do not move.
+
+label hikari_tour_harajuku:
+    scene bg_harajuku with walk_fade
+    "The train lets us out into a crowd that looks dressed for a different country."
+    "Then we turn a corner, the street narrows, and the colours arrive all at once. Pink, yellow, stripes, lace, a girl in a skirt the size of a small building."
+    hikari "Takeshita Street."
+    mc "It is... loud."
+    hikari "It was a quiet lane behind the station. Then the boutiques came and nobody has taken them out since."
+    hikari "This is where kawaii stopped being a word in a magazine and became something people wore to the convenience store."
+    mc "What does kawaii mean, exactly?"
+    hikari "可愛い. Cute. But that is the small translation. It is also a way of dressing, a way of talking, a way of deciding what deserves your attention."
+    hikari "If something is kawaii, it is allowed to take up space. That is the whole idea."
+    mc "(A word that gives permission. I can understand that kind of word.)"
+    hikari "Rule two. Walk slowly. If you hurry, you miss the thing the street is actually for."
+    mc "Which is?"
+    hikari "Being seen, and seeing. That is the transaction. Everybody here is both the audience and the show."
+
+    menu:
+        "Ask why nobody is looking at us.":
+            mc "Nobody is looking at us. Is that rude?"
+            hikari "No. They are looking at everyone. That is different from looking at you."
+            hikari "Here, being looked at is not a judgment. It is participation. You will understand when you stop trying not to be seen."
+            mc "(I try not to be seen. I am immediately seen by a girl with pink hair who smiles at me like I did something clever.)"
+            $ reward_attributes_once("harajuku_tour_looking", [("insight", "micro")], show="auto")
+        "Ask what the rules of the street are.":
+            mc "You have rules for this place too?"
+            hikari "Of course. Look with your eyes, not with your camera. Say 可愛い when something deserves it. Do not laugh at anybody, ever."
+            hikari "And if somebody asks to photograph you, say yes. That is how you become part of the street."
+            mc "(She says it like a rule. I can follow a rule.)"
+            $ reward_attributes_once("harajuku_tour_rules", [("grace", "micro")], show="auto")
+        "Count the colours in one shop window.":
+            mc "I am trying to count the colours in that window."
+            hikari "How many?"
+            mc "Nineteen. I lost count at the socks."
+            hikari "Then the window has won. That is what it wanted."
+            $ reward_attributes_once("harajuku_tour_colours", [("nerve", "micro")], show="auto")
+
+    "We move with the crowd, which is the only way to move here."
+    "A crepe shop turns a crepe into a tower of fruit and whipped cream and something that might be chocolate. A girl beside me orders it without looking at the menu."
+    "A tapioca shop has a line that goes around the corner. The drinks are the colour of milk tea and the cups are covered in cartoon cats."
+    "And everywhere, cotton candy. Pink, blue, green, purple, shaped like flowers and hearts and animals with too many ears."
+
+    menu:
+        "Get the biggest crepe.":
+            mc "I want that one. The one that is structurally impossible."
+            hikari "Good. It is designed to be photographed before it is eaten."
+            "The crepe is taller than my hand. I eat it with a fork and then with my fingers. Hikari is right about the photograph."
+            $ reward_attributes_once("harajuku_tour_crepe", [("nerve", "micro")], show="auto")
+        "Ask what tapioca is.":
+            mc "What is in the cup? Those little black balls."
+            hikari "タピオカ. Tapioca. Starch from a root, boiled until it bounces."
+            mc "It bounces?"
+            hikari "Everything here bounces. It is part of the design."
+            $ reward_attributes_once("harajuku_tour_tapioca", [("insight", "micro")], show="auto")
+        "Let Hikari choose.":
+            mc "You choose. I will eat whatever you point at."
+            hikari "That is the first sensible thing you have said since we got off the train."
+            "She gets us something cold and sweet with a cat drawn on the cup. She does not tell me what it is. I decide not to ask."
+            $ reward_attributes_once("harajuku_tour_let_choose", [("grace", "micro")], show="auto")
+
+    scene bg_harajuku_clothes with walk_fade
+    "The clothing shop is smaller than the street and louder than both of us together."
+    "Skirts hang over trousers. Socks are worn over other socks. There is a jacket covered in pockets that serve no purpose, and Hikari touches the sleeve like it is a document she has been waiting to read."
+    hikari "This is the part people photograph and call a costume. It is not a costume. People live in it."
+    hikari "Look. The layers are not random. Short over long, loose over tight, something soft and one thing that should not work."
+    mc "Why one thing that should not work?"
+    hikari "Because then somebody has to look twice. That is the whole point of being seen."
+
+    menu:
+        "Ask her to explain the outfit on the mannequin.":
+            mc "Walk me through it. Top to bottom."
+            hikari "Skirt over trousers. Socks over boots. A ribbon that does nothing. And one colour that is fighting all the others."
+            hikari "It should be a mess. It is not. Somebody decided, and that is the difference."
+            mc "(Deciding. I am starting to think that is what this street is about.)"
+            $ reward_attributes_once("harajuku_tour_outfit", [("insight", "micro")], show="auto")
+        "Try something on.":
+            mc "Can I try that jacket? The one with all the pockets."
+            "The assistant takes it down before Hikari can answer. I put it on. The pockets are real. I have no idea what to put in them."
+            hikari "可愛い."
+            mc "What did she say?"
+            hikari "She said you look cute. Do not ask me to repeat it."
+            $ reward_attributes_once("harajuku_tour_try_on", [("nerve", "micro")], show="auto")
+        "Ask if she ever dressed like this.":
+            mc "Did you ever dress like this?"
+            hikari "For about a year. I thought it was the most important thing in the world."
+            mc "What changed?"
+            hikari "I found out I liked being seen more when I could choose when to be seen."
+            "She says it to the jacket, not to me. I let it stand."
+            $ reward_attributes_once("harajuku_tour_her_style", [("grace", "micro")], show="auto")
+
+    scene bg_harajuku_candy with walk_fade
+    "The cotton candy shop is a wall of colour. Spirals of sugar on sticks, shaped like flowers and hearts and clouds, stacked in rows like a field that has gone wrong in the best possible way."
+    "A girl behind the counter spins a new one. Sugar goes in, colour comes out. It takes about four seconds."
+    hikari "Look at it. 綿菓子. Wataame. Cotton candy."
+    mc "It is too beautiful to eat."
+    hikari "That is what everybody says. Then they eat it."
+    "She buys two. Mine is pink and shaped like a flower with more petals than any real flower has. Hers is blue and shaped like a heart."
+    "I hold it at arm's length. The street keeps moving around me."
+
+    menu:
+        "Say it is too cute to eat.":
+            mc "可愛すぎる. It is too cute. I cannot eat it."
+            hikari "That is also a correct use of the word."
+            mc "I ate it anyway."
+            hikari "Of course you did. It was made to be eaten."
+            $ reward_attributes_once("harajuku_tour_too_cute", [("nerve", "micro")], show="auto")
+        "Ask how they make the shapes.":
+            mc "How does she get it into a heart?"
+            hikari "She does not. You do. Watch."
+            "The girl hands me the stick and turns my wrist twice. Sugar folds where I tell it to. The heart is not perfect. It is mine."
+            $ reward_attributes_once("harajuku_tour_candy_shape", [("insight", "micro")], show="auto")
+        "Take a photograph of Hikari with hers.":
+            mc "Hold it up. I want a photograph."
+            hikari "No."
+            mc "Why not?"
+            hikari "Because this one is mine, and I am eating it before you can document it."
+            "She does. She gets sugar on her finger and does not wipe it off. I decide that this is the best thing I have seen all day."
+            $ reward_attributes_once("harajuku_tour_candy_photo", [("grace", "micro")], show="auto")
+
+    "We walk the street again, slower this time, toward the station end."
+    "The light has changed. The colours have changed with it. A shop that looked ordinary an hour ago is now impossible to ignore."
+    mc "I thought this place would be too much."
+    hikari "It is too much. That is the point. You were supposed to find a way to stand in the middle of too much and not leave."
+    mc "Did I?"
+    hikari "You are still here. Yes."
+
+    menu:
+        "Ask why she brought me here.":
+            mc "Why here, of all the places you could have shown me?"
+            hikari "Because you look at things like you are afraid of getting them wrong."
+            hikari "There is no wrong here. You put a skirt over trousers and see what happens. That is the whole lesson."
+            mc "(She says it like a rule. This one I might keep.)"
+            $ reward_attributes_once("harajuku_tour_why_here", [("insight", "micro")], show="auto")
+        "Say you want to come back alone.":
+            mc "I want to come back by myself."
+            hikari "Good. Walk the whole street. Do not buy anything on the first pass."
+            mc "The third shop?"
+            hikari "You were listening."
+            $ reward_attributes_once("harajuku_tour_come_back", [("nerve", "micro")], show="auto")
+        "Tell her you had fun.":
+            mc "I had a really good time."
+            hikari "I know. You stopped checking where we were about an hour ago."
+            mc "I did?"
+            hikari "You did. That is how I know."
+            $ reward_attributes_once("harajuku_tour_had_fun", [("grace", "micro")], show="auto")
+
+    $ unlock_hikari_tour_destination("harajuku")
+    $ phone_map_visit("harajuku")
+    $ renpy.notify("Harajuku: Takeshita Street is now on your map.")
+    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    hikari "Next time, go without me."
+    mc "You are not coming?"
+    hikari "I have shown you. That was the point."
+    mc "(She says it lightly. It does not land lightly.)"
+    hikari "And if you get a crepe, get the one with the fruit. The tall one is for photographs."
+    $ reward_attributes_once("hikari_tour_harajuku_complete", [("insight", "tiny")], show="auto")
+
+    scene bg_train_interior with walk_fade
+    "The train home is warm and half empty. Hikari falls asleep against the window with her jacket folded under her head."
+    "There is a streak of pink sugar on her finger that she never wiped off."
+    mc "(She took me to a street where nobody is embarrassed to be seen. I think that was the point.)"
+
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    hikari "We're home."
+    mc "We're home."
+    hikari "You're welcome."
+    mc "I didn't say thank you."
+    hikari "You were going to."
+    "She goes inside before I can prove her right."
+    return
+
+
+label hikari_tour_karaoke:
+    scene bg_karaoke_room with walk_fade
+    "The karaoke box is smaller than I expected and louder than the street outside."
+    hikari "One hour. You pick the first song. I'm judging."
+    mc "You said you were showing me around."
+    hikari "This is the tour. The room is the place."
+    $ unlock_hikari_tour_destination("karaoke")
+    "She does not sing until the last ten minutes. Then she does, and she is better than she let on."
+    mc "(I know where the place is now. I know what the room sounds like.)"
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    return
+
+
+label hikari_tour_combini:
+    scene bg_combini with walk_fade
+    "The combini is the same temperature and brightness as every other one in the city."
+    hikari "This is not a tour. This is an errand with commentary."
+    mc "You picked it."
+    hikari "I picked it because you walk past it every day and never look inside properly."
+    $ unlock_hikari_tour_destination("combini")
+    "She shows me the good shelf, the bad shelf, and the machine that makes coffee one cup at a time."
+    mc "(I can come back here alone. I know which door chimes when.)"
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    return
+
+
+label hikari_tour_odaiba:
+    scene bg_odaiba with walk_fade
+    "Odaiba is too wide and too clean, like a street built from a drawing of a street."
+    hikari "This is the future they planned. It looks better in photographs."
+    mc "You don't like it."
+    hikari "I didn't say that. I said it looks better in photographs."
+    $ unlock_hikari_tour_destination("odaiba")
+    "We walk until the water is on three sides and the city is a line of light across the bay."
+    mc "(I can find the station from here. I can come back and decide what I think.)"
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    return
+
+
+label hikari_tour_yokohama:
+    scene bg_yokohama_chinatown with walk_fade
+    "The train lets us out into a crowd that is already eating."
+    "Two streets later the city changes its mind. Red pillars. Gold trim. A gate tall enough to be a building, with characters stacked above it like a warning."
+    hikari "Yokohama Chinatown."
+    mc "It doesn't look like the rest of the city."
+    hikari "It isn't supposed to."
+    hikari "Yokohama was a port before it was a city. In 1859 they opened it to foreign ships. The people who came to trade needed somewhere to eat, sleep, and be among their own."
+    hikari "This is where the Chinese traders and cooks settled. Then their children stayed. Then their children's children."
+    mc "(She says it like a history lecture. She is still walking.)"
+    hikari "It is the largest Chinatown in Japan. Also the loudest. Those are separate facts."
+    "A lantern swings above us. Somewhere ahead, a shopkeeper is laughing at something nobody said."
+    mc "(I am a foreigner in Japan, standing in a part of Japan that is foreign to Japan. The math is doing something strange.)"
+
+    menu:
+        "Ask why the Chinese settled here, and not Tokyo.":
+            mc "Why Yokohama? Why not Tokyo?"
+            hikari "Tokyo was the government. Yokohama was the door."
+            hikari "The port opened first here. The ships came here. The cooks came with them."
+            mc "(A door needs somebody on both sides of it.)"
+            $ reward_attributes_once("yokohama_tour_why_port", [("insight", "micro")], show="auto")
+        "Ask if people actually live here.":
+            mc "Do people live here, or is it all shops?"
+            hikari "Look up."
+            "I look up. Above the red awnings and the souvenir signs, there are windows. Laundry. A satellite dish. A cat asleep on a sill."
+            hikari "People live here. They just also sell things to people who don't."
+            mc "(It is a neighborhood wearing a costume. Or a costume with a neighborhood inside it.)"
+            $ reward_attributes_once("yokohama_tour_live_here", [("grace", "micro")], show="auto")
+        "Ask what happens if you order too many dumplings.":
+            mc "Hypothetically. What happens if I order too many?"
+            hikari "Ask me after we've eaten. You'll know then."
+            mc "So that's a refusal."
+            hikari "It's a postponement. I'm just hungry."
+            mc "(She speeds up. I take that as an answer.)"
+            $ reward_attributes_once("yokohama_tour_dumpling_math", [("nerve", "micro")], show="auto")
+
+    "Main street is a tunnel of red lanterns and shopfronts. Steam climbs out of doorways and hangs under the eaves."
+    "A woman lifts the lid off a steamer. A man shapes dough behind glass. A child runs between the tables with a plastic bag held over his head like a trophy."
+    hikari "Steamed buns. Good. Not the point."
+    "She points at a window where a man is folding half-moons of dough with the speed of someone who stopped counting years ago."
+    hikari "Jiaozi. Gyoza, in Japanese. Chinese dumplings that came over with the cooks and stayed."
+    hikari "Japanese gyoza is the cousin. More garlic, more chive, thinner skin, fried on one side. Chinese jiaozi is the one that stayed home."
+    mc "So we're eating the cousin."
+    hikari "We're eating the cousin in the house the family built. Close enough."
+    "She points at a bamboo steamer. Inside, the dumplings are pleated like small purses and sit in a pool of their own heat."
+    hikari "Shoronpo. Soup dumplings. The soup is inside. You bite a hole first or you regret it."
+    mc "And the ramen?"
+    hikari "Yokohama ramen has its own history. Sanmamen. Thick sauce, vegetables, a whole different animal. The port put it together."
+    mc "(She has a whole map in her head. She is pretending she is only here for the food.)"
+
+    menu:
+        "Point at the soup dumplings.":
+            mc "Those. The ones with the soup inside."
+            hikari "Good choice. Dangerous choice."
+            hikari "Bite, wait, then drink. If you put the whole thing in your mouth, you will not enjoy the next ten minutes."
+            mc "(I will absolutely put the whole thing in my mouth.)"
+            $ reward_attributes_once("yokohama_tour_shoronpo", [("grace", "micro")], show="auto")
+        "Point at the gyoza.":
+            mc "Gyoza. The real ones."
+            hikari "Correct."
+            mc "You didn't even look."
+            hikari "I didn't need to."
+            $ reward_attributes_once("yokohama_tour_gyoza_pick", [("nerve", "micro")], show="auto")
+        "Point at the ramen.":
+            mc "What about the ramen?"
+            hikari "The ramen is for later. Or for people who don't have a plan."
+            mc "You have a plan?"
+            hikari "I have a stomach. It is a plan."
+            $ reward_attributes_once("yokohama_tour_ramen_question", [("insight", "micro")], show="auto")
+
+    "She walks faster. I follow."
+    "We pass the big restaurants with photographs of their food and menus in four languages. She ignores all of them."
+    "Then she stops."
+    "Between a souvenir shop and a noodle place, there is a building so narrow it looks like the alley learned to stand up. A red sign. Three characters I can't read. A curtain in the doorway, faded to the color of old tea."
+    hikari "Here."
+    mc "This is a shop?"
+    hikari "It is the shop."
+    "She pushes the curtain aside and disappears into the steam."
+
+    scene bg_gyoza_shop with walk_fade
+    "The inside is smaller than the outside. Six stools along a counter. Two tables pushed against the wall. A ceiling fan that turns like it is thinking about stopping."
+    "The air is pork fat and garlic and something clean and green. A television in the corner is playing a drama at a volume that makes the room vibrate."
+    "A man's voice comes through the kitchen window. 「Jiaozi! Jiaozi!」"
+    "A woman answers. 「Laile! Ni cui shenme!」"
+    "A boy ducks past with a tray held over his head. Nobody looks at us. Everybody has seen us."
+    "Then an old woman comes out of the kitchen."
+    "She is not tall. She does not need to be. She has the face of someone who has been running this room since before I was born, and who will still be running it after I leave."
+    "She looks at Hikari. Then at me. Then at the clock."
+    $ lei_mood = "shout"
+    lei "你又来了！"
+    lei "また来たのか。"
+    "Hikari's face does something I have not seen on it before. She looks caught."
+    hikari "She says I'm here again. She's teasing me."
+    mc "You said you found this place on a seminar trip."
+    hikari "I did. I came back a few times. She remembers."
+    lei "外人まで連れてきたのか。"
+    hikari "She says I brought a foreigner."
+    mc "You told her about me?"
+    hikari "I told her I was bringing someone who gets lost. She assumed."
+    "From the kitchen, the loud voice says something. The boy laughs. Hikari's ears go red."
+    hikari "They're teasing me too. Something about walking out on the good restaurant."
+    mc "And then coming back here?"
+    hikari "A few times."
+    $ lei_mood = "normal"
+    lei "幾位？"
+    lei "何人ですか。"
+    "She says it twice. The first time in Chinese, the second in Japanese. Hikari does not speak Chinese, so Lei Lei says the important parts again for her. I wait for Hikari."
+    mc "(I hold up two fingers. It feels like a confession.)"
+    $ lei_mood = "shout"
+    lei "坐。快點。"
+    lei "座って。早く。"
+    mc "(Two languages. I understand neither. I wait for Hikari.)"
+    hikari "Sit. She means now."
+    mc "What was the first part?"
+    hikari "Chinese. I don't speak it. She repeats the important bits in Japanese for me."
+    mc "So I only have to listen to you."
+    hikari "That's the idea."
+    "The stools are too small. The table is too small. The menu is a laminated sheet with photographs that have gone orange at the edges."
+    "Lei Lei stands over us with her arms crossed. She does not hand me the menu. She waits for me to deserve it."
+    $ lei_mood = "normal"
+    lei "吃什麼？"
+    lei "何を食べますか。"
+    mc "(She is looking at me. Not Hikari. Me.)"
+    hikari "She wants to know what you want."
+    mc "I don't know Chinese. I don't know anything on this menu."
+    hikari "Point at whatever smells best. I'll tell you if you're wrong."
+
+    menu:
+        "Let Hikari order for both of you.":
+            mc "You order. I'll trust you."
+            hikari "Good. I'll get us gyoza and shoronpo."
+            "She orders in Japanese, quick and low. Lei Lei nods once, writes nothing down, and goes back to the kitchen."
+            mc "(I catch none of it. Hikari handles it.)"
+            mc "(No one wrote anything down. I do not know if that is confidence or a threat.)"
+            $ reward_attributes_once("yokohama_tour_let_hikari_order", [("grace", "micro")], show="auto")
+        "Try to order in Chinese.":
+            mc "Um. 餃子。"
+            "It is the only word I know, and I am almost certainly saying it wrong."
+            $ lei_mood = "shout"
+            lei "餃子！"
+            "She says it back, louder, as if volume is correction."
+            lei "餃子です。"
+            "Then the Japanese version, for Hikari. The two words share their characters."
+            lei "對。餃子。"
+            lei "そう。餃子。"
+            hikari "She says that's right."
+            mc "And the rest?"
+            hikari "That you say it like a tourist. She said that with her whole face."
+            $ reward_attributes_once("yokohama_tour_order_chinese", [("nerve", "micro")], show="auto")
+        "Ask what she recommends.":
+            mc "What do you recommend?"
+            "Hikari asks in Japanese. Lei Lei looks at me for a long second."
+            $ lei_mood = "shout"
+            lei "全部。"
+            lei "全部です。"
+            hikari "She says everything."
+            mc "That is not a recommendation."
+            hikari "It is a test."
+            $ reward_attributes_once("yokohama_tour_recommendation", [("insight", "micro")], show="auto")
+
+    "The kitchen does not have a door. It has an opening. Sound comes out of it the way steam does."
+    "They argue in Chinese. I don't understand a word of it. Hikari doesn't either, but she leans in, listening for the Japanese when they use it."
+    "Man: 「Jiaozi! Jiaozi!」"
+    "Woman: 「Laile! Ni cui shenme!」"
+    "Boy: 「Nainai! Dianhua!」"
+    "Hikari's head moves a fraction. The boy has switched to the Japanese word — 電話, denwa — and that much she understands."
+    "Lei Lei, without turning: 「Shuo wo bu zai!」"
+    "The boy says something into the phone. Then he comes back and says: 「Ta shuo ta bu zai.」"
+    "The man's voice turns sharp. The woman's turns sharper. I cannot follow the words. The boy laughs."
+    "One of the sons puts his head through the opening and shouts something in Japanese. Hikari catches one word in it — 蒸し器, the steamer."
+    "Lei Lei says a single word — 「やめて。」 — and both of them stop. I don't know the word. The room does."
+    mc "What are they arguing about?"
+    hikari "The steamer."
+    mc "What about it?"
+    hikari "Whether it is on."
+    mc "Is it on?"
+    hikari "That is the argument."
+    "A pot hits a stove. Somebody laughs. Somebody else says a word I am fairly sure is not for children."
+    mc "(I do not understand any of it. I understand all of it.)"
+    mc "(Six people in a room built for three, every one of them talking at once, none of them talking to me, and I am somehow part of the conversation.)"
+    hikari "You look worried."
+    mc "Is someone angry?"
+    hikari "They are always like this."
+    mc "Always?"
+    hikari "If they stop shouting, that is when you worry."
+    mc "And we're just going to sit here?"
+    hikari "We're going to eat. Let's just eat."
+    "Hikari dips her head toward the kitchen."
+    hikari "Her name is Lei Lei. She came from Shanghai when she was nineteen. She has been in Yokohama longer than she was ever anywhere else."
+    hikari "She has been in this shop since before the building had a permit. She is the one who decides whether you eat well."
+    mc "She decides?"
+    hikari "She decides."
+    hikari "Her brothers are in the kitchen. Her sister runs the front when Lei Lei lets her. Two of her sons work the steamer. The boy is a grandson."
+    mc "All of them work here?"
+    hikari "All of them eat here. Working is what happens between meals."
+
+    "Lei Lei comes back with two plates and a bowl balanced on one arm. She sets them down like she is putting down a bet."
+    scene bg_gyoza_dishes with walk_fade
+    "The gyoza are face-down in a dark pan glaze. The bottoms are lace. The tops are soft. The shoronpo sit in a bamboo steamer, pleated like small purses. The ramen is not ramen the way I know it: thick noodles, a sauce that clings, vegetables stacked like a roof."
+    hikari "Wait."
+    mc "I am waiting."
+    hikari "Not yet. Watch how I do it."
+    "She picks up a shoronpo with her chopsticks, bites a small hole, and blows. Then she drinks the soup out of it."
+    "She does not wait."
+    hikari "Hot."
+    mc "You told me to wait."
+    hikari "I know. I should have waited as well."
+    $ lei_mood = "shout"
+    lei "慢點吃！"
+    lei "ゆっくり食べて！"
+    hikari "Slow down. She says you'll burn yourself."
+    mc "I'm fine."
+    lei "不是。"
+    lei "違う。"
+    hikari "She says no. You are not fine."
+    "She puts a glass of water down hard enough to make the table jump. Hikari drinks it. Lei Lei watches her drink it. Then she goes back to the kitchen."
+    mc "(I have seen people look after each other in a lot of ways. This is a new one.)"
+    "The first gyoza is crisp and hot and tastes like garlic and pork and something green I cannot name. The shoronpo is a small explosion I have to think about before I take another. The ramen is a meal and an argument at the same time."
+    "For a minute, nobody shouts."
+
+    menu:
+        "Tell Lei Lei the gyoza is the best you've ever had.":
+            mc "This is the best gyoza I've ever eaten."
+            "Hikari says it in Japanese. Lei Lei looks at me. Then at Hikari. Then back at me."
+            $ lei_mood = "normal"
+            lei "當然。"
+            lei "当然です。"
+            hikari "She says of course."
+            mc "Is that good?"
+            hikari "It is the best you are going to get."
+            "She goes back to the kitchen. A minute later, a second plate of gyoza arrives. Nobody explains it."
+            $ reward_attributes_once("yokohama_tour_compliment_lei", [("grace", "micro")], show="auto")
+        "Ask Hikari how she knew about this place.":
+            mc "How did you find this?"
+            hikari "Seminar trip. Everyone went to the big restaurant with the photographs."
+            hikari "I walked out and kept walking until I found a door with no photographs."
+            mc "And she let you in?"
+            hikari "She let me wait. There is a difference."
+            mc "(There is. I am starting to understand the difference.)"
+            $ reward_attributes_once("yokohama_tour_how_hikari_found", [("insight", "micro")], show="auto")
+        "Shout the only Chinese word I know, with total confidence.":
+            mc "餃子！"
+            "The room stops."
+            "Six faces turn toward me. Even the boy. Even the television seems quieter."
+            $ lei_mood = "intense"
+            lei "……"
+            "Then Lei Lei laughs. It is a short, dry sound, like a drawer closing."
+            "The room starts again. Somebody is repeating my pronunciation. Somebody else is correcting it."
+            hikari "The room thought you were joining the argument."
+            mc "I was asking what it meant."
+            hikari "They heard a challenge. That's why they laughed."
+            $ reward_attributes_once("yokohama_tour_shout_back", [("nerve", "micro")], show="auto")
+
+    "Eventually the plates are empty. The television has moved on to a different argument. The boy is asleep against a stack of rice sacks."
+    mc "I'll pay."
+    hikari "You won't."
+    "She puts money on the table before I can get to my wallet. Lei Lei picks it up, counts it, and pushes a coin back toward Hikari."
+    hikari "She says the gyoza were smaller today."
+    mc "Were they?"
+    hikari "No."
+    mc "(The coin stays on the table. Hikari leaves it there.)"
+    $ lei_mood = "normal"
+    lei "再來。"
+    lei "またどうぞ。"
+    "Then she says something else, shorter, to Hikari. Hikari's ears go red again."
+    lei "あんたもね。"
+    hikari "She says come back. Both of us."
+    mc "That's it?"
+    hikari "That's a lot. From her."
+    "Lei Lei looks at me one more time. Then she points at the empty plate, then at my face. She says it in Chinese first, then in Japanese, and the Japanese is what makes Hikari smile."
+    mc "What did she say?"
+    hikari "She says you eat like someone who has been hungry."
+    mc "Is that an insult?"
+    hikari "Not from her."
+
+    scene bg_yokohama_akarenga with walk_fade
+    "Twenty minutes later the red lanterns are behind us and the streets have opened up. The water appears between the buildings in pieces, then all at once."
+    "The red brick warehouses stand along the waterfront, long and low and lit at the windows. The Ferris wheel turns behind them, slow enough to look patient."
+    hikari "Akarenga. Red Brick Warehouse."
+    hikari "They built it at the start of the last century. Customs. Goods came off the ships and went in there."
+    mc "Silk? Tea?"
+    hikari "Silk. Tea. Machinery. Everything a port is for."
+    hikari "The 1923 earthquake took most of the city. These buildings were still standing. Not because they were lucky. Because they were built to hold weight."
+    mc "(She says that like it means something else.)"
+    hikari "Now it is shops. Events. A place to take photographs."
+    mc "That's a strange thing to do with a warehouse."
+    hikari "It is a strange thing to do with a city. We do it anyway."
+
+    menu:
+        "Ask what the warehouses held.":
+            mc "What was in them?"
+            hikari "Silk, mostly. Tea. Porcelain. Things that had to get from one country to another without breaking."
+            mc "And now?"
+            hikari "Now? Coffee. Souvenirs. Tourists who want to stand where the ships were."
+            mc "(The building did not change. The cargo did.)"
+            $ reward_attributes_once("yokohama_tour_warehouse_cargo", [("insight", "micro")], show="auto")
+        "Ask why she brought you here.":
+            mc "Why here?"
+            hikari "Because Chinatown is loud and this is quiet."
+            mc "That's an answer I don't like yet."
+            hikari "It is the answer I have."
+            "She looks at the water instead of me."
+            hikari "I like places where the city stops pretending it isn't a port."
+            mc "(I do not know what to say to that. I look at the water too.)"
+            $ reward_attributes_once("yokohama_tour_why_akarenga", [("grace", "micro")], show="auto")
+        "Climb the outside stairs to the top landing.":
+            "I find a narrow staircase at the end of the building and start climbing. Hikari follows without asking why."
+            "At the top, the whole harbor is below us. The Ferris wheel. The lights on the water. The red lanterns of Chinatown, small now, burning in the distance."
+            hikari "You could have just asked."
+            mc "Asked what?"
+            hikari "If you wanted to see it from up here."
+            mc "Would you have said yes?"
+            hikari "No."
+            mc "(We stay up there until the wind gets cold.)"
+            $ reward_attributes_once("yokohama_tour_akarenga_stairs", [("nerve", "micro")], show="auto")
+
+    "By the time we come down, the lamps along the waterfront are on and the sky has gone the color of a peach left too long in the sun."
+    hikari "You know the way back from here?"
+    mc "Station, then the line home."
+    hikari "Good."
+    mc "That's it? Good?"
+    hikari "What did you want?"
+    mc "I don't know. A certificate."
+    hikari "You ate. You listened. You didn't get us thrown out."
+    hikari "That is the certificate."
+
+    $ unlock_hikari_tour_destination("yokohama")
+    $ phone_map_visit("yokohama")
+    $ renpy.notify("Yokohama Chinatown is now on your map.")
+    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    hikari "Next time, you can come without me."
+    mc "You're not coming?"
+    hikari "I have shown you. That was the point."
+    mc "(She says it lightly. It does not land lightly.)"
+    hikari "But if you go back to Lei Lei, order the gyoza. Not the ramen."
+    mc "Why not the ramen?"
+    hikari "Because the ramen is good, and the gyoza is hers."
+    $ reward_attributes_once("hikari_tour_yokohama_complete", [("insight", "tiny")], show="auto")
+
+    scene bg_train_interior with walk_fade
+    "The train home is warm and half empty. Hikari falls asleep against the window with her jacket folded under her head."
+    mc "(She took me to dinner and then made it a lesson. Or she made it a lesson and then took me to dinner. I am not sure which order it happened in.)"
+    "The lights of Yokohama slide past the glass and go out one by one."
+
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    hikari "We're home."
+    mc "We're home."
+    hikari "You're welcome."
+    mc "I didn't say thank you."
+    hikari "You were going to."
+    "She goes inside before I can prove her right."
+    return
+
+
+label hikari_tour_ueno:
+    scene bg_ueno with walk_fade
+    "Ueno Park in April is a picnic the whole city has agreed to attend."
+    hikari "Hanami. The flowers are an excuse. The sitting is the point."
+    mc "You sound like my father."
+    hikari "He sounds like a sensible man. I'll take it."
+    $ unlock_hikari_tour_destination("ueno")
+    "We sit on the edge of somebody else's tarp until the light goes orange."
+    mc "(I know which gate we came in through. I can find the rest myself.)"
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    return
+
+
+label hikari_tour_shibuya:
+    scene bg_shibuya with walk_fade
+    "Shibuya Crossing is not a crossing. It is a performance that happens every two minutes."
+    hikari "Stand here. Watch. Do not cross until the light changes."
+    mc "I know how crossings work."
+    hikari "You know how your crossings work. These are different."
+    $ unlock_hikari_tour_destination("shibuya")
+    "When the light changes, we cross with everyone else and nobody touches."
+    mc "(The trick is not the crowd. The trick is knowing which exit to take after.)"
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    return
+
+
+label hikari_tour_shimokitazawa:
+    scene bg_shimokitazawa with walk_fade
+    "Shimokitazawa is what Harajuku would be if it stopped performing."
+    hikari "Small streets. Used records. A live house that looks like a fridge."
+    mc "This is your kind of place."
+    hikari "It is. I'm glad you noticed."
+    $ unlock_hikari_tour_destination("shimokitazawa")
+    "We walk the narrow streets until the shops start closing and the lamps come on."
+    mc "(I can come back here alone. I know the way from the station now.)"
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    return
+
+
+label hikari_tour_omotesando:
+    scene bg_omotesando with walk_fade
+    "Omotesando is a street built to look like a forest and priced like a museum."
+    hikari "The shops are glass. Then the shops end and the torii begins."
+    mc "One street. Two countries."
+    hikari "You noticed. Good."
+    $ unlock_hikari_tour_destination("omotesando")
+    "We walk the gravel path to the shrine and stop before the steps."
+    mc "(I can find this again. I can come back when it is quiet.)"
+    scene bg_home_exterior_night with walk_fade
+    $ night_street()
+    return
+
+
+## --- STANDALONE TEST LABEL ----------------------------------------------------
+##
+## Open the console with Shift+O and type either:
+##   jump test_hikari_tour          - the Yokohama tour
+##   jump test_hikari_tour_harajuku - the Harajuku tour
+##
+## These play the whole tour without having to reach a hub day first. The picker
+## is forced by marking the OTHER written tour as already unlocked, so the one
+## under test is always the one offered — even after a real playthrough finished it.
+
+label test_hikari_tour:
+    scene black with Dissolve(0.8)
+    "TEST SEQUENCE: MESSAGE HIKARI // YOKOHAMA CHINATOWN"
+    "The full tour: the texts, the station, Chinatown, Lei Lei's gyoza shop, Akarenga, and the train home."
+    $ hikari_tour_unlocked = [p for p in hikari_tour_unlocked if p != "yokohama"]
+    if "harajuku" not in hikari_tour_unlocked:
+        $ hikari_tour_unlocked.append("harajuku")
+    call hikari_tour from _call_test_hikari_tour
+    "Test complete. Yokohama is unlocked for solo visits."
+    return
+
+
+label test_hikari_tour_harajuku:
+    scene black with Dissolve(0.8)
+    "TEST SEQUENCE: MESSAGE HIKARI // HARAJUKU, TAKESHITA STREET"
+    "The full tour: the texts, the station, the street, the clothes, the cotton candy, and the train home."
+    $ hikari_tour_unlocked = [p for p in hikari_tour_unlocked if p != "harajuku"]
+    if "yokohama" not in hikari_tour_unlocked:
+        $ hikari_tour_unlocked.append("yokohama")
+    call hikari_tour from _call_test_hikari_tour_harajuku
+    "Test complete. Harajuku is unlocked for solo visits."
+    return

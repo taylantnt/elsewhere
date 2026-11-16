@@ -61,7 +61,7 @@ label city_row_river:
     mc "(Nobody comes here to be seen. That is why it works.)"
 
     menu:
-        "Skip stones until one goes all the way across.":
+        "Skip a stone at the swan and watch it miss.":
             "The first three sink. The fourth skips twice. The fifth goes almost to the other bank."
             "An old man on the bench says something I do not catch, then nods."
             mc "(I think that was approval. I am going to count it as approval.)"
@@ -86,25 +86,53 @@ label city_row_river:
 
 
 label city_row_harajuku:
+    $ phone_map_visit("harajuku")
     scene bg_harajuku with walk_fade
     "Takeshita Street is a river of people dressed like they are all going to different parties."
     "A girl in platform boots argues with a boy in a school uniform. A tourist photographs a crepe like it is a monument."
+    "I am alone this time. Hikari's rules are in my head anyway: look with your eyes, buy nothing at the first two shops, never laugh."
     mc "(In Akihabara I was invisible. Here I am visible and nobody cares. It is a different kind of invisible.)"
 
     menu:
         "Try on something I would never wear.":
             "I let the shop assistant put a jacket on me. It is too bright and too short and it fits perfectly."
-            "She says something in fast Japanese. I understand one word: cool."
+            "She says something in fast Japanese. I understand one word: 可愛い."
             mc "(I do not buy it. I wear it for one more minute.)"
             $ reward_attributes_once("city_harajuku_try", [("nerve", "micro")], show="auto")
         "Buy nothing and watch the street.":
             "I walk the whole street without buying anything. It takes twenty minutes."
             "Nobody stops me. Nobody asks what I am doing. The street is a performance and I am allowed to be audience."
+            "I work out that this is what Hikari meant by participating."
             $ reward_attributes_once("city_harajuku_watch", [("insight", "micro")], show="auto")
         "Ask a stranger where the good crepe place is.":
             "The stranger thinks about it seriously, then points at a shop with no sign and a line around the corner."
             "The crepe is too sweet. The line was right."
             $ reward_attributes_once("city_harajuku_ask", [("grace", "micro")], show="auto")
+        "Let someone photograph me.":
+            "A girl with pink hair raises her phone and asks with her eyes. I say yes before I can talk myself out of it."
+            "She shows me the picture. I am smiling and I do not remember deciding to."
+            mc "(Being seen turns out to be easier when somebody else is holding the camera.)"
+            $ reward_attributes_once("city_harajuku_photo", [("nerve", "micro")], show="auto")
+
+    scene bg_harajuku_clothes with walk_fade
+    "The third shop is the one Hikari told me to wait for. It is narrower than the others and the clothes look like somebody actually lives in them."
+    "A skirt is hung over a pair of trousers. Socks go over boots. One colour is fighting all the others and losing beautifully."
+
+    menu:
+        "Ask the assistant to explain an outfit.":
+            "She turns the mannequin a quarter turn and points, saying the words slowly so I can follow."
+            "Short over long. Loose over tight. One thing that should not work."
+            mc "(She is not selling me anything. She is explaining a sentence.)"
+            $ reward_attributes_once("city_harajuku_outfit", [("insight", "micro")], show="auto")
+        "Buy something small.":
+            "I buy a pair of socks with cats on them. They are the most impractical thing I own."
+            "The assistant wraps them in paper and says something that sounds like a blessing."
+            $ reward_attributes_once("city_harajuku_buy", [("grace", "micro")], show="auto")
+
+    scene bg_harajuku_candy with walk_fade
+    "The cotton candy shop is still a wall of impossible colour. I get a pink one shaped like a flower, because Hikari would have got the blue heart and somebody has to try the other one."
+    "It is too sweet. I eat all of it."
+    mc "(I came here to see a street. I am leaving with sugar on my fingers and a photograph of myself smiling.)"
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
@@ -118,12 +146,12 @@ label city_row_karaoke:
     mc "(One hour. Nobody knows I am here. That is either freedom or the beginning of a bad habit.)"
 
     menu:
-        "Sing the first song badly.":
+        "Sing the airport song with words I made up and mean every one.":
             "I pick a song I know from the airport playlist. I do not know the words. I sing them anyway."
             "The machine gives me a score. I am not going to say what it was."
             mc "(The room does not laugh. The room has heard worse.)"
             $ reward_attributes_once("city_karaoke_sing", [("nerve", "micro")], show="auto")
-        "Pick a song Hikari would hate.":
+        "Sing the most earnest love song in the book. Straight.":
             "I pick the most sentimental song on the list and sing it straight."
             "Halfway through I can hear her voice in my head: you are enjoying this too much."
             mc "(I am. That is the point.)"
@@ -197,6 +225,7 @@ label city_row_combini:
                 mc "You say that to everyone."
                 tanaka "That is the job."
                 mc "Do you mean it?"
+                "He switches to English for this part, which he almost never does."
                 tanaka "I mean that you are welcome in the store. That is not the same as being welcome in my day."
                 mc "(He says it flatly. It is not cruel. It is a boundary with a barcode.)"
                 if tanaka_story >= 3:
@@ -368,11 +397,13 @@ label city_row_odaiba:
 
 
 label city_row_yokohama:
+    $ phone_map_visit("yokohama")
     scene bg_yokohama with walk_fade
     "Chinatown is ten minutes from the station and a hundred years from the rest of the city."
     "Red lanterns. Gates with Chinese characters. Shops selling steamed buns and lucky cats and things made of sugar."
     "A woman asks me something in Chinese. I answer in Japanese. She laughs and switches to Japanese, then to English, then back."
     mc "(I am the foreigner in a place built by foreigners. It is a different kind of foreign.)"
+    mc "(Hikari showed me the shape of this place. Today I get to walk it without her.)"
 
     menu:
         "Follow the smell of the steamed buns.":
@@ -391,6 +422,42 @@ label city_row_yokohama:
             "I turn off the main street and the crowd disappears. The alleys are narrow and quiet. A cat sleeps on a stack of crates."
             "I am lost for twenty minutes. Nobody asks what I am doing. That is the luxury of a place that is used to visitors."
             $ reward_attributes_once("city_yokohama_lost", [("nerve", "micro")], show="auto")
+        "Go back to the little gyoza shop.":
+            scene bg_gyoza_shop_quiet with walk_fade
+            "The curtain is the colour of old tea. I push it aside and the room shouts at me in Chinese."
+            "Lei Lei looks up from the steamer. She looks at me, then at the empty stool I took last time."
+            $ lei_mood = "shout"
+            lei "また来たのか。"
+            mc "(She remembers me. I do not know whether that is good.)"
+            $ lei_mood = "normal"
+            lei "餃子。"
+            "It is not a question. I sit."
+            scene bg_gyoza_dishes with walk_fade
+            "The gyoza are crisp and hot and taste exactly the way I remember."
+            mc "(Hikari was right. The gyoza is hers.)"
+            $ spend_money(800)
+            $ reward_attributes_once("city_yokohama_leilei", [("grace", "micro")], show="auto")
+
+    "Later, the crowd thins and the street opens toward the water."
+
+    scene bg_yokohama_akarenga with walk_fade
+    "The red brick warehouses stand along the waterfront, long and low and lit at the windows. The Ferris wheel turns behind them, slow enough to look patient."
+    "I remember Hikari telling me these buildings survived the earthquake because they were built to hold weight."
+    mc "(She said a lot of things today. I think I was supposed to remember which ones.)"
+
+    menu:
+        "Walk the waterfront.":
+            "I walk until the water is on three sides and the city is a line of light across the bay."
+            "A couple takes photographs of each other and nobody else is in frame. I keep walking."
+            $ reward_attributes_once("city_yokohama_waterfront", [("grace", "micro")], show="auto")
+        "Find the step she showed me.":
+            "I find the narrow staircase at the end of the building and climb it. The whole harbor is below me."
+            mc "(She would have said no if I had asked. I did not ask.)"
+            $ reward_attributes_once("city_yokohama_stairs", [("nerve", "micro")], show="auto")
+        "Just stand and look at the bricks.":
+            "I stand close enough to see the mortar. The bricks are older than the country I came from."
+            mc "(The cargo changed. The building did not. I think that was her point.)"
+            $ reward_attributes_once("city_yokohama_bricks", [("insight", "micro")], show="auto")
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()

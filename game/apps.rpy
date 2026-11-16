@@ -96,7 +96,7 @@ init python:
             "area": "Yokohama",
             "summary": "The largest Chinatown in Japan, with vibrant streets, red gates, and countless restaurants.",
             "note": "A taste of another country just a train ride away.",
-            "image": "images/backgrounds/bg_asakusa_kaminarimon.png",
+            "image": "images/backgrounds/bg_yokohama_chinatown.png",
             "position": (30, 100),
         },
         {
@@ -113,6 +113,18 @@ init python:
     def apps_open(page=None):
         store.phone_apps_start_page = page
 
+        # The handset is never part of a save thumbnail. The phone opens in its
+        # own context, so the frame on screen right now is still the story
+        # behind it - keep that picture before the phone rises. The Backup app
+        # hands these bytes to the save, so a slot shows the game the save
+        # belongs to rather than the phone the player saved from. Session
+        # storage keeps the picture out of the save file itself.
+        try:
+            renpy.session["phone_save_thumbnail"] = renpy.screenshot_to_bytes(
+                (config.thumbnail_width, config.thumbnail_height))
+        except Exception:
+            renpy.session["phone_save_thumbnail"] = None
+
         while True:
             renpy.call_in_new_context("_phone_apps_open")
 
@@ -126,6 +138,24 @@ init python:
             store.camera_shot_requested = False
             renpy.call_in_new_context("_camera_capture_after_phone", _clear_layers=False)
             store.phone_apps_start_page = "camera"
+
+    class PhoneFileSave(FileSave):
+        """Save a slot with the game behind the phone as its thumbnail.
+
+        Saving happens inside the handset, where Ren'Py would otherwise
+        photograph the open phone. The clean frame was kept when the phone
+        opened; it is installed just before the save runs, so every slot - and
+        the overwrite confirmation on the way to it - keeps that picture.
+        """
+
+        def __call__(self):
+            thumb = renpy.session.get("phone_save_thumbnail")
+
+            if thumb:
+                renpy.game.interface.screenshot = thumb
+                renpy.game.interface.screenshot_surface = None
+
+            return FileSave.__call__(self)
 
     def phone_map_visit(location_id):
         if location_id not in store.phone_map_unlocked:
@@ -1024,7 +1054,7 @@ screen phone_app_stats_contents():
                     add Solid("#ffffff14") xysize (gui.scale(224), gui.scale(1))
 
 
-screen phone_app_backup_contents(mode, page_value):
+screen phone_app_backup_contents(mode):
     if mode is None:
         vbox:
             xfill True
@@ -1050,17 +1080,16 @@ screen phone_app_backup_contents(mode, page_value):
         vbox:
             xfill True
             spacing gui.scale(6)
-            button:
+            fixed:
                 xfill True
-                ysize gui.scale(28)
-                background Solid("#141c22")
-                hover_background Solid("#1a282d")
-                action page_value.Toggle()
-                key_events True
-                input:
+                ysize gui.scale(30)
+                add Solid("#141c22")
+                text file_page_label():
                     style "phone_detail"
-                    value page_value
-                    length 24
+                    size gui.scale(12)
+                    color "#b4ada1"
+                    xalign 0.5
+                    yalign 0.5
             hbox:
                 xalign 0.5
                 spacing gui.scale(4)
@@ -1092,7 +1121,7 @@ screen phone_app_backup_contents(mode, page_value):
                             background Solid("#141c22")
                             hover_background Solid("#1a282d")
                             sensitive (mode == "save" or slot_loadable)
-                            action (FileSave(slot) if mode == "save" else FileLoad(slot))
+                            action (PhoneFileSave(slot) if mode == "save" else FileLoad(slot))
                             vbox:
                                 xfill True
                                 spacing gui.scale(5)
@@ -1122,6 +1151,11 @@ screen phone_app_backup_contents(mode, page_value):
                                     size gui.scale(10)
                                     color "#83909a"
                                     outlines []
+                        if slot_loadable:
+                            textbutton "DELETE SAVE":
+                                style "phone_delete_button"
+                                xalign 1.0
+                                action FileDelete(slot)
 
 
 screen phone_app_settings_contents(tab):
@@ -1408,7 +1442,6 @@ screen phone_app_shell(title, subtitle=None, back_action=None, close_action=None
 screen phone_apps():
     modal True
     zorder 130
-    default backup_page_value = FilePageNameInputValue(pattern="Page {}", auto="Automatic saves", quick="Quick saves")
 
     add Solid("#030609d8")
 
@@ -1551,10 +1584,7 @@ screen phone_apps():
                     else:
                         use phone_app_calendar_contents_locked
                 elif phone_apps_page == "backup":
-                    use phone_app_backup_contents(
-                        phone_apps_backup_mode,
-                        backup_page_value,
-                    )
+                    use phone_app_backup_contents(phone_apps_backup_mode)
                 elif phone_apps_page == "settings":
                     use phone_app_settings_contents(phone_apps_settings_tab)
 

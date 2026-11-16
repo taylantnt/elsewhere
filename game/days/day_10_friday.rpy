@@ -17,8 +17,9 @@ label friday_morning:
     "My phone buzzes against the desk."
 
     if "aya" in wire_unlocked:
+        $ aya_morning = "It's Shiori now. I'm drawing every day. Still terrible at it. ☆" if confidant_visits.get("aya", 0) >= 7 else "Good morning, Master! ☆"
         $ run_chat("aya", [
-            {"them": "Good morning, Master! ☆", "options": [
+            {"them": aya_morning, "options": [
                 {"label": "\"Good morning, Aya.\"",
                  "send": "Good morning, Aya.",
                  "them": ["You remembered my name!", "Most people just say 'miss'."]},
@@ -122,9 +123,9 @@ label friday_morning:
     play music "audio/Music/(shibuya morning) scramble_hour.mp3" fadein 2.0
     "The morning is heavier than yesterday. The sky is the color of a held breath."
     "Hikari walks beside me, the paper folded in her pocket, and does not say anything for a whole block."
-    hikari "You're going to take it, aren't you."
+    hikari "That Japanese course. I think you've already decided."
     mc "The Japanese course?"
-    hikari "You've been taking it since the airport. You just didn't have a name for it."
+    hikari "It's the one that opens the city. You'll be glad you took it."
     mc "(She is not wrong. I do not tell her that either.)"
 
     scene bg_station with walk_fade
@@ -138,9 +139,9 @@ label friday_morning:
     "The English announcement follows the Japanese. This morning it is not a translation. It is a second take."
     "Then it says the next station is the one we just left. It says it again, in English, in my voice."
     mc "(I look around. Nobody else has heard it.)"
-    hikari "You're doing the thing again."
+    hikari "You're doing your thing again."
     mc "I'm always doing the thing."
-    hikari "At least you know now."
+    hikari "At least it means you're paying attention."
 
     menu:
         "Ask about honne and tatemae on the train.":
@@ -207,7 +208,7 @@ label friday_morning:
     murakami "When you learn to read all three, you are not learning a code. You are learning a history of who got to speak."
 
     menu:
-        "Take the course. The Japanese course. With Murakami.":
+        "Sign the sheet. In Japanese, if she'll let me.":
             mc "Then I will take the Japanese course. With you."
             murakami "Good."
             "She writes my name on the sheet in three scripts. The third one is hiragana. It looks like a small, careful drawing."
@@ -247,9 +248,9 @@ label friday_morning:
     "Hikari is waiting by the stairs with two paper cups of tea."
     hikari "You took it."
     mc "How do you know?"
-    hikari "You have the sheet. And you have that face."
+    hikari "You have the sheet. And you've got that look."
     mc "What face?"
-    hikari "The one you had at the airport. The one that says you have decided something and are pretending you haven't."
+    hikari "The one from the airport. Only this time it looks like you're glad you came."
     "She hands me a cup."
     hikari "The afternoon is yours. I have seminar until five."
     mc "(One place. That is the rule I have given myself. One place, and then home.)"
@@ -301,9 +302,9 @@ label friday_morning:
             $ reward_attributes_once("day10_night_onnade", [("insight", "micro")], show="auto")
         "Tell her I'm nervous about the course.":
             mc "I'm nervous about the course. What if I'm bad at it?"
-            hikari "You'll be bad at it."
-            mc "That's not comforting."
-            hikari "It's not meant to be. You'll be bad at it, and then you'll be less bad at it. That's the whole thing."
+            hikari "Everybody is, at first."
+            mc "I'll believe the part about getting less bad."
+            hikari "That's the part that's meant to be. You'll be bad at it, then less bad, and then one day the hand knows the shape before you do. That's the whole thing."
             $ remember("hikari", "admitted he was nervous about Murakami's course, and she told him he would be bad at it and then less bad")
             $ reward_attributes_once("day10_night_nervous", [("nerve", "micro")], show="auto")
 

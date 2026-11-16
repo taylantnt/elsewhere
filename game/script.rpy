@@ -398,7 +398,20 @@ image bg_fortune_stall = bg_or_placeholder("bg_fortune_stall", "#2a211b", "ASAKU
 # no code change.
 image bg_combini = bg_or_placeholder("bg_combini", "#26302a", "COMBINI\nNIGHT SHIFT")
 image bg_odaiba = bg_or_placeholder("bg_odaiba", "#202b33", "ODAIBA\nARTIFICIAL ISLAND")
-image bg_yokohama = bg_or_placeholder("bg_yokohama", "#331f1f", "YOKOHAMA\nCHINATOWN")
+# Yokohama has real art now. The Chinatown gate is the establishing shot for
+# both the solo row and the first tour, and the red brick warehouses are the
+# second half. The gyoza shop has three drawings: the crowded room for the tour,
+# the dish close-up for when the food arrives, and a quieter angle for solo visits.
+image bg_yokohama = Transform("images/backgrounds/bg_yokohama_chinatown.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_yokohama_chinatown = Transform("images/backgrounds/bg_yokohama_chinatown.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_yokohama_akarenga = Transform("images/backgrounds/bg_yokohama_akarenga.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_gyoza_shop = Transform("images/backgrounds/bg_gyoza_shop.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_gyoza_shop_quiet = Transform("images/backgrounds/bg_gyoza_shop2.jpg", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_gyoza_dishes = Transform("images/backgrounds/bg_gyoza.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+# Harajuku has real art for the candy shop and the clothing shop. The street
+# itself is auto-defined from bg_harajuku.png; these two need explicit sizing.
+image bg_harajuku_candy = Transform("images/backgrounds/bg_harajuku_candy.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_harajuku_clothes = Transform("images/backgrounds/bg_harajuku_clothes.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_ueno = bg_or_placeholder("bg_ueno", "#2c3025", "UENO PARK\nAPRIL")
 image bg_shibuya = bg_or_placeholder("bg_shibuya", "#25222f", "SHIBUYA\nSCRAMBLE CROSSING")
 image bg_shimokitazawa = bg_or_placeholder("bg_shimokitazawa", "#262321", "SHIMOKITAZAWA\nSMALL THEATERS")
@@ -1207,7 +1220,7 @@ init python:
         "pamphlet": {
             "name": "Pamphlet",
             "icon": "images/ui/pamphlet.png",
-            "desc": "A folded map covered in arrows and kanji. I can't read it, but other people can. Open it to take a closer look.",
+            "desc": "A folded map covered in arrows and kanji. I can pick out a few station names now, but most of it is still beyond me.",
             "usable": True,
             "use_label": "Open",
         },
@@ -1305,6 +1318,9 @@ define sim = Character("Sim", color="#add8e6", callback=type_sound, image="sim")
 define aya = Character("Aya", color="#dda0dd", callback=type_sound, image="aya")
 define maid = Character("Maid", color="#dca0dd", callback=type_sound, image="Maid")
 define hana = Character("Hana", color="#98fb98", callback=type_sound, image="hana")
+# Lei Lei runs the gyoza shop in Yokohama Chinatown. She is old, loud, and has
+# no patience for a customer who has not decided yet.
+define lei = Character("Lei Lei", color="#d8b06a", callback=type_sound, image="lei")
 
 # Generic NPCs
 #
@@ -1483,6 +1499,22 @@ image side chef = At(Transform("images/characters/chef.png", xysize=(256, 384), 
 image side sim = At(Transform("images/characters/sim.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side hana = At(Transform("images/characters/hana.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side orson = At(Transform("images/characters/orson.png", xysize=(256, 384), fit="contain"), portrait_idle)
+
+# Lei Lei has three drawings: arms crossed and unimpressed (lei_normal),
+# arms crossed and shouting (lei_shout), and the one where the whole room goes
+# quiet (lei_intense). The flag is set around her lines so the say screen picks
+# the right drawing without attribute syntax. The values are exactly:
+# "normal", "shout", "intense".
+default lei_mood = "normal"
+
+image side lei = At(ConditionSwitch(
+    "lei_mood == 'intense'",
+    Transform("images/characters/lei_intense.png", xysize=(256, 384), fit="contain"),
+    "lei_mood == 'shout'",
+    Transform("images/characters/lei_shout.png", xysize=(256, 384), fit="contain"),
+    True,
+    Transform("images/characters/lei_normal.png", xysize=(256, 384), fit="contain"),
+), portrait_idle)
 
 # These three are drawn but not yet delivered. Drop the named file into
 # images/characters/ and the picture replaces the label here with no other change:
@@ -2225,7 +2257,7 @@ label talk_security:
         security2 "……何か？"
         mc "(Her expression doesn't change.)"
         security2 "ここは立入制限区域です。この先は関係者以外通れません。"
-        mc "(Restricted area. I'm not trying to go anywhere. I just want the exit.)"
+        mc "(I don't get the words, but she wants me to move. I just want the exit.)"
         mc "Excuse me. Which way is...."
         security2 "総合案内所はあちらです。"
         mc "(She points behind me without turning around.)"
@@ -2432,7 +2464,7 @@ label answer_assistant_patient:
     "Then she lets out a breath."
     assistant "Map... yes. ちず。"
     "She reaches for a pamphlet."
-    $ reward_attributes_once("answer_assistant_patient", [("insight", "micro")], show="auto")
+    $ reward_attributes_once("answer_assistant_patient", [("grace", "micro")], show="auto")
     jump answer_assistant_ask
 
 label answer_assistant_ask:
@@ -2460,12 +2492,12 @@ label answer_assistant_nevermind:
 
 label talk_veteran_assistant:
     if not has_pamphlet:
-        veteran "You look a little lost. Can I help?"
+        veteran "Oh dear — you've got that look. Let me guess: pamphlet?"
         veteran "If you pick up one of the pamphlets from the desk, I might be able to help you work through it."
         mc "Pamphlet? I'll go look for one."
         jump airport_exploration
 
-    veteran "You look a little lost. That pamphlet! Let me see... Are you trying to get to 中野3丁目?"
+    veteran "These things are more puzzle than guide, aren't they? Here — are you trying to get to 中野3丁目?"
     mc "That's right."
     veteran "..."
     "He unfolds it and runs a finger down the margin."
@@ -2495,8 +2527,7 @@ label taxi_choice:
         "Tell me about the taxi.":
             veteran "The taxi stand is just outside. There may be a short wait."
             veteran "The fare will be around ¥18,000, perhaps more in traffic."
-            veteran "It should be about forty-five minutes."
-            $ reward_attributes_once("veteran_advice_train", [("insight", "micro")], show="auto")
+            $ reward_attributes_once("veteran_advice_taxi_detail", [("insight", "micro")], show="auto")
             jump end_airport
         "I'll take the train. Thank you.":
             jump end_airport
@@ -2507,8 +2538,8 @@ label train_choice:
         "Tell me about the train.":
             veteran "First, buy a ticket before you go through the gate."
             veteran "Look for the express on the Keisei Line. The local stops at every station and takes much longer."
-            veteran "Show the driver the address and they'll take you there."
-            $ reward_attributes_once("veteran_advice_taxi_detail", [("insight", "micro")], show="auto")
+            veteran "If you can't read the platform sign, ask at the gate. Everybody does."
+            $ reward_attributes_once("veteran_advice_train_detail", [("insight", "micro")], show="auto")
             jump end_airport
         "I'll take the taxi. Thank you.":
             jump end_airport
@@ -2598,7 +2629,7 @@ label taxi_warning:
     menu:
         "Take the taxi anyway.":
             $ travel_method = "taxi"
-            $ reward_attributes_once("travel_route_attribute", [("nerve", "medium")])
+            $ reward_attributes_once("travel_route_attribute", [("nerve", "small")])
             jump taxi_stand
         "Take the train instead.":
             $ travel_method = "train"
@@ -2639,7 +2670,7 @@ label taxi_stand:
     mc "(...I understood one word of that and it was 中野.)"
     mc "Ah, um... 中野3丁目... please?"
     "The driver chuckles."
-    taxi_driver "Okay, okay. 中野3丁目. No problem."
+    taxi_driver "Okay okay — 中野3丁目. Far, but no problem, okay?"
     mc "(He laughed. I'm choosing to believe that was friendly.)"
 
     "The meter starts ticking and we pull away from the kerb."
@@ -2799,7 +2830,7 @@ label train_ticket:
 
 label ticket_machine:
     menu:
-        "Try the 320 yen button, it's cheap enough to test.":
+        "Press the cheapest button and see what falls out.":
             if has_item("ticket_320"):
                 mc "(I already purchased this ticket. It's the wrong one.)"
                 jump ticket_machine
@@ -2810,7 +2841,7 @@ label ticket_machine:
             mc "(Put it down. Try again.)"
             jump ticket_machine
 
-        "Try the 800 yen button. That was one of the numbers on the pamphlet.":
+        "Press the number I half-remember from the pamphlet.":
             if has_item("ticket_800"):
                 mc "(I already purchased this ticket. It's the wrong one.)"
                 jump ticket_machine
@@ -3007,7 +3038,7 @@ label home_arrival:
         mother "Thank goodness. We thought you'd got lost somewhere between the airport and here."
         mother "Come in, come in. Quickly. It's cold out, and everyone else is asleep."
         "She holds the door and waves me in with her whole arm."
-        mc "Sorry. The train took much longer than I thought, and I..."
+        mc "Sorry. The station was bigger than I expected, and I..."
         mother "It's alright. Truly. You're here now, that's all that matters."
         mother "Shoes off here. Then straight up the stairs, quietly."
         stop music fadeout 3.0
@@ -3064,7 +3095,7 @@ label home_arrival:
     $ room_ambient(True)
 
     # The room, and the boxes that arrived before he did.
-    "The stairs creak under both of us. She apologises for it, which only makes me notice it more."
+    "The stairs creak under both of us."
     mother "Well, it's not a lot, but this will be your room for the year."
     mother "Hikari's room is next door, so please try not to make too much noise. She's a light sleeper."
     mother "Oh, and the things you shipped over arrived yesterday. They're still down by the door."
@@ -3072,6 +3103,7 @@ label home_arrival:
     mc "Of course. Let me help."
 
     mother "Sorry about the stairs. And the boxes. I should have brought them up earlier."
+    "She apologises for it, which only makes me notice it more."
     menu:
         "You've already done a lot for me.":
             # Acknowledging her effort rather than dismissing her worry.
@@ -3739,7 +3771,7 @@ label department_tour:
             mc "There are three of those. Three different flats, three different people who all took the same photograph."
             hikari "Same agent, probably. People pass the adverts around when they move out."
             $ remember("hikari", "picked the three rooms for rent")
-        "[tag_insight] The lost cat." if has_attribute_points("insight", 0.8):
+        "[tag_insight] The lost cat." if has_attribute_points("insight", 0.5):
             mc "The cat one. The tape has gone yellow and both bottom corners have curled."
             hikari "...Huh."
             mc "There's a date at the bottom. Last semester. Has anyone checked whether they found it?"
@@ -3748,7 +3780,7 @@ label department_tour:
             $ remember("hikari", "picked the lost cat nobody had taken down")
 
     "She stops at the far end, in front of a set of double doors, and reads a timetable taped to the glass."
-    hikari "Right. That's your first lecture. History, four floors up, and we have about ten minutes."
+    hikari "Right. That's your first lecture. History and literature, four floors up, and we have about ten minutes."
     mc "We're going up?"
     hikari "We're not going up. Not yet. You have to see student relations first."
     mc "Student Relations?"
@@ -3826,7 +3858,7 @@ label student_relations:
             mc "When does the photography club meet? Can I visit before joining?"
             clerk "This afternoon. Second floor. They welcome visitors."
             $ remember("clerk", "asked when he could visit the photography club")
-        "[tag_grace] You've made this much easier." if has_attribute_points("grace", 1.0):
+        "[tag_grace] You've made this much easier." if has_attribute_points("grace", 0.6):
             mc "You've made this much easier. I was worried I'd miss something important."
             clerk "You're welcome. Keep the booklet. There's a lot to remember on your first day."
             $ reward_attributes_once("answer_circles_back", [("grace", "micro")], show="auto")
@@ -3834,7 +3866,7 @@ label student_relations:
 
     mc "Thank you. Really."
     clerk "You are welcome. Come back when something breaks. Something always breaks."
-    clerk "Now go. History starts in four minutes."
+    clerk "Now go. History and literature starts in four minutes."
     mc "Four minutes?"
     "Hikari is already standing. She was on her feet before the clerk finished the sentence."
     hikari "Sorry. That one is on me. I'll see you up there."
@@ -3920,8 +3952,8 @@ label first_class:
     # investment opens a respectful challenge about the official appointment,
     # including on the train route.
     menu:
-        "I'll write that down.":
-            "I open my notebook and write the class time at the top of the page."
+        "I'll write it down and check the room on the portal.":
+            "I open my notebook and write the class time at the top of the page, then check the room on the portal."
             $ reward_attributes_once("answer_clock_write", [("insight", "micro")], show="auto")
             $ remember("professor", "wrote down the attendance rule")
         "It won't happen again.":
@@ -4011,10 +4043,10 @@ label first_class:
     menu:
         "I want to learn the way home.":
             mc "I'm going to walk back. On my own. If I don't learn the way now I'll never learn it."
-            hikari "You'll get lost."
+            hikari "You'll get lost a little. The bakery on the corner is your mark."
             mc "Probably. That's how I'll learn it."
             hikari "..."
-            hikari "Don't take the west exit. That's the wrong one. That's all you're getting."
+            hikari "Don't take the west exit. That's the wrong one. The rest you learn by walking. Message me if you're stuck."
             $ first_day_activity = "walk_alone"
         "I'll come with you.":
             mc "I'll come. On one condition. Somewhere on the way you show me something other than the cafeteria."
@@ -4221,13 +4253,13 @@ label after_school_walk_alone:
     "He has been looking at the phone on the counter since I put the money down."
     chef "「WIRE、やってるか」"
     "Two English sounds, dropped into a Japanese sentence, at the exact volume of the pots."
-    mc "(I caught the whole thing. I have no idea how.)"
+    mc "(I caught two English sounds in the middle of Japanese. I let myself nod as if that was understanding.)"
     mc "Yeah. Hikari put it on here. My host sister. She set the whole thing up before I landed."
     "He grunts, which is what he does instead of a nod."
     "Then he turns a small laminated card round on the counter so that it is facing me."
     "A black square made out of smaller black squares. Under it, six words in English, in handwriting that is not his."
     chef "「読め」"
-    mc "(Read it. That one is no mystery either. I am learning to read this room instead of the language.)"
+    mc "(He wants me to scan the card. I know the gesture, not the word.)"
     "I hold the phone over the card. The app takes it without asking me anything, and puts a name on the list."
     mc "So I know if you're shut before I walk down here for nothing."
     "He turns the card back round and goes to the pots, which is the conversation over."
@@ -4245,7 +4277,7 @@ label after_school_walk_alone:
     "Those two convenience stores are twenty metres away."
     mc "(That sign. That one there. I know that street.)"
     mc "(I was on it this morning, on the way to school, and I did not look at it once.)"
-    "Home is four minutes away and it took me an hour to do it, and I would do it again exactly the same way."
+    "Home is four minutes away and it took me a couple of hours to do it, and I would do it again exactly the same way."
     mc "(I found a ramen shop. I found it by getting lost, which means it was always findable. It was there the whole time.)"
 
     scene bg_home_exterior_night with walk_fade
@@ -4267,7 +4299,7 @@ label after_school_walk_alone:
     father "Don't make it a pattern. You still have school tomorrow."
     father "Dinner is still warm. Sit down before you go upstairs."
     mc "Sorry Hikari, I should have listened and come home with you."
-    mc "But on the bright side, I found this ramen place with a red lantern over the door."
+    mc "But on the bright side, I found this ramen place with a blue cloth over the door, a bowl painted on it."
     mc "Four seats. One man. He gave me a bowl I didn't order, and it was the best thing I've eaten here."
     hikari "..."
     hikari "The one near the two convenience stores."
@@ -4296,7 +4328,7 @@ label after_school_run:
     scene bg_home_exterior_day with walk_fade
     stop music fadeout 2.0
 
-    "We walk. Eleven minutes, the same eleven minutes as this morning, and this time I know which bakery is the one to ignore."
+    "We walk. Eleven minutes from the station, and this time I know which bakery is the one to ignore."
     "She talks the whole way. The professor. The clerk."
     "A vending machine on the corner that has been out of the same drink for two months."
     "I have worked out that she fills silences on purpose. I have not worked out why."
@@ -4304,7 +4336,7 @@ label after_school_run:
     menu:
         "Thanks for coming back with me.":
             mc "Thanks for coming back with me. You must have had other things to do."
-            hikari "You're welcome. Don't make it a thing."
+            hikari "You're welcome. I'd have come anyway."
             $ reward_attributes_once("answer_run_thanks", [("grace", "nudge")], show="auto")
         "How long have you lived here?":
             mc "Have you lived on this street your whole life?"
@@ -4382,9 +4414,9 @@ label after_school_run:
     "Twenty minutes later I am on my knees at a vending machine with my hands on my thighs."
     "She is not out of breath. She has bought us both something without asking, and mine is an energy drink I would never have chosen."
     mc "(Cold, at least. Right now that's enough.)"
-    hikari "You're not unfit. You're just new. Those are different things and it's rude to confuse them."
+    hikari "You're not unfit. That was a hard route. I chose it, and you kept up."
     mc "Thank you."
-    hikari "That wasn't a compliment. That was a diagnosis."
+    hikari "You're welcome. I meant it."
 
     "We drink them under the lamp, listening to the water move past."
 
@@ -4422,7 +4454,7 @@ label after_school_run:
     mc "That was not a lap."
     hikari "It was a lap. A generous one. Same time next week?"
     mc "Same time next week."
-    hikari "Good. I wasn't asking."
+    hikari "Good. I'll see you then."
     scene bg_river_night with walk_fade
 
 
@@ -4440,10 +4472,10 @@ label after_school_run:
     mc "Why."
     hikari "Because I'm not explaining it twice."
     "She takes it out of my hand, which is turning into how the two of us do things."
-    hikari "You still haven't opened WIRE."
-    mc "I know. I never opened it."
-    hikari "Open it."
-    "I open it. It is a list with one name on it, and the name is hers."
+    hikari "You still haven't used WIRE."
+    mc "I know. I haven't had a reason to."
+    hikari "You will. Open it."
+    "I open it. Nothing new is there yet."
     hikari "That's the point of it."
     mc "(That is not it.)"
     "She does not look at me while she says the next part, which is how I know it matters."
@@ -4655,7 +4687,7 @@ label after_school_photo_club:
     $ wire_unlock("sim")
     # Circle's welcome message. Like the chef's advert, it is queued until the
     # phone has a data plan; Hikari is still standing there when it lands.
-    $ queue_message("sim", "Welcome to Circle! I posted the two photographs you took today. The window one already has replies. Next meeting is Thursday. Bring the camera if you have it.", day="yesterday")
+    $ queue_message("sim", "Circle. You're in. I posted the room one — it already has replies. Thursday. Bring the camera.", day="yesterday")
     # Forced closer for the photo route. Sitting in a room of strangers and staying
     # is the Grace beat that matches the other first-afternoon finales.
     $ reward_attributes_once("photo_first_session", [("grace", "small")], show="card")
@@ -5478,7 +5510,7 @@ label first_evening_dinner:
                 father "..."
                 father "I'm glad you found somewhere to eat. But when this family sits down, we eat together."
                 father "We couldn't talk to you about it, and that isn't your fault. But dinner time is dinner time."
-                mother "There's rice in the pot. If you get hungry later."
+                mother "I left a bowl out. In case you're still hungry later. You never say."
                 $ declined_dinner = True
                 # Telling the truth about being full is honesty, not rudeness.
                 $ reward_attributes_once("first_dinner_declined", [("nerve", "micro")], show="auto")
@@ -5787,12 +5819,12 @@ label first_connection_messages:
         mc "You could have just told me."
         hikari "And for the record, I meant what I wrote."
         mc "..."
-        hikari "Don't make it a thing."
+        hikari "You don't have to say anything. I just wanted you to know."
 
     elif arrived_from == "chef":
         hikari "That was your phone. The chef found you."
         $ run_chat("chef", [])
-        mc "(I cannot read a word of it. It is a commercial from a man who has never said more than three words to me.)"
+        mc "(Characters, and a number I can read. Hikari will tell me what the rest is.)"
         hikari "An advertisement. You've been a customer for one day."
         mc "Then he must want me back."
 
@@ -5839,7 +5871,7 @@ label second_school_day:
     "We reach the gate with enough time to walk instead of hurry."
     hikari "Look at that. A whole morning without sprinting."
     mc "I am learning."
-    hikari "Don't get used to the praise."
+    hikari "You should get used to it. You've earned it."
 
     scene bg_department_hall with walk_fade
     "The corridor is busier than yesterday. I find the lecture room before the bell."
@@ -5876,7 +5908,7 @@ label second_school_day:
         "Look up more examples online after class.":
             $ haiku_study_method = "research"
             mc "(I mark the word and make a note to compare a few translations later.)"
-            $ reward_attributes_once("haiku_lesson_research", [("nerve", "nudge")], show="auto")
+            $ reward_attributes_once("haiku_lesson_research", [("insight", "nudge")], show="auto")
                 
     scene black with Fade(1.0, 0.3, 0.0)
     "I write the last line of the haiku in my notebook, then look up at the professor."
@@ -5933,7 +5965,7 @@ label second_school_day:
             yamada "かしこまりました。学生プランから確認しましょう。"
             hikari "She will start with the student plan and check whether its data allowance fits."
         "I would rather have enough data not to worry about every search.":
-            $ reward_attributes_once("cellular_plan_usage", [("nerve", "micro")], show="auto")
+            $ reward_attributes_once("cellular_plan_usage", [("insight", "micro")], show="auto")
             mc "I would rather have enough data not to worry about every search."
             hikari "データは多めがいいです。毎回気にしたくないです。"
             yamada "では、上のプランも比較しましょう。差額を確認してから決めてください。"
@@ -5977,11 +6009,11 @@ label second_school_day:
             mc "Let's keep it to the student plan and nothing else, please."
             hikari "学生プランだけで、追加は一切なしでお願いします。"
             $ reward_attributes_once("cellular_plan_basic", [("grace", "micro")], show="auto")
-        "No extras, thanks.":
-            mc "No extras, thanks."
-            hikari "追加サービスは結構です。"
-            yamada "かしこまりました。追加サービスはすべて外します。"
-            $ reward_attributes_once("cellular_plan_decline_extras", [("nerve", "micro")], show="auto")
+        "What happens if I need to cancel?":
+            mc "Before we sign — what happens if I need to cancel?"
+            hikari "途中で解約した場合、どうなるんですか。"
+            yamada "手続きと費用は、契約書に書いてあります。"
+            $ reward_attributes_once("cellular_plan_decline_extras", [("insight", "micro")], show="auto")
     "Yamada walks us through the monthly fee, the first partial bill, and the cancellation terms."
     "Hikari reads the summary twice. I read it once, then again where she points."
     hikari "No handset, no streaming service, no insurance. Just the plan we agreed on."
@@ -6057,16 +6089,16 @@ label second_school_day:
     mc "(I wanted to see one. I just hadn't decided if I wanted to admit that out loud.)"
 
     "One of the maids approaches, leaving enough space that I can keep walking if I want to."
-    maid "Hello! Are you exploring Akihabara for the first time? We have a maid cafe just upstairs. I can explain how it works, if you're curious."
+    maid "First time? We're just upstairs. The menu has pictures — the spell is the only thing anybody gets wrong."
 
     menu:
-        "I'm only looking around. I'm not sure yet.":
+        "Could you explain how it works before I decide?":
             $ reward_attributes_once("akihabara_maid_cafe_cautious", [("grace", "micro")], show="auto")
-            mc "I'm only looking around. I'm not sure it's for me."
+            mc "Could you explain how it works before I decide?"
             maid "That's completely fine. You can look at the menu and the prices first. If you decide it's not your thing, no hard feelings."
-        "I've heard about maid cafes. I've wanted to see one.":
+        "I heard about the spell. Does it come with the food?":
             $ reward_attributes_once("akihabara_maid_cafe_curiosity", [("nerve", "micro")], show="auto")
-            mc "I've heard about maid cafes. I've wanted to see one, actually."
+            mc "I heard about the spell. Does it come with the food?"
             maid "Then your timing is perfect! I'll explain everything before you order. First visits can be a little surprising."
         "How do I know what to expect inside?":
             $ reward_attributes_once("akihabara_maid_cafe_questions", [("insight", "micro")], show="auto")
@@ -6078,7 +6110,7 @@ label second_school_day:
     maid "You only order what you want. I won't add anything without asking you first."
     mc "(That is more practical than the mystery I had built up in my head.)"
     maid "No rush. I'll show you the menu, and you can still change your mind."
-    mc "(Hikari's warning is still in my head. But Aya hasn't tugged at my sleeve or tried to hurry me. She seems friendly, and the place is bright and busy.)"
+    mc "(Hikari's warning is still in my head. But this maid hasn't tugged at my sleeve or tried to hurry me. She seems friendly, and the place is bright and busy.)"
     mc "(Maybe being nervous and being curious can happen at the same time.)"
     mc "All right. I'll take a look."
     maid "Wonderful! This way, please."
@@ -6110,7 +6142,7 @@ label second_school_day:
         "Tell her the whole place is a little overwhelming.":
             $ reward_attributes_once("maid_cafe_admit_nerves", [("nerve", "micro")], show="auto")
             mc "I think I'm a little overwhelmed."
-            aya "That's normal on a first visit. We can take it one step at a time: choose a drink or meal, and ignore everything else until you feel ready."
+            aya "Ehehe~ first-timers always look like that! I'll go slow, Master. Drink first, then we decide."
             mc "(One step at a time. I can do that.)"
         "Thank her for explaining things clearly.":
             $ reward_attributes_once("maid_cafe_thank_aya", [("grace", "micro")], show="auto")
@@ -6124,20 +6156,20 @@ label second_school_day:
         "Please recommend something.":
             $ reward_attributes_once("maid_cafe_first_recommendation", [("grace", "micro")], show="auto")
             mc "A recommendation would be nice."
-            aya "Then I suggest the omurice. It's fluffy, and I can draw something on top with ketchup just for you."
+            aya "Then I suggest the omurice. It's fluffy — and I'll draw a rabbit on it. That's what I draw when I'm happy."
             mc "Sounds good. Let's do that."
         "I'll try choosing for myself.":
             $ reward_attributes_once("maid_cafe_first_independent_order", [("nerve", "micro")], show="auto")
             mc "I'll try choosing for myself."
             aya "Ooh, confident! What catches your eye?"
             mc "The omurice. It says it's your specialty."
-            aya "A classic! I can draw something on top with ketchup just for you."
+            aya "A classic! You'll see what I draw — I don't want to give it away."
         "What do most people order?":
             $ reward_attributes_once("maid_cafe_first_popular_order", [("insight", "micro")], show="auto")
             mc "What do most people order?"
             aya "The omurice is our specialty. The parfaits are popular too, especially if you want something sweet."
             mc "Let's go with the omurice, then."
-            aya "Great choice! I can draw something on top with ketchup just for you."
+            aya "Great choice! The little cat, I think. It's my favorite."
 
     "Aya repeats the order and the price before she takes the menu, giving me one last chance to change it."
     mc "That's right."
@@ -6151,7 +6183,7 @@ label second_school_day:
     aya "Before you eat, we do the magic spell together. Copy me, okay?"
     "She makes a heart with her hands and leans toward the plate."
     menu:
-        "Try the spell with her.":
+        "Do the heart and say it out loud.":
             $ reward_attributes_once("maid_cafe_join_spell", [("nerve", "micro")], show="auto")
             aya "Are you ready?"
             mc "(I am in a crowded cafe in Akihabara, making a heart with my hands over lunch. The room does not stop for it. Neither do I.)"
@@ -6300,7 +6332,7 @@ label second_school_day:
     father "So. What did today cost you?"
     hikari "Dad."
     father "It is a fair question. He bought a phone plan."
-    mc "It's not a trap?"
+    mc "I'd rather hear it straight."
     father "It is a question."
     "He says it without looking up from the newspaper. Mother keeps her tea between both hands and watches us over the rim."
 
@@ -6324,13 +6356,13 @@ label second_school_day:
             hikari "He's learning."
             $ reward_attributes_once("night_table_boundary", [("nerve", "micro")], show="auto")
             $ add_affection("father", 1)
-        "[tag_nerve] I could tell you. Then you could tell me what the car cost." if has_attribute_points("nerve", 1.2):
-            mc "I could tell you. Then you could tell me what the car cost."
+        "[tag_nerve] I'll tell you. All of it. You might want to put the newspaper down." if has_attribute_points("nerve", 0.8):
+            mc "I'll tell you. All of it. You might want to put the newspaper down."
             "Hikari's chopsticks stop halfway to her mouth."
             father "..."
-            father "The car is paid for."
-            mc "So is the phone plan."
-            father "..."
+            "The newspaper comes down an inch. Not all the way. An inch."
+            mc "That's enough. I'll start with the plan."
+            father "I have been dreading this since you arrived."
             "Something moves at the corner of his mouth. It is gone before I can be sure."
             hikari "Oh no. He's got a sense of humor."
             mother "Don't encourage him."
@@ -6431,13 +6463,13 @@ label night_room_visit:
     # before — because there is one more thing she has clearly been saving.
     hikari "One more thing. The quiz is next week, and after that it's midterms. Three weeks. Maybe four."
     mc "I can handle three weeks."
-    hikari "You can barely handle a school day. But yes. You can."
+    hikari "You can. And if it starts to feel like too much, tell me. We'll take it a week at a time."
     "She picks up the receipt from the desk, the one with 中野 on the back, turns it over, and sets it down again."
     hikari "The library is where people actually get things done. Not the classroom. The classroom is where they tell you what to think about."
     hikari "The library is where you find out if you agree."
     hikari "Third floor. East wing. Past the vending machines, left at the noticeboard with the corner taped back on. The door has no sign."
     mc "How do I know which door has no sign when half of them don't?"
-    hikari "Because you've walked past it both days you've been on campus and never once looked up."
+    hikari "Because I've walked past it with you both days, and I was looking."
     mc "(She has. She notices things. It is unsettling how good she is at it.)"
     hikari "Tomorrow. Don't sleep through it. Don't wander off. And if you get lost,"
     mc "Ask literally anyone."
@@ -6508,12 +6540,24 @@ label free_afternoon:
     $ flush_pending_messages()
     $ place = renpy.call_screen("location_hub", places=hub_destination_order())
 
+    # Home is not an empty afternoon: Hikari is always there with a reason to
+    # take him back outside, so it routes into her run chain. The evening reads
+    # "walk_hikari" for the dinner callback.
+    if place == "home":
+        $ last_afternoon_place = "walk_hikari"
+        $ last_afternoon_was_run = False
+        $ last_afternoon_hikari_tour = False
+        jump confidant_visit_hikari
+
     # The evening reads this to remember where the afternoon went. The run flag
     # is cleared first so a previous Hikari run cannot leak into another row.
     $ last_afternoon_place = place
     $ last_afternoon_was_run = False
+    $ last_afternoon_hikari_tour = False
 
-    if place == "sim":
+    if place == "message_hikari":
+        jump hikari_tour
+    elif place == "sim":
         jump confidant_visit_sim
     elif place == "orson":
         jump confidant_visit_orson
@@ -6591,7 +6635,7 @@ label saturday_off:
     scene bg_kitchen with walk_fade
     "The kitchen smells like miso and grilled fish."
     "A normal Saturday breakfast, which is its own small event in this house."
-    mother "You're up early. Good. Eat something before you disappear."
+    mother "You're up early — I thought you'd sleep through the rain. Eat."
     mc "I'm going to the library. Hikari gave me the route."
     mother "The library. Good. A library is a building that keeps its promises."
     father "Eat first. Breakfast can wait ten minutes. You cannot."
@@ -6841,7 +6885,7 @@ label lupins_den_first:
         "(Say nothing. Drink the water.)":
             "I pick up the glass and drink. He notices anyway, the wolf mask tilts, barely,"
             "in what might be a nod."
-            bar_master "You found us. Most people don't."
+            bar_master "Most people walk straight past. You stopped."
             # Reading the room and letting the silence do the introductions.
             $ reward_attributes_once("lupins_den_silence", [("insight", "micro")], show="auto")
 
@@ -7140,7 +7184,7 @@ label monday_morning:
     scene bg_kitchen with walk_fade
     mother "Eat. You have a quiz today, yes?"
     mc "Yes. He announced it on Friday. Three questions."
-    mother "Then eat like it matters."
+    mother "Then eat. You'll need the energy."
     father "It does matter."
     if sunday_quiz_score == 3:
         hikari "He got three out of three on my quiz yesterday."
@@ -7174,6 +7218,8 @@ label monday_lecture:
     professor "Which word is the kigo?"
     "A pause. Thirty students not breathing."
     professor "It is not a trick question. It is the easiest question I have."
+    if quiz_announced:
+        mc "(He told us this was coming last week. I have been carrying the question all weekend.)"
     $ monday_quiz_score = 0
     $ monday_q1_correct = False
     $ monday_q2_correct = False
@@ -7362,7 +7408,8 @@ label monday_lecture:
                 hikari "You got lost *again*."
                 father "..."
                 father "I'm glad you found somewhere to eat. But when this family sits down, we eat together."
-                mother "There's rice in the pot. If you get hungry later."
+                mc "(He said almost this once before. I remember the shape of the sentence, which is strange.)"
+                mother "I left a bowl out. In case you're still hungry later. You never say."
                 $ day6_dinner_declined = True
                 $ reward_attributes_once("day6_dinner_declined", [("nerve", "micro")], show="auto")
                 $ remember("father", "told him he was still full from ramen on Monday")
@@ -7409,7 +7456,7 @@ label day6_walk_home_chef:
     else:
         "I take the wrong train line on purpose, or what turns out to be the wrong one."
     "One turn too many. The street gets narrower. No mirrors on the poles, no cat on any window."
-    "The phone has a map on it. No signal. I put it back."
+    "I open the map on my phone. It works now, and it tells me exactly how far I am from a station I don't want."
     "The sun goes down off the roofs while I walk. The lights on the poles come on in a line."
     "The shops stop looking like they are for passers-by."
     mc "(It is getting dark. It was supposed to take eleven minutes.)"
@@ -7453,12 +7500,12 @@ label hikari_first_run:
     "Twenty minutes later I am at the second bridge with my hands on my thighs and she is not out of breath."
     mc "(My legs are arguing. Hers are not. That is the whole difference between us.)"
 
-    hikari "You're not unfit. You're just new. Those are different things and it's rude to confuse them."
+    hikari "You're not unfit. That was a hard route. I chose it, and you kept up."
     "We sit on the wall. She buys two cans without asking and hands me one."
     menu:
         "This is the only hour that's yours?" :
             mc "This is the only hour that's yours?"
-            hikari "It's the only hour of the day that's mine. Don't make it weird."
+            hikari "It's the only hour of the day that's mine."
             $ reward_attributes_once("hikari_first_run_why", [("insight", "micro")], show="auto")
         "Why the river?" :
             mc "Why the river?"
@@ -7476,7 +7523,7 @@ label hikari_first_run:
     "At the gate she stops with her key in her hand."
     hikari "Same time next week?"
     mc "Same time next week."
-    hikari "Good. I wasn't asking."
+    hikari "Good. I'll see you then."
     scene bg_home_night with walk_fade
     $ hikari_run = False
     $ hikari_visits = max(hikari_visits, 1)
@@ -7555,7 +7602,7 @@ label tuesday_morning:
             "Father lowers the paper. He does not look surprised."
             father "Good. Nervous means you know it matters."
             father "Unprepared is the thing to be afraid of. Not nervous."
-            mc "That's not as comforting as you think it is."
+            mc "That's useful. Just not comforting."
             father "It is not meant to be comforting. It is meant to be useful."
             $ reward_attributes_once("tuesday_breakfast_nerves", [("nerve", "micro")], show="auto")
 
@@ -7703,9 +7750,9 @@ label tuesday_lecture:
     else:
         "Hikari is already at the table, her chopsticks still in their paper, waiting with the family."
         mother "There you are. Wash your hands."
-        hikari "You're late."
+        hikari "You made it. Dinner's been ready a few minutes."
         mc "I'm not late. Dinner is early."
-        hikari "Dinner is on time. You're late."
+        hikari "Either way, it's hot. Sit down and eat."
         "I wash my hands. The water is warm."
     mother "Where did you go?"
 
@@ -7735,7 +7782,7 @@ label tuesday_lecture:
             mc "I walked home with Hikari. We took the long way."
             hikari "You took the long way. I followed."
             mc "That's not how I remember it."
-            hikari "That's because you were busy being right."
+            hikari "That's how I remember it. I'm glad you came with me."
     elif last_afternoon_place == "walk_alone":
         mc "Nowhere. I walked until the light changed, and then I walked home."
         father "Nowhere is a place. Just not a destination."
@@ -7783,15 +7830,15 @@ label tuesday_lecture:
             hikari "You're the first person who's asked me that this week."
             mc "(She says it lightly. It does not land lightly.)"
             $ reward_attributes_once("tuesday_study_seminar", [("grace", "micro")], show="auto")
-        "Tell her I'm scared of the midterm.":
-            mc "I'm scared of the midterm."
+        "Tell her I'm scared, and ask her to stay a minute.":
+            mc "I'm scared of the midterm. Will you stay a minute?"
             hikari "Good."
             mc "That's what Dad said."
             hikari "He's right about some things. Don't tell him."
             hikari "You're allowed to be bad at this for a while. You're new."
             mc "I don't want to be bad at it."
             hikari "Then be bad at it and keep going. That's the whole trick."
-            $ reward_attributes_once("tuesday_study_scared", [("nerve", "micro")], show="auto")
+            $ reward_attributes_once("tuesday_study_scared", [("grace", "micro")], show="auto")
 
     "She takes her cup and leaves the door open a hand's width."
     "I listen to her go down the stairs, then the house settle into its night sounds."
@@ -7799,17 +7846,8 @@ label tuesday_lecture:
 
     stop music fadeout 2.0
     scene black with Dissolve(2.0)
-    play music "audio/Music/dream_sequence.mp3" fadein 3.0
-    "The station again."
-    "The platform lights. The announcement arriving before the voice."
-    "There is someone at the far end of the platform. A woman in white. She is not facing me."
-    "She says, without turning: \"He is starting to keep the days.\""
-    show hospital_flash onlayer overlay at truecenter:
-        alpha 0.0
-        linear 0.1 alpha 0.45
-        linear 0.1 alpha 0.0
-    $ renpy.say(None, "signal lost.", interact=False)
-    pause 0.4
+    "The station, for a moment. The announcement arriving before the voice."
+    "Then it is gone."
     stop music fadeout 3.0
 
     scene bg_room_night with Dissolve(1.5)
@@ -7844,7 +7882,7 @@ label day7_sim_campus:
     sim "Circle. The photography club is what the timetable calls us."
     mc "I didn't know I was looking for it until I stopped."
     sim "That is the same thing, said properly."
-    sim "We usually meet Thursdays. This week half the club called off and the attendance was terrible, so we moved it to Tuesday. Special session. Don't tell the department."
+    sim "I'm holding a one-off today. Half the club is away this week, so there's no Thursday session. Don't tell the department."
     mc "Why tell me?"
     sim "Because you looked like you were looking for it. That is the whole recruitment policy."
     "He turns and walks toward the studio room at the end of the corridor, camera still in hand."
@@ -7899,9 +7937,9 @@ label afternoon_walk_hikari:
     $ last_afternoon_was_run = False
     scene bg_campus_interior with walk_fade
     "Hikari is at the gate when I get there. She does not ask why I came. She just turns and starts walking, the way she does when she has decided something."
-    hikari "You're slow."
+    hikari "You took your time."
     mc "You're early."
-    hikari "I'm on time. You're slow."
+    hikari "I'm on time. And the long way's the one worth walking."
     "We take the long way without discussing it."
 
     menu:
@@ -7922,10 +7960,10 @@ label afternoon_walk_hikari:
             $ reward_attributes_once("hub_walk_hikari_river", [("insight", "micro")], show="auto")
         "Tell her I'm glad she waited.":
             mc "I'm glad you waited."
-            hikari "I wasn't waiting. I was walking slowly."
+            hikari "I wasn't waiting. I was walking slowly on purpose."
             mc "In the direction of the gate."
             hikari "..."
-            hikari "Don't make it a thing."
+            hikari "All right. I was waiting. I'm glad you came."
             mc "(Too late. It is already a thing.)"
             $ reward_attributes_once("hub_walk_hikari_glad", [("nerve", "micro")], show="auto")
 

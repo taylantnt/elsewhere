@@ -93,7 +93,7 @@ label hikari_visit_02:
         "How long have you been running this route?":
             mc "How long have you been running this route?"
             hikari "Since before I can remember."
-            mc "That's not an answer."
+            mc "That's an answer I don't like yet."
             hikari "It is the only answer I have. I don't remember learning it. I just know it."
             mc "(She says it the way a person says their own address. Not like a memory. Like a fact.)"
             $ reward_attributes_once("hikari_visit_02_how", [("insight", "micro")], show="auto")
@@ -172,7 +172,7 @@ label hikari_visit_02:
     "At the house gate she stops with her key in her hand."
     hikari "Same time next week?"
     mc "Same time next week."
-    hikari "Good. I wasn't asking."
+    hikari "Good. I'll be there."
     "She goes inside. The kitchen light is on. I stand at the gate for a moment longer than I need to."
     $ hikari_run = False
     return

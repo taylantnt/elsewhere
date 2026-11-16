@@ -20,8 +20,9 @@ label thursday_morning:
     "My phone buzzes once on the desk."
 
     if "sim" in wire_unlocked:
+        $ sim_morning = "Circle's on hold. The room is still there if you need it." if confidant_visits.get("sim", 0) >= 7 else "Room's open at five. Bring anything."
         $ run_chat("sim", [
-            {"them": "Circle meets today. You should come.", "options": [
+            {"them": sim_morning, "options": [
                 {"label": "\"What are we shooting?\"",
                  "send": "What are we shooting?",
                  "them": ["Whatever the light does.", "Bring the camera. Or don't. The wall doesn't care."]},
@@ -68,7 +69,7 @@ label thursday_morning:
     mc "Since today."
     hikari "I don't like it."
     mc "You said I was horizontal."
-    hikari "You were horizontal. Now you're vertical. It's unsettling."
+    hikari "You were horizontal. Now you're vertical. I'm still getting used to it. It's unsettling."
     mother "Sit, Hikari. Eat. You can be unsettled at the table."
 
     "The rice is hot. The miso is darker than yesterday. Mother watches me take the first spoonful."
@@ -104,8 +105,8 @@ label thursday_morning:
             father "This country is built around not making meiwaku. It is why the trains are quiet."
             mc "(So the silence is not silence. It is a courtesy.)"
             $ reward_attributes_once("day9_kitchen_meiwaku", [("nerve", "micro")], show="auto")
-        "Make a joke about the rules.":
-            mc "So the chopsticks are a language and the bath is a conversation. What do you call a foreigner who keeps getting it wrong?"
+        "If I get it wrong, do I become a person or a problem?":
+            mc "If I get it wrong, do I become a person or a problem?"
             hikari "Guest."
             mc "That was fast."
             hikari "It was accurate."
@@ -130,7 +131,7 @@ label thursday_morning:
     mc "Your dad said."
     hikari "He notices everything. It's exhausting."
     mc "It's useful."
-    hikari "Don't tell him that."
+    hikari "He'd like to hear that. He'd pretend he didn't."
 
     scene bg_home_exterior_day with walk_fade
     play music "audio/Music/(shibuya morning) scramble_hour.mp3" fadein 2.0
@@ -146,7 +147,7 @@ label thursday_morning:
     "Not because of a sign. Because of everyone else."
     "A train comes. The doors open. The people waiting step aside and let the people inside get out first."
     "Then they get on. In order. Without a word."
-    hikari "You're watching again."
+    hikari "You're watching the platform."
     mc "I'm learning the rules."
     hikari "There are no rules. There are just a thousand people agreeing."
     mc "(That is the same thing, said in a way that makes it true.)"

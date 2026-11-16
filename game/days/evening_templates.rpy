@@ -86,9 +86,9 @@ label dinner_open(variant=None):
 label dinner_open_ordinary:
     "Mother is ladling something into four bowls. Father is setting the table with the careful imprecision of a man who has been told to help."
     mother "There you are. Wash your hands."
-    hikari "You're late."
+    hikari "You made it."
     mc "I'm not late. Dinner is early."
-    hikari "Dinner is on time. You're late."
+    hikari "Then we are both on time."
     "I wash my hands. The water is warm."
     mother "Where did you go?"
     call dinner_report
@@ -154,7 +154,7 @@ label dinner_open_hikari_cooks:
     hikari "I could hear you both."
     "She sets down four bowls. One of them is the chipped one. She gives that one to herself."
     mc "You cooked."
-    hikari "I cooked. Don't make it a thing."
+    hikari "I cooked. It is just dinner."
     mc "(It is already a thing. The whole table knows it.)"
     hikari "Where did you go?"
     call dinner_report
@@ -164,7 +164,16 @@ label dinner_open_hikari_cooks:
 ## The one copy of the afternoon callback. Every dinner frame ends here, so the
 ## place the player picked is still the thing the table asks about.
 label dinner_report:
-    if last_afternoon_place == "chef":
+    if last_afternoon_hikari_tour and last_afternoon_place == "yokohama":
+        mc "Hikari took me to Yokohama. Chinatown first, then the red brick warehouses."
+        hikari "I took you to dinner. The warehouses were a walk."
+        mc "(She showed me a place that was hers. I think that was the point.)"
+    elif last_afternoon_hikari_tour:
+        $ tour_place_name = destination_names.get(last_afternoon_place, last_afternoon_place)
+        mc "Hikari took me to [tour_place_name]. She called it an errand."
+        hikari "It was an errand. You were the good part."
+        mc "(She showed me the way back. I think that was the point.)"
+    elif last_afternoon_place == "chef":
         mc "The ramen shop. The broth had been going since morning."
         mc "(He did not make a thing of it. That was the whole welcome.)"
     elif last_afternoon_place == "aya":
@@ -279,7 +288,7 @@ label night_open_tea:
 
 label night_open_window:
     "The door opens without a knock. Hikari crosses the room and pushes the window up."
-    hikari "It smells like the inside of your head in here."
+    hikari "This room has gone stale. It needs air."
     mc "That's not a thing."
     hikari "It is now."
     "She sits on the sill with her legs outside, which cannot be allowed and is clearly allowed."
@@ -306,11 +315,11 @@ label night_afternoon_callback:
     if last_afternoon_place == "chef":
         hikari "You smell like broth."
         mc "I had ramen."
-        hikari "You always have ramen. It's becoming a personality."
+        hikari "The good kind. That takes all morning to get right."
     elif last_afternoon_place == "aya":
         hikari "You smell like sugar."
         mc "The cafe."
-        hikari "The cafe. You say it like it's a country you visited."
+        hikari "The cafe. She remembered your order, I take it."
     elif last_afternoon_place == "hana":
         hikari "You're doing the quiet thing."
         mc "What quiet thing?"
@@ -322,7 +331,7 @@ label night_afternoon_callback:
     elif last_afternoon_place == "sim":
         hikari "You've got that camera look."
         mc "What look?"
-        hikari "The one where you keep framing things. Stop it. You're at home."
+        hikari "The one where you keep framing things. You do not have to carry it home."
     elif last_afternoon_place == "walk_hikari":
         hikari "You walked slower today."
         mc "I was tired."
@@ -334,7 +343,7 @@ label night_afternoon_callback:
     elif last_afternoon_place == "library":
         hikari "You have that library face."
         mc "What face?"
-        hikari "The one that says you read a sentence four times and still lost."
+        hikari "The one that means you found something worth reading twice."
     elif last_afternoon_place == "river":
         hikari "Your shoes are muddy."
         mc "The riverbank."
@@ -342,13 +351,13 @@ label night_afternoon_callback:
         mc "I didn't know it was a shared thing."
         hikari "It is now."
     elif last_afternoon_place == "harajuku":
-        hikari "You look like you got dressed by a committee."
+        hikari "Did Harajuku dress you?"
         mc "I didn't buy anything."
-        hikari "That's worse. Now you have the look and nothing to show for it."
+        hikari "Then it was the street. It does that here."
     elif last_afternoon_place == "karaoke":
         hikari "Your voice is gone."
         mc "I was singing."
-        hikari "That is not what I would call it."
+        hikari "That is not what I would call it. But you were having fun."
     elif last_afternoon_place == "night_market":
         hikari "You smell like fried things."
         mc "I ate standing up."
@@ -362,7 +371,7 @@ label night_afternoon_callback:
         else:
             hikari "You came home smelling like the combini."
             mc "Supplies."
-            hikari "Nobody buys three pens at eight p.m. for supplies."
+            hikari "Three pens at eight p.m. is not supplies. It is a treat."
             mc "(She is right. I also bought coffee in a can, and stood outside drinking it.)"
     elif last_afternoon_place == "odaiba":
         hikari "You have that look. The one you get when something is too new."
@@ -418,7 +427,7 @@ label night_afternoon_callback:
         mc "I worked the register."
         hikari "You worked it. For four hours."
         mc "Four hours."
-        hikari "And you're still standing. That's more than I expected."
+        hikari "Four hours, and you are still standing. That is worth a chair."
         mc "(That is either an insult or a promotion. I am too tired to tell.)"
     return
 

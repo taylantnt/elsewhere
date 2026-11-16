@@ -1,25 +1,46 @@
-# Harajuku
+# Harajuku: Takeshita Street
 
-**Status:** built as a city row.
+**Status:** built as a city row and as the second Message Hikari tour.
 
-- **Label** — `city_row_harajuku` (`game/city_rows.rpy`).
+- **Solo label** — `city_row_harajuku` (`game/city_rows.rpy`).
+- **Tour label** — `hikari_tour_harajuku` (`game/confidant_visits/hikari_tour.rpy`).
 - **Hub name** — `Harajuku: Takeshita Street`.
-- **Art** — `bg_harajuku` (real art on disk).
+- **Art** — `bg_harajuku` (the street), `bg_harajuku_clothes` (the kawaii shop),
+  `bg_harajuku_candy` (the cotton candy shop). All three are real art on disk;
+  the two shop backgrounds are sized explicitly in `script.rpy`.
 
-## Scene
+## Tour
 
-Takeshita Street is a river of people dressed for different parties. The
-protagonist notices the difference from Akihabara: there he was invisible, here
-he is visible and nobody cares. That is a different kind of invisible.
+The second Message Hikari outing. She opens with the fashion rather than a
+place: have you heard of kawaii style? He has not. She explains enough in the
+texts to make him curious, then turns it into a walk because the street is the
+point. Beats:
 
-Three choices:
+1. Text hook: 可愛い is not just "cute" — it is a way of dressing and a way of
+   deciding what deserves attention. The weather is nice; meet at the station.
+2. Takeshita Street: a quiet lane behind the station until the boutiques came.
+   Hikari's rules — look with your eyes, say 可愛い when something deserves it,
+   never laugh, buy nothing before the third shop.
+3. The food street: crepes, タピオカ, and cotton candy in every colour.
+4. A kawaii clothing shop: layers, socks over boots, one colour that should not
+   work. She admits she dressed that way for a year.
+5. A cotton candy shop (綿菓子 / wataame): pink flowers and blue hearts. He eats
+   his; she eats hers before he can photograph it.
+6. Home by train. The tour unlocks the solo hub row; Hikari does not come on
+   later visits.
 
-- try on something he would never wear (Nerve);
-- buy nothing and watch the street (Insight);
-- ask a stranger where the good crepe place is (Grace).
+Five menus with one-time attribute rewards cover the street, the food, the
+clothes, the candy, and the reason she brought him. Finishing pays a final
+Insight tick. `test_hikari_tour_harajuku` in the console plays the full tour.
 
-## Fortune Teller link
+## Solo scene
 
-The Fortune Teller's second card names Harajuku: a narrow street of crepe stands
-and vintage shops. The row itself does not stage her; the card is the hook for
-her later appearance.
+He walks the street alone with Hikari's rules still in his head. The clothes
+shop is the one she told him to wait for; the assistant explains an outfit the
+way she would explain a sentence. He buys socks with cats on them. At the candy
+shop he gets the pink flower because Hikari would have taken the blue heart.
+
+Four choices on the street (Nerve / Insight / Grace / Nerve), then two in the
+clothes shop (Insight / Grace). No Hikari: the rules are his to keep or break.
+The Fortune Teller's second card also names Harajuku as a hook for her later
+appearance; the row does not stage her.

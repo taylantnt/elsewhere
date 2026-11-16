@@ -69,6 +69,23 @@ init python:
         trans.alpha = initial_alpha * (1.0 - progress)
         return 0.016 if progress < 1.0 else None
 
+    def file_page_label():
+        """Name the current save page without offering a text field.
+
+        Ren'Py's page names are editable by clicking the field they are shown
+        in, which invites stray text where the player expects a plain label.
+        The save screens read the name from here instead, so the page is
+        identifiable but cannot be typed over.
+        """
+        page = persistent._file_page
+
+        if page == "auto":
+            return _("Automatic saves")
+        elif page == "quick":
+            return _("Quick saves")
+
+        return _("Page {}").format(page)
+
 # Coordinates match the illustrated screen aperture. The phone, not the wrist,
 # is centered; all pages share these bounds so navigation never moves the grip.
 define menu_phone_x = 506
@@ -425,18 +442,19 @@ screen phone_game_menu(title, scroll=None, yinitial=0.0, spacing=0, back_action=
         key "game_menu" action [SetVariable("menu_phone_open", True), ShowMenu("main_menu")]
 
 screen phone_files(title):
-    default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
     use game_menu(title):
         vbox:
             spacing gui.scale(12)
-            button:
-                style "phone_row"
-                action page_name_value.Toggle()
-                key_events True
-                input:
-                    style "phone_row_text"
-                    value page_name_value
-                    length 24
+            fixed:
+                xfill True
+                ysize gui.scale(30)
+                add Solid("#141c22")
+                text file_page_label():
+                    style "phone_detail"
+                    size gui.scale(12)
+                    color "#b4ada1"
+                    xalign 0.5
+                    yalign 0.5
             hbox:
                 xalign 0.5
                 spacing gui.scale(4)
@@ -476,8 +494,9 @@ screen phone_files(title):
                         text save_slot_label(slot) style "phone_save_title"
                         text FileTime(slot, format=_("%Y-%m-%d  %H:%M"), empty=_("No save data")) style "phone_detail"
                 if FileLoadable(slot):
-                    textbutton _("Delete"):
-                        style "phone_small_button"
+                    textbutton "DELETE SAVE":
+                        style "phone_delete_button"
+                        xalign 1.0
                         action FileDelete(slot)
             if config.has_sync:
                 if CurrentScreenName() == "save":
@@ -868,6 +887,14 @@ style phone_blocker is button:
 
 style phone_page_button_text is phone_small_button_text:
     xalign 0.5
+
+style phone_delete_button is phone_small_button:
+    padding (gui.scale(6), gui.scale(3))
+
+style phone_delete_button_text is phone_small_button_text:
+    size gui.scale(11)
+    color "#b9827f"
+    hover_color "#ffd9d6"
 
 style phone_side is side:
     spacing gui.scale(6)

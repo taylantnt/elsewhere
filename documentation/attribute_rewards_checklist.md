@@ -6,8 +6,9 @@ This is an editable checklist of the current story choice menus kept here —
 M01–M54, the Monday dinner still-full fork (M54A), the retired weekend-plan
 menu (M47), the retired camera menu (M31), the walk-alone still-full fork
 (M35A), M55–M57 for Tuesday's forced day, M57A for the forced-afternoon reward,
-and M58–M60 for the hub walks and generic hub day, plus the Days 8–12 beats —
-including every answer with no attribute reward. The current
+and M58–M60 for the hub walks and generic hub day, plus the Days 8–12 beats and
+the two Message Hikari tours (M67 Yokohama, M68 Harajuku) — including every
+answer with no attribute reward. The current
 live reward groups are E02–E08 plus the archived E01 board; the five confidant
 chains' visits 2–8 are summarised in the **Confidant Visit Rewards** section
 below; non-dialogue rewards are listed separately. Unwritten future scenes and
@@ -106,7 +107,7 @@ the player from returning for the pamphlet.
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M05.01 | Show her the address. | No rewards | `answer_assistant_ask`; receives the pamphlet. |
-| M05.02 | We can use the map. No rush. | Insight +0.2 | Flag `answer_assistant_patient`; then receives the same pamphlet. |
+| M05.02 | We can use the map. No rush. | Grace +0.2 | Flag `answer_assistant_patient`; soothing an anxious clerk is consideration, not insight. Then receives the same pamphlet. |
 | M05.03 | I'll try another desk. | No rewards | `answer_assistant_nevermind`; leaves without the pamphlet. |
 
 ### M06. The Veteran Assistant's Travel Advice
@@ -151,7 +152,7 @@ Context: spending about eighteen thousand yen would use more than half the start
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M09.01 | Take the taxi anyway. | Nerve +1.0 | Sets the taxi route; flag `travel_route_attribute`. |
+| M09.01 | Take the taxi anyway. | Nerve +0.5 | Sets the taxi route; flag `travel_route_attribute`. |
 | M09.02 | Take the train instead. | Insight +0.5 | Sets the train route; flag `travel_route_attribute`. |
 
 M08.02, M09.01 and M09.02 share one flag. They are alternative ways of making
@@ -266,7 +267,7 @@ Prompt: "Anything on the board catch your eye?"
 |---|---|---|---|
 | M19.01 | The film screening. | No rewards | Asks whether anyone can attend; Hikari remembers. |
 | M19.02 | The three rooms for rent. | No rewards | Notices the identical photographs; Hikari remembers. |
-| M19.03 | [Insight] The lost cat. | Insight +0.2 | Requires 0.8 Insight points; flag `answer_wall_cat`; examines the old tape and date; Hikari remembers. |
+| M19.03 | [Insight] The lost cat. | Insight +0.2 | Requires 0.5 Insight points; flag `answer_wall_cat`; examines the old tape and date; Hikari remembers. |
 
 ### M20. Student Relations And Circles
 
@@ -277,7 +278,7 @@ Context: the clerk has explained student cards, attendance, electives and circle
 |---|---|---|---|
 | M20.01 | Which one would you pick? | No rewards | Asks which circle the clerk would choose; she remembers. |
 | M20.02 | When does the photography club meet? | No rewards | Asks whether visitors can attend; the clerk remembers. |
-| M20.03 | [Grace] You've made this much easier. | Grace +0.2 | Requires 1.0 Grace point; flag `answer_circles_back`; the clerk remembers. |
+| M20.03 | [Grace] You've made this much easier. | Grace +0.2 | Requires 0.6 Grace points; flag `answer_circles_back`; the clerk remembers. |
 
 ### M21. Discussing The Late Mark With The Professor
 
@@ -286,7 +287,7 @@ Context: Student Relations registration made the protagonist late for his first 
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M21.01 | I'll write that down. | Insight +0.2 | Records the attendance rule; the professor remembers; flag `answer_clock_write`. |
+| M21.01 | I'll write it down and check the room on the portal. | Insight +0.2 | Records the attendance rule and verifies the room; the professor remembers; flag `answer_clock_write`. |
 | M21.02 | It won't happen again. | Grace +0.2 | Apologises and promises to arrive early; flag `answer_clock_promise`; the professor remembers. |
 | M21.03 | [Nerve] Can we discuss today's late mark? | Nerve +0.2 | Requires 0.3 Nerve points; flag `answer_clock_ask`; requests review of the registration conflict; the professor remembers. |
 
@@ -511,7 +512,7 @@ Source: [`second_school_day`](../game/script.rpy).
 |---|---|---|---|
 | M38.01 | Take careful notes on the kigo. | Insight +0.3 | Flag `haiku_lesson_notes`. |
 | M38.02 | Listen closely to the example. | Insight +0.3 | Flag `haiku_lesson_listen`. |
-| M38.03 | Look up more examples online after class. | Nerve +0.3 | Flag `haiku_lesson_research`. |
+| M38.03 | Look up more examples online after class. | Insight +0.3 | Flag `haiku_lesson_research`; comparing translations is research, not boldness. |
 
 ### M39. Choosing A Cellular Plan
 
@@ -520,7 +521,7 @@ Source: [`second_school_day`](../game/script.rpy).
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M39.01 | A basic plan is enough for now. | Insight +0.2 | Flag `cellular_plan_modest`. |
-| M39.02 | I would rather have enough data not to worry. | Nerve +0.2 | Flag `cellular_plan_usage`. |
+| M39.02 | I would rather have enough data not to worry. | Insight +0.2 | Flag `cellular_plan_usage`; a considered preference, not boldness. |
 | M39.03 | Could we see the lowest student rate first? | Grace +0.2 | Flag `cellular_plan_student_rate`. |
 
 ### M40. Declining Plan Add-ons
@@ -531,7 +532,7 @@ Source: [`second_school_day`](../game/script.rpy).
 |---|---|---|---|
 | M40.01 | No add-ons. Show us the full monthly total. | Insight +0.2 | Flag `cellular_plan_total`. |
 | M40.02 | Keep it to the student plan and nothing else. | Grace +0.2 | Flag `cellular_plan_basic`. |
-| M40.03 | No extras, thanks. | Nerve +0.2 | Flag `cellular_plan_decline_extras`. |
+| M40.03 | What happens if I need to cancel? | Insight +0.2 | Flag `cellular_plan_decline_extras`; checking the exit terms before signing. |
 
 ### M41. Exploring Akihabara
 
@@ -549,7 +550,7 @@ Source: [`second_school_day`](../game/script.rpy).
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M42.01 | Only looking around. Not sure yet. | Grace +0.2 | Flag `akihabara_maid_cafe_cautious`. |
+| M42.01 | Could you explain how it works before I decide? | Grace +0.2 | Flag `akihabara_maid_cafe_cautious`. |
 | M42.02 | Heard about maid cafes. Wanted to see one. | Nerve +0.2 | Flag `akihabara_maid_cafe_curiosity`. |
 | M42.03 | How do I know what to expect inside? | Insight +0.2 | Flag `akihabara_maid_cafe_questions`. |
 
@@ -592,7 +593,7 @@ Context: Tetsuo asks what the new phone/plan actually cost or meant.
 | M46.01 | I checked the total before I signed. It was lower than I expected. | Insight +0.2 | Flag `night_table_total`; Tetsuo's regard increases by 2. |
 | M46.02 | I spent what I needed to. Nothing extra. | Grace +0.2 | Flag `night_table_plain`; Tetsuo's regard increases by 1. |
 | M46.03 | I'd rather not turn dinner into a bill. | Nerve +0.2 | Flag `night_table_boundary`; Tetsuo's regard increases by 1. |
-| M46.04 | [Nerve] I could tell you. Then you could tell me what the car cost. | Nerve +0.3 | Requires 1.2 Nerve points; flag `night_table_nerve`; Tetsuo's regard increases by 1. The gate now buys the larger reward. |
+| M46.04 | [Nerve] I'll tell you. All of it. You might want to put the newspaper down. | Nerve +0.3 | Requires 0.8 Nerve points; flag `night_table_nerve`; Tetsuo's regard increases by 1. The gate now buys the larger reward. Bold but not invasive — he offers a long explanation instead of prying into the host's finances. |
 
 ### M47. The Weekend Plan
 
@@ -728,7 +729,7 @@ Context: before sleep, kigo list and the midterm.
 |---|---|---|---|
 | M57.01 | Read the kigo list aloud until it sticks. | Insight +0.2 | Pays via flag `tuesday_study_aloud`; the words becoming his own. |
 | M57.02 | Ask her about her seminar. | Grace +0.2 | Pays via flag `tuesday_study_seminar`; asking the question nobody asks. |
-| M57.03 | Tell her I'm scared of the midterm. | Nerve +0.2 | Pays via flag `tuesday_study_scared`; admitting the fear. |
+| M57.03 | Tell her I'm scared, and ask her to stay a minute. | Grace +0.2 | Pays via flag `tuesday_study_scared`; asking for company, not just declaring fear. |
 
 ### M57A. Day 7 Forced Afternoon
 
@@ -936,6 +937,109 @@ Close: **Insight +0.5** (`hikari_visit_07_close`, `small`) — the recognition
 beat is the arc's turn, and the larger close marks it as the last run. The run
 sets `hikari_run_finished = True`.
 
+### M67. Message Hikari — Yokohama Chinatown
+
+Source: [`hikari_tour_yokohama`](../game/confidant_visits/hikari_tour.rpy).
+
+Context: the first Message Hikari tour. She is hungry, so the invitation is
+dinner and the tour happens on the way to it. It introduces Chinatown, Lei Lei's
+gyoza shop, and Akarenga, then unlocks Yokohama for solo visits.
+
+First menu, at the Chinatown gate:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M67.01 | Ask why the Chinese settled here, and not Tokyo. | Insight +0.2 | Pays via flag `yokohama_tour_why_port`; Yokohama was the open door. |
+| M67.02 | Ask if people actually live here. | Grace +0.2 | Pays via flag `yokohama_tour_live_here`; laundry and a cat above the shops. |
+| M67.03 | Ask what happens if you order too many dumplings. | Nerve +0.2 | Pays via flag `yokohama_tour_dumpling_math`; she postpones the answer until after they eat. |
+
+Second menu, on the food street:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M67.04 | Point at the soup dumplings. | Grace +0.2 | Pays via flag `yokohama_tour_shoronpo`; she warns him about the soup inside. |
+| M67.05 | Point at the gyoza. | Nerve +0.2 | Pays via flag `yokohama_tour_gyoza_pick`; she does not need to look. |
+| M67.06 | Point at the ramen. | Insight +0.2 | Pays via flag `yokohama_tour_ramen_question`; the ramen is for later. |
+
+Third menu, ordering at Lei Lei's:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M67.07 | Let Hikari order for both of you. | Grace +0.2 | Pays via flag `yokohama_tour_let_hikari_order`; nobody writes the order down. |
+| M67.08 | Try to order in Chinese. | Nerve +0.2 | Pays via flag `yokohama_tour_order_chinese`; Lei Lei corrects him by volume. |
+| M67.09 | Ask what she recommends. | Insight +0.2 | Pays via flag `yokohama_tour_recommendation`; Lei Lei says "everything." |
+
+Fourth menu, after the food arrives:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M67.10 | Tell Lei Lei the gyoza is the best you've ever had. | Grace +0.2 | Pays via flag `yokohama_tour_compliment_lei`; a second plate arrives unexplained. |
+| M67.11 | Ask Hikari how she knew about this place. | Insight +0.2 | Pays via flag `yokohama_tour_how_hikari_found`; she walked out of the seminar trip. |
+| M67.12 | Try to join the shouting. | Nerve +0.2 | Pays via flag `yokohama_tour_shout_back`; the room stops, then Lei Lei laughs. |
+
+Fifth menu, at Akarenga:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M67.13 | Ask what the warehouses held. | Insight +0.2 | Pays via flag `yokohama_tour_warehouse_cargo`; the cargo changed, not the building. |
+| M67.14 | Ask why she brought you here. | Grace +0.2 | Pays via flag `yokohama_tour_why_akarenga`; she likes places that admit they are a port. |
+| M67.15 | Climb the outside stairs to the top landing. | Nerve +0.2 | Pays via flag `yokohama_tour_akarenga_stairs`; she would have said no if he asked. |
+
+Close: **Insight +0.1** (`hikari_tour_yokohama_complete`, `tiny`) — the tour
+unlocks the Yokohama hub row and marks it visited on the phone map.
+
+### M68. Message Hikari — Harajuku, Takeshita Street
+
+Source: [`hikari_tour_harajuku`](../game/confidant_visits/hikari_tour.rpy).
+
+Context: the second Message Hikari tour. The hook is kawaii fashion — she
+explains it in the texts, then takes him to the street because "I will show you"
+is easier than explaining. It introduces Takeshita Street, a clothing shop, and
+a cotton candy shop, then unlocks Harajuku for solo visits.
+
+First menu, on Takeshita Street:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M68.01 | Ask why nobody is looking at us. | Insight +0.2 | Pays via flag `harajuku_tour_looking`; being seen is participation, not judgment. |
+| M68.02 | Ask what the rules of the street are. | Grace +0.2 | Pays via flag `harajuku_tour_rules`; look with your eyes, never laugh. |
+| M68.03 | Count the colours in one shop window. | Nerve +0.2 | Pays via flag `harajuku_tour_colours`; the window wins. |
+
+Second menu, on the food street:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M68.04 | Get the biggest crepe. | Nerve +0.2 | Pays via flag `harajuku_tour_crepe`; built to be photographed first. |
+| M68.05 | Ask what tapioca is. | Insight +0.2 | Pays via flag `harajuku_tour_tapioca`; タピオカ, boiled starch that bounces. |
+| M68.06 | Let Hikari choose. | Grace +0.2 | Pays via flag `harajuku_tour_let_choose`; she picks something with a cat on the cup. |
+
+Third menu, in the kawaii clothing shop:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M68.07 | Ask her to explain the mannequin's outfit. | Insight +0.2 | Pays via flag `harajuku_tour_outfit`; short over long, one thing that should not work. |
+| M68.08 | Try on the jacket with all the pockets. | Nerve +0.2 | Pays via flag `harajuku_tour_try_on`; she says 可愛い and refuses to repeat it. |
+| M68.09 | Ask if she ever dressed like this. | Grace +0.2 | Pays via flag `harajuku_tour_her_style`; she liked being seen when she could choose when. |
+
+Fourth menu, at the cotton candy shop:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M68.10 | Say it is too cute to eat. | Nerve +0.2 | Pays via flag `harajuku_tour_too_cute`; 可愛すぎる, then he eats it anyway. |
+| M68.11 | Ask how they make the shapes. | Insight +0.2 | Pays via flag `harajuku_tour_candy_shape`; she makes him fold the heart himself. |
+| M68.12 | Take a photograph of Hikari with hers. | Grace +0.2 | Pays via flag `harajuku_tour_candy_photo`; she eats it before it can be documented. |
+
+Fifth menu, walking back toward the station:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M68.13 | Ask why she brought you here. | Insight +0.2 | Pays via flag `harajuku_tour_why_here`; there is no wrong on this street. |
+| M68.14 | Say you want to come back alone. | Nerve +0.2 | Pays via flag `harajuku_tour_come_back`; third shop, and no buying on the first pass. |
+| M68.15 | Tell her you had fun. | Grace +0.2 | Pays via flag `harajuku_tour_had_fun`; she knew because he stopped checking where they were. |
+
+Close: **Insight +0.1** (`hikari_tour_harajuku_complete`, `tiny`) — the tour
+unlocks the Harajuku hub row and marks it visited on the phone map.
+
 ## Confidant Visit Rewards
 
 The five confidant chains are told in seven numbered visits, followed by a
@@ -1117,7 +1221,7 @@ Use the row IDs to describe any special instructions, for example:
 
 - `M14.03: Nerve +0.2. Keep the answer text.`
 - `M22.01: Nerve +0.5. Keep the answer text; the Grace loss is gone.`
-- `M19.03: No rewards. Keep the 0.8 Insight point requirement.`
+- `M19.03: No rewards. Keep the 0.5 Insight point requirement.`
 
 Unless you say otherwise, bare attribute names mean +0.5, dialogue wording and
 point requirements stay unchanged, and new awards use the existing notification

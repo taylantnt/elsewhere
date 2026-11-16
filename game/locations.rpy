@@ -31,10 +31,12 @@ define destination_names = {
     "orson": "Lupin's Den",
     "chef":  "Ramen Shop",
     "aya":   "Maid Cafe",
-    "hana":  "Reading Club",
+    "hana":  "Library",
     "fortune": "Asakusa: The Fortune Teller",
     "walk_hikari": "Walk home with Hikari",
+    "message_hikari": "Message Hikari",
     "walk_alone":  "Walk home alone",
+    "home":        "Home",
     "library":     "Campus Library",
     "river":       "Riverbank",
     "harajuku":    "Harajuku: Takeshita Street",
@@ -83,6 +85,14 @@ default last_afternoon_place = None
 ## ordinary walk home. The evening uses it to tell the two apart.
 default last_afternoon_was_run = False
 
+## Places Hikari has introduced during a Message Hikari outing. Once a place is
+## in this list, its hub row is unlocked and can be visited alone later.
+default hikari_tour_unlocked = []
+
+## True while this afternoon's trip was one of Hikari's tours rather than a solo
+## visit. The tour labels reset it before the hub row runs.
+default last_afternoon_hikari_tour = False
+
 ## Day 7's dinner needs to know whether Hikari came home with him or was
 ## already at the table. She cannot be "home waiting" if she ran the river
 ## path beside him, so the ordinary dinner greeting forks on this.
@@ -119,15 +129,55 @@ default current_act = 1
 ## single person — turn a number up and that act opens more of everyone.
 define act_confidant_cap = {
     1: 0,
-    2: 5,
-    3: 7,
-    # The eighth visit is the epilogue. It opens as soon as the seventh visit
-    # is done, so the place can stay visitable for the rest of the story.
+    # Act 2 is the long middle and holds every written confidant arc. The caps
+    # for Acts 3 and 4 were designed around glitch-era story that has not been
+    # written yet; until those act breaks exist, keeping the cap at 5 strands
+    # visits 6-8 behind an act the game never enters. Open the whole written arc
+    # here and keep the "later" gate below as the anti-focusing rule. When the
+    # Act 3/4 content lands, retune these numbers to pace it again.
+    2: 8,
+    3: 8,
     4: 8,
 }
 
 
 init python:
+
+    # Destinations that are shown on the hub but cannot be travelled to yet.
+    # They stay visible (greyed out) so the player can see where they will
+    # eventually go; the unlock rules for each land later.
+    disabled_destinations = {
+        "walk_alone",
+        "harajuku", "karaoke", "combini", "odaiba", "yokohama",
+        "ueno", "shibuya", "shimokitazawa", "omotesando",
+    }
+
+    # The city destinations Message Hikari can introduce. They all begin locked;
+    # the first tour adds one id to `hikari_tour_unlocked`, which opens both the
+    # hub row and the ordinary solo city_row_* label.
+    hikari_tour_spots = [
+        "harajuku", "karaoke", "combini", "odaiba", "yokohama",
+        "ueno", "shibuya", "shimokitazawa", "omotesando",
+    ]
+
+    # Only the tours with a written scene are offered. Add a place id here when
+    # its label is ready; until then Message Hikari will not send the player into
+    # a placeholder. Yokohama was the first; Harajuku is the second. The picker
+    # chooses randomly among whatever is still locked and written.
+    hikari_tour_written = ["yokohama", "harajuku"]
+
+    def destination_unlocked(place):
+        return place in store.hikari_tour_unlocked
+
+    def destination_locked(place):
+        return place in disabled_destinations and not destination_unlocked(place)
+
+    def hikari_tour_available_spots():
+        return [p for p in hikari_tour_spots if not destination_unlocked(p)]
+
+    def unlock_hikari_tour_destination(place):
+        if place not in store.hikari_tour_unlocked:
+            store.hikari_tour_unlocked.append(place)
 
     def confidant_cap():
         # If the table ever runs out of acts, the story is open.
@@ -154,11 +204,16 @@ init python:
         people = list(confidant_order)
         if store.fortune_arc_started:
             people.append("fortune")
-        people += ["walk_hikari", "walk_alone"]
+        # Riverbank, the night market, and the old separate Campus Library row
+        # are gone from the hub entirely. Home routes into Hikari's run chain;
+        # Message Hikari is the tour row that unlocks the locked city places.
+        people += ["message_hikari", "walk_alone", "home"]
 
+        removed_from_hub = {"river", "night_market", "library"}
         city = [
             p for p in city_row_order
-            if p != "tanaka" or store.combini_job_unlocked
+            if p not in removed_from_hub
+            and (p != "tanaka" or store.combini_job_unlocked)
         ]
 
         return people + city
@@ -171,6 +226,10 @@ init python:
         # "later"        - already visited, but not everyone has been met yet
         # "closed_today" - the place keeps weekly hours and is shut today
         # "closed"       - every visit is done; the story has finished
+        # "locked" is folded into "paused" for colour purposes; the row label
+        # and short mark below special-case the disabled set.
+        if destination_locked(place):
+            return "paused"
         if place not in confidant_visits:
             return "ready"
         seen = confidant_visits[place]
@@ -194,6 +253,8 @@ init python:
             return "Visit available"
         if state == "epilogue":
             return "The story is over. The place remains."
+        if destination_locked(place):
+            return "Not available yet"
         # A place held by the introduction gate wears the same neutral line as
         # one held by the act cap. The player does not need to know which
         # mechanism is waiting, only that today has nothing new.
@@ -236,11 +297,13 @@ init python:
             return "#5c574d"
         return "#413d36"
 
-    def hub_state_short(state):
+    def hub_state_short(state, place=None):
         # The row's right-hand label and the map legend share one short
         # vocabulary, so the list and the legend never disagree. "later" is
         # deliberately folded into "No new": naming it would hint at content
         # the player has not met yet.
+        if destination_locked(place):
+            return "Locked"
         if state == "ready":
             return "New"
         if state == "epilogue":
@@ -437,11 +500,12 @@ define hub_map_positions = {
     "karaoke":       (0.57, 0.58),
     "night_market":  (0.72, 0.51),
     "tanaka":        (0.90, 0.59),
-    "walk_hikari":   (0.10, 0.77),
+    "message_hikari": (0.10, 0.77),
     "river":         (0.30, 0.75),
     "combini":       (0.45, 0.79),
     "odaiba":        (0.66, 0.74),
     "walk_alone":    (0.29, 0.91),
+    "home":          (0.10, 0.91),
     "yokohama":      (0.78, 0.90),
 }
 
@@ -482,7 +546,7 @@ define hub_map_blocks = [
 ]
 
 
-screen hub_map_pin(place, hovered=None):
+screen hub_map_pin(place, hovered=None, selected=None):
     $ place_state = destination_state(place)
     $ pin_nx, pin_ny = hub_map_positions[place]
     $ pin_x = int(pin_nx * gui.scale(324)) - gui.scale(10)
@@ -498,7 +562,7 @@ screen hub_map_pin(place, hovered=None):
         background None
         hover_background None
         tooltip place
-        action (Return(place) if is_ready else NullAction())
+        action (SetScreenVariable("selected_place", place) if is_ready else NullAction())
         at hub_pin_hover
 
         fixed:
@@ -521,10 +585,10 @@ screen hub_map_pin(place, hovered=None):
             add Solid(pin_color) xysize (gui.scale(3), gui.scale(1)) xalign 0.5 ypos gui.scale(16)
 
 
-screen hub_row(place, hovered=None):
+screen hub_row(place, hovered=None, selected=None):
     $ place_state = destination_state(place)
     $ place_name = destination_names.get(place, place)
-    $ place_short = hub_state_short(place_state)
+    $ place_short = hub_state_short(place_state, place)
     $ is_ready = place_state in ("ready", "epilogue")
     $ is_hovered = hovered == place
     $ row_motion = hub_row_hover if is_ready else hub_row_still
@@ -532,7 +596,7 @@ screen hub_row(place, hovered=None):
     $ status_hover = "#e4bd87" if place_state == "ready" else ("#e8dcc4" if place_state == "epilogue" else hub_status_color(place_state))
 
     button:
-        action (Return(place) if is_ready else NullAction())
+        action (SetScreenVariable("selected_place", place) if is_ready else NullAction())
         background None
         hover_background None
         padding (0, 0)
@@ -542,6 +606,9 @@ screen hub_row(place, hovered=None):
 
         fixed:
             xysize (gui.scale(302), gui.scale(23))
+
+            if selected == place:
+                add Solid("#c8a06a18")
 
             if is_hovered:
                 add Solid("#ffffff08")
@@ -569,9 +636,10 @@ screen hub_row(place, hovered=None):
 
 
 screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one destination for this afternoon."):
-
     modal True
     zorder notice_window_zorder
+    default selected_place = None
+    key "K_RETURN" action If(selected_place is not None, Return(selected_place), NullAction())
     $ hub_places = places if places is not None else hub_destination_order()
     $ hub_people = [p for p in hub_places if p not in city_row_order]
     $ hub_city = [p for p in hub_places if p in city_row_order]
@@ -620,7 +688,7 @@ screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one des
                     vbox:
                         spacing gui.scale(1)
                         for place in hub_people:
-                            use hub_row(place, hub_tip_place)
+                            use hub_row(place, hub_tip_place, selected_place)
                         if hub_city:
                             null height gui.scale(7)
                             text "THE CITY":
@@ -630,7 +698,7 @@ screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one des
                             add Solid("#2a2620") xysize (gui.scale(302), gui.scale(1))
                             null height gui.scale(3)
                             for place in hub_city:
-                                use hub_row(place, hub_tip_place)
+                                use hub_row(place, hub_tip_place, selected_place)
 
             add Solid("#2a2620") xpos gui.scale(315) ypos 0 xysize (gui.scale(1), gui.scale(230))
 
@@ -681,7 +749,7 @@ screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one des
 
                     for place in hub_places:
                         if place in hub_map_positions:
-                            use hub_map_pin(place, hub_tip_place)
+                            use hub_map_pin(place, hub_tip_place, selected_place)
 
                 add Solid("#2a3a42") ypos gui.scale(212) xysize (gui.scale(324), gui.scale(1))
 
@@ -711,4 +779,4 @@ screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one des
                                         style "hub_legend_text"
                                         yalign 0.5
 
-        use standalone_notice_footer("Scroll to see more destinations.", "Head Home", Return(None))
+        use standalone_notice_footer("Select a destination, then travel.", "Travel Here", Return(selected_place), selected_place is not None)

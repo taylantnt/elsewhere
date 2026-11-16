@@ -91,7 +91,7 @@ label sim_visit_01:
             "The shutter makes a sound like a small, polite cough."
             sim "Good. The first one is always the honest one. After that you start trying to be good."
             $ reward_attributes_once("sim_visit_01_shoot", [("nerve", "micro")], show="auto")
-        "Ask why he runs a club nobody joins.":
+        "Ask why he keeps the room open.":
             mc "Why do you run a club that's this hard to find?"
             sim "Because the people who find it are the ones who were looking. The rest would have left after one meeting anyway."
             sim "A club is not a room. It is the people who keep coming back to it."
@@ -108,7 +108,7 @@ label sim_visit_01:
     $ wire_unlock("sim")
     # Circle's welcome message. The Day 2 route sends the longer version; this
     # one matches the shorter first meeting and waits for the phone to connect.
-    $ queue_message("sim", "Welcome to Circle! I posted the one you took today. The room one. Next meeting is Thursday. Bring the camera if you have it.", day="yesterday")
+    $ queue_message("sim", "Circle. You're in. Post what you shot — I'll look tonight.", day="yesterday")
 
     sim "We meet Thursdays. Bring the camera, or don't. The wall doesn't care."
     mc "The wall?"
@@ -142,6 +142,8 @@ label sim_visit_02:
     nami "That was a terrible pun, Sim."
     sim "I am saving the good ones for Thursday."
 
+    sim "「じゃあ、今日はカメラから。みんなで練習しよう。」"
+    "He says it again in English, for the one person in the room who needs it."
     sim "Camera first, introductions second. Nami, stop fighting the tape."
     nami "I am not fighting it. It is fighting the tripod."
     sim "Those are the same war from different sides."
@@ -268,6 +270,7 @@ label sim_visit_03:
     rika "You did. Do not become difficult about it."
     "The room laughs, and I laugh with them."
     sim "Keep the file. Name it after what you were trying to learn, not what you hoped to get."
+    sim "Next time, you shoot."
 
     "After the session, Sim stays behind to coil a cable."
     "For a while, neither of us says anything."
@@ -343,6 +346,8 @@ label sim_visit_04:
 
     sim "I have been thinking about something."
     "The room turns toward him. He does not enjoy the attention, so he looks at the prints instead."
+    sim "「みんな、聞いて。最後に展覧会をしよう。」"
+    "He catches me looking and repeats it, slower, in English."
     sim "There is a community exhibition at the end of the term. Small room, local artists, no fees."
     marco "A real one? With a program and everything?"
     sim "With labels and everything."
@@ -369,7 +374,7 @@ label sim_visit_04:
             $ reward_attributes_once("sim_visit_04_decides", [("insight", "micro")], show="auto")
 
     "Sim writes EXHIBITION on the board in letters large enough to make the room feel suddenly official."
-    sim "Next week we bring three candidates each. We argue like adults, then we order snacks like students."
+    sim "My first show, I mislabeled half the prints. The other half I labeled correctly, and nobody looked. I still made the next one."
     "Riku offers to design the labels. Nami claims the lighting plan. Marco says he will make the posters and immediately begins explaining why Helvetica is a political choice."
     sim "You can help judge. Not because you are the newest, but because you still ask why."
     mc "That feels like a promotion."
@@ -414,9 +419,9 @@ label sim_visit_05:
     "The honesty sits in the room without asking for comfort."
 
     menu:
-        "That sounds lonely, not noble.":
-            mc "That sounds lonely, not noble. But it also sounds honest."
-            sim "Honesty is usually less noble than loneliness."
+        "That sounds honest, not noble.":
+            mc "That sounds honest. Harder than noble, I mean."
+            sim "Perhaps. I never found a nobler way to say it."
             $ reward_attributes_once("sim_visit_05_honest", [("insight", "micro")], show="auto")
         "You don't have to make it sound better.":
             mc "You don't have to make it sound better. This room didn't happen by accident, but it also wasn't magic."
@@ -425,7 +430,7 @@ label sim_visit_05:
         "What made you keep going?":
             mc "What made you keep going after the first people didn't return?"
             sim "The second person. Then the third. Each one made the empty room less convincing."
-            sim "You cannot argue with a person who keeps showing up."
+            sim "(he nudges a mug of tea toward you) I made too much. Drink."
             # Asking the question under the story, not the story itself.
             $ reward_attributes_once("sim_visit_05_keepgoing", [("nerve", "micro")], show="auto")
 
@@ -447,8 +452,9 @@ label sim_visit_05:
     "I hesitate, then raise my phone."
     "The image is mostly pale rectangles and one strip of window light. It is not beautiful in the way photographs are supposed to be."
     sim "Good. Now we know what the room looks like when it is honest."
-    sim "Next week it will be loud again. Bring your best three and your worst one."
-    sim "The worst one is important. It tells us what we are not yet."
+    sim "Next week it will be loud again. Bring whatever you have."
+    "He sets a clean sleeve on the table."
+    sim "I'll keep whichever one you are embarrassed by."
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 5)
     $ remember("sim", "heard why he built Circle and photographed the empty room")
     $ queue_message("sim", "The empty-room photograph is my favorite thing anyone has made this month. Do not let the club make you delete it.", day="yesterday")
@@ -465,6 +471,8 @@ label sim_visit_06:
     "The selection wall is covered in sticky notes. Someone has labelled each photograph with a number, a title, and a small drawing of a face expressing an opinion."
     "Sim is standing at the center of it with his phone face-down on the table."
 
+    sim "「みんな、落ち着いて。メールは本当です。」"
+    "He switches to English mid-sentence, the way he does when he remembers I am here."
     sim "Before anyone asks: yes, the email is real. No, I have not slept properly since Tuesday."
     marco "You look fantastic."
     sim "That is because panic is excellent for circulation."
@@ -490,7 +498,7 @@ label sim_visit_06:
             $ reward_attributes_once("sim_visit_06_future", [("insight", "micro")], show="auto")
         "Are you scared?":
             mc "Are you scared?"
-            sim "Constantly. But fear is just information wearing a bad coat."
+            sim "Every day. But I'm still here."
             $ reward_attributes_once("sim_visit_06_fear", [("nerve", "micro")], show="auto")
 
     "The room goes quiet in the particular way of people who have understood that a joke would be too small."
@@ -521,7 +529,7 @@ label sim_visit_06:
             sim "I would be frightened, then I would come back here and complain about the lighting."
             # Separating the work from the reward, by asking the hypothetical.
             $ reward_attributes_once("sim_visit_06_disappear", [("insight", "micro")], show="auto")
-            sim "Some things are useful even when they do not change your life."
+            sim "(he presses a curling print flat with his thumb) I would still have these."
 
     "Sim picks up the phone, reads the email once more, and sets it down without answering."
     sim "The exhibition is still happening. That has not changed."
@@ -529,6 +537,7 @@ label sim_visit_06:
     sim "Not because I am brave. Because this room taught me that decisions are easier when other people are watching."
     "He looks at the selection wall, then at me."
     sim "You helped choose the prints. You helped make the room feel like it had a reason to exist."
+    sim "This group feels real because you're here too."
     sim "Whatever I decide next, I want you to know that you were part of the reason I could imagine leaving."
     $ sim_affection += 1
 
@@ -559,6 +568,8 @@ label sim_visit_07:
     riku "The legend is a drawing of a confused pigeon."
     marco "The pigeon represents the visitor."
 
+    sim "「みんな、決めました。聞いてほしい。」"
+    "Then, to me:"
     sim "I have decided."
     "The room does not become silent immediately. That would be too theatrical. It becomes attentive, which is harder to resist."
     sim "The magazine offered me a commission. It is in another city, and it would mean leaving Circle."
@@ -624,7 +635,9 @@ label sim_visit_07:
     "Sim gathers everyone for a final photograph."
     "The room crowds close, elbows and shoulders and the soft rustle of jackets."
     "Sim stands in the center, camera raised, smiling wider than he has all evening."
-    sim "Everyone look at the lens. Not at me. At the lens."
+    sim "「さあ、みんな集まって。カメラを見て！」"
+    "He translates for my benefit without breaking stride."
+    sim "Everyone look at the lens! Not at me — ha! — at the lens. That's the one."
     "The shutter clicks."
     "The image is slightly imperfect, slightly overexposed, and completely alive."
     sim "There. That is the last photograph I will take in this room."
@@ -639,7 +652,7 @@ label sim_visit_07:
     "The room empties slowly, reluctant to leave."
     "Sim stands beside the last photograph, the strap still warm in my hand."
     sim "Go home. Rest. Tomorrow the city will still be here, and so will the photographs."
-    sim "I will be gone, but the seeing will not."
+    sim "I will be gone. Keep taking photographs."
     scene bg_campus_interior with walk_fade
     stop music fadeout 3.0
     return

@@ -103,7 +103,7 @@ label monday_asakusa:
     mc "How did you know?"
     hikari "You always pick the blue one."
     mc "I do not always pick the blue one."
-    hikari "You do. It's a whole personality."
+    hikari "You do. I like knowing things about you."
     "She starts walking before I can argue."
     hikari "We are going to Asakusa."
     mc "Asakusa."
@@ -283,7 +283,7 @@ label monday_asakusa:
 
     "I put a coin in the box. I shake it. A stick slides out with a number on it. I open the drawer and take the slip."
     "The paper is thin and warm from my hand. There is a character at the top and a column of smaller characters below it."
-    mc "I can't read it."
+    mc "I can't read most of it."
     hikari "Give it here."
     "She reads it. Her face does something complicated."
     if fortune_result == "good":
@@ -315,7 +315,7 @@ label monday_asakusa:
         "I fold the good fortune and put it in my pocket. I do not know why. It feels like something I should keep."
     else:
         "I tie the paper to the rack with the others. The knot is clumsy. A woman beside me does it in one motion."
-        mc "(The bad luck stays at the temple. That is what she said. I am not sure I believe it, but I do it anyway.)"
+        mc "(Something about the bad luck staying here. I copy what she did. I am not sure I believe it.)"
 
     scene bg_fortune_stall with walk_fade
     "We walk to the side of the temple where the crowd thins. Between the incense burner and the souvenir stalls, a woman has set up a folding table."
@@ -436,9 +436,9 @@ label monday_asakusa:
     elif fortune_result == "good":
         "The train doors open as we reach the platform. A woman gives up her seat for an old man. A child shares a bag of crackers with her mother."
         "Hikari buys me a drink from the vending machine. It is the blue one. I did not ask."
-        hikari "Don't make it a thing."
-        mc "I wasn't going to."
-        hikari "You were. You had the face."
+        hikari "I know which one you like."
+        mc "You didn't have to."
+        hikari "I wanted to. That's reason enough."
     else:
         "The train is exactly on time. It is always exactly on time. For a second that feels like a threat."
         "A man across the aisle is reading a newspaper with a magnifying glass. He turns the page at the same moment as a man two seats down."
@@ -495,7 +495,7 @@ label monday_asakusa:
             hikari "I told you. Private."
             mc "You made me show you mine."
             hikari "That was different. Yours was a public fortune."
-            mc "That is not a thing."
+            mc "That sounds like a rule you just made up."
             hikari "It is now."
             "She takes the slip out of her pocket and unfolds it. It says: a door will open from the inside."
             hikari "I don't know what it means."
