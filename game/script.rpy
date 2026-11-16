@@ -1472,12 +1472,16 @@ default hikari_run = False
 # cleared once she is home and has changed back.
 default hikari_kawaii = False
 
+# Box for the full, uncropped kawaii portrait. Raise the first number to make
+# her larger; the image keeps its aspect ratio inside the box.
+define hikari_kawaii_box = (576, 384)
+
 image side sister = At(ConditionSwitch(
-    # sister_kawaii.png is a 1536x1024 landscape group composition. Crop to a
-    # 2:3 portrait around her before sizing, or fit="contain" shrinks it to fit
-    # the box width and she appears tiny next to the other portraits.
+    # sister_kawaii.png is a 1536x1024 landscape composition (uncropped). At a
+    # 256-wide box it renders much shorter than the 2:3 portraits, so this one
+    # gets a wider box. Tune hikari_kawaii_box to make her sit like the others.
     "hikari_kawaii",
-    Transform("images/characters/sister_kawaii.png", crop=(450, 0, 683, 1024), xysize=(256, 384), fit="contain"),
+    Transform("images/characters/sister_kawaii.png", xysize=hikari_kawaii_box, fit="contain"),
     "hikari_run",
     Transform("images/characters/sister_run.png", xysize=(256, 384), fit="contain"),
     "sunday_at_home",
