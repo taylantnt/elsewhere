@@ -416,8 +416,14 @@ image bg_karaoke_outside = Transform("images/backgrounds/bg_karaoke_outside.png"
 image bg_karaoke_drink = Transform("images/backgrounds/bg_karaoke_drink.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_karaoke_room = Transform("images/backgrounds/bg_karaoke_room.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_ueno = bg_or_placeholder("bg_ueno", "#2c3025", "UENO PARK\nAPRIL")
+image bg_ueno_museum = bg_or_placeholder("bg_ueno_museum", "#3a3630", "TOKYO NATIONAL MUSEUM\nTHE STEPS")
 image bg_shibuya = bg_or_placeholder("bg_shibuya", "#25222f", "SHIBUYA\nSCRAMBLE CROSSING")
 image bg_shimokitazawa = bg_or_placeholder("bg_shimokitazawa", "#262321", "SHIMOKITAZAWA\nSMALL THEATERS")
+# The Shimokitazawa tour moves through a record shop, a live house and a coffee
+# shop before it ends. These are placeholders until those rooms get real art.
+image bg_record_shop = bg_or_placeholder("bg_record_shop", "#2b2622", "USED RECORDS\nCRATES")
+image bg_live_house = bg_or_placeholder("bg_live_house", "#201d24", "LIVE HOUSE\nTHE DOOR LIKE A FRIDGE")
+image bg_shimokita_cafe = bg_or_placeholder("bg_shimokita_cafe", "#2d2a25", "COFFEE\nSHIMOKITA")
 image bg_omotesando = bg_or_placeholder("bg_omotesando", "#252a26", "OMOTESANDO\nMEIJI SHRINE")
 
 # The two rooms the first free afternoon can end in. The ramen shop has art now

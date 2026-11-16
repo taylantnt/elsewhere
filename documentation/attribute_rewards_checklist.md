@@ -7,8 +7,8 @@ M01–M54, the Monday dinner still-full fork (M54A), the retired weekend-plan
 menu (M47), the retired camera menu (M31), the walk-alone still-full fork
 (M35A), M55–M57 for Tuesday's forced day, M57A for the forced-afternoon reward,
 and M58–M60 for the hub walks and generic hub day, plus the Days 8–12 beats and
-the three Message Hikari tours (M67 Yokohama, M68 Harajuku, M69 Kuru Fuku Neko)
-— including every answer with no attribute reward. The current
+the five Message Hikari tours (M67 Yokohama, M68 Harajuku, M69 Kuru Fuku Neko,
+M70 Ueno, M71 Shimokitazawa) — including every answer with no attribute reward. The current
 live reward groups are E02–E08 plus the archived E01 board; the five confidant
 chains' visits 2–8 are summarised in the **Confidant Visit Rewards** section
 below; non-dialogue rewards are listed separately. Unwritten future scenes and
@@ -1102,6 +1102,111 @@ Fifth menu, after the first song and the group-song conversation:
 
 Close: **Insight +0.1** (`hikari_tour_karaoke_complete`, `tiny`) — the tour
 unlocks the karaoke hub row and marks it visited on the phone map.
+
+### M70. Message Hikari — Ueno Park
+
+Source: [`hikari_tour_ueno`](../game/confidant_visits/hikari_tour.rpy).
+
+Context: the fourth Message Hikari tour. She offers a day of sitting rather than
+a list of sights; the blossoms last a week and will not wait. The tour teaches
+the park's history (Kan'ei-ji, the 1873 public park, the museum and zoo), hanami
+etiquette, and ends with her admitting she has not sat still in weeks.
+
+First menu, under the blossoms:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M70.01 | Ask why the museum is in a park. | Insight +0.2 | Pays via flag `ueno_tour_museum`; a place that keeps things. |
+| M70.02 | Ask about the cherry trees. | Insight +0.2 | Pays via flag `ueno_tour_trees`; a thousand trees and a week of them. |
+| M70.03 | Claim a place on a tarp. | Nerve +0.2 | Pays via flag `ueno_tour_tarp`; she takes off her shoes. |
+
+Second menu, at the old men's tarp:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M70.04 | Drink the tea. | Grace +0.2 | Pays via flag `ueno_tour_tea`; far too sweet and exactly right. |
+| M70.05 | Ask what happens if you refuse. | Insight +0.2 | Pays via flag `ueno_tour_refuse`; the offer matters more than the answer. |
+| M70.06 | Hold the cup without drinking. | Insight +0.2 | Pays via flag `ueno_tour_hold`; you may hold a thing and not use it. |
+
+Third menu, among the tarp and the cat:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M70.07 | Give the bun to the cat. | Grace +0.2 | Pays via flag `ueno_tour_cat`; she has standards. |
+| M70.08 | Ask why nobody photographs each other here. | Insight +0.2 | Pays via flag `ueno_tour_photos`; doing the thing, not reporting on it. |
+| M70.09 | Let the blossom land in the tea. | Grace +0.2 | Pays via flag `ueno_tour_petal`; watching it change is the point. |
+
+Fourth menu, on the museum steps:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M70.10 | Ask what she would keep. | Insight +0.2 | Pays via flag `ueno_tour_keep`; things last longer un-preserved. |
+| M70.11 | Say you would go in next time. | Nerve +0.2 | Pays via flag `ueno_tour_next_time`; the east room, quiet and empty. |
+| M70.12 | Sit on the steps for a minute. | Grace +0.2 | Pays via flag `ueno_tour_steps`; her mother brought her, the tea was too sweet. |
+
+Fifth menu, back at the tarp in the last light:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M70.13 | Stay until the light goes. | Grace +0.2 | Pays via flag `ueno_tour_stay`; the flowers are an excuse. |
+| M70.14 | Ask if she came here as a child. | Insight +0.2 | Pays via flag `ueno_tour_childhood`; she did not need to understand it. |
+| M70.15 | Say the day is almost over. | Nerve +0.2 | Pays via flag `ueno_tour_end`; neither of them moves. |
+
+Close: **Insight +0.1** (`hikari_tour_ueno_complete`, `tiny`) — the tour
+unlocks the Ueno hub row and marks it visited on the phone map.
+
+### M71. Message Hikari — Shimokitazawa
+
+Source: [`hikari_tour_shimokitazawa`](../game/confidant_visits/hikari_tour.rpy).
+
+Context: the fifth Message Hikari tour, and the one most about her. The hook is
+a record she almost bought at nineteen. The tour teaches the neighborhood's
+postwar cheap-rent theater history, used-record culture and live houses — and
+lets Hikari show the person she was before she became the one who knows where
+everything is.
+
+First menu, in the narrow street:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M71.01 | Ask why she knows this place so well. | Insight +0.2 | Pays via flag `shimokita_tour_before`; "before I decided what I was going to be." |
+| M71.02 | Ask about the little theaters. | Insight +0.2 | Pays via flag `shimokita_tour_theaters`; fifty seats, no committee. |
+| M71.03 | Follow the sound of a bass line. | Nerve +0.2 | Pays via flag `shimokita_tour_sequence`; there is always a sequence. |
+
+Second menu, in the used record shop:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M71.04 | Tell her to buy it. | Grace +0.2 | Pays via flag `shimokita_tour_buy_record`; she asks the clerk to play a track. |
+| M71.05 | Ask what the song sounds like. | Insight +0.2 | Pays via flag `shimokita_tour_sound`; a city at three in the morning. |
+| M71.06 | Recognize a song from an ad. | Nerve +0.2 | Pays via flag `shimokita_tour_ad_song`; that is how music gets into a city. |
+
+Third menu, outside the live house:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M71.07 | Go in anyway. | Nerve +0.2 | Pays via flag `shimokita_tour_go_in`; she says no and changes the subject. |
+| M71.08 | Ask about the singer. | Grace +0.2 | Pays via flag `shimokita_tour_singer`; "nobody remembers. That is what I am getting used to." |
+| M71.09 | Listen to the soundcheck. | Insight +0.2 | Pays via flag `shimokita_tour_soundcheck`; four bars with her eyes closed. |
+
+Fourth menu, in the coffee shop:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M71.10 | Ask if she would go back. | Insight +0.2 | Pays via flag `shimokita_tour_go_back`; standing at the back and listening. |
+| M71.11 | Tell her about Circle. | Grace +0.2 | Pays via flag `shimokita_tour_circle`; being seen and not being seen are both valid. |
+| M71.12 | Say nothing and drink the coffee. | Grace +0.2 | Pays via flag `shimokita_tour_silence`; silence is a place she can stand. |
+
+Fifth menu, walking back to the station:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M71.13 | Ask which rule she likes best. | Insight +0.2 | Pays via flag `shimokita_tour_rule`; buy it the second time. |
+| M71.14 | Say you liked this more than Harajuku. | Nerve +0.2 | Pays via flag `shimokita_tour_order`; she planned the order of the tours. |
+| M71.15 | Ask her to come back with you next time. | Grace +0.2 | Pays via flag `shimokita_tour_next_time`; "ask me again when you have been without me." |
+
+Close: **Insight +0.1** (`hikari_tour_shimokitazawa_complete`, `tiny`) — the tour
+unlocks the Shimokitazawa hub row and marks it visited on the phone map.
 
 ## Confidant Visit Rewards
 

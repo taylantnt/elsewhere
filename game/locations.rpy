@@ -162,9 +162,9 @@ init python:
 
     # Only the tours with a written scene are offered. Add a place id here when
     # its label is ready; until then Message Hikari will not send the player into
-    # a placeholder. Yokohama, Harajuku, and Kuru Fuku Neko (karaoke) are written.
-    # The picker chooses randomly among whatever is still locked and written.
-    hikari_tour_written = ["yokohama", "harajuku", "karaoke"]
+    # a placeholder. Yokohama, Harajuku, Kuru Fuku Neko, Ueno and Shimokitazawa
+    # are written. The picker chooses randomly among whatever is still locked.
+    hikari_tour_written = ["yokohama", "harajuku", "karaoke", "ueno", "shimokitazawa"]
 
     def destination_unlocked(place):
         return place in store.hikari_tour_unlocked
@@ -178,6 +178,11 @@ init python:
     def unlock_hikari_tour_destination(place):
         if place not in store.hikari_tour_unlocked:
             store.hikari_tour_unlocked.append(place)
+
+    # Console test helper: mark every written tour except one as already seen,
+    # so the picker is forced to offer the one under test.
+    def force_hikari_tour_spot(spot):
+        store.hikari_tour_unlocked = [p for p in store.hikari_tour_written if p != spot]
 
     def confidant_cap():
         # If the table ever runs out of acts, the story is open.

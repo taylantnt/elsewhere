@@ -496,27 +496,57 @@ label city_row_yokohama:
 
 
 label city_row_ueno:
+    $ phone_map_visit("ueno")
     scene bg_ueno with walk_fade
     "Ueno Park in April is a picnic that the whole city has agreed to attend."
     "Blue tarps. Cardboard. Salarymen in suits sitting on the ground with their ties loosened. A group of old men with a bottle and a radio."
     "The blossoms are already falling. The ground is pink in the places where people have not walked."
     mc "(Hanami. The flowers are an excuse. The sitting is the point.)"
+    mc "(I know what to do with a cup now. I know not to photograph the people sleeping. I know the museum is not a door I have to open — today, maybe I will.)"
 
     menu:
         "Sit under the blossoms and watch.":
-            "I find a patch of grass and sit. Nobody asks me to move. A man nearby is asleep with his mouth open. His friend is taking a photo."
+            "I find a patch of grass and sit. Nobody asks me to move. A man nearby is asleep with his mouth open. This time I do not raise my phone."
             "The petals come down slowly, like the park is being paid in small coins."
+            "A week. That is all this lasts. I think that is why everybody is here."
             $ reward_attributes_once("city_ueno_watch", [("insight", "micro")], show="auto")
         "Accept the cup from the old men.":
-            "One of the old men holds up a paper cup and says something I do not catch. The others make room."
+            "One of the old men holds up a paper cup. I take it with both hands and say いただきます the way she taught me."
             "The sake is warm and terrible. I drink it. They laugh and pour another."
-            mc "(I do not understand half of what they say. I understand all of it.)"
+            mc "(The offer matters more than the answer. I finally know what that means.)"
             $ reward_attributes_once("city_ueno_cup", [("nerve", "micro")], show="auto")
         "Walk to the museum and don't go in.":
             "I walk to the museum steps and stop. The building is huge and quiet. The people going in have the faces of people who have decided to learn something."
             "I sit on the steps instead. A guard watches me and decides I am harmless."
             mc "(Sometimes the building is enough. Sometimes the deciding is the thing.)"
             $ reward_attributes_once("city_ueno_museum", [("grace", "micro")], show="auto")
+        "Keep my phone in my pocket all afternoon.":
+            "A salaryman asleep with his hat over his face. A child sharing a bun. A cat with somewhere to be."
+            "I look at all of it and put the phone away again before I can decide to document it."
+            mc "(This is one of the few places where none of it has to become a photograph.)"
+            $ reward_attributes_once("city_ueno_no_photo", [("nerve", "micro")], show="auto")
+
+    "I stay until the light goes. The radio switches to a weather report. Nobody listens to that either."
+
+    scene bg_ueno_museum with walk_fade
+    "On the way out I go up the museum steps again. This time I go in."
+    "There are ten thousand things inside and I understand almost none of them. I stay for an hour anyway."
+    mc "(She said she would explain one of them badly. I am glad she did not come. I want to be bad at this on my own.)"
+
+    menu:
+        "Find the east room.":
+            "I find the east room. It is quiet and almost empty, exactly as she said."
+            "There is a bowl in a case that is older than everything I know. I stand in front of it for a long time."
+            mc "(I would not have known to look for this. She told me and I came anyway. That is what she is for.)"
+            $ reward_attributes_once("city_ueno_east_room", [("insight", "micro")], show="auto")
+        "Buy a postcard and write nothing on it.":
+            "I buy a postcard of the museum steps. I do not write on it. I do not know who I would send it to."
+            "I put it in my pocket. That is enough of a decision for today."
+            $ reward_attributes_once("city_ueno_postcard", [("grace", "micro")], show="auto")
+        "Leave before I understand anything.":
+            "I walk out after twenty minutes. Understanding can wait."
+            "Outside, the blossoms are still coming down over the park that was a temple and is now everybody's."
+            $ reward_attributes_once("city_ueno_leave", [("nerve", "micro")], show="auto")
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
@@ -552,30 +582,63 @@ label city_row_shibuya:
 
 
 label city_row_shimokitazawa:
+    $ phone_map_visit("shimokitazawa")
     scene bg_shimokitazawa with walk_fade
-    "Shimokitazawa is what Harajuku would be if it stopped performing."
+    "I take the small gate out of the station. The cat is still in the gap between the bicycle shop and the wall."
+    "He looks at me for a long moment and goes back to sleep. I decide that counts as recognition."
     "Narrow streets. Vintage shops. A live house with a hand-painted sign and a door that looks like a fridge."
     "Nobody is dressed for a photograph. Everybody is dressed for themselves, which is a different kind of effort."
     mc "(It is small. It is slow. It is the first place in this city that has felt like a neighborhood.)"
 
     menu:
         "Buy a used record.":
-            "The record shop is the size of a closet and smells of cardboard. I flip through the stacks until I find something with a cover I like."
+            scene bg_record_shop with walk_fade
+            "The record shop is the size of a closet and smells of cardboard. I go to the third crate, because she said the good things sink."
+            "I flip through it and find a faded sleeve with a street at night on the cover."
             $ spend_money(1200)
             "The owner puts it in a paper sleeve and says something about the band. I nod. I will look them up later."
             mc "(I do not have a record player. That is a problem for future me.)"
             $ reward_attributes_once("city_shimokita_record", [("insight", "micro")], show="auto")
         "Go into a live house.":
+            scene bg_live_house with walk_fade
+            "I push the steel door. It really is like a fridge, and the bass comes out in a cold wave."
             "The band is loud and the room is small and the ceiling is low. Nobody is filming. Everybody is listening."
             $ spend_money(1500)
             "The singer says something between songs that makes the room laugh. I do not catch it. I laugh anyway."
             mc "(For one hour I am not a foreigner. I am a person in a room with a band.)"
             $ reward_attributes_once("city_shimokita_live", [("nerve", "micro")], show="auto")
         "Sit in a coffee shop and listen.":
-            "The coffee shop has six seats and one table. The owner makes each cup by hand. The radio is playing something old."
+            scene bg_shimokita_cafe with walk_fade
+            "The coffee shop has six seats and one table. The owner makes each cup by hand and does not ask what I want. He remembers nothing about me, which is fine."
             "Two women at the next table are talking about a friend who moved to Osaka. A man is reading a book with a cracked spine."
             mc "(Nobody is in a hurry. Nobody is taking a photo. This is what a Tuesday feels like when it is allowed to be a Tuesday.)"
             $ reward_attributes_once("city_shimokita_coffee", [("grace", "micro")], show="auto")
+        "Walk the little theaters without going in.":
+            "A hand-painted sign. A doorway the width of a person. A stack of folded chairs behind a glass door with a hand-written schedule."
+            "Fifty seats, no committee, no application. Somebody wrote a thing and put it on in a room this size."
+            mc "(She said that is how the best places happen. I am starting to see what she meant.)"
+            $ reward_attributes_once("city_shimokita_theaters", [("insight", "micro")], show="auto")
+
+    "I walk back toward the station the long way, past shutters coming down and a guitar case leaning against a closed door."
+    mc "(She wanted me to see a place where nobody has to perform. I think she was showing herself the way back to it too.)"
+
+    menu:
+        "Stand outside the live house.":
+            scene bg_live_house with walk_fade
+            "I do not go in this time. I stand at the door through soundcheck and feel the bass in my chest."
+            "A girl comes out for air, nods at me like I belong there, and goes back in."
+            mc "(That is enough. I do not need to be inside to have been here.)"
+            $ reward_attributes_once("city_shimokita_door", [("nerve", "micro")], show="auto")
+        "Go back to the record shop.":
+            scene bg_record_shop with walk_fade
+            "The third crate. I check whether the street-at-night record is still there."
+            "It is not. Somebody bought it while I was walking."
+            mc "(I am happy for whoever did. That is a new feeling about a record I do not own.)"
+            $ reward_attributes_once("city_shimokita_sold", [("grace", "micro")], show="auto")
+        "Just walk the alley with the cat.":
+            "The cat has moved to a warmer patch of wall. I sit on the step beside him for a minute."
+            "He does not look at me. That is the whole welcome and it is enough."
+            $ reward_attributes_once("city_shimokita_cat", [("insight", "micro")], show="auto")
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
