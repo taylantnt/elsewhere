@@ -411,6 +411,10 @@ image bg_gyoza_dishes = Transform("images/backgrounds/bg_gyoza.png", xysize=(con
 # itself is auto-defined from bg_harajuku.png; these two need explicit sizing.
 image bg_harajuku_candy = Transform("images/backgrounds/bg_harajuku_candy.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_harajuku_clothes = Transform("images/backgrounds/bg_harajuku_clothes.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+# Kuru Fuku Neko: the street-facing sign, the drink bar, and the room itself.
+image bg_karaoke_outside = Transform("images/backgrounds/bg_karaoke_outside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_karaoke_drink = Transform("images/backgrounds/bg_karaoke_drink.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_karaoke_room = Transform("images/backgrounds/bg_karaoke_room.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_ueno = bg_or_placeholder("bg_ueno", "#2c3025", "UENO PARK\nAPRIL")
 image bg_shibuya = bg_or_placeholder("bg_shibuya", "#25222f", "SHIBUYA\nSCRAMBLE CROSSING")
 image bg_shimokitazawa = bg_or_placeholder("bg_shimokitazawa", "#262321", "SHIMOKITAZAWA\nSMALL THEATERS")

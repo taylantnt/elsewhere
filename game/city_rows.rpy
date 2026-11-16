@@ -141,27 +141,57 @@ label city_row_harajuku:
 
 
 label city_row_karaoke:
+    $ phone_map_visit("karaoke")
+    scene bg_karaoke_outside with walk_fade
+    "The cat over the door is still wearing its red bib. I go past it without stopping this time."
+    "I know where the drink bar is. I know which corridor is least likely to have somebody practising the same two lines."
+    mc "(The first time, Hikari showed me the shape of this place. This time I have a room booked for one.)"
+
+    scene bg_karaoke_drink with walk_fade
+    "I get water first. That part I learned."
+    "Then I stand in front of the soft-serve machine for a full minute, which is a decision I do not need to make."
+
     scene bg_karaoke_room with walk_fade
-    "The karaoke box is a small room with a big screen and a machine that does not judge."
-    "I am alone. The room is built for six. That is the first thing I notice."
-    mc "(One hour. Nobody knows I am here. That is either freedom or the beginning of a bad habit.)"
+    "The room is built for six. It is very good at pretending I am not alone in it."
+    "On the tablet I switch the language to English, then switch it back. I leave it in Japanese."
+    "There is a setting for ローマ字 — rōmaji. The lyrics come up in roman letters, which I can read almost as fast as I can sing them."
+    mc "(Almost being the important word.)"
 
     menu:
-        "Sing the airport song with words I made up and mean every one.":
-            "I pick a song I know from the airport playlist. I do not know the words. I sing them anyway."
-            "The machine gives me a score. I am not going to say what it was."
-            mc "(The room does not laugh. The room has heard worse.)"
+        "Pick a Japanese song in rōmaji.":
+            mc "This one. I can read the letters, which is not the same as knowing the words."
+            "I add it. The first line comes up in neat roman letters. I sing them exactly as written, with the confidence of somebody who does not understand what he is saying."
+            "I am terrible. The machine gives me a score. I am not going to say what it was."
+            mc "(But I finished the song. That is mine.)"
+            $ reward_attributes_once("city_karaoke_romaji", [("nerve", "micro")], show="auto")
+        "Sing the airport song with words I made up.":
+            "I pick the English song I know from the airport playlist. I do not know all the words. I sing them anyway."
+            "The room does not laugh. The room has heard worse."
             $ reward_attributes_once("city_karaoke_sing", [("nerve", "micro")], show="auto")
-        "Sing the most earnest love song in the book. Straight.":
-            "I pick the most sentimental song on the list and sing it straight."
-            "Halfway through I can hear her voice in my head: you are enjoying this too much."
-            mc "(I am. That is the point.)"
-            $ reward_attributes_once("city_karaoke_hikari", [("grace", "micro")], show="auto")
-        "Sit and listen to the room next door.":
+        "Listen to the room next door first.":
             "The room next door is singing something old and slow. Through the wall it sounds like a hymn."
-            "I let the timer run down without singing anything."
-            mc "(One hour of not performing. It counts.)"
+            "I wait until they finish. Then I take the cheering stick and hit the table once, softly, for nobody in particular."
+            mc "(That is for my own singing. She would understand.)"
             $ reward_attributes_once("city_karaoke_listen", [("insight", "micro")], show="auto")
+
+    "I try a second song. This is the one where rōmaji stops being a crutch and starts being a trap — the letters run together at speed and I am chasing them."
+    "Somewhere in the second verse I stop reading and just make the sounds. It is not the song. It is close enough to the song."
+    mc "(Hikari said you get it by singing until one day you do it without thinking. I am not there. I am somewhere before there.)"
+
+    menu:
+        "Try the chorus again.":
+            "I queue the same song a second time. The second chorus is better than the first. The third is almost a song."
+            mc "(Somebody in the next room is going to hear this and think a person is learning something in here. They would be right.)"
+            $ reward_attributes_once("city_karaoke_again", [("nerve", "micro")], show="auto")
+        "Read the room from the corridor.":
+            "On the way back to the bar I stand outside a room for ten seconds and listen."
+            "A group, laughing, halfway through a chorus they all know. Somebody off-key and entirely committed."
+            mc "(I can tell what this room is doing. I told her I could not. I can.)"
+            $ reward_attributes_once("city_karaoke_read_room", [("insight", "micro")], show="auto")
+        "Leave a song in the queue for next time.":
+            "Before I go I add one more song. It is the one she sang in the room with me — the one I said I did not know."
+            "I do not queue it for myself. I queue it for the next time somebody is in here with me."
+            $ reward_attributes_once("city_karaoke_queue", [("grace", "micro")], show="auto")
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()

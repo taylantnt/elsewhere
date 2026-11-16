@@ -162,9 +162,9 @@ init python:
 
     # Only the tours with a written scene are offered. Add a place id here when
     # its label is ready; until then Message Hikari will not send the player into
-    # a placeholder. Yokohama was the first; Harajuku is the second. The picker
-    # chooses randomly among whatever is still locked and written.
-    hikari_tour_written = ["yokohama", "harajuku"]
+    # a placeholder. Yokohama, Harajuku, and Kuru Fuku Neko (karaoke) are written.
+    # The picker chooses randomly among whatever is still locked and written.
+    hikari_tour_written = ["yokohama", "harajuku", "karaoke"]
 
     def destination_unlocked(place):
         return place in store.hikari_tour_unlocked

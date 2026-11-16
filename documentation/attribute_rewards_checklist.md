@@ -7,8 +7,8 @@ M01–M54, the Monday dinner still-full fork (M54A), the retired weekend-plan
 menu (M47), the retired camera menu (M31), the walk-alone still-full fork
 (M35A), M55–M57 for Tuesday's forced day, M57A for the forced-afternoon reward,
 and M58–M60 for the hub walks and generic hub day, plus the Days 8–12 beats and
-the two Message Hikari tours (M67 Yokohama, M68 Harajuku) — including every
-answer with no attribute reward. The current
+the three Message Hikari tours (M67 Yokohama, M68 Harajuku, M69 Kuru Fuku Neko)
+— including every answer with no attribute reward. The current
 live reward groups are E02–E08 plus the archived E01 board; the five confidant
 chains' visits 2–8 are summarised in the **Confidant Visit Rewards** section
 below; non-dialogue rewards are listed separately. Unwritten future scenes and
@@ -1050,6 +1050,58 @@ Sixth menu, walking back toward the station:
 
 Close: **Insight +0.1** (`hikari_tour_harajuku_complete`, `tiny`) — the tour
 unlocks the Harajuku hub row and marks it visited on the phone map.
+
+### M69. Message Hikari — Kuru Fuku Neko (karaoke)
+
+Source: [`hikari_tour_karaoke`](../game/confidant_visits/hikari_tour.rpy).
+
+Context: the third Message Hikari tour. She runs late on purpose and frames the
+outing as letting something out with him, not as a performance. It introduces
+the karaoke box, its culture and costs, the drink bar, and the art of choosing a
+group song, then unlocks the karaoke hub row for solo visits.
+
+First menu, outside the neon sign:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M69.01 | Ask how much an hour costs. | Insight +0.2 | Pays via flag `karaoke_tour_cost`; go when nobody else wants to. |
+| M69.02 | Ask why she picked this place. | Grace +0.2 | Pays via flag `karaoke_tour_why`; the loudest place where nobody can hear him. |
+| M69.03 | Put on the cat ears. | Nerve +0.2 | Pays via flag `karaoke_tour_costume`; she takes a pair too and does not explain. |
+
+Second menu, at the drink bar:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M69.04 | Get the soft serve. | Grace +0.2 | Pays via flag `karaoke_tour_softserve`; "very easy to please. That is not an insult." |
+| M69.05 | Ask about the free-flow drinks. | Insight +0.2 | Pays via flag `karaoke_tour_freeflow`; 飲み放題, and the staff keep bringing water. |
+| M69.06 | Just take the water she handed me. | Grace +0.2 | Pays via flag `karaoke_tour_water`; she nods like he answered correctly. |
+
+Third menu, with the tablet in the room:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M69.07 | Ask her to show me the English support. | Insight +0.2 | Pays via flag `karaoke_tour_tablet`; the queue does not care if he switches mid-song. |
+| M69.08 | Pick an English song. | Nerve +0.2 | Pays via flag `karaoke_tour_pick_song`; number 3 in the queue. |
+| M69.09 | Let her add the first song. | Grace +0.2 | Pays via flag `karaoke_tour_let_choose`; "the safest thing you have said all evening." |
+
+Fourth menu, after she adds her own songs:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M69.10 | Ask why these songs matter to her. | Insight +0.2 | Pays via flag `karaoke_tour_her_reasons`; mother, a summer, and one that is stupid. |
+| M69.11 | Join her on one. | Nerve +0.2 | Pays via flag `karaoke_tour_join`; he comes in two beats late and she does not stop. |
+| M69.12 | Say nothing and listen to the preview. | Grace +0.2 | Pays via flag `karaoke_tour_listen_her`; "I am glad you heard it." |
+
+Fifth menu, after the first song and the group-song conversation:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M69.13 | Ask how you choose the right song for a group. | Insight +0.2 | Pays via flag `karaoke_tour_group_song`; read the room, let everybody do something. |
+| M69.14 | Tell her the room feels different now. | Grace +0.2 | Pays via flag `karaoke_tour_closer`; he listened to her instead of himself. |
+| M69.15 | Admit I still do not understand. | Nerve +0.2 | Pays via flag `karaoke_tour_over_time`; "one day you will pick one for me." |
+
+Close: **Insight +0.1** (`hikari_tour_karaoke_complete`, `tiny`) — the tour
+unlocks the karaoke hub row and marks it visited on the phone map.
 
 ## Confidant Visit Rewards
 

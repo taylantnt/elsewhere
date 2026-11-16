@@ -110,6 +110,42 @@ label hikari_tour:
                 "Do not dress normally. I am warning you now.",
             ]},
         ])
+    elif tour_spot == "karaoke":
+        # The sing is the hook, but she frames it as letting something out and
+        # as something to do with him, not as a performance. She runs late on
+        # purpose and gives him a reason to accept before he can refuse.
+        $ run_chat("hikari", [
+            {"options": [
+                {"label": "Hey Hikari. Are you free after class?",
+                 "send": "Hey Hikari. Are you free after class?",
+                 "them": [
+                     "I have to stay after seminar. Something I promised to finish.",
+                     "Two hours, maybe. Then I am free.",
+                 ]},
+            ]},
+            {"them": [
+                "I hope you like singing.",
+                "Or — better — that you like letting things out. I need to let something out tonight.",
+                "There is a place I go. Kuru Fuku Neko.",
+            ], "options": [
+                {"label": "Singing? In front of people?",
+                 "send": "Singing? In front of people?",
+                 "them": [
+                     "Private rooms. Nobody hears you except the person you came with.",
+                     "That is the whole point.",
+                 ]},
+                {"label": "I'm shy. I'm not sure.",
+                 "send": "I'm shy. I'm not sure.",
+                 "them": [
+                     "I know. That is why I am asking you and not somebody else.",
+                     "You can be shy in a room with me.",
+                 ]},
+            ]},
+            {"them": [
+                "Meet me outside. I will explain everything there.",
+                "Do not worry about being good. Nobody is good. That is why the rooms have walls.",
+            ]},
+        ])
     else:
         $ run_chat("hikari", [
             {"options": [
@@ -142,6 +178,10 @@ label hikari_tour:
         mc "Why not?"
         hikari "Because the first shop is for tourists. Rule two. If someone shouts at you, nod. Do not apologise."
         mc "(This is either a tour or a warning.)"
+    elif tour_spot == "karaoke":
+        hikari "Tonight we sing. That is all I am telling you."
+        mc "What if I am terrible?"
+        hikari "Then you will be terrible with me in the room. That is better than being terrible alone."
     elif tour_spot == "harajuku":
         hikari "Rule one. We look at everything. We buy nothing until the third shop."
         mc "Why the third?"
@@ -301,7 +341,7 @@ label hikari_tour_harajuku:
 
     menu:
         "Say it is too cute to eat.":
-            mc "可愛すぎる. It is too cute. I cannot eat it."
+            mc "可愛. It is too cute. I cannot eat it."
             hikari "That is also a correct use of the word."
             mc "I ate it anyway."
             hikari "Of course you did. It was made to be eaten."
@@ -376,16 +416,204 @@ label hikari_tour_harajuku:
 
 
 label hikari_tour_karaoke:
+    scene bg_karaoke_outside with walk_fade
+    "Kuru Fuku Neko is three floors of neon above a closed bakery, with a cat over the door wearing a small red bib."
+    "The sign has a line of Japanese under it that Hikari is reading with her mouth slightly open."
+    hikari "来る福猫. The cat that brings luck when it comes. A verb, a blessing, and a cat. That is the whole name."
+    mc "It is a very good name."
+    hikari "I know. I am glad you said that first."
+
+    "She does not go in yet. She turns to me on the pavement like this is the important part of the tour."
+    hikari "Karaoke is not a stage. That is the thing people get wrong. You rent a room — a box — by the hour, and the room is yours."
+    hikari "Nobody is in it with you unless you ask them in. The machine does not judge, the walls do not judge, and the score is a suggestion."
+    mc "So it is for people who cannot sing."
+    hikari "It is for people who cannot sing and do it anyway. That is a different thing."
+    hikari "You pay for the room, and then for what you drink. Or you take 飲み放題 — nomihōdai — and the drinks keep coming for a fixed price."
+    mc "That sounds dangerous."
+    hikari "It is. That is why they also give you ice cream. Sober people with soft serve are harder to lose."
+    "She points through the glass. A rack of cat ears, plastic glasses, and a hat with a propeller on it."
+    hikari "Costumes. Nobody wears them ironically. You put them on and suddenly you are allowed to be loud."
+    "A shelf beside it holds maracas, a tambourine, and a stick with a padded end."
+    hikari "And those. 応援. Cheering. You hit the stick on the table when somebody is singing well."
+    mc "You are telling me the room has a built-in audience."
+    hikari "I am telling you the room has a built-in audience that you hit with a stick."
+
+    menu:
+        "Ask how much an hour costs.":
+            mc "How much is an hour, actually?"
+            hikari "Depends on the room and the day. Weeknights are cheaper. There is a board inside."
+            hikari "The trick is to go when nobody else wants to. That is when a place is really yours."
+            mc "(She has a theory about everything. Most of them are about timing.)"
+            $ reward_attributes_once("karaoke_tour_cost", [("insight", "micro")], show="auto")
+        "Ask why she picked this place.":
+            mc "Why here? Of all the places you could show me."
+            hikari "Because you said you were shy, and this is the loudest place in the city where nobody can hear you."
+            hikari "I thought you might like the contradiction."
+            mc "(I do. I do not know how to say that yet.)"
+            $ reward_attributes_once("karaoke_tour_why", [("grace", "micro")], show="auto")
+        "Put on the cat ears.":
+            "I take a pair of cat ears off the rack and put them on. They are ridiculous. They are also extremely light."
+            hikari "..."
+            mc "What?"
+            hikari "Nothing. You just became about four years younger and I am not sure how to feel about it."
+            "She takes a pair for herself. She does not explain."
+            $ reward_attributes_once("karaoke_tour_costume", [("nerve", "micro")], show="auto")
+
+    "We go in. The corridor is narrower than the street and twice as loud."
+    "A woman's voice comes through one wall, doing a ballad with her whole life in it. Through the next, a group is laughing and losing the chorus on purpose."
+    "Further down, somebody is singing the same two lines over and over, stopping each time at exactly the same word."
+    hikari "Listen. That one from the first room — everybody knows it. It is from a drama. You have heard it, even if you do not know you have."
+    mc "And the two lines?"
+    hikari "Somebody is practising. That is the bravest room in this building."
+    "She hums a few bars of something as we walk. I do not recognize it. She stops when she notices me listening."
+    hikari "You can tell what a room is doing from the song. That is a real skill."
+    mc "I cannot tell anything."
+    hikari "You will. You already know the difference between the laughing room and the practising room. That is most of it."
+
+    scene bg_karaoke_drink with walk_fade
+    "The drink bar is a wall of taps and a row of machines that dispense colours I have no names for."
+    "There is a soft-serve machine at the end, and a fridge full of things with cartoon cats on them."
+    hikari "Before anything else — water. Singing is exercise and nobody tells you that."
+    "She takes two cups and fills one, then the other. She puts the second in my hand like it is a decision she has already made for both of us."
+    hikari "Then whatever you want. The soft serve is free here. I am telling you because you will not find out otherwise."
+
+    menu:
+        "Get the soft serve.":
+            mc "I am getting the soft serve."
+            hikari "Of course you are."
+            "It comes out in a perfect spiral and tastes like vanilla and cold air. Hikari watches me eat it with an expression I cannot read."
+            hikari "You are very easy to please. That is not an insult."
+            $ reward_attributes_once("karaoke_tour_softserve", [("grace", "micro")], show="auto")
+        "Ask about the free-flow drinks.":
+            mc "How does the all-you-can-drink actually work?"
+            hikari "You pay for a block of time and you order from this list. Alcohol, tea, soda — all of it. They bring it to the room."
+            mc "And people manage that responsibly?"
+            hikari "Some do. The staff keep bringing water after a while. That is their whole job, I think."
+            $ reward_attributes_once("karaoke_tour_freeflow", [("insight", "micro")], show="auto")
+        "Just take the water she handed me.":
+            mc "I will just have the water."
+            "She nods once, like I answered a question correctly."
+            hikari "Good. Then we are going to need it."
+            $ reward_attributes_once("karaoke_tour_water", [("grace", "micro")], show="auto")
+
     scene bg_karaoke_room with walk_fade
-    "The karaoke box is smaller than I expected and louder than the street outside."
-    hikari "One hour. You pick the first song. I'm judging."
-    mc "You said you were showing me around."
-    hikari "This is the tour. The room is the place."
+    "The room is smaller than the lobby and louder than both of us together, even before either of us has sung a note."
+    "A tablet sits on the table beside a remote, a box of tissues, and the padded cheering stick."
+    hikari "This is the remote, and this is the tablet. You search by title, by artist, or by the first letters."
+    "She taps the screen. A menu opens in Japanese, then she touches a small flag in the corner and the whole thing changes to English."
+    hikari "See? English support. Nobody here will notice. Half the tourists in this city use it."
+    mc "It even has the letters spelled out."
+    hikari "That is for people like you. And for people like me when I am too tired to read fast."
+
+    menu:
+        "Ask her to show me the English support.":
+            mc "Show me where the language changes."
+            "She taps the flag, then back again, then forward. The buttons keep their places. Only the words move."
+            hikari "You can switch it mid-song if you want. The queue does not care."
+            mc "(A machine that forgives me for not reading fast. A small miracle.)"
+            $ reward_attributes_once("karaoke_tour_tablet", [("insight", "micro")], show="auto")
+        "Pick an English song.":
+            mc "I am picking this one. It is the only one I know all the words to."
+            "I add it to the queue. The tablet says the song title, then a number: 3."
+            hikari "Three. That means we sing after the people in the next room finish their ballad."
+            mc "There is a next room in my song?"
+            hikari "There is a queue. That is different."
+            $ reward_attributes_once("karaoke_tour_pick_song", [("nerve", "micro")], show="auto")
+        "Let her add the first song.":
+            mc "You choose. I will follow."
+            hikari "That is the safest thing you have said all evening."
+            "She adds something with a title I cannot read. The tablet shows 1."
+            $ reward_attributes_once("karaoke_tour_let_choose", [("grace", "micro")], show="auto")
+
+    "She adds three more songs while I am still looking at the English menu."
+    "I do not recognize any of the titles. Then the first few notes come through the speakers on the tablet preview, and I straighten in my seat."
+    mc "I know this one."
+    hikari "Of course you do. You have heard it in every shop you have walked past since you landed."
+    mc "I thought it was elevator music."
+    hikari "It is a love song. A very famous one. The whole country knows the chorus. You know it too — you just have never had a reason to say it out loud."
+    "She adds one more. This one I recognize from a commercial on the train. I say nothing. She notices."
+    hikari "You are allowed to know things from advertisements. That is how a city teaches you its songs."
+
+    menu:
+        "Ask why these songs matter to her.":
+            mc "Why these ones? They are not the ones you would expect."
+            hikari "My mother sang the first one. The second one was playing the summer I decided I wanted to leave this town."
+            hikari "And the last one is stupid. I like it because it is stupid."
+            mc "(Three reasons. None of them about being good at singing.)"
+            $ reward_attributes_once("karaoke_tour_her_reasons", [("insight", "micro")], show="auto")
+        "Join her on one.":
+            mc "If you sing that one, I will sing the chorus. Badly."
+            hikari "That is the first brave thing you have said tonight."
+            "She does not wait for the tablet. She starts. I come in two beats late and miss the first word. She does not stop."
+            $ reward_attributes_once("karaoke_tour_join", [("nerve", "micro")], show="auto")
+        "Say nothing and listen to the preview.":
+            "I let the next song play through the small speaker instead of skipping it."
+            "Hikari watches me for a second, then looks away. The room gets quieter, which is strange, because neither of us has sung yet."
+            hikari "You do not have to say anything about it. I am glad you heard it."
+            $ reward_attributes_once("karaoke_tour_listen_her", [("grace", "micro")], show="auto")
+
+    "The first song is mine. I am terrible."
+    "I know I am terrible because Hikari is not pretending otherwise — she is sitting on the table with the cheering stick across her knees, waiting for the chorus."
+    "When it comes, she hits the stick against the table exactly once, very hard, and yells something in Japanese that I do not understand."
+    "I laugh in the middle of the line and lose the rest of the words. She keeps singing."
+    hikari "That is the first one. The first one is never the good one. It is the one where you find out what your voice does."
+    mc "And what does mine do?"
+    hikari "It surprises you. That is all. Do it again."
+
+    "We do it again. I am less terrible. This is a measurable improvement and I decide to be proud of it."
+    "Then she sings her song, and I understand something I did not know I was missing: the reason people do this with other people in the room."
+
+    menu:
+        "Ask her how you choose the right song for a group.":
+            mc "How do you know which song to pick when other people are here?"
+            hikari "You read the room. You pick something everybody can join, something that lifts the energy instead of spending it."
+            hikari "A good group song is not the one that shows what you can do. It is the one that lets everybody do something."
+            mc "How do you learn that?"
+            hikari "You cannot. You just keep singing until one day you notice you did it without thinking."
+            $ reward_attributes_once("karaoke_tour_group_song", [("insight", "micro")], show="auto")
+        "Tell her the room feels different now.":
+            mc "The room feels different than it did ten minutes ago."
+            hikari "That is because you stopped listening to yourself sing and started listening to me."
+            mc "Is that the trick?"
+            hikari "That is most of it. The rest is the stick."
+            "She hands me the cheering stick. I do not use it. I just hold it."
+            $ reward_attributes_once("karaoke_tour_closer", [("grace", "micro")], show="auto")
+        "Admit I still do not understand.":
+            mc "I still do not know how you choose. I would pick the same song every time."
+            hikari "I know. That is why I keep adding songs you have heard before."
+            hikari "One day you will pick one for me. I will be able to tell from the first two notes."
+            $ reward_attributes_once("karaoke_tour_over_time", [("nerve", "micro")], show="auto")
+
+    "The last hour goes faster than the first. At some point the cat ears stop feeling ridiculous."
+    "On the way out, the corridor is quieter. Somebody in the last room is singing very softly to nobody in particular."
+    hikari "See? You can tell what that room is doing."
+    mc "Somebody is tired."
+    hikari "Somebody is tired. You are learning."
+
     $ unlock_hikari_tour_destination("karaoke")
-    "She does not sing until the last ten minutes. Then she does, and she is better than she let on."
-    mc "(I know where the place is now. I know what the room sounds like.)"
+    $ phone_map_visit("karaoke")
+    $ renpy.notify("Kuru Fuku Neko is now on your map.")
+    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    hikari "Next time, go without me."
+    mc "You are not coming?"
+    hikari "I have shown you. That was the point."
+    mc "(She says it lightly. It does not land lightly.)"
+    hikari "And if you go — take the water. And pick a song I know."
+    $ reward_attributes_once("hikari_tour_karaoke_complete", [("insight", "tiny")], show="auto")
+
+    scene bg_train_interior with walk_fade
+    "The train home is warm and half empty. Hikari falls asleep against the window with her jacket folded under her head."
+    "There is a paper cup from the drink bar balanced on her knee. It does not spill."
+    mc "(She brought me somewhere loud so I could finally hear her. I think that was the point.)"
+
     scene bg_home_exterior_night with walk_fade
     $ night_street()
+    hikari "We're home."
+    mc "We're home."
+    hikari "You're welcome."
+    mc "I didn't say thank you."
+    hikari "You were going to."
+    "She goes inside before I can prove her right."
     return
 
 
@@ -830,12 +1058,13 @@ label hikari_tour_omotesando:
 
 ## --- STANDALONE TEST LABEL ----------------------------------------------------
 ##
-## Open the console with Shift+O and type either:
+## Open the console with Shift+O and type one of:
 ##   jump test_hikari_tour          - the Yokohama tour
 ##   jump test_hikari_tour_harajuku - the Harajuku tour
+##   jump test_hikari_tour_karaoke  - the Kuru Fuku Neko karaoke tour
 ##
 ## These play the whole tour without having to reach a hub day first. The picker
-## is forced by marking the OTHER written tour as already unlocked, so the one
+## is forced by marking the OTHER written tours as already unlocked, so the one
 ## under test is always the one offered — even after a real playthrough finished it.
 
 label test_hikari_tour:
@@ -843,8 +1072,7 @@ label test_hikari_tour:
     "TEST SEQUENCE: MESSAGE HIKARI // YOKOHAMA CHINATOWN"
     "The full tour: the texts, the station, Chinatown, Lei Lei's gyoza shop, Akarenga, and the train home."
     $ hikari_tour_unlocked = [p for p in hikari_tour_unlocked if p != "yokohama"]
-    if "harajuku" not in hikari_tour_unlocked:
-        $ hikari_tour_unlocked.append("harajuku")
+    $ hikari_tour_unlocked = list(set(hikari_tour_unlocked + ["harajuku", "karaoke"]))
     call hikari_tour from _call_test_hikari_tour
     "Test complete. Yokohama is unlocked for solo visits."
     return
@@ -855,8 +1083,18 @@ label test_hikari_tour_harajuku:
     "TEST SEQUENCE: MESSAGE HIKARI // HARAJUKU, TAKESHITA STREET"
     "The full tour: the texts, the station, the street, the clothes, the cotton candy, and the train home."
     $ hikari_tour_unlocked = [p for p in hikari_tour_unlocked if p != "harajuku"]
-    if "yokohama" not in hikari_tour_unlocked:
-        $ hikari_tour_unlocked.append("yokohama")
+    $ hikari_tour_unlocked = list(set(hikari_tour_unlocked + ["yokohama", "karaoke"]))
     call hikari_tour from _call_test_hikari_tour_harajuku
     "Test complete. Harajuku is unlocked for solo visits."
+    return
+
+
+label test_hikari_tour_karaoke:
+    scene black with Dissolve(0.8)
+    "TEST SEQUENCE: MESSAGE HIKARI // KURU FUKU NEKO"
+    "The full tour: the texts, the street corner, the drink bar, the room, the songs, and the train home."
+    $ hikari_tour_unlocked = [p for p in hikari_tour_unlocked if p != "karaoke"]
+    $ hikari_tour_unlocked = list(set(hikari_tour_unlocked + ["yokohama", "harajuku"]))
+    call hikari_tour from _call_test_hikari_tour_karaoke
+    "Test complete. Kuru Fuku Neko is unlocked for solo visits."
     return
