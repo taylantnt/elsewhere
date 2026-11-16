@@ -1021,21 +1021,32 @@ Third menu, in the kawaii clothing shop:
 | M68.08 | Try on the jacket with all the pockets. | Nerve +0.2 | Pays via flag `harajuku_tour_try_on`; she says 可愛い and refuses to repeat it. |
 | M68.09 | Ask if she ever dressed like this. | Grace +0.2 | Pays via flag `harajuku_tour_her_style`; she liked being seen when she could choose when. |
 
-Fourth menu, at the cotton candy shop:
+Fourth menu, in the fitting room of the kawaii shop:
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M68.10 | Say it is too cute to eat. | Nerve +0.2 | Pays via flag `harajuku_tour_too_cute`; 可愛すぎる, then he eats it anyway. |
-| M68.11 | Ask how they make the shapes. | Insight +0.2 | Pays via flag `harajuku_tour_candy_shape`; she makes him fold the heart himself. |
-| M68.12 | Take a photograph of Hikari with hers. | Grace +0.2 | Pays via flag `harajuku_tour_candy_photo`; she eats it before it can be documented. |
+| M68.10 | Tell her she looks incredible. | Grace +0.2 | Pays via flag `harajuku_tour_kawaii_compliment`; the assistant translates her embarrassment. |
+| M68.11 | Say nothing. Just stare. | Nerve +0.2 | Pays via flag `harajuku_tour_kawaii_speechless`; she laughs and calls him hopeless. |
+| M68.12 | Ask if she is comfortable. | Insight +0.2 | Pays via flag `harajuku_tour_kawaii_comfort`; she kept it on because he could not speak. |
 
-Fifth menu, walking back toward the station:
+She keeps the outfit on through the candy shop and the train home, and changes
+back at the front door (`hikari_kawaii` flag, `sister_kawaii.png` portrait).
+
+Fifth menu, at the cotton candy shop:
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M68.13 | Ask why she brought you here. | Insight +0.2 | Pays via flag `harajuku_tour_why_here`; there is no wrong on this street. |
-| M68.14 | Say you want to come back alone. | Nerve +0.2 | Pays via flag `harajuku_tour_come_back`; third shop, and no buying on the first pass. |
-| M68.15 | Tell her you had fun. | Grace +0.2 | Pays via flag `harajuku_tour_had_fun`; she knew because he stopped checking where they were. |
+| M68.13 | Say it is too cute to eat. | Nerve +0.2 | Pays via flag `harajuku_tour_too_cute`; 可愛すぎる, then he eats it anyway. |
+| M68.14 | Ask how they make the shapes. | Insight +0.2 | Pays via flag `harajuku_tour_candy_shape`; she makes him fold the heart himself. |
+| M68.15 | Take a photograph of Hikari with hers. | Grace +0.2 | Pays via flag `harajuku_tour_candy_photo`; she eats it before it can be documented. |
+
+Sixth menu, walking back toward the station:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M68.16 | Ask why she brought you here. | Insight +0.2 | Pays via flag `harajuku_tour_why_here`; there is no wrong on this street. |
+| M68.17 | Say you want to come back alone. | Nerve +0.2 | Pays via flag `harajuku_tour_come_back`; third shop, and no buying on the first pass. |
+| M68.18 | Tell her you had fun. | Grace +0.2 | Pays via flag `harajuku_tour_had_fun`; she knew because he stopped checking where they were. |
 
 Close: **Insight +0.1** (`hikari_tour_harajuku_complete`, `tiny`) — the tour
 unlocks the Harajuku hub row and marks it visited on the phone map.

@@ -5,10 +5,9 @@
 - **Solo label** — `city_row_yokohama` (`game/city_rows.rpy`).
 - **Tour label** — `hikari_tour_yokohama` (`game/confidant_visits/hikari_tour.rpy`).
 - **Hub name** — `Yokohama Chinatown`.
-- **Art** — `bg_yokohama_chinatown`, `bg_yokohama_akarenga`, and three gyoza-shop
-  drawings: `bg_gyoza_shop` (the crowded room in the tour),
-  `bg_gyoza_dishes` (the dish close-up when the food arrives), and
-  `bg_gyoza_shop_quiet` (the quieter angle for the solo visit). Lei Lei has three portraits
+- **Art** — `bg_yokohama_chinatown`, `bg_yokohama_akarenga`, and two gyoza-shop
+  drawings: `bg_gyoza_shop` (the room, used in both the tour and the solo visit)
+  and `bg_gyoza_dishes` (the dish close-up when the food arrives). Lei Lei has three portraits
   selected by `lei_mood`: `lei_normal.png` (unimpressed), `lei_shout.png`
   (shouting), `lei_intense.png` (the room goes quiet).
 

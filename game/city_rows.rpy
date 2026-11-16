@@ -423,7 +423,7 @@ label city_row_yokohama:
             "I am lost for twenty minutes. Nobody asks what I am doing. That is the luxury of a place that is used to visitors."
             $ reward_attributes_once("city_yokohama_lost", [("nerve", "micro")], show="auto")
         "Go back to the little gyoza shop.":
-            scene bg_gyoza_shop_quiet with walk_fade
+            scene bg_gyoza_shop with walk_fade
             "The curtain is the colour of old tea. I push it aside and the room shouts at me in Chinese."
             "Lei Lei looks up from the steamer. She looks at me, then at the empty stool I took last time."
             $ lei_mood = "shout"

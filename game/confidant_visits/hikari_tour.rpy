@@ -161,6 +161,7 @@ label hikari_tour:
 ## written. The message flow, picker, unlock, and solo fallback do not move.
 
 label hikari_tour_harajuku:
+    $ hikari_kawaii = False
     scene bg_harajuku with walk_fade
     "The train lets us out into a crowd that looks dressed for a different country."
     "Then we turn a corner, the street narrows, and the colours arrive all at once. Pink, yellow, stripes, lace, a girl in a skirt the size of a small building."
@@ -249,6 +250,45 @@ label hikari_tour_harajuku:
             "She says it to the jacket, not to me. I let it stand."
             $ reward_attributes_once("harajuku_tour_her_style", [("grace", "micro")], show="auto")
 
+    "The assistant has been watching Hikari touch the sleeve. Before either of us can say anything, she is holding a dress on a hanger and talking very fast."
+    hikari "What? No. I could not —"
+    "She looks at me. I have no idea what she is asking me, and I say the only thing that makes sense."
+    mc "You should."
+    "The assistant takes her by the sleeve, and the next thing I see is the curtain of the fitting room moving."
+    "It takes a while. I look at the socks. I look at the jacket with the pockets. I try very hard not to look at the curtain."
+    $ hikari_kawaii = True
+    "Then the curtain opens."
+    "It is Hikari. It is not the Hikari who sits across the breakfast table and tells me the rules of the house."
+    "The skirt goes over the trousers. The socks go over the boots. There is a ribbon doing nothing at all, and one colour fighting all the others and losing."
+    "She looks like she has been assembled out of the whole street."
+    mc "..."
+    hikari "Say something."
+    mc "..."
+    hikari "That bad?"
+    mc "No. That is the problem. I do not have words."
+
+    menu:
+        "Tell her she looks incredible.":
+            mc "You look incredible."
+            "She opens her mouth, then closes it. The assistant says something in fast Japanese and Hikari's ears go red."
+            hikari "She says you have excellent taste. Do not ask me to translate the rest."
+            $ reward_attributes_once("harajuku_tour_kawaii_compliment", [("grace", "micro")], show="auto")
+        "Say nothing. Just stare.":
+            mc "..."
+            "She waits. I fail. She laughs — a real one, not the one she uses at the table."
+            hikari "You are hopeless."
+            mc "I know."
+            $ reward_attributes_once("harajuku_tour_kawaii_speechless", [("nerve", "micro")], show="auto")
+        "Ask if she is comfortable.":
+            mc "Is it comfortable?"
+            hikari "It is a dress made for standing still in a shop window. No."
+            mc "Then why —"
+            hikari "Because you could not speak. I wanted to see how long it would last."
+            $ reward_attributes_once("harajuku_tour_kawaii_comfort", [("insight", "micro")], show="auto")
+
+    "She does not take it off."
+    "She keeps the dress and the ribbon and the ridiculous socks for the rest of the day — through the candy shop, onto the train, and in through the door of the house."
+
     scene bg_harajuku_candy with walk_fade
     "The cotton candy shop is a wall of colour. Spirals of sugar on sticks, shaped like flowers and hearts and clouds, stacked in rows like a field that has gone wrong in the best possible way."
     "A girl behind the counter spins a new one. Sugar goes in, colour comes out. It takes about four seconds."
@@ -328,7 +368,9 @@ label hikari_tour_harajuku:
     hikari "You're welcome."
     mc "I didn't say thank you."
     hikari "You were going to."
+    $ hikari_kawaii = False
     "She goes inside before I can prove her right."
+    "By the time I reach the front step, the ribbon is gone. She is wearing her own clothes again, and she never mentions the dress."
     return
 
 

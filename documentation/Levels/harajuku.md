@@ -23,15 +23,20 @@ point. Beats:
    never laugh, buy nothing before the third shop.
 3. The food street: crepes, タピオカ, and cotton candy in every colour.
 4. A kawaii clothing shop: layers, socks over boots, one colour that should not
-   work. She admits she dressed that way for a year.
+   work. She admits she dressed that way for a year. The assistant then pulls
+   her into the fitting room; she comes out in the full outfit (the
+   `sister_kawaii.png` portrait, selected by the `hikari_kawaii` flag), and he is
+   speechless. She keeps the dress, ribbon, and socks on for the rest of the day.
 5. A cotton candy shop (綿菓子 / wataame): pink flowers and blue hearts. He eats
    his; she eats hers before he can photograph it.
-6. Home by train. The tour unlocks the solo hub row; Hikari does not come on
-   later visits.
+6. Home by train. At the door the ribbon is gone and she is in her own clothes
+   again; she never mentions the dress afterward. The tour unlocks the solo hub
+   row; Hikari does not come on later visits.
 
-Five menus with one-time attribute rewards cover the street, the food, the
-clothes, the candy, and the reason she brought him. Finishing pays a final
-Insight tick. `test_hikari_tour_harajuku` in the console plays the full tour.
+Six menus with one-time attribute rewards cover the street, the food, the
+clothes, the fitting room, the candy, and the reason she brought him. Finishing
+pays a final Insight tick. `test_hikari_tour_harajuku` in the console plays the
+full tour.
 
 ## Solo scene
 

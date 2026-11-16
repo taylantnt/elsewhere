@@ -406,7 +406,6 @@ image bg_yokohama = Transform("images/backgrounds/bg_yokohama_chinatown.png", xy
 image bg_yokohama_chinatown = Transform("images/backgrounds/bg_yokohama_chinatown.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_yokohama_akarenga = Transform("images/backgrounds/bg_yokohama_akarenga.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_gyoza_shop = Transform("images/backgrounds/bg_gyoza_shop.png", xysize=(config.screen_width, config.screen_height), fit="cover")
-image bg_gyoza_shop_quiet = Transform("images/backgrounds/bg_gyoza_shop2.jpg", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_gyoza_dishes = Transform("images/backgrounds/bg_gyoza.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 # Harajuku has real art for the candy shop and the clothing shop. The street
 # itself is auto-defined from bg_harajuku.png; these two need explicit sizing.
@@ -1468,7 +1467,14 @@ image side father = At(ConditionSwitch(
 # she changes and back to False once she is back in the house.
 default hikari_run = False
 
+# The Harajuku tour has her try on a kawaii outfit and keep it on for the rest
+# of the day. This flag takes priority over the run and Sunday drawings, and is
+# cleared once she is home and has changed back.
+default hikari_kawaii = False
+
 image side sister = At(ConditionSwitch(
+    "hikari_kawaii",
+    Transform("images/characters/sister_kawaii.png", xysize=(256, 384), fit="contain"),
     "hikari_run",
     Transform("images/characters/sister_run.png", xysize=(256, 384), fit="contain"),
     "sunday_at_home",
