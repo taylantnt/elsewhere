@@ -1473,8 +1473,11 @@ default hikari_run = False
 default hikari_kawaii = False
 
 image side sister = At(ConditionSwitch(
+    # sister_kawaii.png is a 1536x1024 landscape group composition. Crop to a
+    # 2:3 portrait around her before sizing, or fit="contain" shrinks it to fit
+    # the box width and she appears tiny next to the other portraits.
     "hikari_kawaii",
-    Transform("images/characters/sister_kawaii.png", xysize=(256, 384), fit="contain"),
+    Transform("images/characters/sister_kawaii.png", crop=(450, 0, 683, 1024), xysize=(256, 384), fit="contain"),
     "hikari_run",
     Transform("images/characters/sister_run.png", xysize=(256, 384), fit="contain"),
     "sunday_at_home",
