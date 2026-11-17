@@ -4615,6 +4615,10 @@ label after_school_photo_club:
     sim "Everyone! Everyone! this is our first-timer."
     sim "「初めて参加のお方です！みなさん、どうぞよろしくお願いします！」"
     "The room says it back at me in one voice. Somebody waves. Somebody takes a bag off the chair beside him and puts it on the floor."
+    "A voice from the whiteboard adds, flat and unbothered: 'Welcome. Do not stand in the light.'"
+    sim "Nami. She runs the light. She is right about it ninety percent of the time."
+    nami "Ninety-five."
+    sim "See? She is already negotiating."
 
     menu:
         "Is this the photography club?":
@@ -4639,6 +4643,17 @@ label after_school_photo_club:
     sim "Some because they wanted somewhere to be on a Tuesday and this room was open."
     sim "Everybody gives what they have and takes what they need. It works both ways. Nobody pays, and nobody has to be any good."
     mc "(Two rooms in one day, and both of them told me who they were for before they told me anything else.)"
+
+    sim "You will meet everybody properly next week. Tapi models for us when she is not working."
+    mc "Tapi."
+    sim "Short hair, black sweater. She says very little, and it is usually worth waiting for."
+    mc "Is she one of the women in those photographs?"
+    sim "That is Rika. Tapi is the one who brings the coffee. TT brings the camera."
+    mc "TT?"
+    sim "Her boyfriend. He shoots for a living. Weddings, shops, things with a budget."
+    sim "He does not come to meetings. He says a room with no invoices in it is a room worth photographing."
+    "I say both names quietly to myself, the way I did with the station names on the train."
+    mc "(Two names for people I have not met. This city is already smaller than it was this morning.)"
 
     sim "So. Do you have a camera?"
 

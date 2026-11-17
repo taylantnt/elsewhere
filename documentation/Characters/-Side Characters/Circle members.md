@@ -9,11 +9,11 @@ appeared across the written interactions under
 | Name | Role | First appears | Notes |
 | :--- | :--- | :--- | :--- |
 | **Rika** | Member / recurring model | Visit 3 | Warm, theatrical energy ("my face — giant on a wall!"). The person the group photographs most often; her arc mirrors the club's growth. |
-| **Nami** | Member / lighting lead | Visit 1 (named in visit 2) | Dry, blunt, competent. Argues with Sim from the first scene ("You two have had this argument every week since March") and runs half the lighting by visit 4. The old note that she "wouldn't speak above a whisper" described an earlier draft, not the written voice. |
+| **Nami** | Member / lighting lead | Day 2 first session (named by Sim there) | Dry, blunt, competent. Argues with Sim from the first scene ("You two have had this argument every week since March") and runs half the lighting by visit 4. The old note that she "wouldn't speak above a whisper" described an earlier draft, not the written voice. |
 | **Marco** | Member | Visit 1 (named in visit 2) | Laughs easily; argues that autofocus is lazy and that the poster matters as much as the photograph. Makes the exhibition map. |
 | **Riku** | Member | Visit 4 | Quiet, plain-spoken. Took the best print on the wall by accident because he was late and did not look through the viewfinder. Designs the exhibition labels. |
-| **Tapi** | Member / model | Visit 2 | The second model. Quiet and precise rather than theatrical; has spent more time in front of a lens than anyone else in the room. Deadpan ("It is the same thing"). Models, brings coffee, and stays after Sim leaves. |
-| **TT** | Guest / photographer | Visit 7 | Tapi's boyfriend, a working photographer. Not a student and not a member. Comes to the exhibition with a camera, argues about the lighting, and takes the one photograph in the show that a Circle member did not make — a portrait of Sim. |
+| **Tapi** | Member / model | Named in the Day 2 first session; met in visit 2 | The second model. Quiet and precise rather than theatrical; has spent more time in front of a lens than anyone else in the room. Deadpan ("It is the same thing"). Models, brings coffee, and stays after Sim leaves. |
+| **TT** | Guest / photographer | Named in the Day 2 first session; seen in visit 7 | Tapi's boyfriend, a working photographer. Not a student and not a member. Comes to the exhibition with a camera, argues about the lighting, and takes the one photograph in the show that a Circle member did not make — a portrait of Sim. |
 
 ## Portraits
 

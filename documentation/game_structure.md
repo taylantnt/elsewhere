@@ -881,6 +881,26 @@ or nightmare — so the calendar move is never lost to a missing dream.
 | `haiku_study_method` | `second_school_day` haiku menu | Which study approach he picked; read by nothing yet |
 | `place` (transient) | `free_afternoon` | The hub row picked this afternoon; not saved |
 
+### 5.12 Arc replay (console test mode)
+
+`game/arc_replay.rpy` is a test-only way to watch a confidant's chain without
+playing the days between visits. Shift+O, then `jump arc_replay` for a menu, or
+jump straight to `arc_replay_sim`, `arc_replay_orson`, `arc_replay_aya` or
+`arc_replay_hana`.
+
+The replay **calls the real visit labels** in order, with a black caption card
+between each one, so the dialogue, menus, reward cards and WIRE messages are
+exactly the ones from play. `arc_replay_begin()` snapshots the save state before
+the chain and `arc_replay_end()` restores it afterwards, so a test run on a live
+save does not advance your counters or spend your rewards. Quitting halfway
+through a replay skips the restore.
+
+Sim's chain includes his standalone visit 1. For Orson, Aya and Hana, visit 1
+is inside the Day 1/2 routes and cannot be called on its own, so those replays
+start at visit 2. Individual scenes still have their own `test_*` labels (Sim's
+in `sim.rpy`, Hikari's tours in `hikari_tour.rpy`, the minigames in
+`game/minigames/`).
+
 ---
 
 ## 7. Not Yet in the Script
