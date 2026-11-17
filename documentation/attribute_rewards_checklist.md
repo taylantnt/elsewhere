@@ -1128,11 +1128,11 @@ Second menu, at the old men's tarp:
 | M70.05 | Ask what happens if you refuse. | Insight +0.2 | Pays via flag `ueno_tour_refuse`; the offer matters more than the answer. |
 | M70.06 | Hold the cup without drinking. | Insight +0.2 | Pays via flag `ueno_tour_hold`; you may hold a thing and not use it. |
 
-Third menu, among the tarp and the cat:
+Third menu, watching the lines nobody crosses:
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
-| M70.07 | Give the bun to the cat. | Grace +0.2 | Pays via flag `ueno_tour_cat`; she has standards. |
+| M70.07 | Watch the lines nobody crosses. | Insight +0.2 | Pays via flag `ueno_tour_lines`; a cup rolls into the aisle and nobody claims it. |
 | M70.08 | Ask why nobody photographs each other here. | Insight +0.2 | Pays via flag `ueno_tour_photos`; doing the thing, not reporting on it. |
 | M70.09 | Let the blossom land in the tea. | Grace +0.2 | Pays via flag `ueno_tour_petal`; watching it change is the point. |
 

@@ -521,10 +521,13 @@ label city_row_ueno:
             mc "(Sometimes the building is enough. Sometimes the deciding is the thing.)"
             $ reward_attributes_once("city_ueno_museum", [("grace", "micro")], show="auto")
         "Keep my phone in my pocket all afternoon.":
-            "A salaryman asleep with his hat over his face. A child sharing a bun. A cat with somewhere to be."
+            "A salaryman asleep with his hat over his face. A group passing a bottle without a word. Two tarps close enough to touch that never touch."
             "I look at all of it and put the phone away again before I can decide to document it."
             mc "(This is one of the few places where none of it has to become a photograph.)"
             $ reward_attributes_once("city_ueno_no_photo", [("nerve", "micro")], show="auto")
+
+    "Nobody crosses the lines between the tarps. I know the rule now, and I keep it without being asked, which is the same as belonging."
+    mc "(She said somebody should make reaching easier. I still do not know what she meant. I think about it while the light goes.)"
 
     "I stay until the light goes. The radio switches to a weather report. Nobody listens to that either."
 

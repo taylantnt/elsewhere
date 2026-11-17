@@ -1069,6 +1069,17 @@ label hikari_tour_ueno:
     mc "You sound like my father."
     hikari "He sounds like a sensible man. I'll take it."
 
+    "There are hundreds of people under the trees. I keep waiting for the noise of a crowd — voices carrying between groups, somebody calling across the grass."
+    "Nothing. Each tarp is its own small country. People walk between them without looking in, the way you pass an open door in a building you do not live in."
+    mc "There are so many people here and nobody is talking to anybody."
+    hikari "They are talking. Just not across."
+    hikari "At a picnic where I grew up, people wander over. They bring food and meet you. Here the tarp is a room. You can sit in a crowd of ten thousand people and still be private."
+    hikari "I think that is why everybody comes. It is the one place in the city where being alone is not lonely."
+    mc "Where I come from, if you sit next to somebody they talk to you whether you want it or not."
+    hikari "That sounds exhausting."
+    mc "Sometimes. Sometimes it is the best part of the day."
+    "She does not answer that one. She looks at the tarps for a moment longer than she needs to."
+
     "She walks us past the first few groups without stopping. She is looking for a place, not a view."
     hikari "This was a temple once. Kan'ei-ji, built in the sixteen twenties by the Tokugawa family. It was their family temple, big enough to be a village."
     hikari "Then the shogunate fell, and the temple was destroyed in the fighting. In eighteen seventy-three they opened the grounds as a park."
@@ -1101,6 +1112,9 @@ label hikari_tour_ueno:
             $ reward_attributes_once("ueno_tour_tarp", [("nerve", "micro")], show="auto")
 
     "A man at the next tarp is pouring from a thermos into a paper cup. He pours a second cup and holds it out in our direction without looking."
+    hikari "...That does not usually happen."
+    mc "What?"
+    hikari "You were looking at his bottle. He noticed. That is all. Do not turn it into a story."
     hikari "Take it with both hands. Say いただきます."
     mc "What does it mean?"
     hikari "Something like — I receive this. It is polite. It is also true."
@@ -1129,8 +1143,9 @@ label hikari_tour_ueno:
             hikari "It is one. It is the one this park is for."
             $ reward_attributes_once("ueno_tour_hold", [("insight", "micro")], show="auto")
 
-    "A child on the next tarp gets lost between two tables and ends up at ours. She offers me half a bun with the seriousness of a treaty."
-    "I take it. A cat moves along the back of the tarp, steps in somebody's tray, and keeps going without breaking stride."
+    "For an hour nobody crosses the line between one tarp and the next. A group on a blue sheet passes a bottle to the left. A family three metres away passes a bag of oranges to the right. Neither group looks at the other."
+    mc "It is like everybody is in their own house with the walls taken down."
+    hikari "That is a good way to say it. The walls are just agreed on."
     "I raise my phone toward a salaryman asleep with his hat over his face. Hikari's hand comes down on the phone."
     hikari "Do not."
     mc "He is asleep in public."
@@ -1139,12 +1154,12 @@ label hikari_tour_ueno:
     "I put the phone away. The blossoms keep coming down. One lands in the tea I am still holding."
 
     menu:
-        "Give the bun to the cat.":
-            "I offer the bun to the cat. The cat looks at it, looks at me, and walks away."
-            hikari "She has standards."
-            mc "She is a cat in a park."
-            hikari "That is exactly why she can have standards."
-            $ reward_attributes_once("ueno_tour_cat", [("grace", "micro")], show="auto")
+        "Watch the lines nobody crosses.":
+            "I spend ten minutes watching the space between the tarps. A paper cup rolls out of one group and stops in the aisle. Nobody claims it. A woman from the next tarp gets up, walks past it, and sits down again."
+            hikari "You are learning the shape of the room."
+            mc "It is not a room. There are no walls."
+            hikari "There are always walls. Some of them you can only see if you watch."
+            $ reward_attributes_once("ueno_tour_lines", [("insight", "micro")], show="auto")
         "Ask why nobody photographs each other here.":
             mc "Why is nobody taking pictures? There are whole families here."
             hikari "Because they are doing the thing, not reporting on it. That is the difference between this street and the ones we walked last week."
@@ -1194,6 +1209,16 @@ label hikari_tour_ueno:
     mc "You are always taking me somewhere."
     hikari "I know. This is the first hour I have not been the one who knows where we are going."
     hikari "It is nice. Do not make it important."
+    "Below us, two groups sit almost close enough to touch and do not. A bottle goes round one tarp. A bag of oranges goes round the other."
+    hikari "I used to think it was a shame. That people could be this close and still not reach."
+    mc "And now?"
+    hikari "Now I think it might be a kindness. Or I am just tired of wanting it to be different."
+    mc "Different how?"
+    "She is quiet long enough that I think she will not answer."
+    hikari "Somebody should make it easier. That is all."
+    mc "Make what easier?"
+    hikari "Reaching."
+    "She says it in the same voice she has used all day. I let it lie there."
     "I lie down beside her. A petal lands on my sleeve. I do not move it."
 
     menu:

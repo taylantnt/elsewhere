@@ -24,10 +24,14 @@ which is exactly why she takes him. Beats:
 3. The cup from the old men: accept with both hands, say いただきます, and you
    are allowed to hold it without drinking. The offer matters more than the
    answer.
-4. Etiquette by observation: a child offers him half a bun, a cat walks the
-   tarp, and he is stopped from photographing a sleeping salaryman — "one of
-   the few places in this city where you can fall asleep without it meaning
-   anything."
+4. Alone together: hundreds of people in one place, each tarp its own room,
+   nobody crossing the lines between them. Hikari explains the courtesy of it —
+   being in a crowd and still being private — and contrasts it with picnics
+   where strangers wander over and talk. He is stopped from photographing a
+   sleeping salaryman: "one of the few places in this city where you can fall
+   asleep without it meaning anything." The cup from the old men is treated as
+   the rare exception it is ("You were looking at his bottle. He noticed."),
+   not as normal stranger sociability.
 5. The museum steps, which they do not go into. A park that keeps things; a
    city that lost a temple and decided to keep objects instead. Hikari says she
    likes that somebody decided things were worth keeping, even the ones she
@@ -36,6 +40,13 @@ which is exactly why she takes him. Beats:
    weeks she has not been the one taking him somewhere. She remembers being
    brought here by her mother ("the tea was too sweet"). This is a new side of
    her: still, ordinary, and willing to do nothing.
+7. The quiet line: she used to think it was a shame that people could be this
+   close and still not reach; now she thinks it might be a kindness, or that she
+   is tired of wanting it different. Asked how, she says only "Somebody should
+   make it easier — reaching," in exactly the same voice she has used all day.
+   No glitch, no slip in the surface: a wish that reads as ordinary warmth now
+   and lands differently once the player knows what she really is. Keep it that
+   way — the horror comes from the reader, not from her.
 
 Five menus cover the park's history, the cup, the tarp, the museum, and the last
 hour. Each pays a micro reward once; finishing pays a final Insight tick.
