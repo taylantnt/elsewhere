@@ -1,7 +1,7 @@
 # Calendar, Dates, and Location Hours
 **Document type:** As-implemented reference
 **Covers:** `game/calendar.rpy`, the date chip, the phone Calendar app, and weekly opening rules
-**Status:** Built; dates are canonical from the airport through Tuesday, Day 14
+**Status:** Built; dates are canonical from the airport through Tuesday, Day 21
 
 > This is the document to check before writing a line that names a day or a date.
 > The script does not infer dates from scene order. Each day label pins the
@@ -27,6 +27,13 @@
 | Day 12 | Sunday, April 19 | `sunday_practice` |
 | Day 13 | Monday, April 20 | `monday_asakusa` |
 | Day 14 | Tuesday, April 21 | `tuesday_week_two` |
+| Day 15 | Wednesday, April 22 | `wednesday_preview` |
+| Day 16 | Thursday, April 23 | `thursday_mitate` |
+| Day 17 | Friday, April 24 | `friday_sounds` |
+| Day 18 | Saturday, April 25 | `saturday_matsuri` |
+| Day 19 | Sunday, April 26 | `sunday_mock` |
+| Day 20 | Monday, April 27 | `monday_midterm` |
+| Day 21 | Tuesday, April 28 | `tuesday_results` |
 
 The year is an internal anchor only. The HUD and the phone Calendar show the
 weekday and month/day; `2026` exists so month lengths and weekdays are real.

@@ -1,10 +1,12 @@
 ################################################################################
-## NEON STEP ― FOUR-LANE RHYTHM MINIGAME
+## NEON STEP: FOUR-LANE RHYTHM MINIGAME
 ################################################################################
 ##
-## An original 128 BPM synthwave track drives a four-lane note highway. The
-## chart is generated per difficulty and judged against the audio clock, so
-## arrows land on the beat rather than on a frame timer.
+## A 128 BPM synthwave track drives a four-lane note highway. The chart spans
+## the whole track and is generated per difficulty against the audio clock, so
+## arrows land on the beat rather than on a frame timer. The section map below
+## is tuned to neon_step.mp3 (97 bars, ~182.8 s) -- change DANCE_TOTAL_BARS and
+## DANCE_SECTIONS together if the music is swapped again.
 ##
 ## Keyboard: ← ↓ ↑ → or D F J K. Touch: tap the lane pads.
 ## Story use: call minigame_dance
@@ -20,8 +22,20 @@ init python:
     import random
 
     DANCE_BPM = 128
-    DANCE_BEAT = 60.0 / DANCE_BPM
+    # Beat period measured from neon_step.mp3 via spectral-flux onset analysis
+    # (127.99 BPM). Do not "round" this back to 60/128 -- the 0.005% difference
+    # drifts ~20 ms over the full track.
+    DANCE_BEAT = 0.46880
     DANCE_BAR = DANCE_BEAT * 4.0
+    # Time of the first downbeat, measured from the track's onset envelope.
+    # The old 0.10 guess put every note ~64 ms ahead of the music.
+    DANCE_BEAT_OFFSET = 0.036
+    # Audio output latency of renpy.music.get_pos, in seconds. get_pos reports
+    # the position sent to the audio device, which runs ahead of what the
+    # player hears by the mixer buffer. If notes still feel early vs the song,
+    # raise this (try 0.04-0.08); if they feel late, lower it.
+    DANCE_AUDIO_LAG = 0.0
+    DANCE_TOTAL_BARS = 97      # ~182.8 s at 128 BPM
     DANCE_MUSIC = "audio/Music/neon_step.mp3"
 
     DANCE_LANE_COLORS = ["#53c8ff", "#7dff9f", "#ffd166", "#ff6f9f"]
@@ -100,6 +114,15 @@ init python:
         [(0, 3), (1, 1), (2, 2), (2.5, 3), (3, 0)],
     ]
 
+    # The intro rides the quiet sparkle arp before the first drop. Bars 0-1 are
+    # left open as a lead-in, so notes begin at bar 2.
+    DANCE_INTRO_BARS = [
+        [(0, 0), (2, 2)],
+        [(0, 3), (2, 1)],
+        [(0, 1), (2, 3)],
+        [(0, 2), (2, 0)],
+    ]
+
     # The outro rides the final crash out instead of stopping at the last chorus.
     DANCE_OUTRO_BARS = [
         [(0, 2), (2, 0)],
@@ -108,11 +131,34 @@ init python:
         [(0, (0, 3)), (2, (1, 2))],
     ]
 
+    # Section map for neon_step.mp3, derived from the track's energy layout:
+    #   intro 0-7 | drop 8-23 | verse 24-39 | break 40-47 | build 48-55
+    #   | drop II 56-87 | outro 88-96
+    # Each entry is (first_bar, end_bar_exclusive, HUD label, pattern key).
+    DANCE_SECTIONS = [
+        (0, 8, "INTRO", "intro"),
+        (8, 24, "DROP", "chorus"),
+        (24, 40, "VERSE", "verse"),
+        (40, 48, "BREAK", "break"),
+        (48, 56, "BUILD", "build"),
+        (56, 88, "DROP II", "chorus"),
+        (88, DANCE_TOTAL_BARS, "OUTRO", "outro"),
+    ]
+
+    DANCE_PATTERNS = {
+        "intro": DANCE_INTRO_BARS,
+        "verse": DANCE_VERSE_BARS,
+        "build": DANCE_BUILD_BARS,
+        "chorus": DANCE_CHORUS_BARS,
+        "break": DANCE_BREAK_BARS,
+        "outro": DANCE_OUTRO_BARS,
+    }
+
     def make_dance_chart(difficulty="normal"):
         notes = []
 
         def add_note(bar, beat, lanes):
-            time = (bar * 4.0 + beat) * DANCE_BEAT
+            time = (bar * 4.0 + beat) * DANCE_BEAT + DANCE_BEAT_OFFSET
             if isinstance(lanes, int):
                 lanes = (lanes,)
             if difficulty == "easy" and len(lanes) > 1:
@@ -132,31 +178,17 @@ init python:
                     continue
                 add_note(bar, beat, lanes)
 
-        for index, bar in enumerate(range(2, 10)):
-            add_bar(bar, DANCE_VERSE_BARS[index % 4])
-
-        for index, bar in enumerate(range(10, 14)):
-            add_bar(bar, DANCE_BUILD_BARS[index])
-
-        for index, bar in enumerate(range(14, 22)):
-            add_bar(bar, DANCE_CHORUS_BARS[index % 4])
-
-        for index, bar in enumerate(range(22, 26)):
-            add_bar(bar, DANCE_BREAK_BARS[index])
-
-        for index, bar in enumerate(range(26, 34)):
-            add_bar(bar, DANCE_CHORUS_BARS[index % 4])
-            if difficulty == "hard":
-                add_note(bar, 3.75, (index + 2) % 4)
-
-        for index, bar in enumerate(range(34, 38)):
-            add_bar(bar, DANCE_OUTRO_BARS[index])
-
-        if difficulty == "hard":
-            for bar in range(2, 10):
-                add_note(bar, 3.25, (bar * 3) % 4)
-            for bar in range(14, 22):
-                add_note(bar, 0.75, (bar + 1) % 4)
+        for start, end, _label, kind in DANCE_SECTIONS:
+            pattern = DANCE_PATTERNS[kind]
+            for offset, bar in enumerate(range(start, end)):
+                if bar < 2:
+                    continue
+                add_bar(bar, pattern[offset % len(pattern)])
+                if difficulty == "hard":
+                    if kind in ("chorus", "build"):
+                        add_note(bar, 3.75, (bar + 2) % 4)
+                    elif kind == "verse":
+                        add_note(bar, 3.25, (bar * 3) % 4)
 
         unique = {}
         for note in notes:
@@ -211,7 +243,7 @@ init python:
             self.difficulty = difficulty
             self.speed_mult = {"easy": 0.86, "normal": 1.0, "hard": 1.16}.get(difficulty, 1.0)
             self.notes = make_dance_chart(difficulty)
-            self.chart_end = max(note["time"] for note in self.notes) + 2.4
+            self.chart_end = max(note["time"] for note in self.notes) + 1.2
 
             self.phase = "playing"
             self.elapsed = 0.0
@@ -252,7 +284,7 @@ init python:
                 return
             position = renpy.music.get_pos(channel="dance_music")
             if position is not None:
-                self.clock_offset = position - self.pause_elapsed
+                self.clock_offset = position - self.pause_elapsed - DANCE_AUDIO_LAG
             renpy.music.set_volume(0.8, channel="dance_music")
             renpy.music.set_pause(False, channel="dance_music")
             self.fallback = 0.0
@@ -285,10 +317,10 @@ init python:
                     self.elapsed += dt
             else:
                 self.fallback = 0.0
-                self.elapsed = max(0.0, position - self.clock_offset)
+                self.elapsed = max(0.0, position - self.clock_offset - DANCE_AUDIO_LAG)
 
         def update_count_in(self):
-            while self.next_beep < 4 and self.elapsed >= self.next_beep * DANCE_BEAT:
+            while self.next_beep < 4 and self.elapsed >= self.next_beep * DANCE_BEAT + DANCE_BEAT_OFFSET:
                 if self.next_beep > 0:
                     renpy.sound.play("audio/SFX/dance_select.wav", channel="dance_sfx4")
                 self.next_beep += 1
@@ -389,10 +421,6 @@ init python:
 
             self.popup(result, DANCE_GRADE_COLORS[result], lane)
             self.add_hit_effects(lane, result)
-            renpy.sound.play(
-                "audio/SFX/dance_hit%d.wav" % lane,
-                channel="dance_hit%d" % lane,
-            )
 
         def add_hit_effects(self, lane, result):
             center_x = DANCE_LANE_X[lane] + DANCE_LANE_W / 2.0
@@ -465,27 +493,15 @@ init python:
 
         def section_label(self):
             bar = int(self.elapsed // DANCE_BAR)
-            if bar < 2:
-                return "INTRO"
-            if bar < 10:
-                return "VERSE"
-            if bar < 14:
-                return "BUILD"
-            if bar < 22:
-                return "DROP"
-            if bar < 26:
-                return "BREAK"
-            if bar < 34:
-                return "DROP II"
+            for start, end, label, _kind in DANCE_SECTIONS:
+                if bar < end:
+                    return label
             return "OUTRO"
 
 
 init python:
     renpy.music.register_channel("dance_music", mixer="music", loop=False)
     renpy.music.register_channel("dance_sfx4", mixer="sfx", loop=False)
-    for _dance_lane in range(4):
-        renpy.music.register_channel("dance_hit%d" % _dance_lane, mixer="sfx", loop=False)
-        renpy.music.set_volume(0.55, channel="dance_hit%d" % _dance_lane)
     renpy.music.set_volume(0.8, channel="dance_sfx4")
     renpy.music.set_volume(0.8, channel="dance_music")
 
@@ -515,7 +531,7 @@ screen dance_rhythm(engine):
     zorder 130
 
     $ lane_x = DANCE_LANE_X
-    $ beat_phase = (engine.elapsed % DANCE_BEAT) / DANCE_BEAT
+    $ beat_phase = ((engine.elapsed - DANCE_BEAT_OFFSET) % DANCE_BEAT) / DANCE_BEAT
     $ beat_pulse = max(0.0, 1.0 - beat_phase * 2.4)
     $ scroll = DANCE_SCROLL * engine.speed_mult
     $ progress = min(1.0, engine.elapsed / max(0.1, engine.chart_end))
@@ -571,7 +587,7 @@ screen dance_rhythm(engine):
         add Solid("#53c8ff") xysize (max(1, int(gui.scale(1232) * progress)), gui.scale(4))
         add "images/dance/glow.png" xpos int(gui.scale(1232) * progress) - gui.scale(20) ypos gui.scale(-18) xysize (gui.scale(40), gui.scale(40)) alpha 0.5 matrixcolor TintMatrix("#8fe4ff")
 
-        for mark in (2, 10, 14, 22, 26, 34):
+        for mark in [start for start, _end, _label, _kind in DANCE_SECTIONS[1:]]:
             add Solid("#061019") xpos int(gui.scale(1232) * ((mark * DANCE_BAR) / max(0.1, engine.chart_end))) ypos 0 xsize gui.scale(1) ysize gui.scale(4)
 
     # ----------------------------------------------------------- left panel
@@ -762,7 +778,7 @@ screen dance_rhythm(engine):
 
         $ first_beat = int(math.floor(engine.elapsed / DANCE_BEAT)) - 1
         for beat_index in range(24):
-            $ beat_time = (first_beat + beat_index) * DANCE_BEAT
+            $ beat_time = (first_beat + beat_index) * DANCE_BEAT + DANCE_BEAT_OFFSET
             $ beat_y = DANCE_HIT_Y - (beat_time - engine.elapsed) * scroll
             if -4 <= beat_y <= DANCE_HIT_Y:
                 if (first_beat + beat_index) % 4 == 0:

@@ -1,5 +1,5 @@
 ################################################################################
-## ORBIT DEFENDER ― ARCADE SHOOTER
+## ORBIT DEFENDER: ARCADE SHOOTER
 ################################################################################
 ##
 ## An endless arcade wave shooter built from Ren'Py screen displayables.
@@ -734,5 +734,5 @@ label test_arcade_shooter:
     scene black with Dissolve(0.4)
     "Orbit Defender: hold Left/Right to dodge. The waves keep coming until the ship is destroyed."
     call minigame_arcade_shooter from _call_minigame_arcade_shooter
-    "Run over ― level [_arcade_engine.level], score [_arcade_engine.score]."
+    "Run over: level [_arcade_engine.level], score [_arcade_engine.score]."
     return

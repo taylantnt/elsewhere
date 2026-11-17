@@ -1,5 +1,5 @@
 ################################################################################
-## SIGNAL ECHO ― NEURAL CALIBRATION MINIGAME
+## SIGNAL ECHO: NEURAL CALIBRATION MINIGAME
 ################################################################################
 ##
 ## A standalone psychological-thriller minigame designed for Elsewhere's dream

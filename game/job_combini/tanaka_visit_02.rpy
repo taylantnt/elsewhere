@@ -1,5 +1,5 @@
 ################################################################################
-## THE COMBINI JOB ― VISIT 2: THE FLOOR
+## THE COMBINI JOB: VISIT 2: THE FLOOR
 ################################################################################
 ##
 ## New stock, and the order of the shelves. The protagonist starts to notice

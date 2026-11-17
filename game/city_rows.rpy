@@ -154,7 +154,7 @@ label city_row_karaoke:
     scene bg_karaoke_room with walk_fade
     "The room is built for six. It is very good at pretending I am not alone in it."
     "On the tablet I switch the language to English, then switch it back. I leave it in Japanese."
-    "There is a setting for ローマ字 ― roumaji. The lyrics come up in roman letters, which I can read almost as fast as I can sing them."
+    "There is a setting for ローマ字, roumaji. The lyrics come up in roman letters, which I can read almost as fast as I can sing them."
     mc "(Almost being the important word.)"
 
     menu:
@@ -174,7 +174,7 @@ label city_row_karaoke:
             mc "(That is for my own singing. She would understand.)"
             $ reward_attributes_once("city_karaoke_listen", [("insight", "micro")], show="auto")
 
-    "I try a second song. This is the one where roumaji stops being a crutch and starts being a trap ― the letters run together at speed and I am chasing them."
+    "I try a second song. This is the one where roumaji stops being a crutch and starts being a trap: the letters run together at speed and I am chasing them."
     "Somewhere in the second verse I stop reading and just make the sounds. It is not the song. It is close enough to the song."
     mc "(Hikari said you get it by singing until one day you do it without thinking. I am not there. I am somewhere before there.)"
 
@@ -189,7 +189,7 @@ label city_row_karaoke:
             mc "(I can tell what this room is doing. I told her I could not. I can.)"
             $ reward_attributes_once("city_karaoke_read_room", [("insight", "micro")], show="auto")
         "Leave a song in the queue for next time.":
-            "Before I go I add one more song. It is the one she sang in the room with me ― the one I said I did not know."
+            "Before I go I add one more song. It is the one she sang in the room with me, the one I said I did not know."
             "I do not queue it for myself. I queue it for the next time somebody is in here with me."
             $ reward_attributes_once("city_karaoke_queue", [("grace", "micro")], show="auto")
 
@@ -504,7 +504,7 @@ label city_row_ueno:
     "Blue tarps. Cardboard. Salarymen in suits sitting on the ground with their ties loosened. A group of old men with a bottle and a radio."
     "The blossoms are already falling. The ground is pink in the places where people have not walked."
     mc "(Hanami. The flowers are an excuse. The sitting is the point.)"
-    mc "(I know what to do with a cup now. I know not to photograph the people sleeping. I know the museum is not a door I have to open ― today, maybe I will.)"
+    mc "(I know what to do with a cup now. I know not to photograph the people sleeping. I know the museum is not a door I have to open. Today, maybe I will.)"
 
     menu:
         "Sit under the blossoms and watch.":

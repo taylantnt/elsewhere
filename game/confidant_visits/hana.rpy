@@ -1,5 +1,5 @@
 ################################################################################
-## HANA ― READING CLUB
+## HANA: READING CLUB
 ################################################################################
 ##
 ## Visit 1 happened in script.rpy, on the Saturday library errand: the haiku
@@ -45,7 +45,7 @@ label hana_visit_02:
 
     "It is *A Child's Garden of Verses*, a slim older volume with a spine faded soft at the corners."
     "I open it carefully to the front flyleaf."
-    "In faded pencil: For Hana ― when the house gets too loud, read this and remember you are allowed to be small. ― Grandma."
+    "In faded pencil: For Hana, when the house gets too loud, read this and remember you are allowed to be small. - Grandma."
     "Beside the words, a pressed flower has gone gray with age, and near the title someone has pencilled a small private star."
     "This was never a library book she could lend. This was hers."
 
@@ -57,7 +57,7 @@ label hana_visit_02:
         "\"Hana... this is yours. I should give it back.\"":
             mc "Hana... this is yours. I should give it back."
             "She stops mid-step. Her shoulders go rigid, like turning a key in a rusted lock."
-            "Slowly ― slower than I expect ― she half-turns toward me."
+            "Slowly, slower than I expect, she half-turns toward me."
             "She reaches out and takes the book with both hands, careful not to touch my fingers."
             $ reward_attributes_once("hana_visit_02_thanks", [("grace", "micro")], show="auto")
         "(Set it on the table and let her come to it.)":
@@ -66,7 +66,7 @@ label hana_visit_02:
             "She takes it with both hands and does not let go right away."
             $ reward_attributes_once("hana_visit_02_quiet", [("insight", "micro")], show="auto")
 
-    "She doesn't speak. She bows ― a quick, deep bow, eyes on the floor ― then straightens and walks back toward the shelves."
+    "She doesn't speak. She bows, a quick, deep bow, eyes on the floor, then straightens and walks back toward the shelves."
     "It is not running. It is not quite staying either. It is the closest thing to walking she has given anyone."
 
     "The student from last week slides into the chair beside me, following my gaze."
@@ -98,10 +98,10 @@ label hana_visit_02:
 label hana_visit_03:
     call hana_common_open
 
-    "Rain outside. The club room feels smaller and warmer for it ― coats over chair backs, umbrellas leaning by the door."
+    "Rain outside. The club room feels smaller and warmer for it: coats over chair backs, umbrellas leaning by the door."
     "The window is a blur of grey light. Everyone reads a little slower on days like this."
 
-    "Three weeks now. The book is hers again. I keep thinking about the dedication inside the cover ― allowed to be small."
+    "Three weeks now. The book is hers again. I keep thinking about the dedication inside the cover: allowed to be small."
     "I still haven't figured out how to say thank you in a way she'd let me finish."
 
     "I'm actually reading this time. Deep enough that I don't notice her until she's already there."
@@ -116,7 +116,7 @@ label hana_visit_03:
     menu:
         "\"...What? Sorry, I didn't catch that.\"":
             mc "...What? Sorry, I didn't catch that."
-            "Her whole body flinches, like I'd shouted. She bows ― too fast, too deep ― and backs away, nearly knocking a chair."
+            "Her whole body flinches, like I'd shouted. She bows, too fast, too deep, and backs away, nearly knocking a chair."
             "Then she's gone through the side door, and the only evidence she was ever here is the chair still rocking."
             $ reward_attributes_once("hana_visit_03_whisper", [("grace", "micro")], show="auto")
         "(Wait silently)":
@@ -124,11 +124,11 @@ label hana_visit_03:
             "She bows quickly and slips out the side door, vanishing before I can react."
             $ reward_attributes_once("hana_visit_03_wait", [("insight", "micro")], show="auto")
 
-    "I shouldn't have said anything. Or ― I don't know. I didn't do anything wrong. So why does it feel like something broke?"
+    "I shouldn't have said anything. Or, I don't know. I didn't do anything wrong. So why does it feel like something broke?"
 
     "The student next to me chuckles softly, without looking up from the page."
 
-    quiet_student "Told you. Impossible to talk to. Don't take it personally ― everyone tries once."
+    quiet_student "Told you. Impossible to talk to. Don't take it personally: everyone tries once."
 
     mc "She almost said something."
 
@@ -138,7 +138,7 @@ label hana_visit_03:
 
     "Almost. She almost said something. That has to mean something, right? You don't try four times with someone you want to forget."
 
-    "The hour ends. I pack up slowly. As I reach for my coat, I notice something on the floor by my chair ― a thin corner of paper, half-tucked under the leg of the table."
+    "The hour ends. I pack up slowly. As I reach for my coat, I notice something on the floor by my chair: a thin corner of paper, half-tucked under the leg of the table."
     "I pull it free."
 
     "A torn corner of a page. On it, in careful pencil: half a drawing of a window with rain on it. Finished right up to the last two raindrops. Then abandoned."
@@ -163,12 +163,12 @@ label hana_visit_04:
 
     "She's standing at the far end of that stripe. And she's looking at me."
 
-    "Actually looking. Not glancing. For the first time, Hana is holding my gaze ― and she's holding something else, too."
+    "Actually looking. Not glancing. For the first time, Hana is holding my gaze, and she's holding something else, too."
     "A large, heavy book, clutched against her chest with both arms, cover turned outward."
 
     "I can read the title from here. 'Impressionist Masters.'"
 
-    "She takes one step. Then another. Halfway across the room ― right at the edge of the sunlight ― she stops."
+    "She takes one step. Then another. Halfway across the room, right at the edge of the sunlight, she stops."
 
     "Her grip tightens. Her knuckles go pale against the spine. She looks at me, then at the book, then at the floor."
     "Her mouth moves, but nothing comes out."
@@ -184,7 +184,7 @@ label hana_visit_04:
 
     menu:
         "Get up and pull a matching art book off the shelf.":
-            mc "I walk to the art section, slow as I can. I put my hand on a book from the same row ― another volume on the Impressionists ― and take it back to my seat."
+            mc "I walk to the art section, slow as I can. I put my hand on a book from the same row, another volume on the Impressionists, and take it back to my seat."
             "I don't look toward the shelves. I just open it, out in the open, where she can see. I read for the rest of the hour with a painting of a water garden on the cover."
             $ reward_attributes_once("hana_visit_04_match", [("nerve", "micro")], show="auto")
         "Stay where I am. Don't spook her.":
@@ -195,7 +195,7 @@ label hana_visit_04:
 
     "She's reading. Just on the other side of the row. Our books back to back across a wall of paper."
 
-    "The hour ends. When I stand to leave, the gap in the art shelf is filled. She reshelved it ― but not in its old place."
+    "The hour ends. When I stand to leave, the gap in the art shelf is filled. She reshelved it, but not in its old place."
     "She put it right at the end of the row, where I'd have to walk past it. Right where someone sitting in my chair would see it on the way out."
 
     $ hana_affection += 1
@@ -211,14 +211,14 @@ label hana_visit_04:
 label hana_visit_05:
     call hana_common_open
 
-    "Warm, drowsy afternoon light. Fewer readers than usual ― just three of us and the ticking fan."
+    "Warm, drowsy afternoon light. Fewer readers than usual: just three of us and the ticking fan."
     "The room has that slumped, unhurried feel of a place that knows everyone is tired."
 
     "I take my usual seat and spread out my book, expecting the usual: a book left near my table, a shadow at the edge of my vision, a bow, gone."
 
     "Instead, she sits down."
 
-    "Hana sets a book on the same table. Not near it ― on it. She pulls out the chair across from me, sits down stiffly, and opens the book to a random page."
+    "Hana sets a book on the same table. Not near it: on it. She pulls out the chair across from me, sits down stiffly, and opens the book to a random page."
     "She holds it up in front of her face like a shield."
 
     "She's pretending to read. Badly. The book is upside down."
@@ -231,13 +231,13 @@ label hana_visit_05:
             mc "I turn a page carefully, like the upside-down book is perfectly normal. If she wants to be invisible, I'll let her be invisible."
             $ reward_attributes_once("hana_visit_05_pretend", [("insight", "micro")], show="auto")
 
-    "After a while, I feel it ― the tiny weight of being watched. I glance up. Over the top edge of her book, her eyes flick away, and the book rises another inch to hide her face."
+    "After a while, I feel it: the tiny weight of being watched. I glance up. Over the top edge of her book, her eyes flick away, and the book rises another inch to hide her face."
 
     "She peeked. She peeked at me."
 
     "We sit like that for most of the hour. Two people reading badly. Neither of us turning a page."
 
-    "The hour ends. Chairs scrape. People pack up. Hana stays very still until I start to gather my things ― then, in a single quick motion, she stands and heads for the door."
+    "The hour ends. Chairs scrape. People pack up. Hana stays very still until I start to gather my things. Then, in a single quick motion, she stands and heads for the door."
     "She doesn't look at me. She doesn't bow."
 
     "On the table, where her book was, there's a small square of folded paper. Folded four times, edges lined up with obsessive care, sitting dead centre in the space between where we were sitting."
@@ -267,12 +267,12 @@ label hana_visit_05:
 label hana_visit_06:
     call hana_common_open
 
-    "It's raining again. The room is almost empty ― just Hana and me and one student asleep over a textbook in the corner."
+    "It's raining again. The room is almost empty: just Hana and me and one student asleep over a textbook in the corner."
     "The blinds are down. The fan ticks. The rain makes the whole room sound like it's wrapped in cloth."
 
     "Hana is already at my table when I sit down. She has a large, soft-covered notebook in front of her, both hands flat on top of it, like she's keeping it from flying away."
 
-    "She doesn't pretend to read this time. She just looks at me. Her eyes are wet, but not from crying ― more like she's been holding her breath for a very long time and is finally, slowly, letting some of it out."
+    "She doesn't pretend to read this time. She just looks at me. Her eyes are wet, but not from crying, more like she's been holding her breath for a very long time and is finally, slowly, letting some of it out."
 
     hana "I... try. Going to... try. Please. Don't... fill in. If I stop. Don't. Please."
 
@@ -296,14 +296,14 @@ label hana_visit_06:
 
     hana "Feel... stuck. Like... person-shaped space. Where person... should be. Can't say anything. Can't... rebel. So I... hide. Here. In books. Under... arms."
 
-    "A long silence. The rain fills it. Then, slowly, she pushes the notebook across the table toward me ― with one finger, like she's surrendering a weapon."
+    "A long silence. The rain fills it. Then, slowly, she pushes the notebook across the table toward me, with one finger, like she's surrendering a weapon."
 
     hana "You can... look. Never shown... anyone."
 
     "I open it."
 
     "I'd expected hidden sketches. Pencil doodles. What's actually in there stops me cold."
-    "Page after page ― ink and watercolour, ink and pencil ― a city that's unmistakably Tokyo, but painted like nobody has ever looked at it properly."
+    "Page after page, ink and watercolour, ink and pencil, a city that's unmistakably Tokyo, but painted like nobody has ever looked at it properly."
     "Rain on a train window. The inside of a convenience store at 2 a.m. An old man feeding crows, drawn so gently he looks like he's about to cry."
     "A girl with her back to us, holding a book over her face. Her. Over and over. The same girl, from behind, from the side, always unfinished at the face."
 
@@ -323,7 +323,7 @@ label hana_visit_06:
 
     hana "Don't know... if I can. What you're saying. But... think I want... to try."
 
-    "She closes the notebook, holds it against her chest, and for the first time all year ― Hana smiles."
+    "She closes the notebook, holds it against her chest, and for the first time all year, Hana smiles."
     "It's small and crooked and terrified, like a first step. But it's real."
 
     "The hour ends. She leaves before I do, but at the door she stops, half-turns, and bows. Not the fast panicked bow from before. A slow one. Deliberate. Thank you."
@@ -341,12 +341,12 @@ label hana_visit_06:
 label hana_visit_07:
     call hana_common_open
 
-    "The room is empty when I arrive. Blinds up, late sun, the shelves tidier than I've ever seen them ― every spine aligned, every gap closed."
+    "The room is empty when I arrive. Blinds up, late sun, the shelves tidier than I've ever seen them: every spine aligned, every gap closed."
     "The fan ticks. It's the last hour the club meets this month."
 
     "It looks like someone finished everything and said goodbye to the room."
 
-    "Hana is standing by the window, waiting. Not hiding behind a shelf. Not holding a book. Just standing, hands clasped, facing the door ― waiting for me specifically."
+    "Hana is standing by the window, waiting. Not hiding behind a shelf. Not holding a book. Just standing, hands clasped, facing the door, waiting for me specifically."
     "When she sees me she doesn't look away."
 
     "She's trembling. But she's smiling."
@@ -385,11 +385,11 @@ label hana_visit_07:
             hana "Maybe. Doesn't feel like winning. Feels like... putting something heavy down."
             $ reward_attributes_once("hana_visit_07_win", [("grace", "micro")], show="auto")
 
-    "She reaches into her bag and takes out something small, wrapped in a square of plain paper. She holds it out with both hands ― the way you hand someone something that matters."
+    "She reaches into her bag and takes out something small, wrapped in a square of plain paper. She holds it out with both hands, the way you hand someone something that matters."
 
     hana "This is for you. I made it. Not... very good."
 
-    "I unwrap it. A small cloth strap ― the kind you'd hang on a phone or a bag ― with a tiny brush and a painter's palette stitched into it in coloured thread."
+    "I unwrap it. A small cloth strap, the kind you'd hang on a phone or a bag, with a tiny brush and a painter's palette stitched into it in coloured thread."
     "The stitching is uneven. Every stitch is deliberate."
 
     hana "Brush and palette. What I'm going to be... if I'm brave enough. Wanted you to carry it. So you don't... forget me."
@@ -402,12 +402,12 @@ label hana_visit_07:
             mc "This means a lot to me. Thank you, Hana."
             $ reward_attributes_once("hana_visit_07_means", [("nerve", "micro")], show="auto")
 
-    hana "No ― not like that. For you... so you don't forget me. Like... like you carried my dream. When I couldn't. You kept showing up. Every week. Nobody... ever kept showing up."
+    hana "No, not like that. For you... so you don't forget me. Like... like you carried my dream. When I couldn't. You kept showing up. Every week. Nobody... ever kept showing up."
 
-    "She steps back and bows ― slow, deep, the way she did at the door last time. Then she picks up her bag and walks out. Not fleeing. Walking."
+    "She steps back and bows, slow and deep, the way she did at the door last time. Then she picks up her bag and walks out. Not fleeing. Walking."
     "At the door she stops for half a second and looks back one last time, and this time she holds my eyes for a full breath before she goes."
 
-    "I stand in the empty club room for a while. The shelves are straight. The blinds are up. The fan ticks. There's nothing left here for her ― she finished it, tidied it, and closed it."
+    "I stand in the empty club room for a while. The shelves are straight. The blinds are up. The fan ticks. There's nothing left here for her: she finished it, tidied it, and closed it."
 
     "I turn the small charm over in my hand. Uneven stitches. A brush and a palette."
 
@@ -433,14 +433,14 @@ label hana_visit_closed:
     "The reading club is still here. The shelves are still full. The fan still ticks."
     "But Hana is gone."
 
-    "A different volunteer is shelving returns ― someone I've never seen before. They don't move like Hana did. They don't hesitate before each book."
+    "A different volunteer is shelving returns, someone I've never seen before. They don't move like Hana did. They don't hesitate before each book."
 
     quiet_student "Looking for Hana? She stopped coming. Something about art school."
 
     "I take my usual seat. The table feels larger without her. The silence feels different."
 
     "The book I returned is still hers. The rain window drawing is still in my pocket. The note is folded along every crease, exactly as she left it."
-    "The charm hangs from my phone ― brush and palette, uneven stitches, proof that courage comes in small handmade things."
+    "The charm hangs from my phone: brush and palette, uneven stitches, proof that courage comes in small handmade things."
 
     menu:
         "Leave quietly.":

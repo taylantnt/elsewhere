@@ -1,5 +1,5 @@
 ################################################################################
-## DAY 11 ― SATURDAY, APRIL 18, 2026
+## DAY 11: SATURDAY, APRIL 18, 2026
 ## The book town: used paper, modern literature, and the second life of a book.
 ################################################################################
 

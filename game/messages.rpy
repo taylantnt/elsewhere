@@ -1,5 +1,5 @@
 ################################################################################
-## MESSAGES ― TEXTING, THREADS, AND THE PHONE BUZZ
+## MESSAGES: TEXTING, THREADS, AND THE PHONE BUZZ
 ################################################################################
 
 default message_threads = {}

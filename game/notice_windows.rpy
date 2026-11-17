@@ -75,7 +75,7 @@ transform notice_backdrop_out:
     linear 0.28 alpha 0.0
 
 style guide_category is default:
-    font "DejaVuSans.ttf"
+    font ui_font
     size gui.scale(11)
     bold True
     color "#c8a06a"

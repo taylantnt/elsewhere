@@ -1,5 +1,5 @@
 ################################################################################
-## WIRE ― THE PHONE APP
+## WIRE: THE PHONE APP
 ################################################################################
 ##
 ## WIRE is what the phone in his pocket is actually for. It is where the people

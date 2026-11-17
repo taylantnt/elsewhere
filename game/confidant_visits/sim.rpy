@@ -47,7 +47,7 @@ label sim_common_open:
     return
 
 ################################################################################
-## VISIT 1 ― THE DOOR WITH TAPE ON IT
+## VISIT 1: THE DOOR WITH TAPE ON IT
 ################################################################################
 ##
 ## The alternate first meeting. The Day 2 photo-club route already contains the
@@ -69,7 +69,7 @@ label sim_visit_01:
         "Sim leads me the last few steps to the studio room and opens the door himself."
 
     "The room smells of fixative and warm electronics and too much coffee. Four people are arguing in front of a whiteboard."
-    sim "― it is not lazy. It is just not thinking about the picture."
+    sim "It is not lazy. It is just not thinking about the picture."
     marco "It is a machine making the decision for you. That is the definition of lazy."
     sim "It is a machine making a decision you would have made anyway, only faster. That is the definition of a tool."
     nami "You two have had this argument every week since March."
@@ -118,7 +118,7 @@ label sim_visit_01:
     $ wire_unlock("sim")
     # Circle's welcome message. The Day 2 route sends the longer version; this
     # one matches the shorter first meeting and waits for the phone to connect.
-    $ queue_message("sim", "Circle. You're in. Post what you shot ― I'll look tonight.", day="yesterday")
+    $ queue_message("sim", "Circle. You're in. Post what you shot, I'll look tonight.", day="yesterday")
 
     sim "We meet Thursdays. Bring the camera, or don't. The wall doesn't care."
     mc "The wall?"
@@ -747,7 +747,7 @@ label sim_visit_07:
     "Sim stands in the center, camera raised, smiling wider than he has all evening."
     sim "「さあ、みんな集まって。カメラを見て！」"
     "He translates for my benefit without breaking stride."
-    sim "Everyone look at the lens! Not at me ― ha! ― at the lens. That's the one."
+    sim "Everyone look at the lens! Not at me, ha, at the lens. That's the one."
     "The shutter clicks."
     "The image is slightly imperfect, slightly overexposed, and completely alive."
     sim "There. That is the last photograph I will take in this room."
@@ -788,7 +788,7 @@ label sim_visit_07:
 
 
 ################################################################################
-## EPILOGUE ― THE CLUB ON HOLD
+## EPILOGUE: THE CLUB ON HOLD
 ################################################################################
 ##
 ## Sim is gone and Circle has no host. The school has put the club on hold

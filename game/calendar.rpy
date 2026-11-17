@@ -52,6 +52,13 @@ define story_calendar_events = {
     12: "Asakusa with Murakami",
     13: "Asakusa with Hikari",
     14: "The second week",
+    15: "The midterm gets a shape",
+    16: "The vending machine shrine",
+    17: "The house speaks Japanese",
+    18: "The neighbourhood matsuri",
+    19: "The mock exam",
+    20: "The midterm",
+    21: "Two words in red",
 }
 
 ## Weekly opening rules, Monday = 0 through Sunday = 6.
@@ -346,7 +353,7 @@ style story_day_frame is empty:
     padding (gui.scale(16), gui.scale(7), gui.scale(16), gui.scale(7))
 
 style story_day_date is default:
-    font "DejaVuSans.ttf"
+    font ui_font
     size gui.scale(17)
     bold True
     color "#f3eee5"
@@ -354,7 +361,7 @@ style story_day_date is default:
     outlines []
 
 style story_day_meta is default:
-    font "DejaVuSans.ttf"
+    font ui_font
     size gui.scale(9)
     bold True
     color "#c8a06a"
@@ -370,7 +377,7 @@ style story_day_cash_label is default:
     outlines []
 
 style story_day_cash is default:
-    font "DejaVuSans.ttf"
+    font ui_font
     size gui.scale(14)
     bold True
     color "#e7c08d"

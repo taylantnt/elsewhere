@@ -1,5 +1,5 @@
 ################################################################################
-## AYA ― THE MAID CAFE
+## AYA: THE MAID CAFE
 ################################################################################
 ##
 ## Visit 1 happened in script.rpy, on the day he wandered into Akihabara: the
@@ -57,7 +57,7 @@ label aya_visit_02:
 
     mc "I did. The omurice was too good to only eat once."
     aya "Ha! Most people say that and then never come back. Foreign guests especially. They come for the 'Maid Cafe experience,' take one photo, and that's the whole story."
-    aya "But you― you actually came back. I half expected to forget your face by now."
+    aya "But you actually came back. I half expected to forget your face by now."
     "She says it lightly, but she is already pulling out 'your' table, the one by the window with the sticker on the leg."
 
     menu:
@@ -72,7 +72,7 @@ label aya_visit_02:
             $ reward_attributes_once("aya_visit_02_surprise", [("nerve", "micro")], show="auto")
         "What do you recommend today?" :
             mc "What do you recommend today?"
-            aya "You actually asked for my opinion? Well then― let me think."
+            aya "You actually asked for my opinion? Well then, let me think."
             aya "The curry rice is good today. I'll make sure it looks cute for you."
             $ reward_attributes_once("aya_visit_02_recommend", [("insight", "micro")], show="auto")
 
@@ -100,7 +100,7 @@ label aya_visit_02:
             $ reward_attributes_once("aya_visit_02_picked", [("grace", "micro")], show="auto")
 
     "The food arrives, and this time she does not just set it down and leave."
-    "She stands beside the table with the marker, and for a moment she just looks at me like she is deciding whether I am worth the effort."
+    "She stands beside the table with the ketchup, and for a moment she just looks at me like she is deciding whether I am worth the effort."
     aya "Now… it's time for your custom art again. Same request as before? Or do you trust my artistic vision today?"
 
     menu:
@@ -345,7 +345,7 @@ label aya_visit_05:
     "The cafe is nearly empty when I arrive. Just one table of students and the soft hum of the machines."
     "Aya is there, but something is off. Her voice is a little hoarse, and the brightness takes an extra second to switch on."
 
-    aya "Welcome back, Master! You came at a good time― actually, no, you came at a very quiet time. That's better."
+    aya "Welcome back, Master! You came at a good time... actually, no, you came at a very quiet time. That's better."
     "She says it warmly, but I can hear the effort in it."
 
     "We sit. She does not do the usual menu presentation. She just watches me with eyes that are tired in a way that has nothing to do with sleep."
@@ -508,7 +508,7 @@ label aya_visit_06:
 
     $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 6)
     $ remember("aya", "she auditioned for a singing contest and showed him her streetwear sketchbook")
-    $ queue_message("aya", "I did it. I sang. I was terrified and I did it anyway. You were right― I am allowed to want things.", day="yesterday")
+    $ queue_message("aya", "I did it. I sang. I was terrified and I did it anyway. You were right. I am allowed to want things.", day="yesterday")
     $ reward_attributes_once("aya_visit_06_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -607,7 +607,7 @@ label aya_visit_07:
 
 
 ################################################################################
-## EPILOGUE ― THE SAME OMURICE
+## EPILOGUE: THE SAME OMURICE
 ################################################################################
 ##
 ## Aya is gone. The cafe is not. The new maid has been trained from Aya's notes,

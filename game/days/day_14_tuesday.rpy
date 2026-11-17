@@ -1,5 +1,5 @@
 ################################################################################
-## DAY 14 ― TUESDAY, APRIL 21, 2026
+## DAY 14: TUESDAY, APRIL 21, 2026
 ## The second week opens: one free afternoon, and everything it can hold.
 ################################################################################
 
@@ -153,4 +153,4 @@ label tuesday_week_two:
     stop music fadeout 2.0
     scene black with Dissolve(1.5)
     pause 1.5
-    jump end_of_build
+    jump wednesday_preview

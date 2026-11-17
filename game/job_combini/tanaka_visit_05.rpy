@@ -1,5 +1,5 @@
 ################################################################################
-## THE COMBINI JOB ― VISIT 5: JUST ENOUGH
+## THE COMBINI JOB: VISIT 5: JUST ENOUGH
 ################################################################################
 ##
 ## Make just enough. Do not be afraid to sell out. The last lesson before the

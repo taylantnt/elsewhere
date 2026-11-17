@@ -3,12 +3,12 @@
 ## Everything the game needs to answer two questions: "where can I go?" and "is
 ## there anything waiting for me there?"
 ##
-## Nothing in this file plays a scene. It keeps the bookkeeping ― how much of a
-## person's story the player has seen ― and draws the one screen that shows it.
+## Nothing in this file plays a scene. It keeps the bookkeeping: how much of a
+## person's story the player has seen, and draws the one screen that shows it.
 ## The story decides when the screen opens and what happens when a row is picked.
 ##
 ## The rule the screen exists to express:
-##   * a person's story is told in seven visits, one per outing ― Chef's and
+##   * a person's story is told in seven visits, one per outing: Chef's and
 ##     Hana's run to eight, because their eighth is the closed place, the end
 ##     of the arc;
 ##   * the story only lets it move so far in each act, so a place is either
@@ -118,7 +118,7 @@ define confidant_visit_totals = {
 ## Which part of the story we are in. The story bumps this at an act break.
 ## Act 1 is the arrival (airport to first dream), which is before the player
 ## has any freedom at all, which is why the cap below starts at nothing.
-## Act 2 is the long middle ― the big act that holds every confidant arc.
+## Act 2 is the long middle: the big act that holds every confidant arc.
 ## Act 3 is the glitch era; the final visits land while the world breaks.
 default current_act = 1
 
@@ -126,7 +126,7 @@ default current_act = 1
 ## caught up with its cap is paused: the person is still there and still
 ## talking, but nothing new about them happens until the story moves on. This
 ## is the one dial that stops the player from spending the whole game on a
-## single person ― turn a number up and that act opens more of everyone.
+## single person: turn a number up and that act opens more of everyone.
 define act_confidant_cap = {
     1: 0,
     # Act 2 is the long middle and holds every written confidant arc. The caps

@@ -95,6 +95,16 @@ init -3 python:
     # game's own handwriting font.
     game_font.add(kana_font, None, None)
 
+    # The clean sans-serif look used by the HUD, notice titles and the memory
+    # screen. DejaVu Sans draws the Latin UI text, but it has no glyph for the
+    # punctuation the game settled on (・ U+30FB and ￥ U+FFE5): used on its
+    # own it shows a tofu box for them. Anything outside Latin falls through
+    # to Kiwi Maru, which does have those glyphs, so the symbols stay visible
+    # without losing the sans look on the ASCII labels.
+    ui_font = FontGroup()
+    ui_font.add("DejaVuSans.ttf", 0x20, 0x024f)
+    ui_font.add(kanji_font, None, None)
+
 ## The font used for in-game text.
 define gui.text_font = game_font
 

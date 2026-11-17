@@ -3,7 +3,10 @@
 **Status:** design memo — the first quiz arc is scripted (Hikari's Sunday
 practice and the professor's Monday quiz); Tuesday runs the midterm briefing,
 the haiku lecture continuation, and the forced last first-week confidant
-meeting; the hub starts Wednesday and later exam-period scenes remain future.
+meeting; the hub starts Wednesday. The midterm arc itself is now scripted in
+Days 15–21: preview/review, sound words, the mock exam, the three-part midterm
+on Day 20, and the result conversation on Day 21. Later exam-period scenes
+beyond that remain future.
 **Why it exists:** Hana's introduction (and the Reading Club errand) hangs off
 exam season, and the lectures the protagonist attends should all teach
 something that can come back as an exam question. This file is the memo of
@@ -40,7 +43,14 @@ the miss.
 | Saturday, April 18 (Day 11) | Jimbocho book town with Murakami; Sōseki, Kawabata, Tanizaki, *wabi-sabi*. |
 | Sunday, April 19 (Day 12) | Sensō-ji with Murakami; *ma*, *ichigo ichie*, *omikuji*. |
 | Monday, April 20 (Day 13) | The city as a text; Asakusa with Hikari; the Fortune Teller's first reading. |
-| Tuesday, April 21 (Day 14) | The city as a conversation; one free afternoon (the first reachable hub day after the expansion). End of the current build. |
+| Tuesday, April 21 (Day 14) | The city as a conversation; one free afternoon (the first reachable hub day after the expansion). |
+| Wednesday, April 22 (Day 15) | The midterm is announced: written, practical and a map from memory. 予習 (yoshuu, preview) vs 復習 (fukushuu, review). The exam plum. |
+| Thursday, April 23 (Day 16) | Circle at the photo club; 見立て (mitate), seeing one thing as another; a figure in the vending machine reflection. |
+| Friday, April 24 (Day 17) | Murakami on 擬音語 (giongo) and 擬態語 (gitaigo); the house has been speaking Japanese since Day 8. He writes カチ (kachi). |
+| Saturday, April 25 (Day 18) | The neighbourhood matsuri: happi coats, yakitori, kingyo sukui, the mikoshi, Father on the rope, the white mask. |
+| Sunday, April 26 (Day 19) | The mock exam he writes and Hikari answers; できる (dekiru) vs わかる (wakaru); a fourth question in his own handwriting. |
+| Monday, April 27 (Day 20) | **The midterm.** Three parts: written, practical at the combini, and the map. The fourth question appears on the paper; the professor writes "See me." in red. |
+| Tuesday, April 28 (Day 21) | Results: he passed, the map was the best in the class, and the professor asks about the corridor. End of the current build. |
 | Act 2, late | The wider exam period — later exams, optional `run_quiz` sets, results echoing in later dialogue. |
 | Act 3 | No classes — the world is breaking. (Deliberate contrast.) |
 

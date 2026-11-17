@@ -8,7 +8,7 @@
 ## FICTION:
 ##   Sim gives the protagonist his first field camera assignment for Circle:
 ##   "The city gives you ten thousand things at once. A camera doesn't just
-##   record ― it decides what matters. Find the line that holds the frame together."
+##   record: it decides what matters. Find the line that holds the frame together."
 ##
 ## DESIGN:
 ##   * 3 field assignments in different locations:

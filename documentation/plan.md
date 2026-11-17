@@ -12,7 +12,7 @@ in `story_treatment.md` and the per-location interaction docs; this file is the
 | Act | Title | Covers | Status |
 |-----|-------|--------|--------|
 | 1 | The Arrival | Airport → home → first dream → first night | **Built** |
-| 2 | The Long Middle | First day, second day, the hub, all confidant visits | **In progress** — days 1–14 built through the second hub day; all confidant visits 2–7 and the repeatable epilogues written; the repeating loop after Day 14 is still open |
+| 2 | The Long Middle | First day, second day, the hub, all confidant visits, the midterm week | **In progress** — days 1–21 built through the midterm and its aftermath; all confidant visits 2–7 and the repeatable epilogues written; the repeating loop after Day 21 is still open |
 | 3 | The Glitch | The leaks stop being atmospheric and start being structural (treatment "Escalating Mystery" stages 1–5) | Not written |
 | 4 | The End | The revelation, the three endings, and the epilogue coda | Not written |
 
@@ -106,6 +106,17 @@ which is the simulation removing people as the test measures his equilibrium.
       morning, elective (the city as a conversation), one free afternoon,
       dinner, night, then `end_of_build`. The build now runs to the second
       Tuesday instead of stopping on Day 12.
+- [x] 2026-11-18 — Week 3 written as seven separate day files
+      (`game/days/day_15_wednesday.rpy` … `day_21_tuesday.rpy`) for Wednesday,
+      April 22 through Tuesday, April 28. A midterm week: 予習/復習 and the exam
+      plum (Day 15), Sim's 見立て photo lesson and a figure in the reflection
+      (16), Murakami's giongo/gitaigo lesson and the word カチ (17), the
+      neighbourhood matsuri with Father on the mikoshi rope (18), the mock exam
+      and できる/わかる with a fourth question in his own handwriting (19), the
+      three-part midterm with the combini practical and "See me." in red (20),
+      and the result conversation where the professor asks about the corridor
+      (21). Day 14 now jumps to `wednesday_preview`; Day 21 jumps to
+      `end_of_build`. Calendar beats, docs and the menu flags synced. Lint passes.
 - [x] 2026-11-12 — Fortune Teller added as a **three-card limited confidant**:
       `confidant_visits["fortune"]`, `confidant_visit_totals["fortune"] = 3`,
       hub row gated by `fortune_arc_started`, `confidant_visit_fortune` turns

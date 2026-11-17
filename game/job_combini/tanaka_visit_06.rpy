@@ -1,5 +1,5 @@
 ################################################################################
-## THE COMBINI JOB ― VISIT 6: THE TENCHO
+## THE COMBINI JOB: VISIT 6: THE TENCHO
 ################################################################################
 ##
 ## The reveal. The man who has been ordering the protagonist around for five

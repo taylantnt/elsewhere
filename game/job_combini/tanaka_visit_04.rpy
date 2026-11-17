@@ -1,5 +1,5 @@
 ################################################################################
-## THE COMBINI JOB ― VISIT 4: THE FRYER
+## THE COMBINI JOB: VISIT 4: THE FRYER
 ################################################################################
 ##
 ## Deep fried food is exactly timed, and what is past its time is disposed of.

@@ -34,16 +34,17 @@ is the revelation and the endings.
 | Act | Title | What it covers | Ends on |
 |-----|-------|----------------|---------|
 | 1 | The Arrival | The plane, Narita terminal, the travel decision, the journey home, the house, the first dream | The end of the first dream, where `morning_call` begins Act 2 |
-| 2 | The Long Middle | The opening school days, the first weekend, the free-roam hub, the seven-visit confidant stories | **In progress** — days 1–14 built through the second hub day; every confidant visit is written; ends when the glitches turn structural |
+| 2 | The Long Middle | The opening school days, the first weekend, the free-roam hub, the seven-visit confidant stories, the midterm week | **In progress** — days 1–21 built through the midterm and its aftermath; every confidant visit is written; ends when the glitches turn structural |
 | 3 | The Glitch | The simulation leaks stop being atmospheric and start breaking the world (treatment "Escalating Mystery" stages 1–5) | *not written* |
 | 4 | The End | Hikari's revelation at the river, the three endings, the epilogue coda | *not written* |
 
 The prologue content and the first two school days are built end to end, and
-the script now continues through the first weekend, the second week, and the
-Asakusa / combini material to Tuesday, April 21 (Day 14). The hub (`label
-free_afternoon` + `screen location_hub`) is wired and reached on Day 7 and
-again on Day 14; the confidant visit labels and the city rows are written
-scenes, not stubs. Day 14 lands on the end-of-build card.
+the script now continues through the first weekend, the second week, the
+Asakusa / combini material, and the third week's midterm arc to Tuesday,
+April 28 (Day 21). The hub (`label free_afternoon` + `screen location_hub`) is
+wired and reached on Day 7, Day 14 and every day of week 3; the confidant visit
+labels and the city rows are written scenes, not stubs. Day 21 lands on the
+end-of-build card.
 
 > The older numbering (Act 1 = the airport, Act 2 = the journey, Act 3 = the
 > first day) is retired, and so is the intermediate numbering that made the
@@ -530,11 +531,21 @@ is the index.
   (`ō`, `ū`, `ā`, `ē`, `ī`) along with `—`, `·`, `¥`, `é`, `•` and most dingbat
   or geometric symbols. Romaji follows the author's plain convention instead:
   `Bashou`, `Sensou-ji`, `Taishou`, `roumaji`, `nomihoudai`. For punctuation use
-  what the font has — `―` (horizontal bar) for a dash, `・` (katakana middle
-  dot) for a separator, `￥` for yen.
+  what the font has: `・` (katakana middle dot) for a separator, `￥` for yen.
+  Avoid dashes entirely, since `—` renders blank; use a colon where one fits,
+  or rephrase the line.
 - A screen that genuinely needs one of the missing symbols can pin its own font
   (`font "DejaVuSans.ttf"` / `text_font "DejaVuSans.ttf"`), which is how the
   chevrons, skip triangle, overflow dots and minigame symbols are drawn.
+- **DejaVu Sans is the mirror image of the game font.** It has `·`, `¥`, `•`
+  and `—`, but no `・` or `￥`, and it draws a tofu box (□) for a missing glyph
+  rather than nothing. So never pin bare DejaVu Sans on an element that shows
+  the game's `・` or `￥` — the HUD date chip and the memory-screen eyebrow used
+  to do exactly that and rendered boxes. Those screens use the `ui_font`
+  group from `game/gui.rpy` instead: DejaVu Sans for Latin (0x20–0x024f), Kiwi
+  Maru for everything else. It keeps the same clean look on ASCII labels while
+  covering the punctuation. `guide_font` (notice windows) and `menu_phone_font`
+  (phone UI) are the same two-font pattern.
 - `python3 tools/check_fonts.py` scans every `.rpy` file for characters that
   would render blank and prints the file and line. It reads the FontGroup rules
   out of `game/gui.rpy`, skips comments, and honours per-element font overrides
@@ -744,7 +755,7 @@ what makes them textable.
 and one place to say which weekdays a destination is open.
 
 - **The anchor is fixed.** Day 1 is Wednesday, April 8; Day 2 is Thursday,
-  April 9; and the built story runs through Tuesday, April 21 (Day 14). Every day
+  April 9; and the built story runs through Tuesday, April 28 (Day 21). Every day
   label pins its absolute day at the top with `set_story_day()`, so a branch or
   a rollback cannot leave the calendar a day behind. The full date table lives
   in `documentation/calendar.md`.
@@ -914,8 +925,8 @@ that does not exist.
   epilogue coda all live there. See `story_treatment.md` and `plan.md`.
 - **The day loop after the current build.** `free_afternoon` and the
   `confidant_visit_*` labels exist (§5.7). The playable story now runs through
-  Tuesday, April 21 (Day 14), the second hub day, and lands on the end-of-build
-  card (`end_of_build`), so the repeating day is not missing the terminal path;
+  Tuesday, April 28 (Day 21), after the midterm week, and lands on the
+  end-of-build card (`end_of_build`), so the repeating day is not missing the terminal path;
   it is simply still unwritten. A repeating day (morning → lecture → hub →
   night) remains the missing skeleton.
 - **The confidant locations beyond their first visit.** All five confidants

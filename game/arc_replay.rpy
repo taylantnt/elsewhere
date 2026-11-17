@@ -1,5 +1,5 @@
 ################################################################################
-## ARC REPLAY ― CONSOLE TEST MODE
+## ARC REPLAY: CONSOLE TEST MODE
 ################################################################################
 ##
 ## Shift+O, then `jump arc_replay`. Pick a confidant and watch their whole
@@ -13,7 +13,7 @@
 ## memories and WIRE messages are exactly the ones from play. It snapshots the
 ## save state on the way in and puts it back on the way out, so a test run in a
 ## live save does not permanently spend your rewards or advance your counters.
-## Quitting in the middle of a replay skips the restore ― finish the arc.
+## Quitting in the middle of a replay skips the restore: finish the arc.
 ##
 ## Visit 1 for Orson, Aya and Hana is inside the Day 1/2 routes, not a separate
 ## label, so those arcs start at visit 2. Sim's visit 1 is standalone and is
@@ -68,13 +68,13 @@ label arc_replay:
     "Pick a chain. Every visit is the real scene, played back-to-back with a card between them."
     "Nothing you do here is kept: the visits, rewards, memories and messages are restored when the arc ends."
     menu:
-        "Sim ― Circle (visit 1 through the epilogue)":
+        "Sim: Circle (visit 1 through the epilogue)":
             call arc_replay_sim from _arc_hub_sim
-        "Orson ― Lupin's Den (visits 2-7 and the epilogue)":
+        "Orson: Lupin's Den (visits 2-7 and the epilogue)":
             call arc_replay_orson from _arc_hub_orson
-        "Aya ― the Maid Cafe (visits 2-7 and the epilogue)":
+        "Aya: the Maid Cafe (visits 2-7 and the epilogue)":
             call arc_replay_aya from _arc_hub_aya
-        "Hana ― the Reading Club (visits 2-7 and the epilogue)":
+        "Hana: the Reading Club (visits 2-7 and the epilogue)":
             call arc_replay_hana from _arc_hub_hana
         "Stop":
             return
@@ -85,35 +85,35 @@ label arc_replay:
 label arc_replay_sim:
     $ arc_replay_begin()
     scene black with Dissolve(0.5)
-    "SIM // VISIT 1 ― THE DOOR WITH TAPE ON IT"
+    "SIM // VISIT 1: THE DOOR WITH TAPE ON IT"
     call sim_visit_01 from _arc_sim_01
 
     scene black with Dissolve(0.5)
-    "SIM // VISIT 2 ― CAMERA FIRST, INTRODUCTIONS SECOND"
+    "SIM // VISIT 2: CAMERA FIRST, INTRODUCTIONS SECOND"
     call sim_visit_02 from _arc_sim_02
 
     scene black with Dissolve(0.5)
-    "SIM // VISIT 3 ― THE FIRST FRAME THAT IS HIS"
+    "SIM // VISIT 3: THE FIRST FRAME THAT IS HIS"
     call sim_visit_03 from _arc_sim_03
 
     scene black with Dissolve(0.5)
-    "SIM // VISIT 4 ― THE EXHIBITION"
+    "SIM // VISIT 4: THE EXHIBITION"
     call sim_visit_04 from _arc_sim_04
 
     scene black with Dissolve(0.5)
-    "SIM // VISIT 5 ― THE EMPTY ROOM"
+    "SIM // VISIT 5: THE EMPTY ROOM"
     call sim_visit_05 from _arc_sim_05
 
     scene black with Dissolve(0.5)
-    "SIM // VISIT 6 ― THE MAGAZINE OFFER"
+    "SIM // VISIT 6: THE MAGAZINE OFFER"
     call sim_visit_06 from _arc_sim_06
 
     scene black with Dissolve(0.5)
-    "SIM // VISIT 7 ― TT AT THE EXHIBITION"
+    "SIM // VISIT 7: TT AT THE EXHIBITION"
     call sim_visit_07 from _arc_sim_07
 
     scene black with Dissolve(0.5)
-    "SIM // EPILOGUE ― THE CLUB ON HOLD"
+    "SIM // EPILOGUE: THE CLUB ON HOLD"
     call sim_visit_closed from _arc_sim_closed
 
     $ arc_replay_end()
@@ -125,31 +125,31 @@ label arc_replay_sim:
 label arc_replay_orson:
     $ arc_replay_begin()
     scene black with Dissolve(0.5)
-    "ORSON // VISIT 2 ― THE MASKS"
+    "ORSON // VISIT 2: THE MASKS"
     call orson_visit_02 from _arc_orson_02
 
     scene black with Dissolve(0.5)
-    "ORSON // VISIT 3 ― THE NOTEBOOK"
+    "ORSON // VISIT 3: THE NOTEBOOK"
     call orson_visit_03 from _arc_orson_03
 
     scene black with Dissolve(0.5)
-    "ORSON // VISIT 4 ― THE LIFE BEFORE THE BAR"
+    "ORSON // VISIT 4: THE LIFE BEFORE THE BAR"
     call orson_visit_04 from _arc_orson_04
 
     scene black with Dissolve(0.5)
-    "ORSON // VISIT 5 ― THE ROUTINES"
+    "ORSON // VISIT 5: THE ROUTINES"
     call orson_visit_05 from _arc_orson_05
 
     scene black with Dissolve(0.5)
-    "ORSON // VISIT 6 ― THE COASTER AND THE CRACK"
+    "ORSON // VISIT 6: THE COASTER AND THE CRACK"
     call orson_visit_06 from _arc_orson_06
 
     scene black with Dissolve(0.5)
-    "ORSON // VISIT 7 ― HE TAKES THE MASK OFF"
+    "ORSON // VISIT 7: HE TAKES THE MASK OFF"
     call orson_visit_07 from _arc_orson_07
 
     scene black with Dissolve(0.5)
-    "ORSON // EPILOGUE ― THE WOLF STILL HANGING"
+    "ORSON // EPILOGUE: THE WOLF STILL HANGING"
     call orson_visit_closed from _arc_orson_closed
 
     $ arc_replay_end()
@@ -161,31 +161,31 @@ label arc_replay_orson:
 label arc_replay_aya:
     $ arc_replay_begin()
     scene black with Dissolve(0.5)
-    "AYA // VISIT 2 ― RECOGNITION"
+    "AYA // VISIT 2: RECOGNITION"
     call aya_visit_02 from _arc_aya_02
 
     scene black with Dissolve(0.5)
-    "AYA // VISIT 3 ― THE MASK, ONE LAYER"
+    "AYA // VISIT 3: THE MASK, ONE LAYER"
     call aya_visit_03 from _arc_aya_03
 
     scene black with Dissolve(0.5)
-    "AYA // VISIT 4 ― THE PERFORMANCE SLIPS"
+    "AYA // VISIT 4: THE PERFORMANCE SLIPS"
     call aya_visit_04 from _arc_aya_04
 
     scene black with Dissolve(0.5)
-    "AYA // VISIT 5 ― WHAT IS UNDER IT"
+    "AYA // VISIT 5: WHAT IS UNDER IT"
     call aya_visit_05 from _arc_aya_05
 
     scene black with Dissolve(0.5)
-    "AYA // VISIT 6 ― THE NAME SHE CHOSE"
+    "AYA // VISIT 6: THE NAME SHE CHOSE"
     call aya_visit_06 from _arc_aya_06
 
     scene black with Dissolve(0.5)
-    "AYA // VISIT 7 ― NOT PERFORMING"
+    "AYA // VISIT 7: NOT PERFORMING"
     call aya_visit_07 from _arc_aya_07
 
     scene black with Dissolve(0.5)
-    "AYA // EPILOGUE ― THE SAME OMURICE"
+    "AYA // EPILOGUE: THE SAME OMURICE"
     call aya_visit_closed from _arc_aya_closed
 
     $ arc_replay_end()
@@ -197,31 +197,31 @@ label arc_replay_aya:
 label arc_replay_hana:
     $ arc_replay_begin()
     scene black with Dissolve(0.5)
-    "HANA // VISIT 2 ― GIVING THE BOOK BACK"
+    "HANA // VISIT 2: GIVING THE BOOK BACK"
     call hana_visit_02 from _arc_hana_02
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 3 ― OBSERVATION"
+    "HANA // VISIT 3: OBSERVATION"
     call hana_visit_03 from _arc_hana_03
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 4 ― SMALL ATTEMPTS"
+    "HANA // VISIT 4: SMALL ATTEMPTS"
     call hana_visit_04 from _arc_hana_04
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 5 ― THE ART BOOK"
+    "HANA // VISIT 5: THE ART BOOK"
     call hana_visit_05 from _arc_hana_05
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 6 ― SHARED SILENCE"
+    "HANA // VISIT 6: SHARED SILENCE"
     call hana_visit_06 from _arc_hana_06
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 7 ― THE CONFESSION"
+    "HANA // VISIT 7: THE CONFESSION"
     call hana_visit_07 from _arc_hana_07
 
     scene black with Dissolve(0.5)
-    "HANA // EPILOGUE ― THE LAST FAREWELL"
+    "HANA // EPILOGUE: THE LAST FAREWELL"
     call hana_visit_closed from _arc_hana_closed
 
     $ arc_replay_end()

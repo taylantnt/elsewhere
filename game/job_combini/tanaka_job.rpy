@@ -1,5 +1,5 @@
 ################################################################################
-## THE COMBINI JOB ― DISPATCHER AND SHARED BEATS
+## THE COMBINI JOB: DISPATCHER AND SHARED BEATS
 ################################################################################
 ##
 ## Tanaka is the man behind the counter who rang up the first purchase and
@@ -7,8 +7,8 @@
 ## (`combini_first_counter`, in `city_rows.rpy`) put the HELP WANTED card in the
 ## window; the hub's `tanaka` row is the job.
 ##
-## The job is structured like a confidant arc ― one visit per shift, one file
-## per visit (`tanaka_visit_01.rpy` … `tanaka_visit_07.rpy`) ― but it is not a
+## The job is structured like a confidant arc: one visit per shift, one file
+## per visit (`tanaka_visit_01.rpy` … `tanaka_visit_07.rpy`), but it is not a
 ## confidant. The row never closes, because the store does not. Progress is
 ## `tanaka_story`, the number of teaching shifts he has given; `combini_shifts`
 ## counts every shift worked, including repeats.
