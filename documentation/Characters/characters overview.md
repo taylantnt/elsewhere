@@ -53,7 +53,9 @@ justified: a wildcard and a job.
 
 Recurring non-confidant characters who give the locations their texture:
 
-- **Circle members** (Rika, Nami, Marco, Riku) — Sim's photography club;
+- **Circle members** (Nami, Marco, Rika, Riku, Tapi) and **TT** (Tapi's
+  boyfriend, a photographer who comes to the exhibition) — Sim's photography
+  club;
   see [`-Side Characters/Circle members.md`](file:///Users/taylan/Documents/GitHub/elsewhere/documentation/Characters/-Side%20Characters/Circle%20members.md)
 - **The Reading Circle regular** — Hana's silent scene partner at the library
 - **Lupin's Den regulars** — the fox, the rabbit, the white mask; Orson's

@@ -1,3 +1,12 @@
+> **Written version:** this is the session where Sim finally does the
+> introductions he keeps putting off. After the manual-exposure exercise he names
+> Nami, Marco and Riku, then Tapi arrives with coffee. Tapi is a second model,
+> quiet and dry where Rika is theatrical, and mentions TT — her boyfriend, a
+> working photographer who will come to the exhibition with a camera. The three
+> answers about Tapi pay Insight / Grace / Nerve micro rewards. See
+> `game/confidant_visits/sim.rpy`, label `sim_visit_02`, and
+> `documentation/Characters/-Side Characters/Circle members.md`.
+
 (A week later, you arrive at the small studio again. This time you’re carrying a brand-new camera bag, looking slightly nervous. The sound of shutters clicking fills the room. Sim spots you immediately, waving with his usual bright grin.)
 Sim: “Hey! You came back. …And what’s this? Ohh, you upgraded already?”
 (He gestures at your camera bag like it’s a treasure chest, eyes lighting up. Then he calls out to the others in Japanese.)

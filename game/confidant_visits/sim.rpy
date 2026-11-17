@@ -1,9 +1,16 @@
 # Defined late so type_sound (script.rpy) already exists when this runs.
 init 999 python:
-    nami = Character("Nami", callback=type_sound)
+    # The four original members are still dialogue-only: no art on disk. Nami,
+    # Tapi and TT have portraits and use the same side-image system as Sim, so
+    # their image tags have to match the `image side` definitions in script.rpy.
+    nami = Character("Nami", callback=type_sound, image="nami")
     marco = Character("Marco", callback=type_sound)
     rika = Character("Rika", callback=type_sound)
     riku = Character("Riku", callback=type_sound)
+    # Tapi is a second model. TT is her boyfriend, a working photographer who
+    # comes to the exhibition with a camera rather than as a club member.
+    tapi = Character("Tapi", callback=type_sound, image="tapi")
+    tt = Character("TT", callback=type_sound, image="tt")
 
 label confidant_visit_sim:
     $ visit = confidant_visits.get("sim", 0)
@@ -34,6 +41,9 @@ label sim_common_open:
     stop music fadeout 1.2
     play music "audio/Music/circle.mp3" fadein 2.0
     $ phone_map_visit("photo_club")
+    # The epilogue leaves her sitting on the steps. Every other session starts
+    # with her on her feet and fighting something.
+    $ nami_pose = "standing"
     return
 
 ################################################################################
@@ -174,6 +184,66 @@ label sim_visit_02:
             # Asking the person who knows, instead of guessing alone.
             $ reward_attributes_once("sim_visit_02_learn", [("grace", "micro")], show="auto")
 
+    "Sim claps once, quietly, the way somebody does when a room needs an agenda again."
+    sim "Right. Introductions. I keep promising to do this properly and then I never do."
+    "He gestures at the woman with the tape, who has finally made the tripod surrender."
+    sim "Nami. Lighting, tape, and the only person in this room who tells me I am wrong to my face."
+    nami "Only when you are."
+    sim "That is what makes it useful."
+    "She does not look up from the tripod, but something in her face changes at being introduced at all."
+
+    sim "Marco, at the table. He will tell you the poster matters as much as the photograph."
+    marco "Because it does. Nobody sees the photograph if the poster is ugly."
+    sim "And Riku, by the window. He has been here twenty minutes without once asking to be included."
+    riku "I was included. I just did not say anything."
+    sim "That is a form of inclusion. It is my favourite form."
+
+    "The door opens before he can get to anybody else."
+    "A girl with a short dark bob and a black knit sweater comes in with two paper cups. She hands one to Nami without looking."
+    sim "And this is Tapi. She models for us when Rika is not in the room, and sometimes when she is."
+    tapi "Only when somebody asks nicely. Sim asked nicely."
+    sim "I am very good at asking nicely."
+    tapi "You are very good at asking repeatedly."
+    "She says it without smiling, and the room accepts it as a greeting."
+
+    sim "Tapi has spent more time in front of a lens than the rest of us put together."
+    tapi "I stand where I am told. That is not the same as knowing anything."
+    sim "It is exactly the same as knowing one thing very well."
+
+    menu:
+        "Ask what it feels like to be on the other side.":
+            mc "What is it like, being the one in front of the camera?"
+            tapi "Quiet. You can hear the shutter even when you are not listening for it."
+            tapi "After a while you learn which silence means they got it, and which means they are still looking."
+            mc "Can you tell which one this is?"
+            tapi "Not yet. You are still finding out what you want."
+            $ reward_attributes_once("sim_visit_02_tapi_other_side", [("insight", "micro")], show="auto")
+        "Ask what she gets out of it.":
+            mc "What do you get out of standing in front of a camera?"
+            tapi "I do not enjoy being looked at. I enjoy being still and having somebody notice that I am there."
+            tapi "Those are different things. People assume they are the same."
+            sim "She is very good at telling people that without telling them that."
+            $ reward_attributes_once("sim_visit_02_tapi_why", [("grace", "micro")], show="auto")
+        "Ask about the cup she brought.":
+            mc "Do you always bring coffee?"
+            tapi "Only on days when Sim forgets to put the kettle on."
+            sim "I do not forget. I get distracted by the art."
+            tapi "It is the same thing."
+            "Tapi is not smiling. Nami is, which from her is practically a laugh."
+            $ reward_attributes_once("sim_visit_02_tapi_coffee", [("nerve", "micro")], show="auto")
+
+    "Sim glances toward the door, then back at Tapi."
+    sim "There is one more person you should know about, but he does not come to meetings."
+    mc "Not a member?"
+    tapi "No. He is my boyfriend. TT."
+    tapi "He shoots for a living. Weddings, shops, things with a budget."
+    sim "He is coming to the exhibition. As a photographer, not as a plus-one. I can already tell he will argue about the lighting."
+    tapi "He will. He has already argued about it twice and he has not been here."
+    mc "TT?"
+    tapi "That is what everybody calls him. Even me."
+    "She goes to find a bin for the empty cup. The room takes its own noise back."
+    mc "(The first week I came here, six people sat in a circle and nobody said my name. Now I know who brings the coffee.)"
+
     sim "Put it on manual. Aperture wide enough that the background disappears, shutter slow enough that the room is still paying attention."
     sim "Do not look at the settings yet. Look at the frame."
     "The nearest wall is stained at shoulder height in a way nobody has ever explained to me."
@@ -214,7 +284,8 @@ label sim_visit_03:
     "The circle is smaller than last week, and more purposeful."
     "A sheet of paper is taped beside the door: models wanted, one hour, all skill levels, payment in cake and honest criticism."
     "Rika is already there, draped over a chair as though the pose has chosen her."
-    "When she sees me, she sits up with theatrical dignity."
+    "Tapi is on the floor against the whiteboard with her knees up, watching Rika work the room. Nobody has asked her to model tonight and she does not seem to want to be asked."
+    "When she sees me, Rika sits up with theatrical dignity."
 
     rika "Oh. The photographer who learned from the wall."
     mc "I prefer stain photographer. It sounds less accidental."
@@ -223,6 +294,8 @@ label sim_visit_03:
     nami "I am very professional."
     marco "You brought two slices."
     nami "One is mine."
+    sim "Tapi is here for the cake and the criticism. She has spent enough time on the other side to know which one is worth more."
+    tapi "The cake is worth more. The criticism is longer."
 
     sim "Tonight you shoot. Not observe. Not admire. Shoot."
     mc "What if I ruin it?"
@@ -269,6 +342,15 @@ label sim_visit_03:
     mc "I made it."
     rika "You did. Do not become difficult about it."
     "The room laughs, and I laugh with them."
+
+    "Tapi looks up from the floor."
+    tapi "Can I see it?"
+    "I turn the camera so she can. She studies the screen longer than politeness requires."
+    tapi "She is not looking at you there. That is when she looks like herself."
+    rika "I am always myself."
+    tapi "No. You are always Rika. It is a very good Rika."
+    "Rika considers that for a second and accepts it with a nod, which from her is a kind of friendship."
+
     sim "Keep the file. Name it after what you were trying to learn, not what you hoped to get."
     sim "Next time, you shoot."
 
@@ -376,6 +458,13 @@ label sim_visit_04:
     "Sim writes EXHIBITION on the board in letters large enough to make the room feel suddenly official."
     sim "My first show, I mislabeled half the prints. The other half I labeled correctly, and nobody looked. I still made the next one."
     "Riku offers to design the labels. Nami claims the lighting plan. Marco says he will make the posters and immediately begins explaining why Helvetica is a political choice."
+    "Tapi writes her name on a sticky note and puts it on the board. Under it, in smaller letters, she writes: plus one."
+    sim "Is that the photographer?"
+    tapi "TT. He will bring a camera. He cannot help it."
+    sim "Then he can photograph the room. We have never had a picture of this place from outside it."
+    tapi "He will also tell us the lighting is wrong."
+    sim "That is what makes it a photograph instead of a snapshot."
+
     sim "You can help judge. Not because you are the newest, but because you still ask why."
     mc "That feels like a promotion."
     sim "It is. The pay is exposure and cake."
@@ -405,6 +494,7 @@ label sim_visit_05:
     sim "Nami sent a photograph of her cat sitting on the whiteboard. It is technically perfect and spiritually chaotic."
     "He holds it up. The cat has the expression of a creature that has read the minutes and disagreed with them."
     sim "Riku is in Osaka until Sunday. Marco is making posters at his cousin's print shop. Rika is asleep on the floor of the library."
+    sim "Tapi is at work. She says standing still in a shop window pays better than standing still here."
     sim "It is just us and the rectangles."
 
     sim "I know what this room looks like when it is empty. I knew it before there was anyone to fill it."
@@ -515,6 +605,14 @@ label sim_visit_06:
     sim "That is either profound or the stupidest thing anyone has written all semester."
     marco "It is both."
 
+    "Tapi has been sitting very still through all of it. She only speaks once."
+    tapi "Will you still take photographs?"
+    sim "Yes."
+    tapi "Then it is not the end of anything. It is somewhere else."
+    sim "You make it sound simple."
+    tapi "It is simple. You are the one who makes it complicated."
+    "She says it gently, and Sim accepts it the way he accepts the cake."
+
     menu:
         "Make the exhibition for the room, not for the magazine.":
             mc "Make the exhibition for the room, not for the magazine. Let it be about us."
@@ -567,6 +665,18 @@ label sim_visit_07:
     marco "I designed the map. It has a legend."
     riku "The legend is a drawing of a confused pigeon."
     marco "The pigeon represents the visitor."
+
+    "A man in a dark cap and thick glasses comes in behind Tapi with a camera hanging at his chest. He is older than everybody else here by enough that the doorway seems to get shorter as he passes through it."
+    sim "There he is. TT, this is the photographer who learned from a stain on the wall."
+    tt "The one who photographed the wall? I have been looking for that wall."
+    mc "It is on the second floor. Nobody knows why."
+    tt "Those are always the best walls."
+    "He shakes my hand with the confidence of somebody who has shaken a lot of hands."
+    tt "I am Tapi's plus-one. She has told me that twice, because I kept introducing myself as the photographer."
+    tapi "You are the photographer. That is why I said it twice."
+    tt "And I have come to photograph the room. Somebody told me the lighting here is an argument."
+    nami "It is not an argument. It is a plan with enemies."
+    "Tapi nods at her, the way you nod at somebody who has said something you would have said yourself."
 
     sim "「みんな、決めました。聞いてほしい。」"
     "Then, to me:"
@@ -642,9 +752,28 @@ label sim_visit_07:
     "The image is slightly imperfect, slightly overexposed, and completely alive."
     sim "There. That is the last photograph I will take in this room."
     sim "It is not the best one. It is the one I will remember."
+
+    "TT has been standing off to one side with his camera down. He raises it now."
+    tt "Sim."
+    sim "Not tonight."
+    tt "You have photographed every person in this room."
+    sim "That is my job."
+    tt "Not tonight it is not."
+    "Tapi steps out of the frame. Nami does too, which is how I know this is going to happen."
+    tapi "Ten seconds. He is very quick."
+    tt "Thank you. I have been waiting all evening for you to say that."
+    "Sim looks at the camera, then at the circle of people watching him, and stops pretending he does not want to be in it."
+    tt "There."
+    "He lowers the camera. Sim is still standing in the middle of the room with his hands half raised, caught in the act of not knowing where to put himself."
+    rika "That one is going on the wall."
+    sim "It is not a photograph by a member."
+    nami "It is a photograph of a member. That is close enough."
+    "Tapi comes back and stands beside him without looking at the screen. She already knows what it says."
+    tapi "You look like somebody who was asked to stay."
+    sim "...I was."
     $ sim_affection += 1
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 7)
-    $ remember("sim", "left for a magazine commission and gave the protagonist his camera strap")
+    $ remember("sim", "left for a magazine commission, gave the protagonist his camera strap, and was photographed by TT")
     $ queue_message("sim", "The exhibition was the best thing I have ever made. Thank you for being in the room. I will send photographs from the new city.", day="yesterday")
     $ reward_attributes_once("sim_visit_07_close", [("nerve", "micro")], show="card")
 
@@ -672,6 +801,8 @@ label sim_visit_closed:
     scene bg_campus_dusk with walk_fade
     stop music fadeout 2.0
     $ phone_map_visit("photo_club")
+    # The sitting drawing is for this scene: she is on the steps with the box.
+    $ nami_pose = "sitting"
 
     "The campus is doing its evening thing: bicycles, club posters, the last of the light on the clock tower."
     "I came to the building where Circle meets. The second-floor window is dark."
@@ -698,11 +829,14 @@ label sim_visit_closed:
         "Ask her who might take over.":
             mc "Do you think anyone will?"
             nami "Marco asked. The school said he is a first-year and the club needs a second-year host. Rika said she would do it if they let her run it like a zine. They are thinking about it."
+            nami "Tapi said she will help whenever somebody decides. TT offered to photograph the reopening, which is the least surprising sentence he has ever said."
             nami "Someone will. The room is too good to leave empty."
             $ reward_attributes_once("sim_visit_closed_ask", [("insight", "micro")], show="auto")
         "Look through the prints.":
             "I kneel beside the box. The portrait of Rika. Marco's map. The last photograph, the one Sim took of all of us, slightly overexposed and completely alive."
             "Sim is in the center, camera raised, smiling wider than he did all evening. He is not looking at the lens. He is looking at the people he arranged around it."
+            "At the bottom of the box is the one print that nobody in Circle made: TT's photograph of Sim, hands half raised, caught in the act of not knowing where to put them."
+            "It is not mounted. Nami kept it loose so it could be moved around."
             $ reward_attributes_once("sim_visit_closed_look", [("nerve", "micro")], show="auto")
 
     "Nami tapes the box shut and writes CIRCLE on the side in marker."
@@ -723,4 +857,31 @@ label sim_visit_closed:
 
     scene bg_home_exterior_night with walk_fade
     stop music fadeout 3.0
+    return
+
+
+################################################################################
+## CONSOLE TEST LABELS
+##
+## Shift+O, then `jump test_sim_visit_02` (or _07 / _closed). These call the
+## real scenes, so rewards, memories and the visit counter behave as in play.
+
+label test_sim_visit_02:
+    scene black with Dissolve(0.6)
+    "TEST SEQUENCE: SIM // VISIT 2 - THE INTRODUCTIONS"
+    call sim_visit_02 from _call_test_sim_visit_02
+    return
+
+
+label test_sim_visit_07:
+    scene black with Dissolve(0.6)
+    "TEST SEQUENCE: SIM // VISIT 7 - TT AT THE EXHIBITION"
+    call sim_visit_07 from _call_test_sim_visit_07
+    return
+
+
+label test_sim_visit_closed:
+    scene black with Dissolve(0.6)
+    "TEST SEQUENCE: SIM // EPILOGUE - THE BOX"
+    call sim_visit_closed from _call_test_sim_visit_closed
     return

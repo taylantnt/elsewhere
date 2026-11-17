@@ -1,3 +1,10 @@
+> **Written version:** TT attends the exhibition as Tapi's plus-one and as a
+> photographer. Sim introduces him to the protagonist early in the scene; after
+> the strap gift and the final group shot, TT turns his camera on Sim, who has
+> spent the whole exhibition behind one. The resulting print is the one in the
+> box in the epilogue that nobody in Circle made. See label `sim_visit_07` in
+> `game/confidant_visits/sim.rpy`.
+
 The club gathers at a small local gallery, its walls lined with the best photos from every member. The atmosphere is buzzing — laughter, nervousness, pride. People from outside the club stroll in, admiring the work. It feels like something bigger than just a hobby group.
 Sim is everywhere — greeting visitors, adjusting frames, making sure every photo gets noticed. Yet when he finally spots you, he slows down, his usual whirlwind energy replaced with something gentler.
 Sim: “So… here we are. Our little club, on display for the world to see. Can you believe it? A few months ago, this was just me, alone with a camera… wondering if any of it mattered.”

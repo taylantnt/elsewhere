@@ -1287,7 +1287,7 @@ rotated across Insight, Grace and Nerve instead of paying Grace twice in a row.
 
 | Visit | Answered choices (reward) | Close reward |
 |---|---|---|
-| 2 | Manual (Insight), automatic (Nerve), what to learn first (Grace) | Grace micro |
+| 2 | Manual (Insight), automatic (Nerve), what to learn first (Grace); Tapi: other side (Insight), what she gets out of it (Grace), the coffee (Nerve) | Grace micro |
 | 3 | Decide (Nerve), wait (Grace), frame (Insight) | Insight micro |
 | 4 | Collective (Grace), choice (Insight), keep it simpler (Nerve); commit (Nerve), fear (Grace), who decides (Insight) | Nerve micro |
 | 5 | Honest (Insight), real (Grace), what made you keep going (Nerve) | Grace micro |

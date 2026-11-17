@@ -1532,6 +1532,22 @@ image side Maid = At(Transform("images/characters/maid.png", xysize=(256, 384), 
 # on disk, so unlike the three below they need no placeholder.
 image side chef = At(Transform("images/characters/chef.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side sim = At(Transform("images/characters/sim.png", xysize=(256, 384), fit="contain"), portrait_idle)
+
+# Circle's new art. Nami has two poses: she stands through the busy sessions and
+# sits for the quiet ones (the empty room, the box on the steps after Sim leaves).
+# The flag is read every time the picture is built, like Hikari's run drawing, so
+# a scene only has to set `nami_pose` before her first line.
+default nami_pose = "standing"
+image side nami = At(ConditionSwitch(
+    "nami_pose == 'sitting'",
+    Transform("images/characters/circle_nami_sitting.png", xysize=(256, 384), fit="contain"),
+    True,
+    Transform("images/characters/circle_nami_standing.png", xysize=(256, 384), fit="contain"),
+), portrait_idle)
+# Tapi models for Circle. TT is her boyfriend: not a member, but a working
+# photographer who comes to the exhibition and takes pictures of the room.
+image side tapi = At(Transform("images/characters/circle_tapi.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side tt = At(Transform("images/characters/circle_tt.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side hana = At(Transform("images/characters/hana.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side orson = At(Transform("images/characters/orson.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
@@ -1592,6 +1608,7 @@ init python:
     for _standing_tag in (
         "assistant", "veteran", "security", "security2", "mother", "father",
         "sister", "taxi_driver", "professor", "yamada", "chef", "sim",
+        "nami", "tapi", "tt",
         "hana", "orson", "clerk", "timid_man", "cheerful_woman",
     ):
         renpy.image(_standing_tag + "_standing", At("side " + _standing_tag, standing))
