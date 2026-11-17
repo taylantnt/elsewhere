@@ -397,7 +397,12 @@ image bg_fortune_stall = bg_or_placeholder("bg_fortune_stall", "#2a211b", "ASAKU
 # arrives; dropping the matching file into images/backgrounds/ replaces it with
 # no code change.
 image bg_combini = bg_or_placeholder("bg_combini", "#26302a", "COMBINI\nNIGHT SHIFT")
-image bg_odaiba = bg_or_placeholder("bg_odaiba", "#202b33", "ODAIBA\nARTIFICIAL ISLAND")
+image bg_odaiba = bg_or_placeholder("bg_odaiba_walkway", "#202b33", "ODAIBA\nARTIFICIAL ISLAND")
+# The rest of the island. The base Odaiba art was renamed to the walkway so the
+# tour can use the statue, the beach and the night view as separate places.
+image bg_odaiba_statue = bg_or_placeholder("bg_odaiba_statue", "#202b33", "ODAIBA\nTHE STATUE")
+image bg_odaiba_beach = bg_or_placeholder("bg_odaiba_beach", "#202b33", "ODAIBA\nTHE BEACH")
+image bg_odaiba_night = bg_or_placeholder("bg_odaiba_night", "#10161b", "ODAIBA\nNIGHT")
 # Yokohama has real art now. The Chinatown gate is the establishing shot for
 # both the solo row and the first tour, and the red brick warehouses are the
 # second half. The gyoza shop has three drawings: the crowded room for the tour,
