@@ -7,8 +7,9 @@ M01–M54, the Monday dinner still-full fork (M54A), the retired weekend-plan
 menu (M47), the retired camera menu (M31), the walk-alone still-full fork
 (M35A), M55–M57 for Tuesday's forced day, M57A for the forced-afternoon reward,
 and M58–M60 for the hub walks and generic hub day, plus the Days 8–12 beats and
-the five Message Hikari tours (M67 Yokohama, M68 Harajuku, M69 Kuru Fuku Neko,
-M70 Ueno, M71 Shimokitazawa) — including every answer with no attribute reward. The current
+the six Message Hikari tours (M67 Yokohama, M68 Harajuku, M69 Kuru Fuku Neko,
+M70 Ueno, M71 Shimokitazawa, M72 Omotesando / Meiji Shrine) — including every
+answer with no attribute reward. The current
 live reward groups are E02–E08 plus the archived E01 board; the five confidant
 chains' visits 2–8 are summarised in the **Confidant Visit Rewards** section
 below; non-dialogue rewards are listed separately. Unwritten future scenes and
@@ -1207,6 +1208,59 @@ Fifth menu, walking back to the station:
 
 Close: **Insight +0.1** (`hikari_tour_shimokitazawa_complete`, `tiny`) — the tour
 unlocks the Shimokitazawa hub row and marks it visited on the phone map.
+
+### M72. Message Hikari — Omotesando / Meiji Shrine
+
+Source: [`hikari_tour_omotesando`](../game/confidant_visits/hikari_tour.rpy).
+
+Context: the sixth Message Hikari tour. She offers a forest in the middle of
+Tokyo, asks him to bring a five-yen coin, and refuses to explain either over
+text. The tour teaches the avenue's history as the shrine's front approach, the
+architecture of the flagship street, shrine etiquette, the man-made forest, the
+offering barrels, and the 二礼二拍手一礼.
+
+First menu, on the avenue:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M72.01 | Ask how a road for gods became a shopping street. | Insight +0.2 | Pays via flag `omotesando_tour_shape`; keep the shape, change the use. |
+| M72.02 | Ask if she has ever bought anything here. | Insight +0.2 | Pays via flag `omotesando_tour_coat`; the one coat she still wears. |
+| M72.03 | Look up at the buildings instead of the windows. | Grace +0.2 | Pays via flag `omotesando_tour_buildings`; Tod's, Dior, Prada. |
+
+Second menu, at the temizuya:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M72.04 | Do it exactly as she says. | Grace +0.2 | Pays via flag `omotesando_tour_temizu`; "be sorry" vs "be careful." |
+| M72.05 | Ask why water. | Insight +0.2 | Pays via flag `omotesando_tour_water`; no founder, no book, so begin with a wash. |
+| M72.06 | Watch the others first. | Insight +0.2 | Pays via flag `omotesando_tour_watch`; "a tradition is not a feeling. A number." |
+
+Third menu, among the barrels:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M72.07 | Ask where the trees came from. | Insight +0.2 | Pays via flag `omotesando_tour_trees`; a map that grew. |
+| M72.08 | Ask about the wine barrels. | Nerve +0.2 | Pays via flag `omotesando_tour_wine`; an offering is a letter. |
+| M72.09 | Walk without talking. | Grace +0.2 | Pays via flag `omotesando_tour_quiet`; she matches his pace. |
+
+Fourth menu, at the sanctuary:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M72.10 | Ask what she said when she bowed. | Insight +0.2 | Pays via flag `omotesando_tour_thanks`; "thank you — for the afternoon." |
+| M72.11 | Ask if she believes in it. | Insight +0.2 | Pays via flag `omotesando_tour_believe`; "better to do it carefully than badly." |
+| M72.12 | Do it a second time, slower. | Grace +0.2 | Pays via flag `omotesando_tour_second`; not copying anybody. |
+
+Fifth menu, over coffee:
+
+| ID | Answer / Choice | Reward (editable) | Notes |
+|---|---|---|---|
+| M72.13 | Ask why she brought me here. | Grace +0.2 | Pays via flag `omotesando_tour_why`; "you apologise to doors." |
+| M72.14 | Ask about the coin. | Insight +0.2 | Pays via flag `omotesando_tour_coin`; used once, "I am still here." |
+| M72.15 | Say thank you properly. | Nerve +0.2 | Pays via flag `omotesando_tour_thankyou`; ありがとうございました, practiced on the mirror. |
+
+Close: **Insight +0.1** (`hikari_tour_omotesando_complete`, `tiny`) — the tour
+unlocks the Omotesando hub row and marks it visited on the phone map.
 
 ## Confidant Visit Rewards
 

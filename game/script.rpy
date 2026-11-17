@@ -425,6 +425,13 @@ image bg_record_shop = bg_or_placeholder("bg_record_shop", "#2b2622", "USED RECO
 image bg_live_house = bg_or_placeholder("bg_live_house", "#201d24", "LIVE HOUSE\nTHE DOOR LIKE A FRIDGE")
 image bg_shimokita_cafe = bg_or_placeholder("bg_shimokita_cafe", "#2d2a25", "COFFEE\nSHIMOKITA")
 image bg_omotesando = bg_or_placeholder("bg_omotesando", "#252a26", "OMOTESANDO\nMEIJI SHRINE")
+# The shrine walk is four places, not one: the avenue, the torii and temizuya,
+# the forest path with the offering barrels, and the courtyard before the
+# sanctuary. The first three are drawn; the courtyard still falls back to its
+# placeholder card if the file is missing.
+image bg_meijijingu_entrance = bg_or_placeholder("bg_meijijingu_entrance", "#2a2f28", "MEIJI JINGU\nTHE TORII")
+image bg_meijijingu_forest = bg_or_placeholder("bg_meijijingu_forest", "#1f2a22", "MEIJI JINGU\nTHE FOREST PATH")
+image bg_meijijingu_temple = bg_or_placeholder("bg_meijijingu_temple", "#2f2a24", "MEIJI JINGU\nTHE SANCTUARY")
 
 # The two rooms the first free afternoon can end in. The ramen shop has art now
 # (it lives at images/backgrounds/bg_ramen_shop.png, which is why the scene name

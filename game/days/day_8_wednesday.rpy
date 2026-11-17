@@ -221,7 +221,7 @@ label wednesday_morning:
     professor "You will have been told it is about a frog."
     "Somebody laughs. The professor does not."
     professor "It is not about a frog. It is about the moment the world becomes small enough to notice."
-    professor "Bashō did not invent the frog. He invented the attention."
+    professor "Bashou did not invent the frog. He invented the attention."
     "He writes three more words beneath it: 古池, 蛙, 水の音."
     professor "The old pond. The frog. The sound of water. Three images, and one of them is a season."
     professor "The kigo is the frog. Frog is spring. The first warmth. The water warm enough to hold a life."

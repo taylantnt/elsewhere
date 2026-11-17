@@ -14,11 +14,12 @@
 ## the ordinary `city_row_<place>` scene plays without Hikari. The tour is a
 ## one-time introduction, not a companion who follows him forever.
 ##
-## Yokohama was the first tour written; Harajuku: Takeshita Street is the second.
-## Only tours in `hikari_tour_written` are offered, so Message Hikari never sends
-## the player into a placeholder. Add the next place id there when its scene is
-## ready; the picker then chooses randomly among whatever is still locked and
-## written. Each label ends by unlocking its place for the generic solo row.
+## Written tours: Yokohama Chinatown, Harajuku, Kuru Fuku Neko (karaoke), Ueno,
+## Shimokitazawa, and Omotesando / Meiji Shrine. Only tours in
+## `hikari_tour_written` are offered, so Message Hikari never sends the player
+## into a placeholder. Add the next place id there when its scene is ready; the
+## picker then chooses randomly among whatever is still locked and written.
+## Each label ends by unlocking its place for the generic solo row.
 
 
 label hikari_tour:
@@ -196,6 +197,34 @@ label hikari_tour:
             ]},
             {"them": ["Four o'clock. The small gate, not the big one.", "And do not say I am being nostalgic."]},
         ])
+    elif tour_spot == "omotesando":
+        # The hook is disbelief. She offers something that sounds impossible in
+        # the middle of Tokyo, then refuses to explain it over text.
+        $ run_chat("hikari", [
+            {"options": [
+                {"label": "Hey Hikari. Are you free after class?",
+                 "send": "Hey Hikari. Are you free after class?",
+                 "them": [
+                     "I have nothing after four. Why?",
+                     "Do you believe me if I say there is a forest in the middle of Tokyo?",
+                 ]},
+            ]},
+            {"them": [
+                "Not a park. A forest. A hundred thousand trees, and the loudest street in the country at the edge of it.",
+                "I want to show you something before the light goes.",
+            ], "options": [
+                {"label": "A hundred thousand?",
+                 "send": "A hundred thousand?",
+                 "them": ["That is the number they give you. I have never counted.", "You can try. It will take the whole afternoon."]},
+                {"label": "You're texting like a tour guide again.",
+                 "send": "You're texting like a tour guide again.",
+                 "them": ["I am a tour guide. You finally noticed.", "Wear shoes you can walk in. The gravel is the point."]},
+            ]},
+            {"them": [
+                "Omotesando station. The exit with the trees.",
+                "And bring a five-yen coin. I will explain when we get there.",
+            ]},
+        ])
     else:
         $ run_chat("hikari", [
             {"options": [
@@ -236,6 +265,10 @@ label hikari_tour:
         hikari "I know a shortcut. It involves one alley and a cat that may or may not approve."
         mc "You come here a lot?"
         hikari "I used to. That is different."
+    elif tour_spot == "omotesando":
+        hikari "Two stops. Then we walk uphill."
+        mc "Uphill to a forest?"
+        hikari "Uphill to a street that thinks it is a forest. Then a forest that is."
     elif tour_spot == "karaoke":
         hikari "Tonight we sing. That is all I am telling you."
         mc "What if I am terrible?"
@@ -253,10 +286,12 @@ label hikari_tour:
 
 ## --- THE TOUR SCENES ---------------------------------------------------------
 ##
-## Yokohama is the written tour. The rest are still placeholders: Hikari arrives
-## with him, introduces the place, and the unlock happens at the end. Replace
-## the placeholder lines and add choices/rewards there when those scenes are
-## written. The message flow, picker, unlock, and solo fallback do not move.
+## Six tours are written: Yokohama, Harajuku, Kuru Fuku Neko, Ueno,
+## Shimokitazawa, and Omotesando / Meiji Shrine. Combini, Odaiba, and Shibuya
+## still fall through to their placeholders: Hikari arrives with him,
+## introduces the place, and the unlock happens at the end. Replace those lines
+## and add choices/rewards there when those scenes are written. The message
+## flow, picker, unlock, and solo fallback do not move.
 
 label hikari_tour_harajuku:
     $ hikari_kawaii = False
@@ -704,6 +739,7 @@ label hikari_tour_odaiba:
 
 
 label hikari_tour_yokohama:
+    play music "audio/Music/chinese_restaurant.mp3" fadein 2.0
     scene bg_yokohama_chinatown with walk_fade
     "The train lets us out into a crowd that is already eating."
     "Two streets later the city changes its mind. Red pillars. Gold trim. A gate tall enough to be a building, with characters stacked above it like a warning."
@@ -978,6 +1014,7 @@ label hikari_tour_yokohama:
     mc "Is that an insult?"
     hikari "Not from her."
 
+    stop music fadeout 1.5
     scene bg_yokohama_akarenga with walk_fade
     "Twenty minutes later the red lanterns are behind us and the streets have opened up. The water appears between the buildings in pieces, then all at once."
     "The red brick warehouses stand along the waterfront, long and low and lit at the windows. The Ferris wheel turns behind them, slow enough to look patient."
@@ -1487,16 +1524,338 @@ label hikari_tour_shimokitazawa:
 
 
 label hikari_tour_omotesando:
+    scene bg_train_interior with walk_fade
+    "The carriage is full of people who have finished their day and people who have not started theirs. Nobody speaks."
+    "Hikari stands with one hand through the strap and does not look at her phone."
+    mc "You are not going to tell me what the forest is."
+    hikari "I am not."
+    mc "Why not?"
+    hikari "Because you would look it up and then you would already know it when we got there. I want to watch you find out."
+    "I put my phone away."
+
     scene bg_omotesando with walk_fade
-    "Omotesando is a street built to look like a forest and priced like a museum."
-    hikari "The shops are glass. Then the shops end and the torii begins."
-    mc "One street. Two countries."
-    hikari "You noticed. Good."
+    "Omotesando Station lets us out under the trees."
+    "Not the little street trees of the side roads. These are zelkova, tall as a building and wide, and the pavement beneath them is broad enough for four people to walk abreast and still not touch."
+    mc "This is the forest?"
+    hikari "This is the road to the forest. It has opinions about itself."
+
+    "She starts walking without checking whether I am following. She knows I am."
+    hikari "Omotesando. Omote means front. Sandō means approach. This was the front approach to the shrine."
+    mc "A road for a god."
+    hikari "For an emperor, first. They made him a god after he died, which is a promotion nobody asks for."
+    hikari "The road went up in the Taishō era, when the shrine was being built. You walked it to arrive at the shrine. That was its whole job."
+    mc "And now?"
+    hikari "Now you walk it to arrive at Louis Vuitton."
+
+    "The shops are low and wide and almost silent. No prices in the windows. A doorman in white gloves stands outside a door that is already open."
+    hikari "Every big house in the world wanted a building on this street. Tod's is by Toyo Ito — those branches on the front are concrete pretending to be a tree. Dior is glass and looks like it is not trying. Prada is bubbles."
+    hikari "People come here to look at the buildings. Not only to buy. The buildings are the exhibition and the clothes are the gift shop."
+    mc "That is a strange thing for a shop to be."
+    hikari "It is a strange street. It is the same trick as hanami. Find a reason to walk slowly."
+
+    "A woman passes us in a coat the colour of milk. A man passes her in a suit cut so close it looks drawn on. Neither of them looks at the other, and both of them know exactly who is behind them."
+    mc "Everyone here is dressed for something."
+    hikari "Everyone here is dressed for everyone else. That is different from being dressed for a photograph."
+    mc "Is it?"
+    hikari "Photographs go away. The person behind you at the crossing does not."
+
+    menu:
+        "Ask how a road for gods became a shopping street.":
+            mc "So the gods used this road, and now it's this."
+            hikari "The gods are not walking. They are being visited. The road stayed and got expensive."
+            hikari "This country keeps the shape of a thing and changes what it is for. The torii is still at the end of the street. That is not nothing."
+            mc "(Keep the shape. Change the use. I put it somewhere I can find it later.)"
+            $ reward_attributes_once("omotesando_tour_shape", [("insight", "micro")], show="auto")
+        "Ask if she has ever bought anything here.":
+            mc "Have you ever bought anything on this street?"
+            hikari "One thing. A coat. It was on sale and it was still the most I have ever spent on clothes."
+            mc "Do you still have it?"
+            hikari "Yes. I wear it when I want to feel like a person who belongs here."
+            mc "You do belong here."
+            hikari "You have been in this country three months. You do not know that yet."
+            "She says it lightly. She does not slow down to say it."
+            $ reward_attributes_once("omotesando_tour_coat", [("insight", "micro")], show="auto")
+        "Look up at the buildings instead of the windows.":
+            "I stop looking at the clothes and look at the buildings holding them."
+            "The Tod's building has branches growing out of concrete. The Dior is a sheet of glass with the trees doubled in it. The Prada has bubbles pressed into its skin."
+            hikari "You are looking at the right thing."
+            mc "The clothes are inside. The buildings are outside."
+            hikari "The buildings are the clothes. Somebody spent more on the box than the thing in the box."
+            $ reward_attributes_once("omotesando_tour_buildings", [("grace", "micro")], show="auto")
+
+    "The street climbs. The shops get quieter, then taller, then older, and then they stop."
+    "The trees are not lining a road anymore. They are the road."
+
+    scene bg_meijijingu_entrance with walk_fade
+    "The torii comes out of the trees without warning — two columns and a beam, unpainted, the colour of old paper, taller than the shops behind us."
+    mc "That is one piece of wood?"
+    hikari "One of the largest wooden torii in the country. Cypress. No paint, because paint would make it a building and it is not a building."
+    hikari "Before you go through, you bow. Once. Not deep. From the chest."
+    mc "To who?"
+    hikari "To whoever is on the other side. It is not a question you have to answer."
+
+    "She bows. I bow. It feels like the wrong depth and then it feels fine."
+    "Then she steps to the left of the path and waits for me to notice."
+    hikari "Walk on the side. The middle belongs to the kami."
+    mc "Is there a guard?"
+    hikari "There is no guard. There is everybody."
+    mc "Like the tarps at Ueno."
+    hikari "Exactly like the tarps at Ueno. You are learning."
+
+    "Inside the gate there is a stone basin under a wooden roof, with bamboo pipes above it and a row of ladles laid across the water."
+    "People come and go in twos and threes. An old man in a cardigan does the whole thing in four seconds and is gone before I have worked out where to stand."
+    hikari "Temizuya. The place you wash before you go further."
+    hikari "The ladle is a hishaku. One scoop is enough. You do not refill it — the water is not for drinking and the basin is not a sink."
+    mc "What is the order?"
+    hikari "Right hand takes the ladle, pour over the left. Left hand takes it, pour over the right. Then pour a little into your left palm and rinse your mouth. Do not drink from the ladle."
+    hikari "Then tip it so the water runs down the handle, and put it back."
+    mc "Why the handle?"
+    hikari "Because somebody else will hold it after you."
+
+    menu:
+        "Do it exactly as she says.":
+            "I take a ladle. The water is colder than the air."
+            "I pour over my left hand, then switch and pour over my right. I pour into my palm and rinse my mouth. I am about to tip the rest back into the basin when her hand closes on my wrist."
+            hikari "Not back in. The basin is for everybody."
+            mc "Sorry."
+            hikari "Do not be sorry. Be careful. They are not the same thing."
+            "I tip the water down the handle instead. It runs off the end and into the gravel. She lets go."
+            $ reward_attributes_once("omotesando_tour_temizu", [("grace", "micro")], show="auto")
+        "Ask why water.":
+            mc "Why water? Of all the things to start with."
+            hikari "Shinto has no founder and no book. There is nothing you have to believe before you are allowed to begin. So it begins with a wash."
+            hikari "You clean your hands before you eat. You clean your hands before you ask somebody for something. It is the same idea, older."
+            mc "So it is manners."
+            hikari "Manners with a god in the room."
+            $ reward_attributes_once("omotesando_tour_water", [("insight", "micro")], show="auto")
+        "Watch the others first.":
+            "I stand back and watch. A schoolgirl does it in five seconds. A businessman does it with his phone still in his other hand, then puts the phone away for the bow."
+            hikari "You are doing the thing you did at Ueno."
+            mc "Watching."
+            hikari "Learning the shape of the room. This room has a shape too."
+            mc "Four seconds for the old man."
+            hikari "He has done it ten thousand times. That is what a tradition is. Not a feeling. A number."
+            $ reward_attributes_once("omotesando_tour_watch", [("insight", "micro")], show="auto")
+
+    scene bg_meijijingu_forest with walk_fade
+    "The gravel starts."
+    "Two steps in, the city is not quieter. It is gone. The traffic, the trains, the shops, the coat and the doorman — all of it stops at the same line."
+    "The air is colder here. The trees are not in rows. They are in a crowd."
+
+    mc "They left a forest in the middle of Tokyo."
+    hikari "They didn't leave it. They planted it."
+    mc "...Planted it."
+    hikari "A hundred thousand trees. Donated — a village in Kyushu sent some, a school in Tohoku sent more, whatever people had. Volunteers carried them up this hill and put them in the ground."
+    hikari "A forestry professor planned the whole thing. He chose the species so the forest would look after itself. He was designing a hundred years ahead."
+    mc "He knew he would never see it."
+    hikari "None of them would. That was the point."
+    mc "That is an insane thing to do."
+    hikari "It is the most Japanese thing in this city and it is not a temple."
+    "We walk. The gravel is loud under us and the trees take the sound away again."
+    mc "So they gave it to people they would never meet."
+    hikari "...Yes."
+    "She walks a little faster, so I do not see her face."
+
+    "On both sides of the path, stacked in wooden frames like a wine rack, are barrels."
+    "Sake barrels on one side, white and black with characters the size of my hand. On the other, dark wooden barrels with French names burned into them."
+    mc "Offerings?"
+    hikari "Offerings. The breweries send them. The names face out so the kami can read who gave what."
+    mc "The god reads the labels."
+    hikari "You give the thing you value. Rice wine was valuable. The name is part of the gift."
+    mc "And the wine?"
+    hikari "Burgundy. From France. Somebody decided the god here should have the good stuff."
+    mc "Do the gods drink?"
+    hikari "That is not the question. The question is whether you gave it."
+
+    menu:
+        "Ask where the trees came from.":
+            mc "You said they were donated. From where?"
+            hikari "Every prefecture. A country sent a tree. If you walked the whole forest you could find where everybody is from."
+            mc "It is a map."
+            hikari "It is a map that grew."
+            $ reward_attributes_once("omotesando_tour_trees", [("insight", "micro")], show="auto")
+        "Ask about the wine barrels.":
+            mc "So a French winery sends wine to a Japanese god."
+            hikari "Yes."
+            mc "Does that work?"
+            hikari "It is not a transaction. It is a letter. You do not need an answer to send one."
+            mc "(She says that like she has sent a few.)"
+            $ reward_attributes_once("omotesando_tour_wine", [("nerve", "micro")], show="auto")
+        "Walk without talking.":
+            "I stop answering. She stops explaining. We walk the rest of the path with nothing but gravel."
+            "It takes a while before I notice she has matched my pace. She is not leading anymore."
+            hikari "You are quiet."
+            mc "You said the gravel is the point."
+            hikari "I did say that."
+            "She does not say anything else, and the walking is better for it."
+            $ reward_attributes_once("omotesando_tour_quiet", [("grace", "micro")], show="auto")
+
+    "Ahead, a line of people comes around the bend."
+    "A bride in white, a white hood over her hair. Two priests. A shrine maiden holding a parasol. The bride's mother carries the hem of the dress off the gravel with both hands."
+    "Nobody speaks. The whole procession moves at the speed of the slowest person in it."
+    hikari "Shinzenshiki. A Shinto wedding."
+    mc "In the middle of the forest."
+    hikari "Where else? The kami is here."
+    mc "Is there always one?"
+    hikari "Every time I come. Somebody in this city is always getting married."
+    "The bride passes close enough that I can see she is concentrating on not stepping on her own dress. Hikari bows slightly. The bride does not see her."
+    mc "(A hundred thousand trees, and the thing I remember is a woman trying not to trip.)"
+
+    scene bg_meijijingu_temple with walk_fade
+    "The path opens into a courtyard and the sound comes back — not traffic. People. A school group in matching hats. A guide with a little flag. A queue at the offering box."
+    hikari "Stop here."
+    mc "Why?"
+    hikari "Hat off."
+    "I take my hat off."
+    hikari "No photographs from here. People are praying and it is not a show. No talking above a murmur. And do not stand in the middle of the path."
+    mc "There is a lot of etiquette."
+    hikari "There is a lot of people. The etiquette is how they all fit."
+    mc "Aren't we going in?"
+    hikari "No. The inner building is not for us. We stand at the front and say it from here."
+    mc "Then why is the door open?"
+    hikari "Because somebody has to go in. It is not going to be you."
+    hikari "Did you bring the coin?"
+    mc "I brought it. I still do not know why."
+    hikari "Go-en. Five yen. It sounds like goen — a connection. People use it when they want one."
+    mc "A connection to what?"
+    hikari "To whoever. That is the honest answer."
+
+    "We reach the offering box. She steps up, drops her coin without looking at where it lands, bows twice, claps twice, and bows once."
+    "It takes maybe ten seconds. She does not close her eyes. She does not look like she is asking for anything."
+    "Then she steps back and looks at me."
+    hikari "Your turn."
+    "I drop my coin. It rattles. I bow twice, too fast. I clap twice, and the first clap is too quiet. I bow once."
+    "She does not correct me. She waits until I am finished and then nods, once."
+    hikari "You did it properly."
+    mc "I clapped too quietly."
+    hikari "The kami is not marking you. Do it again if you want to do it better."
+    mc "I copied you."
+    hikari "That is how it is done. Nobody is born knowing. I copied my mother."
+
+    hikari "You know what you did well today?"
+    mc "I dropped a coin."
+    hikari "You did everything I told you and you never once asked whether you had to."
+    hikari "Most people ask whether they have to. You just did it, and then you asked what it meant."
+    mc "Is that the right order?"
+    hikari "It is the only order that works."
+    "She says it to the courtyard, not to me. Then she looks at me and looks away."
+
+    menu:
+        "Ask what she said when she bowed.":
+            mc "What did you say? When you bowed."
+            hikari "You are not supposed to say."
+            mc "Is that a rule?"
+            hikari "No. It is just mine."
+            "She is quiet for a moment."
+            hikari "I said thank you. That much I will tell you."
+            mc "For what?"
+            hikari "For the afternoon."
+            "She says it in the same voice she has used all day, and it lands heavier than the words."
+            $ reward_attributes_once("omotesando_tour_thanks", [("insight", "micro")], show="auto")
+        "Ask if she believes in it.":
+            mc "Do you believe any of this? The kami, the coins."
+            hikari "I don't know what I believe."
+            hikari "I know it is better to do it carefully than badly. I know I feel better after. That is not nothing."
+            mc "That is not an answer."
+            hikari "It is the only honest one I have. Ask me again when I am older."
+            $ reward_attributes_once("omotesando_tour_believe", [("insight", "micro")], show="auto")
+        "Do it a second time, slower.":
+            "I put another coin in. I do not know why. I bow twice, clap twice, bow once, and this time it is one thing instead of four."
+            "It takes longer than I expected. When I open my eyes she is watching me with an expression I have not seen on her."
+            mc "What?"
+            hikari "Nothing. You looked like you meant it."
+            mc "I don't know if I did."
+            hikari "That is allowed. That is most of the people here."
+            $ reward_attributes_once("omotesando_tour_second", [("grace", "micro")], show="auto")
+
+    "We step back to let a family through. The father holds the little one up so she can reach the bell rope."
+    mc "Do you come here alone?"
+    hikari "Sometimes."
+    mc "To pray?"
+    hikari "To say something to somebody who isn't there."
+    "She says it in the same voice she has used all afternoon. No weight on it. No pause."
+    mc "Who?"
+    hikari "...Come on. The light is going."
+    "She is already walking."
+    mc "(I do not ask again. I am learning when not to.)"
+
+    "The light is going when we come back down. The shops have turned their lights on, and the zelkova leaves are lit from underneath."
+    "She stops at a place with a small sign and no English on it. Two tables outside, one inside, and a barista who looks like he has known her for years."
+    hikari "Two hot coffees. And the cake. Two forks."
+    "The barista says something. She answers. I catch one word and lose the rest."
+    hikari "He asked if you want it hot or iced."
+    mc "What did you say?"
+    hikari "Hot. It is cold and you are tired. I made a decision for you. Tell me if I was wrong."
+    mc "You weren't."
+
+    "The coffee comes in thick cups. The cake is small and costs more than my lunch. We sit outside because she wants to watch the street."
+    mc "Let me pay for mine."
+    hikari "Next time."
+    mc "That's not an answer."
+    hikari "It is an answer. It is just not the one you asked for. Drink your coffee."
+
+    menu:
+        "Ask why she brought me here.":
+            mc "Why this place? Out of all of them."
+            hikari "Because you have been treating this country like a test you are failing."
+            mc "I have not."
+            hikari "You apologise to doors."
+            mc "...Do I?"
+            hikari "You did it at the temizuya. The door had nothing to do with it."
+            hikari "I wanted you to spend an afternoon in a place where the only thing you can do wrong is be careless."
+            $ reward_attributes_once("omotesando_tour_why", [("grace", "micro")], show="auto")
+        "Ask about the coin.":
+            mc "The five-yen coin. Do you always carry one?"
+            hikari "There is one in my wallet. It has been there so long the hole has worn smooth."
+            mc "You never spend it."
+            hikari "You don't spend a connection."
+            mc "Have you ever used one? Ever?"
+            hikari "Once."
+            mc "Did it work?"
+            hikari "I am still here."
+            $ reward_attributes_once("omotesando_tour_coin", [("insight", "micro")], show="auto")
+        "Say thank you properly.":
+            mc "ありがとうございました。"
+            "The full form. The one you use at a counter, to a stranger, when you mean it."
+            hikari "...You said that right."
+            mc "I practiced."
+            hikari "On who?"
+            mc "The mirror."
+            hikari "Of course you did."
+            "She laughs and looks away, which is what she does instead of saying something she means."
+            $ reward_attributes_once("omotesando_tour_thankyou", [("nerve", "micro")], show="auto")
+
+    "We finish the coffee. The street is loud again in the good way — people, bicycles, a bus pulling away."
+    hikari "The shrine closes at sunset."
+    mc "We just came from there."
+    hikari "I know. That is why we are here."
+    mc "It doesn't stay open for anybody?"
+    hikari "Not even for the kami. It closes and opens every day and nobody argues with it."
+    mc "(A place that closes on time. I did not know I needed to see one.)"
+
     $ unlock_hikari_tour_destination("omotesando")
-    "We walk the gravel path to the shrine and stop before the steps."
-    mc "(I can find this again. I can come back when it is quiet.)"
+    $ phone_map_visit("omotesando")
+    $ renpy.notify("Omotesando / Meiji Shrine is now on your map.")
+    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    hikari "Next time, go in without me. Stand where I stood and do it badly."
+    mc "You are not coming?"
+    hikari "I have shown you. That was the point."
+    mc "(She says it lightly. It does not land lightly.)"
+    hikari "And keep the coin."
+    $ reward_attributes_once("hikari_tour_omotesando_complete", [("insight", "tiny")], show="auto")
+
+    scene bg_train_interior with walk_fade
+    "The train home is warm and half full. Hikari takes the window seat and falls asleep against the glass with her coat folded under her head."
+    mc "(She told me a forest was a gift from people who would never see it. I think she has been giving me one all along.)"
+
     scene bg_home_exterior_night with walk_fade
     $ night_street()
+    hikari "We're home."
+    mc "We're home."
+    hikari "You're welcome."
+    mc "I didn't say thank you."
+    hikari "You did. At the shrine. In the right words."
+    "She goes inside before I can argue."
     return
 
 
@@ -1508,6 +1867,7 @@ label hikari_tour_omotesando:
 ##   jump test_hikari_tour_karaoke  - Kuru Fuku Neko (karaoke)
 ##   jump test_hikari_tour_ueno     - Ueno Park
 ##   jump test_hikari_tour_shimokitazawa - Shimokitazawa
+##   jump test_hikari_tour_omotesando - Omotesando / Meiji Shrine
 ##
 ## These play the whole tour without having to reach a hub day first. The picker
 ## is forced by marking the OTHER written tours as already unlocked, so the one
@@ -1555,4 +1915,13 @@ label test_hikari_tour_shimokitazawa:
     $ force_hikari_tour_spot("shimokitazawa")
     call hikari_tour from _call_test_hikari_tour_shimokitazawa
     "Test complete. Shimokitazawa is unlocked for solo visits."
+    return
+
+
+label test_hikari_tour_omotesando:
+    scene black with Dissolve(0.8)
+    "TEST SEQUENCE: MESSAGE HIKARI // OMOTESANDO / MEIJI SHRINE"
+    $ force_hikari_tour_spot("omotesando")
+    call hikari_tour from _call_test_hikari_tour_omotesando
+    "Test complete. Omotesando / Meiji Shrine is unlocked for solo visits."
     return

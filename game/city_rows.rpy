@@ -429,6 +429,7 @@ label city_row_odaiba:
 
 label city_row_yokohama:
     $ phone_map_visit("yokohama")
+    play music "audio/Music/chinese_restaurant.mp3" fadein 2.0
     scene bg_yokohama with walk_fade
     "Chinatown is ten minutes from the station and a hundred years from the rest of the city."
     "Red lanterns. Gates with Chinese characters. Shops selling steamed buns and lucky cats and things made of sugar."
@@ -471,6 +472,7 @@ label city_row_yokohama:
 
     "Later, the crowd thins and the street opens toward the water."
 
+    stop music fadeout 1.5
     scene bg_yokohama_akarenga with walk_fade
     "The red brick warehouses stand along the waterfront, long and low and lit at the windows. The Ferris wheel turns behind them, slow enough to look patient."
     "I remember Hikari telling me these buildings survived the earthquake because they were built to hold weight."
@@ -649,29 +651,75 @@ label city_row_shimokitazawa:
 
 
 label city_row_omotesando:
+    $ phone_map_visit("omotesando")
     scene bg_omotesando with walk_fade
-    "Omotesando is a street built to look like a forest and priced like a museum."
-    "The shops are glass and concrete and very polite. The trees are tall enough to make the buildings feel humble."
-    "Then the shops end and the torii begins. The city gets quiet all at once."
-    mc "(The same street. Two countries. The border is a gate.)"
+    "Omotesando Station, the exit with the trees."
+    "The zelkova are still here, taller than the buildings and older than most of them. The shops beneath them are lit like jewellery cases."
+    "I know the way now. Up the hill, past the last window, through the gate."
+    mc "(She said the road was built for a god and then got expensive. I still think about that.)"
 
     menu:
-        "Purify at the temizuya.":
-            "The temizuya is a stone basin with wooden ladles. A sign shows the order: left hand, right hand, mouth, handle."
-            "I do it slowly. The water is cold. An old woman beside me does it in four seconds and walks on."
-            mc "(I do not know if I did it right. I know I did it.)"
-            $ reward_attributes_once("city_omotesando_temizu", [("grace", "micro")], show="auto")
-        "Walk the gravel path and listen.":
-            "The path to the shrine is gravel and trees. Every step makes a sound. The sound is the point."
-            "The city disappears behind the trees. A crow calls once. Then nothing."
-            mc "(I can hear my own feet. I have not heard my own feet in two weeks.)"
-            $ reward_attributes_once("city_omotesando_gravel", [("insight", "micro")], show="auto")
-        "Write a wish on an ema.":
+        "Look up at the buildings instead of the windows.":
+            "The Tod's building has branches growing out of concrete. The Dior is a sheet of glass with the trees doubled in it. The Prada has bubbles pressed into its skin."
+            "Somebody spent as much on the outside as on the things inside."
+            mc "(A street where the boxes are the point. She would say that is very honest.)"
+            $ reward_attributes_once("city_omotesando_buildings", [("insight", "micro")], show="auto")
+        "Walk up the middle of the pavement.":
+            "I walk up the centre like I own it. Two people in a hurry step around me without a word."
+            "I move to the side. Nobody tells you. You learn it from the shoulders of the people in front of you."
+            mc "(There are lanes here too. They are just not painted.)"
+            $ reward_attributes_once("city_omotesando_lanes", [("nerve", "micro")], show="auto")
+        "Sit on the low wall between two trees and watch.":
+            "I sit. A woman in a coat that costs more than my laptop walks past. A man in work clothes carries a ladder past her. Neither looks at the other."
+            "Two schoolgirls photograph a shop window, then each other, then the window again."
+            mc "(Everybody is dressed for somebody. Nobody is dressed for me.)"
+            $ reward_attributes_once("city_omotesando_watch", [("grace", "micro")], show="auto")
+        "Check my pocket for a five-yen coin.":
+            "There is one in my wallet, under the train card. It has a hole in the middle and I have had it since the airport."
+            "Go-en. A connection. I still do not know who I am supposed to have one with."
+            mc "(I put it in my other pocket so I do not spend it by accident.)"
+            $ reward_attributes_once("city_omotesando_coin", [("insight", "micro")], show="auto")
+
+    "The shops end. The trees change. The pavement becomes gravel and the sound of the city goes out like a light."
+    "The torii is exactly where I left it. I bow once, from the chest, and step to the left of the path."
+    "I do it without thinking. Then I notice I did it."
+    mc "(Three months ago I would have walked straight up the middle and taken a picture.)"
+
+    "At the basin I take a ladle in my right hand, pour over my left, then the other way, then a little into my palm."
+    "I rinse my mouth and do not drink from the ladle. I tip it so the water runs down the handle and put it back."
+    "Nobody watches. Nobody corrects me. It is the first thing I have done correctly in this country with nobody checking."
+    mc "(She said the handle is for the next person. I think about that more than I expected to.)"
+
+    menu:
+        "Take the long way through the forest.":
+            "The long path. The gravel, then the trees, then the place where the city stops."
+            "I walk until my feet are the loudest thing in Tokyo. Then I keep walking until even they are not."
+            mc "(A hundred thousand trees, and somebody planned them for people who were not born yet.)"
+            $ reward_attributes_once("city_omotesando_forest", [("insight", "micro")], show="auto")
+        "Read the names on the sake barrels.":
+            "The barrels are stacked shoulder to shoulder, white and black with characters I cannot read."
+            "One name I recognise from a menu. I do not know how to say it. I point at it like a child and then put my hand down."
+            mc "(Somebody sent this here from a town I will never visit. The kami can read it. That has to be enough.)"
+            $ reward_attributes_once("city_omotesando_barrels", [("grace", "micro")], show="auto")
+        "Use the five-yen coin at the offering box.":
+            "I drop the coin. It rattles more than I meant it to."
+            "Two bows. Two claps. One bow. I get the order right and the timing wrong, and nobody minds."
+            "The second time is slower. I do not know who I said it to."
+            mc "(Go-en. A connection. Maybe wanting one is the connection.)"
+            $ reward_attributes_once("city_omotesando_pray", [("nerve", "micro")], show="auto")
+        "Write a question on an ema.":
             "The ema are wooden plaques with a hole and a string. I buy one and write on it."
-            "I do not write a wish. I write a question. Then I hang it with the others."
-            $ spend_money(500)
+            "I do not write a wish. I write a question. Then I hang it with the others and read a few of theirs."
+            "Somebody has written a name. Somebody has written 'please let it be the same.'"
             mc "(A wall of strangers' questions, hanging in the rain. It is the most honest thing I have seen here.)"
-            $ reward_attributes_once("city_omotesando_ema", [("nerve", "micro")], show="auto")
+            $ spend_money(500)
+            $ reward_attributes_once("city_omotesando_ema", [("insight", "micro")], show="auto")
+
+    "On the way down I stop at the place she took me. The barista looks up and does not pretend not to know me."
+    mc "ホット、お願いします。"
+    "Two words I know, in the order I know them. He understands me the first time."
+    mc "(The first time. That is a new record.)"
+    "I sit outside with the coffee and watch the street get dark under the trees."
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
