@@ -1,5 +1,5 @@
 ################################################################################
-## DAY 12 — SUNDAY, APRIL 19, 2026
+## DAY 12 ― SUNDAY, APRIL 19, 2026
 ## The old city: the gate, the incense, and the pause that is not empty.
 ################################################################################
 
@@ -154,7 +154,7 @@ label sunday_practice:
     "A child in a yellow hat runs past me, laughing. A moment later she runs past again, in the same direction, laughing the same laugh."
     "I turn. There is only one child."
     "At the end of the street, the temple stands with its roof curved up at the corners."
-    murakami "Sensō-ji. The oldest temple in Tokyo. It is also a place where people buy souvenirs and eat ice cream."
+    murakami "Sensou-ji. The oldest temple in Tokyo. It is also a place where people buy souvenirs and eat ice cream."
     mc "Those two things don't go together."
     murakami "They go together perfectly. That is the country. The sacred and the snack stand."
     mc "(I do not know why that makes me feel better. It does.)"

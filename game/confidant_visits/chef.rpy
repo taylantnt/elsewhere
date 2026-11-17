@@ -1,5 +1,5 @@
 ################################################################################
-## CHEF — THE RAMEN SHOP
+## CHEF ― THE RAMEN SHOP
 ################################################################################
 
 # Defined late so type_sound (script.rpy) already exists when this runs.
@@ -42,7 +42,7 @@ label chef_common_open:
     return
 
 ################################################################################
-## VISIT 1 — THE FIRST BOWL
+## VISIT 1 ― THE FIRST BOWL
 ################################################################################
 ##
 ## The alternate first meeting. The Day 2 walk-alone route already contains a
@@ -138,7 +138,7 @@ label chef_visit_01:
             chef "「うん。うまい。」"
             "He grunts yes and turns back to the pots. That is the lesson."
             # The first word of the language, taught mid-bite by the man who
-            # never speaks it. No packet, no sign — he learns it here.
+            # never speaks it. No packet, no sign ― he learns it here.
             $ reward_attributes_once("chef_first_umai_meaning", [("insight", "micro")], show="auto")
         "Thank him properly.":
             mc "Arigatou gozaimasu."
@@ -542,9 +542,9 @@ label chef_visit_05:
         "Can I help clean?":
             mc "Can I help clean? I can wipe the counter."
             chef "客は、食べるだけ。"
-            mc "(Customers eat. I know those words. The rest is in his face — this is not a debate.)"
+            mc "(Customers eat. I know those words. The rest is in his face ― this is not a debate.)"
             chef "でも、ありがとう。"
-            mc "(Thank you — that word I know. He cannot accept, and the refusal is kind.)"
+            mc "(Thank you ― that word I know. He cannot accept, and the refusal is kind.)"
             $ reward_attributes_once("chef_visit_05_help", [("grace", "micro")], show="auto")
         "You work too hard.":
             mc "You work too hard. Even for something you love."
@@ -596,7 +596,7 @@ label chef_visit_06:
     mc "(Kenta. The name I have heard him say before.)"
 
     "Kenta bows. Too deeply. Too quickly."
-    kenta "Nice to meet you. I mean—はじめまして。"
+    kenta "Nice to meet you. I mean―はじめまして。"
     chef "もっと、緩く。"
     mc "(Something about being looser. Kenta straightens less. I copy him.)"
 
@@ -685,7 +685,7 @@ label chef_visit_06:
 label chef_visit_07:
     call chef_common_open
 
-    "The shop is different. Not because of the people or the décor, but because of the feeling."
+    "The shop is different. Not because of the people or the decor, but because of the feeling."
     "It feels like a place that has decided what it is."
 
     "Chef is at the counter. Kenta is beside him, and for the first time, Kenta is moving with confidence."
@@ -843,9 +843,9 @@ label chef_visit_closed:
     "No steam, no glow from the kitchen, no line at the door. Just the building, holding its shape the way a room holds the shape of everyone who has ever left it."
     "The noren is gone. In its place, a printed notice is taped to the glass."
 
-    "CLOSED. PERMANENTLY.\nThe owner has returned to his family home to care for his parents.\nThank you for the meals.\n— Chef"
+    "CLOSED. PERMANENTLY.\nThe owner has returned to his family home to care for his parents.\nThank you for the meals.\n― Chef"
 
-    mc "(He wrote it himself. The English is better than his Japanese, which is to say it is not good — but it is his.)"
+    mc "(He wrote it himself. The English is better than his Japanese, which is to say it is not good ― but it is his.)"
     mc "(I read it twice. I was looking for a trick. There isn't one. The broth stopped because the man who made it had to go home.)"
 
     menu:

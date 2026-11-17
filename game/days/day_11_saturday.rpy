@@ -1,5 +1,5 @@
 ################################################################################
-## DAY 11 — SATURDAY, APRIL 18, 2026
+## DAY 11 ― SATURDAY, APRIL 18, 2026
 ## The book town: used paper, modern literature, and the second life of a book.
 ################################################################################
 
@@ -182,11 +182,11 @@ label saturday_recovery:
     "I sit. She pulls three books from the shelf and sets them on the counter in front of me."
 
     "The first is thin and blue. The second is thick and brown. The third has no cover at all."
-    murakami "Natsume Sōseki. Kokoro. A man who cannot say the thing he means until it is too late."
+    murakami "Natsume Souseki. Kokoro. A man who cannot say the thing he means until it is too late."
     murakami "Kawabata Yasunari. Snow Country. A man who goes to the mountains to be disappointed by a woman."
-    murakami "Tanizaki Junichirō. In Praise of Shadows. An essay about why a room should be dark."
+    murakami "Tanizaki Junichirou. In Praise of Shadows. An essay about why a room should be dark."
     mc "That is a strange combination."
-    murakami "It is a conversation. Sōseki asks whether you can know another person. Kawabata asks whether you can love one. Tanizaki asks whether you can see one."
+    murakami "It is a conversation. Souseki asks whether you can know another person. Kawabata asks whether you can love one. Tanizaki asks whether you can see one."
     murakami "They are all asking the same question in different rooms."
 
     "She opens Snow Country to a page near the beginning and reads a sentence aloud. The Japanese is slow and clean."
@@ -252,7 +252,7 @@ label saturday_recovery:
     call dinner_open
 
     father "And the book?"
-    mc "Kokoro. Sōseki. I have to read the first page."
+    mc "Kokoro. Souseki. I have to read the first page."
     father "Then read it before you sleep. A book read before sleep stays in the body."
     mc "(That is either wisdom or a warning. I am starting to think they are the same thing in this house.)"
 
@@ -261,7 +261,7 @@ label saturday_recovery:
     scene bg_room_night with stair_fade
     $ room_ambient(True)
     "Upstairs, I open Kokoro to the first page. The Japanese is hard. The English in my head is harder."
-    $ night_desk_line = "Sōseki"
+    $ night_desk_line = "Souseki"
     call night_open
 
     menu:

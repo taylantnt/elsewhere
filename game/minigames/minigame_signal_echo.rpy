@@ -1,5 +1,5 @@
 ################################################################################
-## SIGNAL ECHO — NEURAL CALIBRATION MINIGAME
+## SIGNAL ECHO ― NEURAL CALIBRATION MINIGAME
 ################################################################################
 ##
 ## A standalone psychological-thriller minigame designed for Elsewhere's dream
@@ -38,6 +38,9 @@ init python:
             self.color = color
             self.sound = sound
 
+    # The Greek letters and the hexagon are not in the dialogue font, so the
+    # screen pins DejaVuSans.ttf on the two text elements that draw them.
+    # check_fonts: pinned
     SIGNAL_CHANNELS = [
         SignalChannel(0, "ALPHA", "α", "◇", "#5fb8ff", "audio/SFX/attribute_tick.wav"),
         SignalChannel(1, "THETA", "θ", "⬡", "#77d98b", "audio/SFX/wire_connect.wav"),
@@ -225,6 +228,7 @@ screen signal_echo_minigame(engine):
                 # Replay button
                 if engine.phase == "input" and engine.replays_remaining > 0:
                     textbutton "↺ REPLAY SIGNAL ([engine.replays_remaining])":
+                        text_font "DejaVuSans.ttf"
                         action Function(engine.trigger_replay)
                         text_size gui.scale(11)
                         text_color "#f0b85a"
@@ -303,10 +307,10 @@ screen signal_echo_minigame(engine):
 
                     fixed:
                         # Top-left channel symbol
-                        text channel.symbol size gui.scale(24) bold True color text_col xpos gui.scale(18) ypos gui.scale(12) outlines []
+                        text channel.symbol font "DejaVuSans.ttf" size gui.scale(24) bold True color text_col xpos gui.scale(18) ypos gui.scale(12) outlines []
 
                         # Central glyph
-                        text channel.glyph size gui.scale(36) color text_col xalign 0.5 yalign 0.45 outlines []
+                        text channel.glyph font "DejaVuSans.ttf" size gui.scale(36) color text_col xalign 0.5 yalign 0.45 outlines []
 
                         # Channel name
                         text channel.name size gui.scale(14) bold True color text_col xpos gui.scale(18) ypos gui.scale(75) kerning gui.scale(2) outlines []

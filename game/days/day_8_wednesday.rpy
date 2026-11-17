@@ -1,6 +1,6 @@
 ################################################################################
-## DAY 8 — WEDNESDAY, APRIL 15, 2026
-## The day of the frog: chopsticks, the quiet car, and Bashō.
+## DAY 8 ― WEDNESDAY, APRIL 15, 2026
+## The day of the frog: chopsticks, the quiet car, and Bashou.
 ################################################################################
 
 label wednesday_morning:

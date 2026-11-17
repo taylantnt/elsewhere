@@ -1027,9 +1027,9 @@ style inventory_empty_text:
 ## Two different measures of progress appear on each row, and the difference is
 ## deliberate:
 ##
-##   the orb  — how solid this pillar has become across the whole ladder. It only
+##   the orb  ― how solid this pillar has become across the whole ladder. It only
 ##              ever fills, so reaching a new rank never looks like a reset.
-##   the bar  — how far through the *current* rank he is, so the ladder reads as
+##   the bar  ― how far through the *current* rank he is, so the ladder reads as
 ##              rungs, and each rung can be watched filling on its own.
 
 screen attributes():

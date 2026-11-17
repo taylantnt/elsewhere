@@ -1,5 +1,5 @@
 ################################################################################
-## DAY 13 — MONDAY, APRIL 20, 2026
+## DAY 13 ― MONDAY, APRIL 20, 2026
 ## The old city with Hikari: the gate, the smoke, the paper, and the cards.
 ################################################################################
 
@@ -173,7 +173,7 @@ label monday_asakusa:
     "She pulls me to the side, out of the crowd, and points at the two figures standing in the gate's bays."
     hikari "That is Raijin. The thunder god. He has the drums."
     "The figure is red and muscular, surrounded by a ring of drums. His face is not angry. It is busy."
-    hikari "And that is Fūjin. The wind god. He has the bag."
+    hikari "And that is Fuujin. The wind god. He has the bag."
     "The other figure is green and lean, holding a bag over his shoulder. He looks like a man who has just remembered something."
     mc "They are guardians."
     hikari "They guard the approach. Not the temple. The approach."
@@ -184,7 +184,7 @@ label monday_asakusa:
     mc "What am I leaving behind?"
     hikari "That is the question you are supposed to ask yourself while you walk through it."
     "The lantern above us moves a little in the wind. The characters on it are black and sharp."
-    mc "(Raijin has the storm. Fūjin has the wind. Neither of them has a door. The door is the thing they are guarding.)"
+    mc "(Raijin has the storm. Fuujin has the wind. Neither of them has a door. The door is the thing they are guarding.)"
 
     menu:
         "Ask why the gods are so frightening.":

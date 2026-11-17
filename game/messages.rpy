@@ -1,5 +1,5 @@
 ################################################################################
-## MESSAGES — TEXTING, THREADS, AND THE PHONE BUZZ
+## MESSAGES ― TEXTING, THREADS, AND THE PHONE BUZZ
 ################################################################################
 
 default message_threads = {}
@@ -660,7 +660,7 @@ screen phone_app_messages_thread_contents(cid, typing=False, bottom_pad=18):
                 $ day_label = "YESTERDAY" if msg.get("day") == "yesterday" else "TODAY"
                 $ prev_day_label = (("YESTERDAY" if thread[index - 1].get("day") == "yesterday" else "TODAY") if index else None)
                 if day_label != prev_day_label:
-                    text "[day_label]  ·  20:00":
+                    text "[day_label]  ・  20:00":
                         xalign 0.5
                         size gui.scale(10)
                         kerning gui.scale(1)

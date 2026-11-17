@@ -1,5 +1,5 @@
 ################################################################################
-## THE COMBINI JOB — VISIT 7: CLOSING
+## THE COMBINI JOB ― VISIT 7: CLOSING
 ################################################################################
 ##
 ## The last teaching shift. Tanaka lets the protagonist close the store, and

@@ -148,7 +148,7 @@ init python:
         if day is None:
             day = store.story_day
         date_value = story_calendar_date(day)
-        return "%s · %s %d · DAY %d" % (
+        return "%s ・ %s %d ・ DAY %d" % (
             story_weekday_names[date_value.weekday()].upper(),
             story_month_names[date_value.month - 1].upper(),
             date_value.day,
@@ -275,11 +275,11 @@ init python:
         if story_number < 1:
             return "BEFORE ARRIVAL"
         if story_number == int(store.story_day):
-            return "TODAY · DAY %d · WEEK %d" % (
+            return "TODAY ・ DAY %d ・ WEEK %d" % (
                 story_number,
                 story_week_number(story_number),
             )
-        return "DAY %d · WEEK %d" % (
+        return "DAY %d ・ WEEK %d" % (
             story_number,
             story_week_number(story_number),
         )
@@ -325,7 +325,7 @@ screen story_day_hud():
                 text story_date_label().upper():
                     style "story_day_date"
 
-                text "DAY %d  ·  WEEK %d" % (story_day, story_week_number()):
+                text "DAY %d  ・  WEEK %d" % (story_day, story_week_number()):
                     style "story_day_meta"
 
                 null height gui.scale(3)

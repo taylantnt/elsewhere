@@ -8,7 +8,7 @@
 ## FICTION:
 ##   Sim gives the protagonist his first field camera assignment for Circle:
 ##   "The city gives you ten thousand things at once. A camera doesn't just
-##   record — it decides what matters. Find the line that holds the frame together."
+##   record ― it decides what matters. Find the line that holds the frame together."
 ##
 ## DESIGN:
 ##   * 3 field assignments in different locations:
@@ -269,7 +269,7 @@ screen photography_viewfinder(engine):
     $ cur_label = cur_frame["label"]
     $ ev_str = ("+0.7" if engine.selected_ev > 0.1 else "-0.7" if engine.selected_ev < -0.1 else "±0.0")
     $ ev_disp = "EV " + ev_str
-    $ banner_text = assignment.location + "  •  " + assignment.title
+    $ banner_text = assignment.location + "  ・  " + assignment.title
     $ header_study = "CIRCLE // FIELD STUDY " + str(engine.current_idx + 1) + " OF " + str(engine.total_assignments)
     $ sub_title = assignment.subtitle
 
@@ -447,9 +447,9 @@ screen photography_review(engine):
     $ rev_grade = "GRADE " + str(last_result["grade"])
     $ frame_label_rev = frame_data["label"]
     $ critique_text = '"' + last_result["critique"] + '"'
-    $ comp_text = "• Composition: " + frame_data["desc"]
+    $ comp_text = "・ Composition: " + frame_data["desc"]
     $ ev_eval = ("Underexposed (EV -0.7)" if last_result["ev"] < -0.1 else "Overexposed (EV +0.7)" if last_result["ev"] > 0.1 else "Balanced Exposure (EV ±0.0)")
-    $ meter_text = "• Light Meter: " + ev_eval
+    $ meter_text = "・ Light Meter: " + ev_eval
 
     # Dark background
     add Solid("#05080c")

@@ -523,6 +523,22 @@ is the index.
   `japanese_fluency` by 1 per lesson, capped at 5. The elective is chosen at the
   Friday fair and continues through the weekend.
 - Hiragana and katakana are used freely; Kanji only where the font group covers it.
+- **The font has holes.** Kanji come from Kiwi Maru and everything else from
+  mini-wakuwaku-maru (`game/gui.rpy`). Both accept a character they have no
+  glyph for and Ren'Py then draws nothing, so the character silently vanishes
+  from the line instead of showing a box. Macrons are the usual casualty
+  (`ō`, `ū`, `ā`, `ē`, `ī`) along with `—`, `·`, `¥`, `é`, `•` and most dingbat
+  or geometric symbols. Romaji follows the author's plain convention instead:
+  `Bashou`, `Sensou-ji`, `Taishou`, `roumaji`, `nomihoudai`. For punctuation use
+  what the font has — `―` (horizontal bar) for a dash, `・` (katakana middle
+  dot) for a separator, `￥` for yen.
+- A screen that genuinely needs one of the missing symbols can pin its own font
+  (`font "DejaVuSans.ttf"` / `text_font "DejaVuSans.ttf"`), which is how the
+  chevrons, skip triangle, overflow dots and minigame symbols are drawn.
+- `python3 tools/check_fonts.py` scans every `.rpy` file for characters that
+  would render blank and prints the file and line. It reads the FontGroup rules
+  out of `game/gui.rpy`, skips comments, and honours per-element font overrides
+  and a `# check_fonts: pinned` marker. Run it after adding any line of text.
 
 ### 5.3 Money and the Bag
 - Money is the everyday resource: fares, food, a book from a stall. Starts at

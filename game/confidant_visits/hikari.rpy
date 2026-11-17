@@ -1,5 +1,5 @@
 ################################################################################
-## HIKARI — THE RIVER RUN
+## HIKARI ― THE RIVER RUN
 ################################################################################
 ##
 ## Hikari is the host sister and the one person who stays. Her arc is not one of
@@ -49,7 +49,7 @@ label confidant_visit_hikari:
 
 
 ################################################################################
-## VISIT 2 — THE ROUTE
+## VISIT 2 ― THE ROUTE
 ################################################################################
 ##
 ## She runs the route from memory, the way the chef makes ramen. He notices she
@@ -179,7 +179,7 @@ label hikari_visit_02:
 
 
 ################################################################################
-## VISIT 3 — THE EVENING HE KEEPS UP
+## VISIT 3 ― THE EVENING HE KEEPS UP
 ################################################################################
 ##
 ## He matches her pace for ten minutes, and she is surprised enough to say so.
@@ -285,7 +285,7 @@ label hikari_visit_03:
 
 
 ################################################################################
-## VISIT 4 — THE NIGHT NEITHER OF THEM SAYS ANYTHING
+## VISIT 4 ― THE NIGHT NEITHER OF THEM SAYS ANYTHING
 ################################################################################
 ##
 ## They run, they stop, they drink, they walk home in silence. It is the most
@@ -392,7 +392,7 @@ label hikari_visit_04:
 
 
 ################################################################################
-## VISIT 5 — THE RAIN
+## VISIT 5 ― THE RAIN
 ################################################################################
 ##
 ## The bridge in the rain, and the first true thing she says about the house.
@@ -496,7 +496,7 @@ label hikari_visit_05:
 
 
 ################################################################################
-## VISIT 6 — THE NIGHT SHE ASKS HIM TO RUN SOMEWHERE THAT IS NOT HOME
+## VISIT 6 ― THE NIGHT SHE ASKS HIM TO RUN SOMEWHERE THAT IS NOT HOME
 ################################################################################
 ##
 ## She takes him to the part of the river she keeps for herself. The vending
@@ -610,7 +610,7 @@ label hikari_visit_06:
 
 
 ################################################################################
-## VISIT 7 — THE LAST RUN
+## VISIT 7 ― THE LAST RUN
 ################################################################################
 ##
 ## She is faster than she has ever been and he cannot keep up. She asks the

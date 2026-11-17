@@ -391,6 +391,7 @@ screen camera_photo_viewer():
         if camera_viewer_index > 0:
             textbutton "‹":
                 style "phone_small_button"
+                text_font "DejaVuSans.ttf"
                 xpos gui.scale(20)
                 yalign 0.5
                 text_size gui.scale(34)
@@ -399,6 +400,7 @@ screen camera_photo_viewer():
         if camera_viewer_index < viewer_total - 1:
             textbutton "›":
                 style "phone_small_button"
+                text_font "DejaVuSans.ttf"
                 xalign 1.0
                 xoffset gui.scale(-20)
                 yalign 0.5

@@ -1,5 +1,5 @@
 ################################################################################
-## NEON STEP — FOUR-LANE RHYTHM MINIGAME
+## NEON STEP ― FOUR-LANE RHYTHM MINIGAME
 ################################################################################
 ##
 ## An original 128 BPM synthwave track drives a four-lane note highway. The

@@ -1,5 +1,5 @@
 ################################################################################
-## THE COMBINI JOB — VISIT 3: THE HOT CASE
+## THE COMBINI JOB ― VISIT 3: THE HOT CASE
 ################################################################################
 ##
 ## The grill. Not overdone. The hot snacks are the part of the store a customer

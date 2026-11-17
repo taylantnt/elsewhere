@@ -1,5 +1,5 @@
 ################################################################################
-## DAY 10 — FRIDAY, APRIL 17, 2026
+## DAY 10 ― FRIDAY, APRIL 17, 2026
 ## The elective fair: Murakami, the kana, and the country you walk into.
 ################################################################################
 
@@ -197,7 +197,7 @@ label friday_morning:
 
     "The page has three columns. On the left, Chinese characters. In the middle, characters that look like them but looser. On the right, curves."
     murakami "Kanji. The characters we borrowed from China. Serious. Official. The language of documents."
-    murakami "Manyōgana. The first attempt to write Japanese with Chinese sounds. Clumsy. Beautiful. A compromise."
+    murakami "Manyougana. The first attempt to write Japanese with Chinese sounds. Clumsy. Beautiful. A compromise."
     murakami "And then these. Hiragana. Katakana. The curves."
     mc "They look like handwriting."
     murakami "They are handwriting. They were invented by women, in the Heian court, because the men had claimed the serious language."

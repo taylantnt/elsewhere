@@ -1,5 +1,5 @@
 ################################################################################
-## HIKARI TOURS — MESSAGE HIKARI AND UNLOCK THE CITY
+## HIKARI TOURS ― MESSAGE HIKARI AND UNLOCK THE CITY
 ################################################################################
 ##
 ## Foundation for the "Message Hikari" hub row. The flow is:
@@ -126,7 +126,7 @@ label hikari_tour:
             ]},
             {"them": [
                 "I hope you like singing.",
-                "Or — better — that you like letting things out. I need to let something out tonight.",
+                "Or ― better ― that you like letting things out. I need to let something out tonight.",
                 "There is a place I go. Kuru Fuku Neko.",
             ], "options": [
                 {"label": "Singing? In front of people?",
@@ -180,7 +180,7 @@ label hikari_tour:
                 {"label": "Hey Hikari. Are you free after class?",
                  "send": "Hey Hikari. Are you free after class?",
                  "them": [
-                     "Yes — actually, I have been waiting for you to ask.",
+                     "Yes ― actually, I have been waiting for you to ask.",
                      "There is a record shop I have not been to in a long time.",
                  ]},
             ]},
@@ -385,7 +385,7 @@ label hikari_tour_harajuku:
             $ reward_attributes_once("harajuku_tour_her_style", [("grace", "micro")], show="auto")
 
     "The assistant has been watching Hikari touch the sleeve. Before either of us can say anything, she is holding a dress on a hanger and talking very fast."
-    hikari "What? No. I could not —"
+    hikari "What? No. I could not ―"
     "She looks at me. I have no idea what she is asking me, and I say the only thing that makes sense."
     mc "You should."
     "The assistant takes her by the sleeve, and the next thing I see is the curtain of the fitting room moving."
@@ -409,19 +409,19 @@ label hikari_tour_harajuku:
             $ reward_attributes_once("harajuku_tour_kawaii_compliment", [("grace", "micro")], show="auto")
         "Say nothing. Just stare.":
             mc "..."
-            "She waits. I fail. She laughs — a real one, not the one she uses at the table."
+            "She waits. I fail. She laughs ― a real one, not the one she uses at the table."
             hikari "You are hopeless."
             mc "I know."
             $ reward_attributes_once("harajuku_tour_kawaii_speechless", [("nerve", "micro")], show="auto")
         "Ask if she is comfortable.":
             mc "Is it comfortable?"
             hikari "It is a dress made for standing still in a shop window. No."
-            mc "Then why —"
+            mc "Then why ―"
             hikari "Because you could not speak. I wanted to see how long it would last."
             $ reward_attributes_once("harajuku_tour_kawaii_comfort", [("insight", "micro")], show="auto")
 
     "She does not take it off."
-    "She keeps the dress and the ribbon and the ridiculous socks for the rest of the day — through the candy shop, onto the train, and in through the door of the house."
+    "She keeps the dress and the ribbon and the ridiculous socks for the rest of the day ― through the candy shop, onto the train, and in through the door of the house."
 
     scene bg_harajuku_candy with walk_fade
     "The cotton candy shop is a wall of colour. Spirals of sugar on sticks, shaped like flowers and hearts and clouds, stacked in rows like a field that has gone wrong in the best possible way."
@@ -517,11 +517,11 @@ label hikari_tour_karaoke:
     hikari "I know. I am glad you said that first."
 
     "She does not go in yet. She turns to me on the pavement like this is the important part of the tour."
-    hikari "Karaoke is not a stage. That is the thing people get wrong. You rent a room — a box — by the hour, and the room is yours."
+    hikari "Karaoke is not a stage. That is the thing people get wrong. You rent a room ― a box ― by the hour, and the room is yours."
     hikari "Nobody is in it with you unless you ask them in. The machine does not judge, the walls do not judge, and the score is a suggestion."
     mc "So it is for people who cannot sing."
     hikari "It is for people who cannot sing and do it anyway. That is a different thing."
-    hikari "You pay for the room, and then for what you drink. Or you take 飲み放題 — nomihōdai — and the drinks keep coming for a fixed price."
+    hikari "You pay for the room, and then for what you drink. Or you take 飲み放題 ― nomihoudai ― and the drinks keep coming for a fixed price."
     mc "That sounds dangerous."
     hikari "It is. That is why they also give you ice cream. Sober people with soft serve are harder to lose."
     "She points through the glass. A rack of cat ears, plastic glasses, and a hat with a propeller on it."
@@ -555,7 +555,7 @@ label hikari_tour_karaoke:
     "We go in. The corridor is narrower than the street and twice as loud."
     "A woman's voice comes through one wall, doing a ballad with her whole life in it. Through the next, a group is laughing and losing the chorus on purpose."
     "Further down, somebody is singing the same two lines over and over, stopping each time at exactly the same word."
-    hikari "Listen. That one from the first room — everybody knows it. It is from a drama. You have heard it, even if you do not know you have."
+    hikari "Listen. That one from the first room ― everybody knows it. It is from a drama. You have heard it, even if you do not know you have."
     mc "And the two lines?"
     hikari "Somebody is practising. That is the bravest room in this building."
     "She hums a few bars of something as we walk. I do not recognize it. She stops when she notices me listening."
@@ -566,7 +566,7 @@ label hikari_tour_karaoke:
     scene bg_karaoke_drink with walk_fade
     "The drink bar is a wall of taps and a row of machines that dispense colours I have no names for."
     "There is a soft-serve machine at the end, and a fridge full of things with cartoon cats on them."
-    hikari "Before anything else — water. Singing is exercise and nobody tells you that."
+    hikari "Before anything else ― water. Singing is exercise and nobody tells you that."
     "She takes two cups and fills one, then the other. She puts the second in my hand like it is a decision she has already made for both of us."
     hikari "Then whatever you want. The soft serve is free here. I am telling you because you will not find out otherwise."
 
@@ -579,7 +579,7 @@ label hikari_tour_karaoke:
             $ reward_attributes_once("karaoke_tour_softserve", [("grace", "micro")], show="auto")
         "Ask about the free-flow drinks.":
             mc "How does the all-you-can-drink actually work?"
-            hikari "You pay for a block of time and you order from this list. Alcohol, tea, soda — all of it. They bring it to the room."
+            hikari "You pay for a block of time and you order from this list. Alcohol, tea, soda ― all of it. They bring it to the room."
             mc "And people manage that responsibly?"
             hikari "Some do. The staff keep bringing water after a while. That is their whole job, I think."
             $ reward_attributes_once("karaoke_tour_freeflow", [("insight", "micro")], show="auto")
@@ -623,7 +623,7 @@ label hikari_tour_karaoke:
     mc "I know this one."
     hikari "Of course you do. You have heard it in every shop you have walked past since you landed."
     mc "I thought it was elevator music."
-    hikari "It is a love song. A very famous one. The whole country knows the chorus. You know it too — you just have never had a reason to say it out loud."
+    hikari "It is a love song. A very famous one. The whole country knows the chorus. You know it too ― you just have never had a reason to say it out loud."
     "She adds one more. This one I recognize from a commercial on the train. I say nothing. She notices."
     hikari "You are allowed to know things from advertisements. That is how a city teaches you its songs."
 
@@ -646,7 +646,7 @@ label hikari_tour_karaoke:
             $ reward_attributes_once("karaoke_tour_listen_her", [("grace", "micro")], show="auto")
 
     "The first song is mine. I am terrible."
-    "I know I am terrible because Hikari is not pretending otherwise — she is sitting on the table with the cheering stick across her knees, waiting for the chorus."
+    "I know I am terrible because Hikari is not pretending otherwise ― she is sitting on the table with the cheering stick across her knees, waiting for the chorus."
     "When it comes, she hits the stick against the table exactly once, very hard, and yells something in Japanese that I do not understand."
     "I laugh in the middle of the line and lose the rest of the words. She keeps singing."
     hikari "That is the first one. The first one is never the good one. It is the one where you find out what your voice does."
@@ -691,7 +691,7 @@ label hikari_tour_karaoke:
     mc "You are not coming?"
     hikari "I have shown you. That was the point."
     mc "(She says it lightly. It does not land lightly.)"
-    hikari "And if you go — take the water. And pick a song I know."
+    hikari "And if you go ― take the water. And pick a song I know."
     $ reward_attributes_once("hikari_tour_karaoke_complete", [("insight", "tiny")], show="auto")
 
     scene bg_train_interior with walk_fade
@@ -904,12 +904,12 @@ label hikari_tour_yokohama:
     "Man: 「Jiaozi! Jiaozi!」"
     "Woman: 「Laile! Ni cui shenme!」"
     "Boy: 「Nainai! Dianhua!」"
-    "Hikari's head moves a fraction. The boy has switched to the Japanese word — 電話, denwa — and that much she understands."
+    "Hikari's head moves a fraction. The boy has switched to the Japanese word ― 電話, denwa ― and that much she understands."
     "Lei Lei, without turning: 「Shuo wo bu zai!」"
     "The boy says something into the phone. Then he comes back and says: 「Ta shuo ta bu zai.」"
     "The man's voice turns sharp. The woman's turns sharper. I cannot follow the words. The boy laughs."
-    "One of the sons puts his head through the opening and shouts something in Japanese. Hikari catches one word in it — 蒸し器, the steamer."
-    "Lei Lei says a single word — 「やめて。」 — and both of them stop. I don't know the word. The room does."
+    "One of the sons puts his head through the opening and shouts something in Japanese. Hikari catches one word in it ― 蒸し器, the steamer."
+    "Lei Lei says a single word ― 「やめて。」 ― and both of them stop. I don't know the word. The room does."
     mc "What are they arguing about?"
     hikari "The steamer."
     mc "What about it?"
@@ -1106,7 +1106,7 @@ label hikari_tour_ueno:
     mc "You sound like my father."
     hikari "He sounds like a sensible man. I'll take it."
 
-    "There are hundreds of people under the trees. I keep waiting for the noise of a crowd — voices carrying between groups, somebody calling across the grass."
+    "There are hundreds of people under the trees. I keep waiting for the noise of a crowd ― voices carrying between groups, somebody calling across the grass."
     "Nothing. Each tarp is its own small country. People walk between them without looking in, the way you pass an open door in a building you do not live in."
     mc "There are so many people here and nobody is talking to anybody."
     hikari "They are talking. Just not across."
@@ -1129,7 +1129,7 @@ label hikari_tour_ueno:
     menu:
         "Ask why the museum is in a park.":
             mc "Why put a museum in a park?"
-            hikari "Because the temple was already here, and the buildings were already big. But also — I think because a park is where you bring what you want to keep."
+            hikari "Because the temple was already here, and the buildings were already big. But also ― I think because a park is where you bring what you want to keep."
             hikari "The city lost a temple and built a place that keeps things instead. That is not the same as getting it back. It is something else."
             mc "(Something else. She says that like it is a category.)"
             $ reward_attributes_once("ueno_tour_museum", [("insight", "micro")], show="auto")
@@ -1154,7 +1154,7 @@ label hikari_tour_ueno:
     hikari "You were looking at his bottle. He noticed. That is all. Do not turn it into a story."
     hikari "Take it with both hands. Say いただきます."
     mc "What does it mean?"
-    hikari "Something like — I receive this. It is polite. It is also true."
+    hikari "Something like ― I receive this. It is polite. It is also true."
     "I take the cup with both hands. It is tea, and it is far too sweet. The man does not look at me. Hikari drinks hers like this is a normal Tuesday."
     mc "He did not say anything."
     hikari "He gave you a cup. That was the whole conversation."
@@ -1170,7 +1170,7 @@ label hikari_tour_ueno:
             $ reward_attributes_once("ueno_tour_tea", [("grace", "micro")], show="auto")
         "Ask what happens if you refuse.":
             mc "What if I do not want the cup?"
-            hikari "You can say 結構です and leave it. Nobody is offended. But you have to actually say it — you cannot just ignore the hand."
+            hikari "You can say 結構です and leave it. Nobody is offended. But you have to actually say it ― you cannot just ignore the hand."
             hikari "Most things here are like that. The offer matters more than the answer."
             $ reward_attributes_once("ueno_tour_refuse", [("insight", "micro")], show="auto")
         "Hold the cup without drinking.":
@@ -1328,7 +1328,7 @@ label hikari_tour_shimokitazawa:
     hikari "Everybody here is dressed as themselves. That is a different amount of work."
     "She walks faster than usual. I have to half-run to keep up, and when I mention it she slows down without admitting anything."
 
-    hikari "After the war, the rent here was cheap. Small theaters moved in — 小劇場, little rooms with fifty seats and no money for a proper sign."
+    hikari "After the war, the rent here was cheap. Small theaters moved in ― 小劇場, little rooms with fifty seats and no money for a proper sign."
     hikari "Then came the students, then the record shops, then the clothes. It has never been rebuilt into anything newer."
     mc "Is that on purpose?"
     hikari "I think nobody could agree on what to rebuild it into. That is how the best places happen."
@@ -1356,7 +1356,7 @@ label hikari_tour_shimokitazawa:
             $ reward_attributes_once("shimokita_tour_sequence", [("nerve", "micro")], show="auto")
 
     scene bg_record_shop with walk_fade
-    "The record shop is four crates wide and smells like paper and dust. The sign says 中古 — used — and nothing else."
+    "The record shop is four crates wide and smells like paper and dust. The sign says 中古 ― used ― and nothing else."
     "Hikari goes straight to the third crate from the door. Not the first two. She does not look at the others."
     hikari "If a shop has been here a long time, the good things sink. People pull them out and put them back in the wrong place."
     mc "You can tell where they sank?"
@@ -1505,7 +1505,7 @@ label hikari_tour_shimokitazawa:
     mc "You are not coming?"
     hikari "I have shown you. That was the point."
     mc "(She says it lightly. It does not land lightly.)"
-    hikari "And if the record is still there — buy it."
+    hikari "And if the record is still there ― buy it."
     $ reward_attributes_once("hikari_tour_shimokitazawa_complete", [("insight", "tiny")], show="auto")
 
     scene bg_train_interior with walk_fade
@@ -1540,15 +1540,15 @@ label hikari_tour_omotesando:
     hikari "This is the road to the forest. It has opinions about itself."
 
     "She starts walking without checking whether I am following. She knows I am."
-    hikari "Omotesando. Omote means front. Sandō means approach. This was the front approach to the shrine."
+    hikari "Omotesando. Omote means front. Sandou means approach. This was the front approach to the shrine."
     mc "A road for a god."
     hikari "For an emperor, first. They made him a god after he died, which is a promotion nobody asks for."
-    hikari "The road went up in the Taishō era, when the shrine was being built. You walked it to arrive at the shrine. That was its whole job."
+    hikari "The road went up in the Taishou era, when the shrine was being built. You walked it to arrive at the shrine. That was its whole job."
     mc "And now?"
     hikari "Now you walk it to arrive at Louis Vuitton."
 
     "The shops are low and wide and almost silent. No prices in the windows. A doorman in white gloves stands outside a door that is already open."
-    hikari "Every big house in the world wanted a building on this street. Tod's is by Toyo Ito — those branches on the front are concrete pretending to be a tree. Dior is glass and looks like it is not trying. Prada is bubbles."
+    hikari "Every big house in the world wanted a building on this street. Tod's is by Toyo Ito ― those branches on the front are concrete pretending to be a tree. Dior is glass and looks like it is not trying. Prada is bubbles."
     hikari "People come here to look at the buildings. Not only to buy. The buildings are the exhibition and the clothes are the gift shop."
     mc "That is a strange thing for a shop to be."
     hikari "It is a strange street. It is the same trick as hanami. Find a reason to walk slowly."
@@ -1587,7 +1587,7 @@ label hikari_tour_omotesando:
     "The trees are not lining a road anymore. They are the road."
 
     scene bg_meijijingu_entrance with walk_fade
-    "The torii comes out of the trees without warning — two columns and a beam, unpainted, the colour of old paper, taller than the shops behind us."
+    "The torii comes out of the trees without warning ― two columns and a beam, unpainted, the colour of old paper, taller than the shops behind us."
     mc "That is one piece of wood?"
     hikari "One of the largest wooden torii in the country. Cypress. No paint, because paint would make it a building and it is not a building."
     hikari "Before you go through, you bow. Once. Not deep. From the chest."
@@ -1605,7 +1605,7 @@ label hikari_tour_omotesando:
     "Inside the gate there is a stone basin under a wooden roof, with bamboo pipes above it and a row of ladles laid across the water."
     "People come and go in twos and threes. An old man in a cardigan does the whole thing in four seconds and is gone before I have worked out where to stand."
     hikari "Temizuya. The place you wash before you go further."
-    hikari "The ladle is a hishaku. One scoop is enough. You do not refill it — the water is not for drinking and the basin is not a sink."
+    hikari "The ladle is a hishaku. One scoop is enough. You do not refill it ― the water is not for drinking and the basin is not a sink."
     mc "What is the order?"
     hikari "Right hand takes the ladle, pour over the left. Left hand takes it, pour over the right. Then pour a little into your left palm and rinse your mouth. Do not drink from the ladle."
     hikari "Then tip it so the water runs down the handle, and put it back."
@@ -1639,13 +1639,13 @@ label hikari_tour_omotesando:
 
     scene bg_meijijingu_forest with walk_fade
     "The gravel starts."
-    "Two steps in, the city is not quieter. It is gone. The traffic, the trains, the shops, the coat and the doorman — all of it stops at the same line."
+    "Two steps in, the city is not quieter. It is gone. The traffic, the trains, the shops, the coat and the doorman ― all of it stops at the same line."
     "The air is colder here. The trees are not in rows. They are in a crowd."
 
     mc "They left a forest in the middle of Tokyo."
     hikari "They didn't leave it. They planted it."
     mc "...Planted it."
-    hikari "A hundred thousand trees. Donated — a village in Kyushu sent some, a school in Tohoku sent more, whatever people had. Volunteers carried them up this hill and put them in the ground."
+    hikari "A hundred thousand trees. Donated ― a village in Kyushu sent some, a school in Tohoku sent more, whatever people had. Volunteers carried them up this hill and put them in the ground."
     hikari "A forestry professor planned the whole thing. He chose the species so the forest would look after itself. He was designing a hundred years ahead."
     mc "He knew he would never see it."
     hikari "None of them would. That was the point."
@@ -1702,7 +1702,7 @@ label hikari_tour_omotesando:
     mc "(A hundred thousand trees, and the thing I remember is a woman trying not to trip.)"
 
     scene bg_meijijingu_temple with walk_fade
-    "The path opens into a courtyard and the sound comes back — not traffic. People. A school group in matching hats. A guide with a little flag. A queue at the offering box."
+    "The path opens into a courtyard and the sound comes back ― not traffic. People. A school group in matching hats. A guide with a little flag. A queue at the offering box."
     hikari "Stop here."
     mc "Why?"
     hikari "Hat off."
@@ -1716,7 +1716,7 @@ label hikari_tour_omotesando:
     hikari "Because somebody has to go in. It is not going to be you."
     hikari "Did you bring the coin?"
     mc "I brought it. I still do not know why."
-    hikari "Go-en. Five yen. It sounds like goen — a connection. People use it when they want one."
+    hikari "Go-en. Five yen. It sounds like goen ― a connection. People use it when they want one."
     mc "A connection to what?"
     hikari "To whoever. That is the honest answer."
 
@@ -1825,7 +1825,7 @@ label hikari_tour_omotesando:
             "She laughs and looks away, which is what she does instead of saying something she means."
             $ reward_attributes_once("omotesando_tour_thankyou", [("nerve", "micro")], show="auto")
 
-    "We finish the coffee. The street is loud again in the good way — people, bicycles, a bus pulling away."
+    "We finish the coffee. The street is loud again in the good way ― people, bicycles, a bus pulling away."
     hikari "The shrine closes at sunset."
     mc "We just came from there."
     hikari "I know. That is why we are here."

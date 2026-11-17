@@ -15,9 +15,9 @@
 ## it still works, but it is not on the story's path any more.
 ##
 ## Planned keys (not written yet):
-##   "ramen"       — the bowl that will not let him choose
-##   "photo_club"  — a photograph that keeps taking itself
-##   "hikari_run"  — the river path, no phone, no money, no Hikari
+##   "ramen"       ― the bowl that will not let him choose
+##   "photo_club"  ― a photograph that keeps taking itself
+##   "hikari_run"  ― the river path, no phone, no money, no Hikari
 ##
 ## When one of those dreams is written, add its branch here and point the first
 ## visit at it. Nothing else in the day loop needs to change.

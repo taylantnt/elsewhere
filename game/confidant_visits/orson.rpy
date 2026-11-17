@@ -1,5 +1,5 @@
 ################################################################################
-## ORSON — LUPIN'S DEN
+## ORSON ― LUPIN'S DEN
 ################################################################################
 ##
 ## Visit 1 happened in script.rpy, on the wrong turn home from the library:
@@ -83,19 +83,19 @@ label orson_visit_02:
     bar_master "Mind the last train. Miss it and the city tests you."
 
     "He points toward the wall clock, the way you'd point out a floor that's about to give way."
-    bar_master "Our Friday fellow — fox mask, third whisky, cries into it, swears it's the onions."
+    bar_master "Our Friday fellow ― fox mask, third whisky, cries into it, swears it's the onions."
 
     "A pair of masked regulars laugh near the jukebox, too loudly, and nobody minds. Orson lowers his voice without being asked."
     "I feel like I'm always one step behind. I say it before I can decide not to."
-    bar_master "Smaller steps, then. Same drink twice — see what sticks."
+    bar_master "Smaller steps, then. Same drink twice ― see what sticks."
 
-    "The drink is good. Not great, not trying — good, the way water is good."
+    "The drink is good. Not great, not trying ― good, the way water is good."
     bar_master "Finish that, and I'll teach you 'refill, please' without the tourist voice."
 
     menu:
         "\"Teach me.\"":
             mc "Teach me."
-            bar_master "おかわり、お願いします。 Okawari, onegaishimasu — soft on the 'ri,' you'll charm half the city."
+            bar_master "おかわり、お願いします。 Okawari, onegaishimasu ― soft on the 'ri,' you'll charm half the city."
             $ reward_attributes_once("orson_visit_02_teach", [("grace", "micro")], show="auto")
         "\"Maybe next time.\"":
             mc "Maybe next time."
@@ -110,7 +110,7 @@ label orson_visit_02:
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 2)
     $ remember("orson", "he explained the masks and taught him 'okawari onegaishimasu'")
-    $ queue_message("orson", "You left before the last train again. Good. The city tests people who miss it — you're still passing.", day="yesterday")
+    $ queue_message("orson", "You left before the last train again. Good. The city tests people who miss it ― you're still passing.", day="yesterday")
     $ reward_attributes_once("orson_visit_02_close", [("grace", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -138,11 +138,11 @@ label orson_visit_03:
 
     mc "And the locals?"
     bar_master "A poet who will not publish. A barista who hates coffee. A nurse who laughs too loud. The hospital is quiet."
-    bar_master "People think Japan's polite. It is — right up till the mess shows up in formal shoes. People come here to be seen without being recognised."
+    bar_master "People think Japan's polite. It is ― right up till the mess shows up in formal shoes. People come here to be seen without being recognised."
     "I laugh before I can stop myself."
     mc "That helps."
     "He leans in, not far."
-    bar_master "Carry something to write on. A receipt's enough — three things a day that were actually there. When the city gets too big, read them back."
+    bar_master "Carry something to write on. A receipt's enough ― three things a day that were actually there. When the city gets too big, read them back."
 
     menu:
         "\"I'll try that.\"":
@@ -151,7 +151,7 @@ label orson_visit_03:
             $ reward_attributes_once("orson_visit_03_notebook", [("grace", "micro")], show="auto")
         "\"I'll just live it.\"":
             mc "I'll just live it."
-            bar_master "Then live it twice — once when it happens, once when you write it."
+            bar_master "Then live it twice ― once when it happens, once when you write it."
             $ reward_attributes_once("orson_visit_03_live", [("nerve", "micro")], show="auto")
 
     "He slides over a small bowl of edamame."
@@ -181,7 +181,7 @@ label orson_visit_04:
     mc "It doesn't look like what was left."
 
     mc "I'm still figuring out where I fit."
-    bar_master "Pick a few places and keep going back. Belonging's just repetition — nothing more romantic than that."
+    bar_master "Pick a few places and keep going back. Belonging's just repetition ― nothing more romantic than that."
 
     menu:
         "\"It feels fake to force it.\"":
@@ -230,14 +230,14 @@ label orson_visit_05:
     "He sets down a glass and a small dish of yuzu peel."
     bar_master "Heh. Had days where everything came out wrong?"
     mc "All of them."
-    bar_master "It's okay to feel lost — just don't stop walking."
-    bar_master "Small rituals help — one day the city nods back. That's all it takes."
+    bar_master "It's okay to feel lost ― just don't stop walking."
+    bar_master "Small rituals help ― one day the city nods back. That's all it takes."
     mc "Rituals feel safe."
     "He leans on the counter."
     bar_master "Our professor wears a plain white face and reads the same paper for three hours. Never turns the page."
     bar_master "And our tourist found us by accident, then came back every trip. Copies the old regulars' orders, calls it 'research.'"
     mc "I'll remember the copying rule."
-    bar_master "Ask for help, too. Smallest way you can — make it easy for them to say yes."
+    bar_master "Ask for help, too. Smallest way you can ― make it easy for them to say yes."
 
     menu:
         "\"Thanks... that helps.\"":
@@ -246,7 +246,7 @@ label orson_visit_05:
             $ reward_attributes_once("orson_visit_05_helps", [("grace", "micro")], show="auto")
         "\"It still feels hard.\"":
             mc "It still feels hard."
-            bar_master "It is. Worthwhile things are heavy — carry them with both hands."
+            bar_master "It is. Worthwhile things are heavy ― carry them with both hands."
             $ reward_attributes_once("orson_visit_05_hard", [("nerve", "micro")], show="auto")
 
     "For a while neither of us says anything. The bar hums around us."
@@ -272,7 +272,7 @@ label orson_visit_06:
     bar_master "Long year."
     "He pours a small neat drink and pauses before sliding it across."
     bar_master "I tried other lives. The company my family wanted. A shop of my own. Bad location, worse timing."
-    bar_master "This place was desperation with a lease. I wouldn't change it — I'd change arriving alone."
+    bar_master "This place was desperation with a lease. I wouldn't change it ― I'd change arriving alone."
     mc "And it worked."
     bar_master "It works some nights. A bar is a candle. You do not know how long the wax is."
     "He catches himself. The mask tilts."
@@ -293,7 +293,7 @@ label orson_visit_06:
             $ reward_attributes_once("orson_visit_06_showup", [("nerve", "micro")], show="auto")
         "\"I'm still scared.\"":
             mc "I'm still scared."
-            bar_master "Fear keeps your eyes open — just don't let it keep your feet still."
+            bar_master "Fear keeps your eyes open ― just don't let it keep your feet still."
             $ reward_attributes_once("orson_visit_06_scared", [("grace", "micro")], show="auto")
 
     "He looks down the bar, then back."
@@ -334,7 +334,7 @@ label orson_visit_07:
             $ reward_attributes_once("orson_visit_07_miss", [("grace", "micro")], show="auto")
         "\"I'll carry it with me.\"":
             mc "I'll carry it with me."
-            bar_master "Some places can't hold us up forever. You carry the warmth with you — that's what lasts."
+            bar_master "Some places can't hold us up forever. You carry the warmth with you ― that's what lasts."
             $ reward_attributes_once("orson_visit_07_carry", [("nerve", "micro")], show="auto")
 
     "He studies me for a long moment. Then he reaches up and takes off the wolf mask."
@@ -360,7 +360,7 @@ label orson_visit_07:
 
 
 ################################################################################
-## EPILOGUE — THE WOLF STILL HANGING
+## EPILOGUE ― THE WOLF STILL HANGING
 ################################################################################
 ##
 ## The lease ended and Orson is gone. The bar is closed, the window is dark, and

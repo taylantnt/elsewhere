@@ -381,7 +381,7 @@ image bg_student_relations = Transform("images/backgrounds/bg_student_relations.
 image bg_lecture_hall = Transform("images/backgrounds/bg_lecture_hall.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_library = Transform("images/backgrounds/bg_library.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 
-# The old city around Sensō-ji. These were painted for the map app; defining them
+# The old city around Sensou-ji. These were painted for the map app; defining them
 # here lets the Sunday elective use them as scene backgrounds by name.
 image bg_asakusa_kaminarimon = Transform("images/backgrounds/bg_asakusa_kaminarimon.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_asakusa_inside = Transform("images/backgrounds/bg_asakusa_inside.png", xysize=(config.screen_width, config.screen_height), fit="cover")
@@ -493,10 +493,10 @@ default hana_affection = 0
 # and father levels for extra beats; the confidant values are written on their
 # first visits and wait for their own later scenes.
 #
-#   1  Known     at 1   — they have let him closer than a stranger
-#   2  Trusted   at 3   — they expect him to mean what he says
-#   3  Close     at 5   — they bring him the thing they would not say aloud
-#   4  Family    at 8   — the door is open without asking
+#   1  Known     at 1   ― they have let him closer than a stranger
+#   2  Trusted   at 3   ― they expect him to mean what he says
+#   3  Close     at 5   ― they bring him the thing they would not say aloud
+#   4  Family    at 8   ― the door is open without asking
 #
 # Levels are read through affection_level(character), so a scene can gate a
 # confidence or an extra beat without inventing a second stat.
@@ -708,10 +708,10 @@ init python:
         store.money += amount
 
     def money_text(amount=None):
-        """The wallet as it reads on screen: ¥ 30,000, never ¥30000."""
+        """The wallet as it reads on screen: ￥ 30,000, never ￥30000."""
         if amount is None:
             amount = store.money
-        return "¥ {:,}".format(int(amount))
+        return "￥ {:,}".format(int(amount))
 
     def can_afford(amount):
         return store.money >= amount
@@ -827,12 +827,12 @@ init python:
     # scenes stay on the same ladder. Named losses keep the same vocabulary for
     # deliberate trade-offs.
     #
-    #   tiny   — a flicker of behaviour (airport first contacts)
-    #   micro  — a short, clear answer inside a conversation
-    #   nudge  — a stronger reply that still is not a turning point
-    #   small  — a real choice with a subject
-    #   medium — a set-piece beat that closes a scene or a day
-    #   large  — reserved for later act-turning decisions
+    #   tiny   ― a flicker of behaviour (airport first contacts)
+    #   micro  ― a short, clear answer inside a conversation
+    #   nudge  ― a stronger reply that still is not a turning point
+    #   small  ― a real choice with a subject
+    #   medium ― a set-piece beat that closes a scene or a day
+    #   large  ― reserved for later act-turning decisions
     #
     # Soft trade-offs should usually cost `micro_loss` (-0.2), not half a point.
     attribute_reward_sizes = {
@@ -889,8 +889,8 @@ init python:
     def attribute_ring_displayable(attribute_id, progress, size, knots=None):
         """A ring of discrete knots, one per slice of the current rank.
 
-        Every knot stays visible — filled ones in the attribute's colour, the
-        rest as faint beads — so the ring can be read as a count rather than
+        Every knot stays visible ― filled ones in the attribute's colour, the
+        rest as faint beads ― so the ring can be read as a count rather than
         a vague glow. The knot straddling the current progress is lit
         fractionally, which keeps fractional rewards (0.1, 0.2, 0.3) honest
         without needing more dots than the eye can count.
@@ -1075,9 +1075,9 @@ init python:
         Every adjustment shows something, including the small ones. Which of the two
         things it shows is decided here so no scene ever has to think about it:
 
-          show="auto"  — the quiet ticker, or the full card on a rank change
-          show="card"  — the full card, for a set-piece decision
-          show=False   — nothing at all, for bookkeeping that is not a reward
+          show="auto"  ― the quiet ticker, or the full card on a rank change
+          show="card"  ― the full card, for a set-piece decision
+          show=False   ― nothing at all, for bookkeeping that is not a reward
 
         A rank change always takes the full card whatever the size.
         """
@@ -1361,7 +1361,7 @@ define security2 = Character("Security", callback=type_sound, image="security2")
 define taxi_driver = Character("Taxi Driver", callback=type_sound, image="taxi_driver")
 
 # The wolf behind Lupin's Den bar. He is "the Master" to everyone which includes
-# the player — his name is something the story has not earned yet, so the name
+# the player ― his name is something the story has not earned yet, so the name
 # box stays a title until a later visit says otherwise.
 define bar_master = Character("The Master", color="#a9a9a9", callback=type_sound, image="orson")
 
@@ -2527,12 +2527,12 @@ label answer_assistant_nevermind:
 
 label talk_veteran_assistant:
     if not has_pamphlet:
-        veteran "Oh dear — you've got that look. Let me guess: pamphlet?"
+        veteran "Oh dear ― you've got that look. Let me guess: pamphlet?"
         veteran "If you pick up one of the pamphlets from the desk, I might be able to help you work through it."
         mc "Pamphlet? I'll go look for one."
         jump airport_exploration
 
-    veteran "These things are more puzzle than guide, aren't they? Here — are you trying to get to 中野3丁目?"
+    veteran "These things are more puzzle than guide, aren't they? Here ― are you trying to get to 中野3丁目?"
     mc "That's right."
     veteran "..."
     "He unfolds it and runs a finger down the margin."
@@ -2548,7 +2548,7 @@ label talk_veteran_assistant:
             jump taxi_choice
         "Tell me about the taxi.":
             veteran "Follow the signs outside to the taxi stand. Show the driver the address."
-            veteran "Budget around ¥18,000. More if there's traffic."
+            veteran "Budget around ￥18,000. More if there's traffic."
             $ reward_attributes_once("veteran_advice_taxi", [("insight", "micro")], show="auto")
             jump train_choice
         "I have what I need. Thank you.":
@@ -2561,7 +2561,7 @@ label taxi_choice:
     menu:
         "Tell me about the taxi.":
             veteran "The taxi stand is just outside. There may be a short wait."
-            veteran "The fare will be around ¥18,000, perhaps more in traffic."
+            veteran "The fare will be around ￥18,000, perhaps more in traffic."
             $ reward_attributes_once("veteran_advice_taxi_detail", [("insight", "micro")], show="auto")
             jump end_airport
         "I'll take the train. Thank you.":
@@ -2705,7 +2705,7 @@ label taxi_stand:
     mc "(...I understood one word of that and it was 中野.)"
     mc "Ah, um... 中野3丁目... please?"
     "The driver chuckles."
-    taxi_driver "Okay okay — 中野3丁目. Far, but no problem, okay?"
+    taxi_driver "Okay okay ― 中野3丁目. Far, but no problem, okay?"
     mc "(He laughed. I'm choosing to believe that was friendly.)"
 
     "The meter starts ticking and we pull away from the kerb."
@@ -2784,8 +2784,8 @@ label taxi_stand:
     mc "(...Under. It came in under.)"
     mc "(I have never been so relieved to be wrong about a number in my life.)"
 
-    # ¥500 for the first 1.096 km, then ¥100 for every 255 m, so a Tokyo meter
-    # only ever lands on ¥500 plus a multiple of ¥100. That is why the fare here
+    # ￥500 for the first 1.096 km, then ￥100 for every 255 m, so a Tokyo meter
+    # only ever lands on ￥500 plus a multiple of ￥100. That is why the fare here
     # is 17,600 and not something convenient like 18,000.
     $ spend_money(17600)
     mc "...Arigatou gozaimasu."
@@ -4242,7 +4242,7 @@ label after_school_walk_alone:
             chef "「うん。うまい。」"
             "He grunts yes and turns back to the pots. That is the lesson."
             # The first word of the language, taught mid-bite by the man who
-            # never speaks it. No packet, no sign — he learns it here.
+            # never speaks it. No packet, no sign ― he learns it here.
             $ reward_attributes_once("chef_first_umai_meaning", [("insight", "micro")], show="auto")
         "Thank him properly.":
             mc "Arigatou gozaimasu."
@@ -4559,7 +4559,7 @@ label after_school_photo_club:
 
     # Sim's rules (full version in game_structure.md §4.6 and his character
     # file): never complains, never blames anyone, puts others first; what he
-    # says about himself is always smaller than the truth. He is not a student —
+    # says about himself is always smaller than the truth. He is not a student ―
     # he comes in from outside to guide the club, which is called Circle.
     #
     # Planned shape of the seven visits, for when it is written:
@@ -4722,7 +4722,7 @@ label after_school_photo_club:
     $ wire_unlock("sim")
     # Circle's welcome message. Like the chef's advert, it is queued until the
     # phone has a data plan; Hikari is still standing there when it lands.
-    $ queue_message("sim", "Circle. You're in. I posted the room one — it already has replies. Thursday. Bring the camera.", day="yesterday")
+    $ queue_message("sim", "Circle. You're in. I posted the room one ― it already has replies. Thursday. Bring the camera.", day="yesterday")
     # Forced closer for the photo route. Sitting in a room of strangers and staying
     # is the Grace beat that matches the other first-afternoon finales.
     $ reward_attributes_once("photo_first_session", [("grace", "small")], show="card")
@@ -4949,7 +4949,7 @@ init python:
 # Six pairs of the day's own photographs, laid out four across and three down.
 # The board is a tarot spread on a velvet table: parchment frames, an engraved
 # back, and a soft gilded glow when a pair is remembered. The screen owns the
-# whole arc — deal, preview, play, reveal, result — so the board never tears
+# whole arc ― deal, preview, play, reveal, result ― so the board never tears
 # down or rebuilds between turns. A selected card is locked face-up until its
 # twin is chosen; it cannot be toggled back to hide a peek.
 # ---------------------------------------------------------------------------
@@ -5228,7 +5228,7 @@ screen day_memory_match(engine):
         ypos 18
         spacing 2
 
-        text ("FIRST NIGHT  ·  MEMORY  ·  " + route_label):
+        text ("FIRST NIGHT  ・  MEMORY  ・  " + route_label):
             style "memory_eyebrow"
 
         text "KEEP THE DAY TOGETHER":
@@ -5288,7 +5288,7 @@ screen day_memory_match(engine):
             at memory_banner_in
 
     elif engine.phase == "play":
-        text "CLICK A CARD, THEN ITS TWIN  ·  THE DAY IS ALREADY STARTING TO BLUR":
+        text "CLICK A CARD, THEN ITS TWIN  ・  THE DAY IS ALREADY STARTING TO BLUR":
             xalign 0.5
             ypos 78
             style "memory_status"
@@ -5532,7 +5532,7 @@ label first_evening_dinner:
     "For the first time since I came home, the corner of his mouth moves."
 
     # Only the ramen route leaves him genuinely full. Everyone else came home
-    # hungry, so the choice below would not exist for them — and the morning
+    # hungry, so the choice below would not exist for them ― and the morning
     # after reads `declined_dinner` to keep the two days consistent.
     if first_day_activity == "walk_alone":
         mc "(I am still full. That bowl was enormous. But Mother kept this warm, and they waited for me.)"
@@ -5758,7 +5758,7 @@ label test_memory_match:
 ##
 ## The first full day that belongs to him: lecture, the Hamada Denki errand,
 ## then Akihabara free until the maid cafe. This is the shape every later day
-## repeats — the difference is that from here on the afternoon is the hub's.
+## repeats ― the difference is that from here on the afternoon is the hub's.
 
 label second_morning:
     # Day 3: Friday, April 10. The second school day.
@@ -6045,7 +6045,7 @@ label second_school_day:
             hikari "学生プランだけで、追加は一切なしでお願いします。"
             $ reward_attributes_once("cellular_plan_basic", [("grace", "micro")], show="auto")
         "What happens if I need to cancel?":
-            mc "Before we sign — what happens if I need to cancel?"
+            mc "Before we sign ― what happens if I need to cancel?"
             hikari "途中で解約した場合、どうなるんですか。"
             yamada "手続きと費用は、契約書に書いてあります。"
             $ reward_attributes_once("cellular_plan_decline_extras", [("insight", "micro")], show="auto")
@@ -6124,7 +6124,7 @@ label second_school_day:
     mc "(I wanted to see one. I just hadn't decided if I wanted to admit that out loud.)"
 
     "One of the maids approaches, leaving enough space that I can keep walking if I want to."
-    maid "First time? We're just upstairs. The menu has pictures — the spell is the only thing anybody gets wrong."
+    maid "First time? We're just upstairs. The menu has pictures ― the spell is the only thing anybody gets wrong."
 
     menu:
         "Could you explain how it works before I decide?":
@@ -6191,14 +6191,14 @@ label second_school_day:
         "Please recommend something.":
             $ reward_attributes_once("maid_cafe_first_recommendation", [("grace", "micro")], show="auto")
             mc "A recommendation would be nice."
-            aya "Then I suggest the omurice. It's fluffy — and I'll draw a rabbit on it. That's what I draw when I'm happy."
+            aya "Then I suggest the omurice. It's fluffy ― and I'll draw a rabbit on it. That's what I draw when I'm happy."
             mc "Sounds good. Let's do that."
         "I'll try choosing for myself.":
             $ reward_attributes_once("maid_cafe_first_independent_order", [("nerve", "micro")], show="auto")
             mc "I'll try choosing for myself."
             aya "Ooh, confident! What catches your eye?"
             mc "The omurice. It says it's your specialty."
-            aya "A classic! You'll see what I draw — I don't want to give it away."
+            aya "A classic! You'll see what I draw ― I don't want to give it away."
         "What do most people order?":
             $ reward_attributes_once("maid_cafe_first_popular_order", [("insight", "micro")], show="auto")
             mc "What do most people order?"
@@ -6494,8 +6494,8 @@ label second_school_day:
 
 label night_room_visit:
     # She doesn't go downstairs. She leans in the doorframe a moment longer,
-    # then comes in and sits on the edge of my desk — a thing she has never done
-    # before — because there is one more thing she has clearly been saving.
+    # then comes in and sits on the edge of my desk ― a thing she has never done
+    # before ― because there is one more thing she has clearly been saving.
     hikari "One more thing. The quiz is next week, and after that it's midterms. Three weeks. Maybe four."
     mc "I can handle three weeks."
     hikari "You can. And if it starts to feel like too much, tell me. We'll take it a week at a time."
@@ -6566,7 +6566,7 @@ label night_room_visit:
 ## ordinary walk home once the seven runs are done.
 ##
 ## The gating (one visit per outing, no revisits until everyone has been met,
-## act caps) all lives in destination_state() in locations.rpy — this label
+## act caps) all lives in destination_state() in locations.rpy ― this label
 ## only routes.
 
 label free_afternoon:
@@ -6670,7 +6670,7 @@ label saturday_off:
     scene bg_kitchen with walk_fade
     "The kitchen smells like miso and grilled fish."
     "A normal Saturday breakfast, which is its own small event in this house."
-    mother "You're up early — I thought you'd sleep through the rain. Eat."
+    mother "You're up early ― I thought you'd sleep through the rain. Eat."
     mc "I'm going to the library. Hikari gave me the route."
     mother "The library. Good. A library is a building that keeps its promises."
     father "Eat first. Breakfast can wait ten minutes. You cannot."
@@ -6817,7 +6817,7 @@ label reading_club_first:
     "Books spill. A stool scrapes."
     "The slim volume hits the floor, and something small slides out of the front cover face-up."
     "A handmade card. The letters are careful and too small, like they were written by somebody who did not want to be interrupted."
-    "On it: Hana — volunteer, student library desk. Reading club. @hana. Only if you actually read the rules."
+    "On it: Hana ― volunteer, student library desk. Reading club. @hana. Only if you actually read the rules."
     "A square WIRE code is printed beside the words."
     mc "(A contact. Not a name on a badge. A way to reach her.)"
     "I bend to pick up the book. When I straighten, she is already gone."
@@ -7017,7 +7017,7 @@ label home_sukiyaki:
 ## SUNDAY: THE QUIET DAY
 ################################################################################
 ##
-## The second off day. No school, no errand — just Hikari collecting on the
+## The second off day. No school, no errand ― just Hikari collecting on the
 ## "Maybe." she left hanging Friday night, a WIRE app that finally has enough
 ## names to be interesting, and a family that notices everything.
 
@@ -7044,7 +7044,7 @@ label sunday_morning:
     mc "(Whoa. Since when does Tetsuo own clothes that aren't work clothes?)"
     mc "(First time I've seen him not in the suit. He looks almost... relaxed. Okay, that was funny. Do not laugh.)"
     father "It's Sunday. My one day off. Let me relax, at least on Sundays."
-    mother "He's been looking forward to it since Friday. Look at this kitchen—"
+    mother "He's been looking forward to it since Friday. Look at this kitchen―"
     mother "even your father is in his Sunday clothes. It's the house uniform for the one day nobody has to be anywhere."
     hikari "Sundays we take it easy. We stay home, or if we go out, we go together."
     mother "Hikari's been waiting for you since seven. There's something on the table."
@@ -7202,7 +7202,7 @@ label sunday_morning:
 ##
 ## The first full school day after the weekend. The haiku lecture runs the
 ## exam-preview material from Saturday's handout, and the quiz lands at the
-## end of it — three questions, menu-style, scored into `monday_quiz_score`.
+## end of it ― three questions, menu-style, scored into `monday_quiz_score`.
 
 label monday_morning:
     # Day 6: Monday, April 13. The haiku quiz and the last built scene.
@@ -7906,7 +7906,7 @@ label day7_sim_campus:
     mc "(Photography club. It has to be. Nobody else in this building shoots like that.)"
     "I slow down. They slow down. One of them looks up first."
     sim "You're not in the club."
-    mc "No. I was just—"
+    mc "No. I was just―"
     sim "You're looking like you know where it is."
     mc "I don't. I was looking at them."
     sim "Good. Most people look at the cameras. You're looking at the light."

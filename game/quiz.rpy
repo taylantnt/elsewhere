@@ -1,9 +1,9 @@
 ################################################################################
-## QUIZ — reusable question screen for exams, lectures, and study scenes
+## QUIZ ― reusable question screen for exams, lectures, and study scenes
 ################################################################################
 ##
 ## One question at a time, no timer, no fail state. `run_quiz(questions)` plays
-## a set and returns a list of booleans — True where he answered correctly — so
+## a set and returns a list of booleans ― True where he answered correctly ― so
 ## a scene can award Insight for a clean sheet or branch on a specific miss.
 ##
 ## Each question is a dict:

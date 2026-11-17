@@ -1,5 +1,5 @@
 ################################################################################
-## THE COMBINI JOB — VISIT 1: THE FIRST SHIFT
+## THE COMBINI JOB ― VISIT 1: THE FIRST SHIFT
 ################################################################################
 ##
 ## Orientation. The shirt, the register, the script. The protagonist learns
