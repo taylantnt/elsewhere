@@ -874,11 +874,13 @@ init python:
 
     # Ranks are a five-step ladder and every step costs more than the last one,
     # so the early game moves quickly and the later game means something. These
-    # are cumulative totals, not points-per-rank: rank 2 begins at 2.0 total.
+    # are cumulative totals, not points-per-rank: rank 2 begins at 1.5 total.
     #
     # Rank thresholds are cumulative. Dialogue rewards may be fractional and
     # smaller than a half point, so they accumulate toward this ladder.
-    attribute_rank_thresholds = [0.0, 2.0, 5.0, 9.5, 15.0]
+    # Rank 2 lands inside the first day or two for a player who follows the
+    # relevant attribute; the later steps stay slow enough to mean something.
+    attribute_rank_thresholds = [0.0, 1.5, 5.0, 9.5, 15.0]
     attribute_rank_names = [
         "Rank 1",
         "Rank 2",
@@ -3675,7 +3677,7 @@ label morning_call:
     hikari "A few people in the department have been asking when you'd arrive."
     hikari "I told them today. No pressure."
     menu:
-        "[tag_insight] Rank 2: Notice she said no pressure before you asked." if has_attribute("insight", 2):
+        "[tag_insight] Notice she said no pressure before you asked." if has_attribute_points("insight", 0.5):
             mc "You told them today. No pressure. You said that before I asked whether it was a problem."
             mc "You were telling me people would ask, so I would not be surprised."
             hikari "I say the useful thing first. It saves time."
@@ -4420,7 +4422,7 @@ label after_school_walk_alone:
     # Both answers lead to the same meal. Restore the counter shot before the
     # chef speaks, so his portrait never covers the food close-up.
     menu:
-        "[tag_grace] Rank 2: Thank him and leave the bowl where he set it." if has_attribute("grace", 2):
+        "[tag_grace] Thank him and leave the bowl where he set it." if has_attribute_points("grace", 0.5):
             mc "Arigatou gozaimasu."
             "I leave the bowl where he placed it and do not ask another question."
             mc "(He gave me the answer by not needing another one.)"
@@ -5902,7 +5904,7 @@ label end_of_first_day:
     hikari "It is. Get some sleep. I'll come get you in the morning."
 
     menu:
-        "[tag_nerve] Rank 2: Ask her to stay a minute before she goes." if has_attribute("nerve", 2):
+        "[tag_nerve] Ask her to stay a minute before she goes." if has_attribute_points("nerve", 0.5):
             mc "Stay a minute. Before you go."
             "She sits on the edge of the bed and does not look at the clock."
             mc "(I asked for something and nothing broke. That is worth remembering.)"

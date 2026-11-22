@@ -2,7 +2,7 @@
 
 Scope: all active `reward_attributes_once` calls in `game/script.rpy`, `game/confidant_visits/chef.rpy`, `game/confidant_visits/sim.rpy`, `game/confidant_visits/aya.rpy`, `game/confidant_visits/hana.rpy`, and `game/confidant_visits/orson.rpy`, through the end of Day 6 (`monday_lecture`). The Sim section below has been refreshed against the Day 21 build. Excluded: `game/quiz.rpy` L23 (commented out), `attribute_test_rank_up` (L592, dev shortcut), and the archived board in `dream_archive.rpy` L430.
 
-Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0.5, medium = 1.0. Rank thresholds (cumulative): 0 / 2 / 5 / 9.5 / 15.
+Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0.5, medium = 1.0. Rank thresholds (cumulative): 0 / 1.5 / 5 / 9.5 / 15. The very first menus use small point gates (0.5) rather than ranks, because no attribute can reach Rank 2 that early.
 
 ## Complete reward-call table
 

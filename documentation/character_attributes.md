@@ -338,12 +338,12 @@ Progression is a five-rank ladder:
 | Rank | Name | Begins at (cumulative points) |
 |---|---|---|
 | 1 | Rank 1 | 0.0 |
-| 2 | Rank 2 | 2.0 |
+| 2 | Rank 2 | 1.5 |
 | 3 | Rank 3 | 5.0 |
 | 4 | Rank 4 | 9.5 |
 | 5 | Rank 5 | 15.0 |
 
-These are **cumulative totals, not points-per-rank**: rank 2 begins when the attribute has 2.0 points in it, in total, since the beginning of the game. Each step costs more than the last, so the early game moves quickly and the later game means something.
+These are **cumulative totals, not points-per-rank**: rank 2 begins when the attribute has 1.5 points in it, in total, since the beginning of the game. Each step costs more than the last, so the early game moves quickly and the later game means something. The opening menus use small point gates (0.5) instead of ranks, since an attribute cannot reach Rank 2 in the first few minutes.
 
 The thresholds and names are configured in one place (`init python` in
 `game/script.rpy`, `attribute_rank_thresholds` and `attribute_rank_names`).
@@ -701,12 +701,12 @@ content shows where the pacing actually lands.
 | Rank | Total points needed | Name (current) |
 |------|--------------------:|----------------|
 | 1 | 0 | Rank 1 |
-| 2 | 2.0 | Rank 2 |
+| 2 | 1.5 | Rank 2 |
 | 3 | 5.0 | Rank 3 |
 | 4 | 9.5 | Rank 4 |
 | 5 | 15.0 | Rank 5 |
 
-The gaps widen on purpose (2 → 3 → 4.5 → 5.5), so early game moves fast and
+The gaps widen on purpose (1.5 → 3.5 → 4.5 → 5.5), so early game moves fast and
 the top ranks mean something. Attributes clamp at 0–15.
 
 ### Reward sizes
