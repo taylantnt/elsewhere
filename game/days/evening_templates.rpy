@@ -91,7 +91,7 @@ label dinner_open_ordinary:
     hikari "Then we are both on time."
     "I wash my hands. The water is warm."
     mother "Where did you go?"
-    call dinner_report
+    call dinner_report from _call_dinner_report
     return
 
 
@@ -104,7 +104,7 @@ label dinner_open_quiet:
     father "You were out."
     mc "I was out."
     father "Good."
-    call dinner_report
+    call dinner_report from _call_dinner_report_1
     return
 
 
@@ -124,7 +124,7 @@ label dinner_open_tetsuo:
     mother "You are being ominous."
     father "It is the same thing, in this house."
     father "Where did you go?"
-    call dinner_report
+    call dinner_report from _call_dinner_report_2
     return
 
 
@@ -141,7 +141,7 @@ label dinner_open_miharu:
     mother "No. That is why I am telling you."
     "She lifts the cloth from the bowls. Steam."
     mother "Where did you go?"
-    call dinner_report
+    call dinner_report from _call_dinner_report_3
     return
 
 
@@ -157,7 +157,7 @@ label dinner_open_hikari_cooks:
     hikari "I cooked. It is just dinner."
     mc "(It is already a thing. The whole table knows it.)"
     hikari "Where did you go?"
-    call dinner_report
+    call dinner_report from _call_dinner_report_4
     return
 
 
@@ -170,28 +170,51 @@ label dinner_report:
         mc "(She showed me a place that was hers. I think that was the point.)"
     elif last_afternoon_hikari_tour:
         $ tour_place_name = destination_names.get(last_afternoon_place, last_afternoon_place)
-        mc "Hikari took me to [tour_place_name]. She called it an errand."
-        hikari "It was an errand. You were the good part."
+        mc "Hikari took me to [tour_place_name]. She said she was showing me the shape of it."
+        hikari "I showed you. That was the point."
         mc "(She showed me the way back. I think that was the point.)"
     elif last_afternoon_place == "chef":
-        mc "The ramen shop. The broth had been going since morning."
-        mc "(He did not make a thing of it. That was the whole welcome.)"
+        if confidant_visits.get("chef", 0) == 4:
+            mc "The ramen shop. He closed for training, so there was no bowl."
+            mc "(He showed me the notebook instead. That was the whole welcome.)"
+        elif confidant_visits.get("chef", 0) >= 8:
+            mc "The ramen shop. The cloth is gone from the door."
+            mc "(There is no broth left to smell. That is the whole goodbye.)"
+        else:
+            mc "The ramen shop. The broth had been going since morning."
+            mc "(He did not make a thing of it. That was the whole welcome.)"
     elif last_afternoon_place == "aya":
         mc "The maid cafe. She remembered the order before I said it."
         mc "(For about four seconds she was not performing. I don't think she noticed she did it.)"
     elif last_afternoon_place == "hana":
-        mc "The reading room. She was there. She stayed."
-        mc "(We did not talk much. It was enough.)"
+        if confidant_visits.get("hana", 0) >= 7:
+            mc "The reading room. The shelves are straight. She isn't there."
+            mc "(The quiet is still hers, somehow. It just doesn't have her in it.)"
+        else:
+            mc "The reading room. She was there. She stayed."
+            mc "(We did not talk much. It was enough.)"
     elif last_afternoon_place == "orson":
-        mc "Lupin's Den. The bar was empty enough to hear the ice."
-        mc "(He taught me a phrase I am still turning over.)"
+        mc "Lupin's Den. The wolf is still on the door."
+        mc "(I leave with less noise in my head than I came with.)"
     elif last_afternoon_place == "sim":
-        mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
+        if confidant_visits.get("sim", 0) >= 8:
+            mc "The photography club. The exhibition is in a box and the room is on hold."
+            mc "(Nami has the box. Somebody left the door open anyway.)"
+        elif confidant_visits.get("sim", 0) == 7:
+            mc "The exhibition. Sim is gone, and the strap is still warm in my hand."
+        else:
+            mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
     elif last_afternoon_place == "walk_hikari":
-        mc "I walked home with Hikari. We took the long way."
-        hikari "You took the long way. I followed."
-        mc "That's not how I remember it."
-        hikari "That's because you were busy being right."
+        if last_afternoon_was_run:
+            mc "The river path. We ran. She barely looked at the water."
+            hikari "You were looking. I noticed."
+            mc "I was checking where the next bend was."
+            hikari "That is looking."
+        else:
+            mc "I walked home with Hikari. We took the long way."
+            hikari "You took the long way. I followed."
+            mc "That's not how I remember it."
+            hikari "That's because you were busy being right."
     elif last_afternoon_place == "walk_alone":
         mc "Nowhere. I walked until the light changed, and then I walked home."
         father "Nowhere is a place. Just not a destination."
@@ -212,6 +235,12 @@ label dinner_report:
     elif last_afternoon_place == "night_market":
         mc "The food stalls. I ate standing up, like everyone else, and nobody asked me to explain myself."
         father "That is how you learn a city. Standing up, with your hands full."
+    elif last_afternoon_place == "combini_first":
+        mc "The combini. A man asked me six questions, and a card in the window offered me two shifts."
+        father "A job?"
+        mc "Afternoons. Ask for the manager."
+        father "Then you have a job. A job is a thing you make every day."
+        mc "(He says it like he is pleased. I think he is.)"
     elif last_afternoon_place == "combini":
         mc "The combini. Pens. The kind of errand that takes an hour because the aisles are interesting."
     elif last_afternoon_place == "odaiba":
@@ -222,7 +251,7 @@ label dinner_report:
         mc "Yokohama. Chinatown. I was the foreigner in a place built by foreigners."
         mother "That is a useful thing to be once."
     elif last_afternoon_place == "ueno":
-        mc "Ueno Park. Half the city was sitting under the blossoms, drinking."
+        mc "Ueno Park. Half the city was sitting under the trees, drinking."
         father "Hanami. The flowers are an excuse. The sitting is the point."
     elif last_afternoon_place == "shibuya":
         mc "Shibuya. The crossing. A thousand people walking into each other and nobody touching."
@@ -234,9 +263,9 @@ label dinner_report:
         mc "Omotesando. The shopping street, then the shrine behind it. The city got quiet all at once."
         mother "That is the trick of it. You turn one corner and the noise is somebody else's."
     elif last_afternoon_place == "fortune":
-        mc "Asakusa. The smoke, the fortune slip, and a woman with a folding table who knew my face."
-        hikari "She knew your face?"
-        mc "She said she had seen it before. I did not ask where."
+        mc "Asakusa. The smoke, the fortune slip, and a woman with a folding table who said I had been there before."
+        hikari "She said you had?"
+        mc "She said I had, but not in Asakusa. I did not ask where else."
     elif last_afternoon_place == "tanaka":
         mc "The combini. Four hours behind the register. My feet hurt and I know where the forks are."
         father "That is a job. A job is a thing you make every day."
@@ -255,7 +284,7 @@ label dinner_close:
     elif dinner_variant_today == "miharu":
         "We eat. She watches me take the first bite, then looks away."
     elif dinner_variant_today == "hikari_cooks":
-        "We eat what Hikari made. Nobody says anything for a while. It is the best thing anyone has cooked in this house."
+        "We eat what Hikari made. Nobody says anything for a while."
     else:
         "Nobody argues with that. We eat."
     return
@@ -282,7 +311,7 @@ label night_open_tea:
     mc "I was staring at [night_desk_line]."
     hikari "Same thing."
     "She sets the tea down and sits on the floor with her back against the bed."
-    call night_afternoon_callback
+    call night_afternoon_callback from _call_night_afternoon_callback
     return
 
 
@@ -293,7 +322,7 @@ label night_open_window:
     hikari "It is now."
     "She sits on the sill with her legs outside, which cannot be allowed and is clearly allowed."
     hikari "I'm not staying. I'm just letting some air in."
-    call night_afternoon_callback
+    call night_afternoon_callback from _call_night_afternoon_callback_1
     return
 
 
@@ -304,7 +333,7 @@ label night_open_sleep:
     hikari "Talk. I'm listening."
     mc "You're falling asleep."
     hikari "I'm resting my eyes. It's different."
-    call night_afternoon_callback
+    call night_afternoon_callback from _call_night_afternoon_callback_2
     return
 
 
@@ -312,18 +341,39 @@ label night_open_sleep:
 ## five identical night scenes could not do: she was in the house the whole time
 ## and never once asked where he had been.
 label night_afternoon_callback:
-    if last_afternoon_place == "chef":
-        hikari "You smell like broth."
-        mc "I had ramen."
-        hikari "The good kind. That takes all morning to get right."
+    # A Hikari tour was a shared afternoon and she walked home with him. The
+    # place-specific lines below are written for a solo visit ("you went without
+    # me", "you bought a record"), so they do not apply when she was there.
+    if last_afternoon_hikari_tour:
+        hikari "You are quiet tonight."
+        mc "I am still thinking about today."
+        hikari "Good. That is what a day like that is for."
+    elif last_afternoon_place == "chef":
+        if confidant_visits.get("chef", 0) == 4:
+            hikari "No broth on you tonight."
+            mc "He didn't cook. We looked at his recipe notebook."
+            hikari "That sounds like him."
+        elif confidant_visits.get("chef", 0) >= 8:
+            hikari "You came home smelling like the street."
+            mc "The shop is closed. There is no broth left."
+            hikari "Then it is a good thing you went."
+        else:
+            hikari "You smell like broth."
+            mc "I had ramen."
+            hikari "The good kind. That takes all morning to get right."
     elif last_afternoon_place == "aya":
         hikari "You smell like sugar."
         mc "The cafe."
         hikari "The cafe. She remembered your order, I take it."
     elif last_afternoon_place == "hana":
-        hikari "You're doing the quiet thing."
-        mc "What quiet thing?"
-        hikari "The one you do after the reading room. Like you're still listening to something."
+        if confidant_visits.get("hana", 0) >= 7:
+            hikari "You're doing the quiet thing."
+            mc "What quiet thing?"
+            hikari "The one you do after an empty room. Like you're still listening to something."
+        else:
+            hikari "You're doing the quiet thing."
+            mc "What quiet thing?"
+            hikari "The one you do after the reading room. Like you're still listening to something."
     elif last_afternoon_place == "orson":
         hikari "You smell like a bar."
         mc "It's a very quiet bar."
@@ -333,9 +383,14 @@ label night_afternoon_callback:
         mc "What look?"
         hikari "The one where you keep framing things. You do not have to carry it home."
     elif last_afternoon_place == "walk_hikari":
-        hikari "You walked slower today."
-        mc "I was tired."
-        hikari "You were keeping pace. It's not the same thing."
+        if last_afternoon_was_run:
+            hikari "You ran today."
+            mc "I tried."
+            hikari "That is not nothing."
+        else:
+            hikari "You walked slower today."
+            mc "I was tired."
+            hikari "You were keeping pace. It's not the same thing."
     elif last_afternoon_place == "walk_alone":
         hikari "You went nowhere today. I could tell."
         mc "Nowhere is a place."
@@ -362,6 +417,17 @@ label night_afternoon_callback:
         hikari "You smell like fried things."
         mc "I ate standing up."
         hikari "Good. That's how you're supposed to eat at the stalls. Sitting down is for tourists."
+    elif last_afternoon_place == "combini_first":
+        hikari "You smell like the combini."
+        mc "I found a job."
+        hikari "Already?"
+        mc "There's a card in the window. Afternoons. Two shifts."
+        hikari "Tanaka."
+        mc "That's the name on his tag."
+        hikari "He has been at that register longer than I have been alive."
+        hikari "A job that is standing in one place all afternoon. He will like that. He likes people who do not move."
+        mc "(Manager. I did not know he was the manager. I thought he was just... staff.)"
+        $ log_memory("hikari", "told her about the combini job card and Tanaka the first night")
     elif last_afternoon_place == "combini":
         if combini_gift:
             hikari "There is a pudding in the fridge with a bear on the lid."
@@ -387,7 +453,7 @@ label night_afternoon_callback:
         hikari "Good. That's the only way to do it."
     elif last_afternoon_place == "ueno":
         hikari "You're pink."
-        mc "It was the blossoms."
+        mc "It was the walk."
         hikari "It was the sun and the beer the old men gave you."
         mc "I only had one cup."
         hikari "That's what they all say."

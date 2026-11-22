@@ -40,7 +40,7 @@ label orson_common_open:
     return
 
 label orson_visit_02:
-    call orson_common_open
+    call orson_common_open from _call_orson_common_open
 
     "It is later than last time. The bar hums softly, and neon leaks in through the frosted window in colors that don't quite belong to the room."
     "I hesitate at the door for a second longer than I mean to. Then I slide onto the narrow bench."
@@ -59,7 +59,7 @@ label orson_visit_02:
             bar_master "Everywhere's a good answer. Half this city's pretending it's from here."
             $ reward_attributes_once("orson_visit_02_everywhere", [("grace", "micro")], show="auto")
 
-    "He sets down a coaster with a tiny wolf logo and slides it toward me, then looks at me properly for the first time."
+    "He puts a coaster with a tiny wolf logo on the bar in front of me, then looks at me properly for the first time."
     bar_master "Anything you don't want? Sweet, sour, or gentle?"
 
     menu:
@@ -109,8 +109,8 @@ label orson_visit_02:
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 2)
-    $ remember("orson", "he explained the masks and taught him 'okawari onegaishimasu'")
-    $ queue_message("orson", "You left before the last train again. Good. The city tests people who miss it: you're still passing.", day="yesterday")
+    $ log_memory("orson", "he explained the masks and offered to teach him 'okawari onegaishimasu'")
+    $ queue_message("orson", "You left before the last train. Good. The bench will be here tomorrow, and so will I.", day="yesterday")
     $ reward_attributes_once("orson_visit_02_close", [("grace", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -118,7 +118,7 @@ label orson_visit_02:
     return
 
 label orson_visit_03:
-    call orson_common_open
+    call orson_common_open from _call_orson_common_open_1
 
     "The bar is busier than I have seen it. Two stools are taken by people in masks who do not turn around."
     "Orson nods at the bench. He is already reaching for the citrus."
@@ -160,7 +160,7 @@ label orson_visit_03:
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 3)
-    $ remember("orson", "heard a story about paper cranes and was told to carry a notebook")
+    $ log_memory("orson", "heard a story about paper cranes and was told to carry a notebook")
     $ queue_message("orson", "Write three things a day that were actually there. When the city gets too big, the pages make it small again.", day="yesterday")
     $ reward_attributes_once("orson_visit_03_close", [("insight", "micro")], show="card")
 
@@ -169,10 +169,10 @@ label orson_visit_03:
     return
 
 label orson_visit_04:
-    call orson_common_open
+    call orson_common_open from _call_orson_common_open_2
 
     "Rain on the window. The bar is empty except for us and the fox mask at the end of the counter."
-    "Orson pours two. He has never poured himself one."
+    "Orson pours two, one for me and one for himself. I have never seen him pour for himself before."
     bar_master "I had a different life. Shoes that hurt. A train I did not choose. Meetings where the words meant nothing and the silence meant less."
     mc "Why did you leave?"
     bar_master "I was good at it. That is not the same as being alive in it."
@@ -180,6 +180,7 @@ label orson_visit_04:
     bar_master "I failed some expectations. Then I got good at failing them. This place is what was left."
     mc "It doesn't look like what was left."
 
+    bar_master "Nothing does, from the outside."
     mc "I'm still figuring out where I fit."
     bar_master "Pick a few places and keep going back. Belonging's just repetition, nothing more romantic than that."
 
@@ -212,7 +213,7 @@ label orson_visit_04:
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 4)
-    $ remember("orson", "learned about his past life and the concept of anchors")
+    $ log_memory("orson", "learned about his past life and the concept of anchors")
     $ queue_message("orson", "Everything is fake until it is familiar. Familiarity is just time you decided to spend.", day="yesterday")
     $ reward_attributes_once("orson_visit_04_close", [("nerve", "micro")], show="card")
 
@@ -221,7 +222,7 @@ label orson_visit_04:
     return
 
 label orson_visit_05:
-    call orson_common_open
+    call orson_common_open from _call_orson_common_open_3
 
     "The bar is full tonight. Laughter, glass, the low run of the jazz."
     "Orson sees me and lifts two fingers. The bench is free before I reach it."
@@ -240,6 +241,11 @@ label orson_visit_05:
     bar_master "Ask for help, too. Smallest way you can: make it easy for them to say yes."
 
     menu:
+        "[tag_insight] Rank 2: Ask how small the smallest ask can be." if has_attribute("insight", 2):
+            mc "How small is the smallest ask? I keep waiting for mine to be bigger."
+            bar_master "Small enough they can say yes before they think."
+            mc "Then I will start there."
+            $ reward_attributes_once("orson_visit_05_small", [("insight", "micro")], show="auto")
         "\"Thanks... that helps.\"":
             mc "Thanks... that helps."
             bar_master "Let it. It helps."
@@ -254,7 +260,7 @@ label orson_visit_05:
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 5)
-    $ remember("orson", "received practical advice about routines and asking for help")
+    $ log_memory("orson", "received practical advice about routines and asking for help")
     $ queue_message("orson", "Routines let the city recognize you. Safety lets you be brave elsewhere.", day="yesterday")
     $ reward_attributes_once("orson_visit_05_close", [("grace", "micro")], show="card")
 
@@ -263,7 +269,7 @@ label orson_visit_05:
     return
 
 label orson_visit_06:
-    call orson_common_open
+    call orson_common_open from _call_orson_common_open_4
 
     "It is near closing. Two customers, then one, then none."
     "One shelf behind the bar has a gap in it. Three bottles wide. He has not replaced them."
@@ -272,6 +278,7 @@ label orson_visit_06:
     bar_master "Long year."
     "He pours a small neat drink and pauses before sliding it across."
     bar_master "I tried other lives. The company my family wanted. A shop of my own. Bad location, worse timing."
+    mc "Would you change any of it?"
     bar_master "This place was desperation with a lease. I wouldn't change it; I'd change arriving alone."
     mc "And it worked."
     bar_master "It works some nights. A bar is a candle. You do not know how long the wax is."
@@ -279,9 +286,10 @@ label orson_visit_06:
     bar_master "Tonight it is still burning. That is enough."
     mc "I don't feel courageous."
     bar_master "You came back. Courage is mostly coming back."
-    "He reaches under the counter and puts a paper coaster on the bar. The wolf logo, slightly off-centre."
-    bar_master "For when the city is too big. It's a silly thing. Small things outlast us."
+    "He reaches under the counter and takes out a paper coaster from a stack he keeps there. The wolf logo is slightly off-centre."
+    bar_master "Take it home. For when the city is too big. It's a silly thing. Small things outlast us."
     "I turn it in my hand."
+    $ add_item("orson_wolf_coaster")
     mc "Thanks."
     bar_master "I see you. Not all of it. Enough."
     bar_master "You remind me of myself when I came here. Lost. Stubborn. Curious. Curiosity keeps you alive here. Even when the place does not."
@@ -304,7 +312,7 @@ label orson_visit_06:
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 6)
-    $ remember("orson", "received a wolf coaster and learned about the fragility of the bar")
+    $ log_memory("orson", "received a wolf coaster and learned about the fragility of the bar")
     $ queue_message("orson", "Different nights. Same stools. That's enough.", day="yesterday")
     $ reward_attributes_once("orson_visit_06_close", [("insight", "micro")], show="card")
 
@@ -313,7 +321,7 @@ label orson_visit_06:
     return
 
 label orson_visit_07:
-    call orson_common_open
+    call orson_common_open from _call_orson_common_open_5
 
     "The bench is the same bench. Tonight it feels like a seat in a house that is being packed."
     "The last customer left an hour ago. Orson has not locked the door."
@@ -343,6 +351,7 @@ label orson_visit_07:
     "He reaches under the counter and puts a small badge on the bar. A wolf's paw, the edges worn pale."
     bar_master "Do not keep it safe. Carry it. One day you will walk into a place like this and you will not need me."
     mc "I'll carry it."
+    $ add_item("orson_wolf_paw_badge")
     bar_master "You will be part of the warmth yourself. Maybe you already are."
     "The bar is still. The mask sits on the counter between us. The badge is warm in my hand."
     "When I stand to leave, he does not put the mask back on."
@@ -350,7 +359,7 @@ label orson_visit_07:
 
     $ orson_affection += 1
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 7)
-    $ remember("orson", "said goodbye to Orson and received his wolf paw badge")
+    $ log_memory("orson", "said goodbye to Orson and received his wolf paw badge")
     $ queue_message("orson", "The bar is closing, but what we built here stays. You became part of the warmth yourself. That's the point.", day="yesterday")
     $ reward_attributes_once("orson_visit_07_close", [("nerve", "micro")], show="card")
 
@@ -390,7 +399,7 @@ label orson_visit_closed:
             "It belongs to the building. I step back and let it hang there, unlit and patient."
             $ reward_attributes_once("orson_visit_closed_leave", [("grace", "micro")], show="auto")
         "Look through the window.":
-            "I cup my hands around my eyes. The room resolves slowly: the counter, the bench, a single coaster on the wood, a tiny wolf printed slightly off center."
+            "I cup my hands around my eyes. The room resolves slowly: the counter, the bench, a single coaster on the wood, a tiny wolf printed slightly off-centre."
             "I do not know if it is really there. The glass makes everything a guess."
             $ reward_attributes_once("orson_visit_closed_look", [("insight", "micro")], show="auto")
         "Sit on the step.":
@@ -405,7 +414,7 @@ label orson_visit_closed:
     if confidant_visits.get("orson", 0) < 8:
         $ orson_affection += 1
         $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 8)
-        $ remember("orson", "found Lupin's Den closed; the wolf sign was still up and the window was dark")
+        $ log_memory("orson", "found Lupin's Den closed; the wolf sign was still up and the window was dark")
         $ queue_message("orson", "The bar is a room again. Rooms are patient. If you ever need the door, you know where it was.", day="yesterday")
     $ reward_attributes_once("orson_visit_closed_close", [("grace", "micro")], show="card")
 

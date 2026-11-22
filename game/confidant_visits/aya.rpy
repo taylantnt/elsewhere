@@ -13,8 +13,10 @@
 init 999 python:
     shiori = Character("Shiori", color="#dda0dd", callback=type_sound, image="aya")
     # The maid who covers Aya's shifts after she leaves. She has no name here
-    # because that is the point: the role is filled, the person is not.
-    new_maid = Character("Maid", color="#c9a6b8", callback=type_sound)
+    # because that is the point: the role is filled, the person is not. Her
+    # name-box colour stays distinct from Aya's, and her portrait is wired as a
+    # side image in script.rpy without touching any of her lines.
+    new_maid = Character("Maid", color="#c9a6b8", callback=type_sound, image="new_maid")
 
 label confidant_visit_aya:
     $ visit = confidant_visits.get("aya", 0)
@@ -42,7 +44,7 @@ label aya_common_open:
     return
 
 label aya_visit_02:
-    call aya_common_open
+    call aya_common_open from _call_aya_common_open
 
     "The bell over the door rings before I am fully inside, and the room answers it."
     "Jackets off, voices up, the whole ritual of arriving somewhere that has decided to be happy about it."
@@ -73,7 +75,7 @@ label aya_visit_02:
         "What do you recommend today?" :
             mc "What do you recommend today?"
             aya "You actually asked for my opinion? Well then, let me think."
-            aya "The curry rice is good today. I'll make sure it looks cute for you."
+            aya "The omurice is especially good today. I'll make sure it looks cute for you."
             $ reward_attributes_once("aya_visit_02_recommend", [("insight", "micro")], show="auto")
 
     "She writes it down, and instead of walking away she stays at the edge of the table, tray against her hip."
@@ -108,18 +110,23 @@ label aya_visit_02:
             mc "Surprise me."
             aya "Alright, but don't complain if it looks like a strange creature. I'm still practicing!"
             $ reward_attributes_once("aya_visit_02_art_surprise", [("nerve", "micro")], show="auto")
+            $ aya_drawing = "rabbit"
         "Same as last time." :
             mc "Same as last time, please."
             aya "Consistency. I respect that. But next time, I'll convince you to let me draw something fun."
             $ reward_attributes_once("aya_visit_02_art_same", [("grace", "micro")], show="auto")
+            $ aya_drawing = "kitty"
 
     scene bg_maidcafe_omurice with Dissolve(0.5)
 
     "She draws fast, the way people draw when they have done it a hundred times and still enjoy it."
-    "It is not the kitty this time. It is a rabbit, holding a tiny train."
-
-    aya "A rabbit. You looked like someone who would appreciate the effort."
-    mc "I do. It is very good."
+    if aya_drawing == "rabbit":
+        "It is not the kitty this time. It is a rabbit, holding a tiny train."
+        aya "A rabbit. You looked like someone who would appreciate the effort."
+    else:
+        "It is the kitty again, with whiskers and a bow. A little neater than last time."
+        aya "The kitty. You can't improve on a classic, Master."
+    mc "I like it. It is very good."
     aya "Flattery will get you everywhere in this cafe."
 
     scene bg_maidcafe with Dissolve(0.5)
@@ -133,7 +140,7 @@ label aya_visit_02:
     "The spell is shorter now, more routine, but it is also more hers."
     "I catch myself copying the hand motion without being asked."
 
-    "I eat. The curry is better than it has any right to be, and the drawing is still there when I am done."
+    "I take one last look at the drawing before I dig in. The omurice is better than it has any right to be, and by the time I am done the ketchup art is long gone."
     "She comes back to clear the table, and this time she does not go straight to the next customer."
     aya "Hey… do you think it's silly? All of this. The costumes, the spells, the chants."
 
@@ -159,8 +166,8 @@ label aya_visit_02:
     $ aya_affection += 1
 
     $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 2)
-    $ remember("aya", "came back to the maid cafe and she remembered him")
-    $ queue_message("aya", "Master! Look! I drew a rabbit! Come back soon, okay?", day="yesterday")
+    $ log_memory("aya", "came back to the maid cafe and she remembered him")
+    $ queue_message("aya", "Master! Look! I drew a %s! Come back soon, okay?" % aya_drawing, day="yesterday")
     $ reward_attributes_once("aya_visit_02_close", [("grace", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -168,7 +175,7 @@ label aya_visit_02:
     return
 
 label aya_visit_03:
-    call aya_common_open
+    call aya_common_open from _call_aya_common_open_1
 
     "The cafe is quiet this afternoon. A few students in the corner, a couple of salarymen nursing coffee."
     "It is the version of the place that exists between the rushes, when the performance has more space to breathe."
@@ -225,7 +232,7 @@ label aya_visit_03:
     "She catches herself, straightens up, and the maid comes back like a coat being put on."
     "But she does not stand up right away. She sits there for one more second, and I think she is deciding if I am safe."
 
-    aya "Anyway! That was too much for an afternoon parfait."
+    aya "Anyway! That was too much for an ordinary afternoon."
     "She smiles, and this time it reaches her eyes a little."
     aya "Let me get your food before I say something I can't take back."
 
@@ -234,12 +241,13 @@ label aya_visit_03:
     mc "I think it is my favorite one so far."
     aya "…You're trouble, Master."
 
-    "She takes the empty plate without ceremony and heads back to the kitchen."
+    "She leaves me to eat. The heart is gone by the time she comes back, and the plate is empty."
+    "She takes it without ceremony and heads back to the kitchen."
     "I realize I have been watching her work all afternoon without noticing the time pass."
     $ aya_affection += 1
 
     $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 3)
-    $ remember("aya", "heard about her dream of performing and the way the maid uniform hides it")
+    $ log_memory("aya", "heard about her dream of performing and the way the maid uniform hides it")
     $ queue_message("aya", "I could not stop thinking about what you said today. Maybe I will try something. Maybe not. But I am thinking about it.", day="yesterday")
     $ reward_attributes_once("aya_visit_03_close", [("insight", "micro")], show="card")
 
@@ -248,7 +256,7 @@ label aya_visit_03:
     return
 
 label aya_visit_04:
-    call aya_common_open
+    call aya_common_open from _call_aya_common_open_2
 
     "The cafe smells like coffee and butter today, and the light through the windows is the color of late afternoon."
     "A new girl is working the counter, but Aya finds me anyway, weaving between tables with a tray that is somehow always level."
@@ -276,7 +284,7 @@ label aya_visit_04:
         "For a change. I was tired of my old life." :
             mc "For a change. I was tired of my old life, and this was far enough to be different."
             aya "That's honest. I like honest."
-            aya "I did something like that once. I studied abroad for a short time. It was… louder there. Freer."
+            aya "I keep meaning to do something like that myself, in a smaller way."
             $ reward_attributes_once("aya_visit_04_change", [("nerve", "micro")], show="auto")
         "I am still figuring it out." :
             mc "I am still figuring it out. Japan happened before I had a plan for it."
@@ -331,7 +339,7 @@ label aya_visit_04:
     $ aya_affection += 1
 
     $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 4)
-    $ remember("aya", "she told him about studying abroad and wondering if anyone sees the real her")
+    $ log_memory("aya", "she told him about studying abroad and wondering if anyone sees the real her")
     $ queue_message("aya", "I keep thinking about our conversation today. You asked questions nobody else asks. I do not know what to do with that yet.", day="yesterday")
     $ reward_attributes_once("aya_visit_04_close", [("nerve", "micro")], show="card")
 
@@ -340,7 +348,7 @@ label aya_visit_04:
     return
 
 label aya_visit_05:
-    call aya_common_open
+    call aya_common_open from _call_aya_common_open_3
 
     "The cafe is nearly empty when I arrive. Just one table of students and the soft hum of the machines."
     "Aya is there, but something is off. Her voice is a little hoarse, and the brightness takes an extra second to switch on."
@@ -386,7 +394,7 @@ label aya_visit_05:
             $ reward_attributes_once("aya_visit_05_doing", [("grace", "micro")], show="auto")
         "Bravery is just fear with better posture." :
             mc "Bravery is just fear with better posture. You already have the fear part."
-            aya "…That's either very wise or very stupid. I can't tell which."
+            aya "…That's a very strange thing to say to a stranger. I like it."
             aya "But I'll take it."
             $ reward_attributes_once("aya_visit_05_brave", [("nerve", "micro")], show="auto")
         "What would make you stay?" :
@@ -407,7 +415,7 @@ label aya_visit_05:
     $ aya_affection += 1
 
     $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 5)
-    $ remember("aya", "she confessed she is thinking of quitting and that he makes her feel braver")
+    $ log_memory("aya", "she confessed she is thinking of quitting and that he makes her feel braver")
     $ queue_message("aya", "I did not sleep well last night. I keep thinking about what I said. Maybe I am finally ready to do something about it.", day="yesterday")
     $ reward_attributes_once("aya_visit_05_close", [("grace", "micro")], show="card")
 
@@ -416,7 +424,7 @@ label aya_visit_05:
     return
 
 label aya_visit_06:
-    call aya_common_open
+    call aya_common_open from _call_aya_common_open_4
 
     "The cafe feels different today. Lighter. The usual noise is there, but something underneath it has shifted."
     "Aya is there, but she is not doing the full performance. She is smiling, but it is a real smile, not a costume."
@@ -468,6 +476,11 @@ label aya_visit_06:
     aya "I don't know if it's good. I don't know if anyone would wear it. But it's mine."
 
     menu:
+        "[tag_insight] Rank 3: Keep saying learning instead of bad." if has_attribute("insight", 3):
+            mc "You keep saying you are still learning. Not that it is bad."
+            aya "Because learning is a thing I can do. Bad is a thing I am."
+            mc "Then keep saying learning. It is more true."
+            $ reward_attributes_once("aya_visit_06_learning", [("insight", "micro")], show="auto")
         "Can I see more?" :
             mc "Can I see more? The other designs?"
             aya "Sure. But fair warning, some of them are bad. I'm still learning."
@@ -483,7 +496,7 @@ label aya_visit_06:
             aya "…You're too kind. But thank you. I'll remember that."
             $ reward_attributes_once("aya_visit_06_good", [("grace", "micro")], show="auto")
 
-    "She closes the sketchbook and puts it back in her pocket, but she does not put the apron back on."
+    "She closes the sketchbook and puts it back in her pocket, but she does not put the performance back on."
     "For a moment, she is just Aya. Not the maid. Not the character. Just Aya."
     aya "You know, I used to think I had to choose. Between this job and my dreams. Between being safe and being brave."
     aya "But talking to you, I realize I don't have to choose. I can do both. I can serve parfaits and sing. I can wear the apron and draw hoodies."
@@ -507,7 +520,7 @@ label aya_visit_06:
     $ aya_affection += 1
 
     $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 6)
-    $ remember("aya", "she auditioned for a singing contest and showed him her streetwear sketchbook")
+    $ log_memory("aya", "she auditioned for a singing contest and showed him her streetwear sketchbook")
     $ queue_message("aya", "I did it. I sang. I was terrified and I did it anyway. You were right. I am allowed to want things.", day="yesterday")
     $ reward_attributes_once("aya_visit_06_close", [("insight", "micro")], show="card")
 
@@ -516,7 +529,7 @@ label aya_visit_06:
     return
 
 label aya_visit_07:
-    call aya_common_open
+    call aya_common_open from _call_aya_common_open_5
 
     "The cafe is quieter than usual. Fewer customers, softer music, the kind of afternoon that feels like it is already saying goodbye."
     "Aya is there, but she does not do the usual bright welcome. She just looks at me, and her eyes are sad in a way that has nothing to do with tiredness."
@@ -531,7 +544,7 @@ label aya_visit_07:
     menu:
         "Leaving the cafe?" :
             mc "Leaving the cafe?"
-            aya "Yes. I have decided to chase it. My dream. Designing clothes. I do not know if I will succeed, but… staying here forever would be safe, and I do not want to be safe anymore."
+            aya "Yes. I have decided to chase it. The singing, the clothes… they turn out to be the same dream, just worn differently. I do not know if I will succeed, but… staying here forever would be safe, and I do not want to be safe anymore."
             $ reward_attributes_once("aya_visit_07_leaving", [("insight", "micro")], show="auto")
         "What happened?" :
             mc "What happened? Did something change?"
@@ -564,10 +577,11 @@ label aya_visit_07:
             aya "I'll miss you too. But I don't want to stay just because it's familiar."
             $ reward_attributes_once("aya_visit_07_miss", [("grace", "micro")], show="auto")
 
-    "She reaches into her pocket and pulls out the sketchbook again. She turns to a page I have not seen before, and holds it out to me."
+    "She reaches into her pocket and pulls out the sketchbook again. She turns to a page I have not seen before, tears it out carefully, and holds it out to me."
     "It is a drawing of a cat in a streetwear hoodie, the same cat from her sketchbook but now wearing something she designed."
     aya "This is for you. I drew it last night. It's my way of saying thank you."
-    aya "Wear it when you make it big. Or when you just need to feel brave."
+    $ add_item("aya_sketchbook_page")
+    aya "Hang it on your wall when you make it big. Or when you just need to feel brave."
 
     menu:
         "I will treasure it." :
@@ -596,7 +610,7 @@ label aya_visit_07:
     $ aya_affection += 1
 
     $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 7)
-    $ remember("aya", "she left the cafe to pursue her dream and revealed her real name is Shiori")
+    $ log_memory("aya", "she left the cafe to pursue her dream and revealed her real name is Shiori")
     $ wire_contacts["aya"]["name"] = "Shiori"
     $ queue_message("aya", "It is Shiori now. Same phone, different name. I am going to miss this place, but I am not going to miss who I was here. Thank you for everything.", day="yesterday")
     $ reward_attributes_once("aya_visit_07_close", [("nerve", "micro")], show="card")
@@ -632,18 +646,18 @@ label aya_visit_closed:
 
     new_maid "Your usual? The omurice with the cat?"
     mc "You know my usual."
-    new_maid "Aya-san wrote it down before she left. Table by the window. Omurice. Draw the cat, not too neat. Say the spell after the first bite."
+    new_maid "Aya-san wrote it down before she left. Table by the window. Omurice. Draw the cat, not too neat. Say the spell before the first bite."
     "She says it like a recipe. Which, to her, it is."
 
-    "The omurice arrives. The cat is drawn in ketchup, the same shape, the same ears. It is a little neater than Aya's ever was."
+    "The omurice arrives. The cat is drawn in ketchup, the same shape, the same ears. It is a little neater than Aya's ever was, but it is still her cat."
     new_maid "Moe moe kyun! Make it delicious, make it warm, make it yours!"
     "The words are right. The room claps. I clap too."
 
     "I take the first bite. It tastes the same. That is the strange part. It tastes exactly the same."
 
     menu:
-        "Tell her the cat still looks exactly like Aya's.":
-            mc "The cat looks exactly like Aya's."
+        "Tell her the cat still looks like Aya's.":
+            mc "The cat still looks like Aya's."
             new_maid "Thank you! Aya-san trained me for two days. She said the cat is the hard part."
             $ reward_attributes_once("aya_visit_closed_good", [("grace", "micro")], show="auto")
         "Ask about Aya.":
@@ -668,8 +682,8 @@ label aya_visit_closed:
     if confidant_visits.get("aya", 0) < 8:
         $ aya_affection += 1
         $ confidant_visits["aya"] = max(confidant_visits.get("aya", 0), 8)
-        $ remember("aya", "visited the cafe after Aya left; a new maid serves the same omurice")
-        $ queue_message("aya", "I heard you came back. Of course you did. Tell me the new girl draws the ears wrong. I need to believe she draws the ears wrong.", day="yesterday")
+        $ log_memory("aya", "visited the cafe after Aya left; a new maid serves the same omurice")
+        $ queue_message("aya", "I heard you came back. Of course you did. The new girl draws the cat from my notes. Does it still look like mine? I keep wondering.", day="yesterday")
     $ reward_attributes_once("aya_visit_closed_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade

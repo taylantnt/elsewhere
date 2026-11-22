@@ -1,7 +1,7 @@
 [A busier night. The bar’s low light glows against rows of bottles. The player slides into the now-familiar bench. Orson nods, already reaching for the citrus.]
 Orson: “Regular’s posture. You sit like the seat knows you.”
 (sets the first drink)
-Orson: “I trade drinks for stories. Want some?”
+Orson: “I trade drinks for stories. The drinks are better.”
 Player (shrugs): “Go on.”
 Orson: “There was a tourist couple, arguing about the map like it was the last lifeboat on a sinking ship. I gave them two paper cranes and asked them to fold a third together. They kept the cranes, stopped fighting, and sent me a postcard from Kyoto.”
 (shrugs)
@@ -14,7 +14,7 @@ Player (choice):
 “I’ll try that.”
 “I’ll just live it.”
 Orson (if 1): “Good. Memory needs a home.”
-Orson (if 2): “Then live it—but don’t forget it. Same difference, different discipline.”
+Orson (if 2): “Then live it twice: once when it happens, once when you write it.”
 
 [He slides over a small bowl of edamame.]
 Orson: “Eat. Drinking without eating is like sightseeing without looking up.”

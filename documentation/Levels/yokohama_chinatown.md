@@ -22,7 +22,7 @@ dinner invitation and becomes a walk through the district. Beats:
 3. Food street: jiaozi/gyoza, shoronpo, and Yokohama ramen (sanmamen).
 4. A tiny gyoza shop run by Lei Lei, her family, and a great deal of shouting.
    Lei Lei and the family recognize Hikari from her seminar-trip visits and
-   tease her about bringing a foreigner and about coming back every week.
+   tease her about bringing a foreigner and about coming back a few times.
    The family speaks Chinese; the player understands none of it and relies on
    Hikari (who understands none of the Chinese either). Lei Lei repeats the
    important lines in Japanese afterwards, so Hikari follows the second half

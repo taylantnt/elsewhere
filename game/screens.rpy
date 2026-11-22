@@ -104,9 +104,14 @@ screen say(who, what):
     ## keeps the body grounded behind the textbox instead of hovering awkwardly.
     ## A character appears here by being declared with image="name" and given an
     ## "image side name" picture; anyone without one (the narrator, the MC) shows
-    ## nothing. No room for it on the phone variant.
-    if not renpy.variant("small") and not standalone_window_active():
-        add SideImage() xalign 0.5 ypos config.screen_height yanchor 1.0 zoom 1.8
+    ## nothing. Phones get the portrait too, at the same witness-stand-up scale
+    ## as desktop so the speaker reads clearly on the smaller screen.
+    if not standalone_window_active():
+        add SideImage():
+            xalign 0.5
+            ypos config.screen_height
+            yanchor 1.0
+            zoom 1.8
 
     ## Modern, elegant namebox with layered design
     if who is not None:
@@ -336,7 +341,7 @@ init python:
 
 init python:
     # Debug shortcut: pressing 0 in-game jumps to the start of the newest
-    # story content (Hikari's room visit on the night of day two), so the
+    # story content (Hikari's room visit on the night of day three), so the
     # Saturday-to-Monday sequence can be tested without replaying two days.
     def debug_jump_ending():
         # The room visit is the end of Day 3 (Friday). Keep the calendar and

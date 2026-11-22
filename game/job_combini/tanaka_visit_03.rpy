@@ -6,9 +6,9 @@
 ## smells from the street, and Tanaka treats them like an instrument.
 
 label tanaka_visit_03:
-    call tanaka_common_open
+    call tanaka_common_open from _call_tanaka_common_open_3
 
-    "Tonight the lesson is the hot case. The glass front, the warmer, the row of paper sleeves."
+    "Today the lesson is the hot case. The glass front, the warmer, the row of paper sleeves."
     tanaka "The hot case is the only part of the store a person can smell from the street. The register sells. The case invites."
     tanaka "So it is never empty and it is never tired. If the case is tired, the street can tell."
     "He shows me the trays. Nikuman in their paper cradles. Karaage in the basket. Corn dogs on their sticks. Frankfurters turning on the roller."
@@ -45,13 +45,14 @@ label tanaka_visit_03:
     mc "(He taught me the case. He teaches me a thing and then he orders me around about it for the rest of the shift. I am grateful and I am annoyed in the same breath.)"
     mc "(Why does the other worker get to teach and correct and order? Somebody should tell the manager his staff has opinions.)"
 
-    call tanaka_wage_close
+    call tanaka_wage_close from _call_tanaka_wage_close_3
 
     tanaka "You keep looking at me like you know me."
     mc "You remind me of someone."
     tanaka "Everyone reminds someone of someone. That is how the world saves money on faces."
     "He says it without smiling. For a second the register light is too bright, and the store is a white room with a door at the end."
     mc "(I do not tell him. I do not know how.)"
+    mc "(There is a voice I hear in the white room. I think I know what it would look like. I put the thought back before I can see it.)"
 
-    call tanaka_night
+    call tanaka_walk_home from _call_tanaka_walk_home_3
     return

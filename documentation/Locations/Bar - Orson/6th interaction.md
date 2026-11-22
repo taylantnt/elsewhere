@@ -3,15 +3,15 @@ Orson (quiet): “Have you ever noticed how doors look heavier at night? Same wo
 Player: “Long day?”
 Orson: “Long year.”
 (sets down a small, neat drink, pausing before sliding it across)
-Orson: “I tried other lives. My family wanted me in the company—good hours, good title. I tried my own shop once. Bad location, worse timing. I’ve failed politely and loudly. This place… was desperation dressed as a plan. A corner where failure could sit down and order a drink.”
+Orson: “I tried other lives. My family wanted me in the company, good hours, good title. I tried my own shop once. Bad location, worse timing. I’ve failed politely and loudly. This place… was desperation dressed as a plan. A corner where failure could sit down and order a drink.”
 Player: “And it worked.”
-Orson (half-smile, softer): “Sometimes. Sometimes it barely limps. Bars are fragile things—you keep them alive night by night. Like a candle in the wind, you don’t know how long the wax will last.”
+Orson (half-smile, softer): “Sometimes. Sometimes it barely limps. Bars are fragile things. You keep them alive night by night. Like a candle in the wind, you don’t know how long the wax will last.”
 (he catches himself, then chuckles to break the heaviness)
 Orson: “But hey, tonight it’s still burning.”
 Player: “I don’t feel courageous.”
 Orson: “You came back. Courage doesn’t always roar; sometimes it just shows up again.”
 (reaches under the counter, hands out a paper coaster with the wolf logo)
-Orson: “Here. For when the city feels too big. A silly souvenir, but… you’d be surprised how much meaning fits in small circles. Small things outlive us sometimes.”
+Orson: “Take it home. For when the city is too big. A silly souvenir, but… you’d be surprised how much meaning fits in small circles. Small things outlive us sometimes.”
 Player (turns it in hand): “Thanks.”
 Orson (meets their eyes through the mask, voice gentler than before): “I see you, you know. Not every detail. Just enough to know you’re trying. You remind me of the kid I was when I first came to Tokyo. Lost, stubborn, curious. Curiosity will keep you alive here. Even when places don’t.”
 

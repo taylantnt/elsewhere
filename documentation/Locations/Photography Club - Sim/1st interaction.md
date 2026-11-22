@@ -1,3 +1,11 @@
+> **Design sketch:** the transcript below is the original pitch for the first
+> meeting, including choices that were never shipped. The written first session
+> is in `game/script.rpy`, label `after_school_photo_club` (the protagonist uses
+> his phone, Sim names Nami, Tapi and TT, and Circle's welcome message promises
+> Thursday). The standalone `sim_visit_01` in
+> `game/confidant_visits/sim.rpy` is the alternate first meeting for players who
+> skipped that afternoon.
+
 (Player arrives at a tucked-away studio, small sign taped to the door: “Photography Meetup — Welcome!” Inside, a mix of foreigners and Japanese are chatting, testing cameras, adjusting lights. A tall, cheerful man waves with a camera slung around his neck.)
 Sim: “Ah! You must be the new one, right? Welcome, welcome. Come in, don’t be shy.”
 (He switches effortlessly into Japanese for another group member.)

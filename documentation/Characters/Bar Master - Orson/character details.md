@@ -8,28 +8,28 @@
 | **Location** | Lupin's Den (a narrow, dimly lit bar down a back street) |
 | **Archetype** | The Philosophical Guardian / The Anomaly |
 | **Affection Variable** | `orson_affection` |
-| **Language** | Fluent English — the only adult confidant the protagonist can fully talk to without a translator |
+| **Language** | Fluent English, the only adult confidant the protagonist can fully talk to without a translator |
 | **Confidant Theme** | Identity, masks, and belonging |
-| **Leaves / Closes?** | **Yes — the bar closes permanently.** |
+| **Leaves / Closes?** | **Yes. The bar closes permanently.** |
 
 ## Personality
 - **Surface**: Cheerful, unhurried, almost zen. He polishes a glass and lets the room come to him. He reads people instantly but never pushes.
 - **Deep**: A philosopher who has already made peace with his own disappointments. He treats the bar as a sanctuary for people who need to be "seen without being recognised." He recognises the protagonist as a fellow outsider long before they admit it.
 
 ## Appearance & Design
-- A wolf mask with a gentle, *fixed* smile — black fur, lacquered smooth, gold trim along the jawline.
+- A wolf mask with a gentle, *fixed* smile: black fur, lacquered smooth, gold trim along the jawline.
 - Sharp grey suit with yellow accents; bow tie just slightly crooked.
 - The mask never changes expression. That is the point: it is a wall, and he knows it.
 
 ## Backstory
-Orson did not always run a bar. Earlier in life he chased ventures that didn't work out and carried family expectations he never satisfied. The mask gave him the freedom to build something of his own — a place where the other misfits of the city could breathe — but it also became a hiding place of his own. He privately suspects the world around him is stranger than it should be, and chooses to live peacefully inside it rather than fight it.
+Orson did not always run a bar. Earlier in life he chased ventures that didn't work out and carried family expectations he never satisfied. The mask gave him the freedom to build something of his own, a place where the other misfits of the city could breathe, but it also became a hiding place of his own. He privately suspects the world around him is stranger than it should be, and chooses to live peacefully inside it rather than fight it.
 
 ## Confidant Arc (Interactions 1–8)
 | # | Beat |
 | :--- | :--- |
 | 1 | First visit. The protagonist finds the wolf-signed door by accident and means only to look; Orson notices, speaks fluent English, gives him water and a quiet corner of the counter, and leaves a WIRE card he scans on the way home. |
-| 2 | Small talk begins. He explains the masks: "You can be whoever you want when you wear one." |
-| 3 | Bar stories — odd customers, tourists, locals. Japan as both welcoming and isolating. |
+| 2 | Small talk begins. He explains the masks: "With a mask, you can be anyone. Even yourself, if you're lucky." |
+| 3 | Bar stories: odd customers, tourists, locals. Japan as both welcoming and isolating. |
 | 4 | He hints at his past. "People come here to be seen without being recognised." |
 | 5 | Personal advice: it's okay to feel lost, just don't stop walking. |
 | 6 | Real vulnerability: failed ventures, the bar as a refuge, the protagonist reminding him of his own first days in Tokyo. |
@@ -42,10 +42,10 @@ The 7th interaction is a goodbye. Rising rent, a neighbourhood moving on without
 **In-game consequence**: after Interaction 7 the bar is no longer a working bar. The alley is still there and the wolf sign is still on the wall, but the window is dark, the door is locked, and the room inside is stripped between tenants. `orson_affection` is locked. The eighth visit is the repeatable epilogue in that alley.
 
 ## What He Symbolises in the Simulation
-Orson is the "self that found harmony." He neither fights the world nor is consumed by it — he simply makes a small warm room inside it. He is also the first character to hint that masks and reality are the same question, which is the exact question the simulation is built to test.
+Orson is the "self that found harmony." He neither fights the world nor is consumed by it. He simply makes a small warm room inside it. He is also the first character to hint that masks and reality are the same question, which is the exact question the simulation is built to test.
 
 ## Signature Lines
 - "With a mask, you can be anyone. Even yourself, if you're lucky."
 - "Just… don't expect people to be the same without it."
-- "Some places can't hold us up forever. You carry the warmth with you — that's what lasts."
-- "Welcome to the Den."
+- "Some places can't hold us up forever. You carry the warmth with you; that's what lasts."
+- "The water's on the house. The conversation isn't. But you're welcome to it."

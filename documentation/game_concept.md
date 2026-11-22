@@ -12,7 +12,7 @@ The player takes on the role of a foreign student arriving in Tokyo. The initial
 - **Isolation and Connection**: Building relationships in a space where communication is a hurdle.
 
 ## Core Mechanics
-- **Visual Novel Dialogues**: Choice-based progression. Conversations are two-way: the player answers, and the answers are what develop the character. Once he has answered someone, that answer is what comes back the next time he talks to them — a conversation is not a menu that re-rolls.
+- **Visual Novel Dialogues**: Choice-based progression. Conversations are two-way: the player answers, and the answers are what develop the character. Once he has answered someone, that answer is what comes back the next time he talks to them. A conversation is not a menu that re-rolls. Dialogue never uses em dashes; see `dialogue_style.md`.
 - **Character Attributes (Insight / Grace / Nerve)**: Three Pillars of progression, each with its own colour (blue, green, red). Points are **scarce**: most answers pay nothing, and only a genuine turning point awards anything. What does accrue collects into ranks that unlock or close dialogue. Fully specified in `character_attributes.md`.
 - **Character Memory**: Important characters remember what he said to them, marked on screen with a short `(Hikari will remember that)` notice. It is kept separately from the attribute system: an answer can cost nothing and still matter later.
 - **Language Progression System**: Japanese text starts as plain, unreadable text and gradually "translates" into coloured English as the player's fluency increases.

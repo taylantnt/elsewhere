@@ -33,6 +33,7 @@ define destination_names = {
     "aya":   "Maid Cafe",
     "hana":  "Library",
     "fortune": "Asakusa: The Fortune Teller",
+    "murakami": "Japanese Elective",
     "walk_hikari": "Walk home with Hikari",
     "message_hikari": "Message Hikari",
     "walk_alone":  "Walk home alone",
@@ -43,24 +44,27 @@ define destination_names = {
     "karaoke":     "Karaoke Box",
     "night_market": "Night Food Stalls",
     "combini":     "Combini",
+    "honki":       "Honki!",
     "odaiba":      "Odaiba",
     "yokohama":    "Yokohama Chinatown",
     "ueno":        "Ueno Park",
     "shibuya":     "Shibuya Crossing",
     "shimokitazawa": "Shimokitazawa",
     "omotesando":  "Omotesando / Meiji Shrine",
-    "tanaka":      "Combini: Night Shift",
+    "tanaka":      "Convenience Store",
 }
 
 ## The city rows. These are not confidant arcs: no visits, no cap, no closing.
 ## They exist so a paused or closed afternoon still has somewhere to go.
 define city_row_order = [
-    "library", "river", "harajuku", "karaoke", "night_market", "combini",
-    "odaiba", "yokohama", "ueno", "shibuya", "shimokitazawa", "omotesando",
-    # The night shift is a city row, not a person: it is a place he goes to
-    # work. It is filtered out until Tanaka puts the card in the window.
-    "tanaka",
+    "library", "river", "harajuku", "karaoke", "night_market",
+    "odaiba", "yokohama", "ueno", "shibuya", "shimokitazawa", "omotesando", "honki",
 ]
+
+## The job rows. Work, not wandering: the afternoon shift at the combini. Kept out
+## of `city_row_order` so the hub can give it its own section, and filtered by
+## `combini_job_unlocked` until Tanaka puts the card in the window.
+define job_order = ["tanaka"]
 
 ## How many of the seven visits have happened. Zero means they have never been
 ## met. Only the story writes these; the screen only reads them.
@@ -70,11 +74,16 @@ default confidant_visits = {
     "chef": 0,
     "aya": 0,
     "hana": 0,
-    # The Fortune Teller is the one deliberate exception to the seven-visit
-    # rule: three cards, three meetings, and then the deck is closed. She is
-    # still not part of `confidant_order`, so she can never hold back the five
-    # original arcs or their introduction gate.
+    # The Fortune Teller is the one deliberate exception to `confidant_order`:
+    # she is met on Day 13, well after the introduction gate opens, so
+    # requiring her would strand every confidant revisit until then. She still
+    # gets the full seven-visit arc and epilogue; `confidant_visit_totals` and
+    # the epilogue check in `destination_state()` treat her like the five.
     "fortune": 0,
+    # The elective teacher. Met during the Day 10 fair; her hub arc lives in
+    # confidant_visits/murakami.rpy. Unlike the confidants she never closes:
+    # after visit 10 the row stays ready and office hours continue forever.
+    "murakami": 0,
 }
 
 ## The hub row picked this afternoon, or None for Head Home. The day scene
@@ -102,8 +111,8 @@ default day7_walked_with_hikari = False
 ## confidants then gets an eighth visit, the epilogue, where the place is still
 ## there and the person is not. The epilogue is repeatable: the row stays
 ## clickable and plays the same closing scene every time. `confidant_visit_totals`
-## names the exceptions: the five arcs run to eight, and the Fortune Teller's
-## shorter arc runs to three.
+## names the exceptions: the five arcs and the Fortune Teller run to eight,
+## seven visits and a repeatable epilogue.
 define confidant_visits_total = 7
 
 define confidant_visit_totals = {
@@ -112,7 +121,11 @@ define confidant_visit_totals = {
     "chef": 8,
     "aya": 8,
     "hana": 8,
-    "fortune": 3,
+    "fortune": 8,
+    # Ten written visits, and no epilogue: the elective is a room, not a
+    # story that ends. `destination_state()` exempts her from the closed and
+    # paused checks so office hours stay open forever.
+    "murakami": 10,
 }
 
 ## Which part of the story we are in. The story bumps this at an act break.
@@ -148,7 +161,7 @@ init python:
     # eventually go; the unlock rules for each land later.
     disabled_destinations = {
         "walk_alone",
-        "harajuku", "karaoke", "combini", "odaiba", "yokohama",
+        "harajuku", "karaoke", "odaiba", "yokohama",
         "ueno", "shibuya", "shimokitazawa", "omotesando",
     }
 
@@ -156,15 +169,16 @@ init python:
     # the first tour adds one id to `hikari_tour_unlocked`, which opens both the
     # hub row and the ordinary solo city_row_* label.
     hikari_tour_spots = [
-        "harajuku", "karaoke", "combini", "odaiba", "yokohama",
+        "harajuku", "karaoke", "odaiba", "yokohama",
         "ueno", "shibuya", "shimokitazawa", "omotesando",
     ]
 
     # Only the tours with a written scene are offered. Add a place id here when
     # its label is ready; until then Message Hikari will not send the player into
     # a placeholder. Yokohama, Harajuku, Kuru Fuku Neko, Ueno, Shimokitazawa and
-    # Omotesando / Meiji Shrine are written. The picker chooses randomly among
-    # whatever is still locked.
+    # Omotesando / Meiji Shrine are written. This list is also the reveal order:
+    # the picker offers the first still-locked entry, and later tours call back
+    # to earlier ones.
     hikari_tour_written = ["yokohama", "harajuku", "karaoke", "ueno", "shimokitazawa", "omotesando"]
 
     def destination_unlocked(place):
@@ -199,15 +213,29 @@ init python:
         # `confidant_order`, so she can never block the original five.
         return all(confidant_visits.get(c, 0) > 0 for c in confidant_order)
 
+    def all_confidants_maxed():
+        # The completion gate: True when every confidant in confidant_order
+        # has reached their full visit total (including the epilogue). Used
+        # to warn the player before the hub closes at Act 3 proper.
+        return all(confidant_visits.get(c, 0) >= confidant_visits_total_for(c) for c in confidant_order)
+
     def hub_destination_order():
         """Every row the hub should show today, in reading order.
 
         The five original confidants stay first. The Fortune Teller joins the
         people only once her Asakusa card has been turned. The city rows follow,
-        and the night shift appears at the bottom of the city list only after
+        and the afternoon shift appears at the bottom of the city list only after
         Tanaka has put the HELP WANTED card in his window.
         """
         people = list(confidant_order)
+        # Murakami joins the after-school list as soon as he meets her at the
+        # Day 10 elective fair. Enrollment is still a separate choice (the Day
+        # 12 night decision, or her re-offer text) and only drives the WIRE
+        # meter and the enrollment dialogue, not visibility. Like the Fortune
+        # Teller she stays out of `confidant_order`, so she can never block the
+        # introduction gate.
+        if "murakami" in store.wire_unlocked:
+            people.append("murakami")
         if store.fortune_arc_started:
             people.append("fortune")
         # Riverbank, the night market, and the old separate Campus Library row
@@ -216,13 +244,20 @@ init python:
         people += ["message_hikari", "walk_alone", "home"]
 
         removed_from_hub = {"river", "night_market", "library"}
-        city = [
-            p for p in city_row_order
-            if p not in removed_from_hub
-            and (p != "tanaka" or store.combini_job_unlocked)
-        ]
+        city = [p for p in city_row_order if p not in removed_from_hub]
+        if not store.honki_unlocked:
+            city.remove("honki")
+        # The job rows sit under their own heading in the hub. The combini
+        # shift appears only after the HELP WANTED card has been seen.
+        jobs = [p for p in job_order if store.combini_job_unlocked]
 
-        return people + city
+        places = people + city + jobs
+        # Below the sustain floor, paid outings close. Work and the free walks
+        # stay open, so this is a nudge rather than a fail state. The guard also
+        # keeps the gate from ever locking the player out before the job exists.
+        if store.combini_job_unlocked and not can_afford_day():
+            places = [p for p in places if p in job_order or p in ("walk_alone", "home")]
+        return places
 
     def destination_state(place):
         # "ready"        - there is a visit waiting to be played here
@@ -239,11 +274,21 @@ init python:
         if place not in confidant_visits:
             return "ready"
         seen = confidant_visits[place]
-        # The five confidants keep their epilogue after the seventh visit. It
+        # The confidants keep their epilogue after the seventh visit. It
         # opens immediately, even when the act cap would otherwise pause them,
-        # because the farewell is the end of the numbered arc.
-        if place in confidant_order and seen >= 7:
+        # because the farewell is the end of the numbered arc. The Fortune
+        # Teller is not in `confidant_order` but runs the same seven-plus-one
+        # shape, so she gets the same state.
+        if (place in confidant_order or place == "fortune") and seen >= 7:
             return "epilogue"
+        # Murakami's elective never closes. After the ten written visits the
+        # dispatcher falls through to `murakami_lesson_repeat`, so the row
+        # stays ready forever and the act cap does not apply: office hours
+        # are not a confidant slot to be spent.
+        if place == "murakami":
+            if not destination_is_open(place):
+                return "closed_today"
+            return "ready"
         if seen >= confidant_visits_total_for(place):
             return "closed"
         if not destination_is_open(place):
@@ -310,6 +355,8 @@ init python:
         # the player has not met yet.
         if destination_locked(place):
             return "Locked"
+        if place == "honki" and state == "ready":
+            return "Shop"
         if state == "ready":
             return "New"
         if state == "epilogue":
@@ -496,6 +543,7 @@ define hub_map_positions = {
     "sim":           (0.46, 0.17),
     "ueno":          (0.64, 0.10),
     "fortune":       (0.84, 0.16),
+    "murakami":      (0.93, 0.27),
     "shimokitazawa": (0.14, 0.36),
     "orson":         (0.33, 0.40),
     "chef":          (0.55, 0.33),
@@ -509,6 +557,7 @@ define hub_map_positions = {
     "message_hikari": (0.10, 0.77),
     "river":         (0.30, 0.75),
     "combini":       (0.45, 0.79),
+    "honki":         (0.86, 0.75),
     "odaiba":        (0.66, 0.74),
     "walk_alone":    (0.29, 0.91),
     "home":          (0.10, 0.91),
@@ -647,8 +696,9 @@ screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one des
     default selected_place = None
     key "K_RETURN" action If(selected_place is not None, Return(selected_place), NullAction())
     $ hub_places = places if places is not None else hub_destination_order()
-    $ hub_people = [p for p in hub_places if p not in city_row_order]
+    $ hub_people = [p for p in hub_places if p not in city_row_order and p not in job_order]
     $ hub_city = [p for p in hub_places if p in city_row_order]
+    $ hub_jobs = [p for p in hub_places if p in job_order]
 
     # The tooltip is the destination id, not a sentence. The parent turns it
     # into the map header and the hover strip, and the rows and pins use it to
@@ -704,6 +754,16 @@ screen location_hub(places=None, heading="Free Afternoon", blurb="Choose one des
                             add Solid("#2a2620") xysize (gui.scale(302), gui.scale(1))
                             null height gui.scale(3)
                             for place in hub_city:
+                                use hub_row(place, hub_tip_place, selected_place)
+                        if hub_jobs:
+                            null height gui.scale(7)
+                            text "JOBS":
+                                style "guide_meta"
+                                color "#c8a06a"
+                                kerning gui.scale(2)
+                            add Solid("#2a2620") xysize (gui.scale(302), gui.scale(1))
+                            null height gui.scale(3)
+                            for place in hub_jobs:
                                 use hub_row(place, hub_tip_place, selected_place)
 
             add Solid("#2a2620") xpos gui.scale(315) ypos 0 xysize (gui.scale(1), gui.scale(230))

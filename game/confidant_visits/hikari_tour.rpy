@@ -14,21 +14,25 @@
 ## the ordinary `city_row_<place>` scene plays without Hikari. The tour is a
 ## one-time introduction, not a companion who follows him forever.
 ##
-## Written tours: Yokohama Chinatown, Harajuku, Kuru Fuku Neko (karaoke), Ueno,
-## Shimokitazawa, and Omotesando / Meiji Shrine. Only tours in
-## `hikari_tour_written` are offered, so Message Hikari never sends the player
-## into a placeholder. Add the next place id there when its scene is ready; the
-## picker then chooses randomly among whatever is still locked and written.
-## Each label ends by unlocking its place for the generic solo row.
+## Written tours, in the order she reveals them: Yokohama Chinatown, Harajuku,
+## Kuru Fuku Neko (karaoke), Ueno, Shimokitazawa, and Omotesando / Meiji Shrine.
+## Only tours in `hikari_tour_written` are offered, so Message Hikari never sends
+## the player into a placeholder. Add the next place id there when its scene is
+## ready; the picker then offers the first still-locked tour in that order, which
+## is the order the in-scene callbacks and the Level docs assume. Each label ends
+## by unlocking its place for the generic solo row.
 
 
 label hikari_tour:
     $ last_afternoon_was_run = False
     $ last_afternoon_hikari_tour = False
 
-    $ tour_available = [p for p in hikari_tour_available_spots() if p in hikari_tour_written]
+    # She reveals places in a deliberate order (see hikari_tour_written), and the
+    # tours' dialogue refers back to earlier ones, so offer them in sequence
+    # rather than at random.
+    $ tour_available = [p for p in hikari_tour_written if p in hikari_tour_available_spots()]
     if tour_available:
-        $ tour_spot = renpy.random.choice(tour_available)
+        $ tour_spot = tour_available[0]
     else:
         $ tour_spot = None
 
@@ -113,8 +117,8 @@ label hikari_tour:
         ])
     elif tour_spot == "karaoke":
         # The sing is the hook, but she frames it as letting something out and
-        # as something to do with him, not as a performance. She runs late on
-        # purpose and gives him a reason to accept before he can refuse.
+        # as something to do with him, not as a performance. Her "I have to stay
+        # after seminar" gives him a reason to accept before he can refuse.
         $ run_chat("hikari", [
             {"options": [
                 {"label": "Hey Hikari. Are you free after class?",
@@ -274,12 +278,17 @@ label hikari_tour:
         mc "What if I am terrible?"
         hikari "Then you will be terrible with me in the room. That is better than being terrible alone."
     elif tour_spot == "harajuku":
-        hikari "Rule one. We look at everything. We buy nothing until the third shop."
+        hikari "Rule one. We look at everything. We buy no clothes until the third shop."
         mc "Why the third?"
         hikari "The first two are for people who photograph themselves. The third is for people who actually wear it."
         mc "(She has a rule for everything. Most of them turn out to be true.)"
-    hikari "Come on. I want to get there before the line."
-    "She turns before I can ask where we are going. I follow her."
+    if tour_spot == "harajuku":
+        hikari "Come on. I want to get there before the line."
+    elif tour_spot == "ueno":
+        hikari "Come on. The tarps will be going."
+    else:
+        hikari "Come on. I want to get there before the light changes."
+    "She turns before I can ask anything else. I follow her."
 
     $ renpy.jump("hikari_tour_" + tour_spot)
 
@@ -287,7 +296,7 @@ label hikari_tour:
 ## --- THE TOUR SCENES ---------------------------------------------------------
 ##
 ## Six tours are written: Yokohama, Harajuku, Kuru Fuku Neko, Ueno,
-## Shimokitazawa, and Omotesando / Meiji Shrine. Combini, Odaiba, and Shibuya
+## Shimokitazawa, and Omotesando / Meiji Shrine. Odaiba and Shibuya
 ## still fall through to their placeholders: Hikari arrives with him,
 ## introduces the place, and the unlock happens at the end. Replace those lines
 ## and add choices/rewards there when those scenes are written. The message
@@ -421,7 +430,7 @@ label hikari_tour_harajuku:
             $ reward_attributes_once("harajuku_tour_kawaii_comfort", [("insight", "micro")], show="auto")
 
     "She does not take it off."
-    "She keeps the dress and the ribbon and the ridiculous socks for the rest of the day: through the candy shop, onto the train, and in through the door of the house."
+    "She keeps the dress and the ribbon and the ridiculous socks for the rest of the day: through the candy shop and onto the train."
 
     scene bg_harajuku_candy with walk_fade
     "The cotton candy shop is a wall of colour. Spirals of sugar on sticks, shaped like flowers and hearts and clouds, stacked in rows like a field that has gone wrong in the best possible way."
@@ -468,7 +477,7 @@ label hikari_tour_harajuku:
             $ reward_attributes_once("harajuku_tour_why_here", [("insight", "micro")], show="auto")
         "Say you want to come back alone.":
             mc "I want to come back by myself."
-            hikari "Good. Walk the whole street. Do not buy anything on the first pass."
+            hikari "Good. Walk the whole street. Buy nothing at the first two shops."
             mc "The third shop?"
             hikari "You were listening."
             $ reward_attributes_once("harajuku_tour_come_back", [("nerve", "micro")], show="auto")
@@ -491,7 +500,7 @@ label hikari_tour_harajuku:
     $ reward_attributes_once("hikari_tour_harajuku_complete", [("insight", "tiny")], show="auto")
 
     scene bg_train_interior with walk_fade
-    "The train home is warm and half empty. Hikari falls asleep against the window with her jacket folded under her head."
+    "The train home is warm and half empty. Hikari falls asleep against the window, her head tipped against the glass."
     "There is a streak of pink sugar on her finger that she never wiped off."
     mc "(She took me to a street where nobody is embarrassed to be seen. I think that was the point.)"
 
@@ -502,9 +511,9 @@ label hikari_tour_harajuku:
     hikari "You're welcome."
     mc "I didn't say thank you."
     hikari "You were going to."
-    $ hikari_kawaii = False
     "She goes inside before I can prove her right."
     "By the time I reach the front step, the ribbon is gone. She is wearing her own clothes again, and she never mentions the dress."
+    $ hikari_kawaii = False
     return
 
 
@@ -549,7 +558,7 @@ label hikari_tour_karaoke:
             hikari "..."
             mc "What?"
             hikari "Nothing. You just became about four years younger and I am not sure how to feel about it."
-            "She takes a pair for herself. She does not explain."
+            "She takes a pair for herself. She does not explain. She wears them for the rest of the night and never once takes them off."
             $ reward_attributes_once("karaoke_tour_costume", [("nerve", "micro")], show="auto")
 
     "We go in. The corridor is narrower than the street and twice as loud."
@@ -604,21 +613,22 @@ label hikari_tour_karaoke:
             "She taps the flag, then back again, then forward. The buttons keep their places. Only the words move."
             hikari "You can switch it mid-song if you want. The queue does not care."
             mc "(A machine that forgives me for not reading fast. A small miracle.)"
+            "Then I add the only English title I know. The tablet shows 1."
             $ reward_attributes_once("karaoke_tour_tablet", [("insight", "micro")], show="auto")
         "Pick an English song.":
             mc "I am picking this one. It is the only one I know all the words to."
-            "I add it to the queue. The tablet says the song title, then a number: 3."
-            hikari "Three. That means we sing after the people in the next room finish their ballad."
-            mc "There is a next room in my song?"
+            "I add it to the queue. The tablet says the song title, then a number: 1."
+            hikari "One. That means we are next."
+            mc "Next? There is nobody else in this room."
             hikari "There is a queue. That is different."
             $ reward_attributes_once("karaoke_tour_pick_song", [("nerve", "micro")], show="auto")
-        "Let her add the first song.":
+        "Let her pick my song.":
             mc "You choose. I will follow."
             hikari "That is the safest thing you have said all evening."
-            "She adds something with a title I cannot read. The tablet shows 1."
+            "She picks something I know from a commercial on the train. The tablet shows 1."
             $ reward_attributes_once("karaoke_tour_let_choose", [("grace", "micro")], show="auto")
 
-    "She adds three more songs while I am still looking at the English menu."
+    "She adds two more songs while I am still looking at the English menu."
     "I do not recognize any of the titles. Then the first few notes come through the speakers on the tablet preview, and I straighten in my seat."
     mc "I know this one."
     hikari "Of course you do. You have heard it in every shop you have walked past since you landed."
@@ -637,7 +647,7 @@ label hikari_tour_karaoke:
         "Join her on one.":
             mc "If you sing that one, I will sing the chorus. Badly."
             hikari "That is the first brave thing you have said tonight."
-            "She does not wait for the tablet. She starts. I come in two beats late and miss the first word. She does not stop."
+            "She queues the song and taps the flag in the corner. Mine is next. Hers is after."
             $ reward_attributes_once("karaoke_tour_join", [("nerve", "micro")], show="auto")
         "Say nothing and listen to the preview.":
             "I let the next song play through the small speaker instead of skipping it."
@@ -677,7 +687,7 @@ label hikari_tour_karaoke:
             hikari "One day you will pick one for me. I will be able to tell from the first two notes."
             $ reward_attributes_once("karaoke_tour_over_time", [("nerve", "micro")], show="auto")
 
-    "The last hour goes faster than the first. At some point the cat ears stop feeling ridiculous."
+    "The last hour goes faster than the first."
     "On the way out, the corridor is quieter. Somebody in the last room is singing very softly to nobody in particular."
     hikari "See? You can tell what that room is doing."
     mc "Somebody is tired."
@@ -707,20 +717,6 @@ label hikari_tour_karaoke:
     mc "I didn't say thank you."
     hikari "You were going to."
     "She goes inside before I can prove her right."
-    return
-
-
-label hikari_tour_combini:
-    scene bg_combini with walk_fade
-    "The combini is the same temperature and brightness as every other one in the city."
-    hikari "This is not a tour. This is an errand with commentary."
-    mc "You picked it."
-    hikari "I picked it because you walk past it every day and never look inside properly."
-    $ unlock_hikari_tour_destination("combini")
-    "She shows me the good shelf, the bad shelf, and the machine that makes coffee one cup at a time."
-    mc "(I can come back here alone. I know which door chimes when.)"
-    scene bg_home_exterior_night with walk_fade
-    $ night_street()
     return
 
 
@@ -832,8 +828,8 @@ label hikari_tour_yokohama:
     lei "また来たのか。"
     "Hikari's face does something I have not seen on it before. She looks caught."
     hikari "She says I'm here again. She's teasing me."
-    mc "You said you found this place on a seminar trip."
-    hikari "I did. I came back a few times. She remembers."
+    mc "You come here a lot, don't you?"
+    hikari "I do. She remembers."
     lei "外人まで連れてきたのか。"
     hikari "She says I brought a foreigner."
     mc "You told her about me?"
@@ -935,9 +931,9 @@ label hikari_tour_yokohama:
     mc "All of them work here?"
     hikari "All of them eat here. Working is what happens between meals."
 
-    "Lei Lei comes back with two plates and a bowl balanced on one arm. She sets them down like she is putting down a bet."
+    "Lei Lei comes back with two plates balanced on one arm. She sets them down like she is putting down a bet."
     scene bg_gyoza_dishes with walk_fade
-    "The gyoza are face-down in a dark pan glaze. The bottoms are lace. The tops are soft. The shoronpo sit in a bamboo steamer, pleated like small purses. The ramen is not ramen the way I know it: thick noodles, a sauce that clings, vegetables stacked like a roof."
+    "The gyoza are face-down in a dark pan glaze. The bottoms are lace. The tops are soft. The shoronpo sit in a bamboo steamer, pleated like small purses."
     hikari "Wait."
     mc "I am waiting."
     hikari "Not yet. Watch how I do it."
@@ -956,7 +952,7 @@ label hikari_tour_yokohama:
     hikari "She says no. You are not fine."
     "She puts a glass of water down hard enough to make the table jump. Hikari drinks it. Lei Lei watches her drink it. Then she goes back to the kitchen."
     mc "(I have seen people look after each other in a lot of ways. This is a new one.)"
-    "The first gyoza is crisp and hot and tastes like garlic and pork and something green I cannot name. The shoronpo is a small explosion I have to think about before I take another. The ramen is a meal and an argument at the same time."
+    "The first gyoza is crisp and hot and tastes like garlic and pork and something green I cannot name. The shoronpo is a small explosion I have to think about before I take another."
     "For a minute, nobody shouts."
 
     menu:
@@ -1021,7 +1017,7 @@ label hikari_tour_yokohama:
     hikari "Akarenga. Red Brick Warehouse."
     hikari "They built it at the start of the last century. Customs. Goods came off the ships and went in there."
     mc "Silk? Tea?"
-    hikari "Silk. Tea. Machinery. Everything a port is for."
+    hikari "Silk. Tea. Porcelain. Everything a port is for."
     hikari "The 1923 earthquake took most of the city. These buildings were still standing. Not because they were lucky. Because they were built to hold weight."
     mc "(She says that like it means something else.)"
     hikari "Now it is shops. Events. A place to take photographs."
@@ -1097,12 +1093,20 @@ label hikari_tour_yokohama:
 
 label hikari_tour_ueno:
     scene bg_ueno with walk_fade
-    "Ueno Park in April is a picnic the whole city has agreed to attend."
-    "Blue tarps under the trees. Cardboard trays, paper cups, a radio turned low enough that only the table can hear it."
-    "The blossoms are already falling. The ground is pink everywhere nobody has walked."
+    if store.story_day >= 24:
+        "Ueno Park in May is a picnic the whole city has agreed to attend."
+        "Blue tarps under the trees. Cardboard trays, paper cups, a radio turned low enough that only the table can hear it."
+        "The blossoms are gone. The trees are green and heavy, and the tarps are out anyway."
+    else:
+        "Ueno Park in April is a picnic the whole city has agreed to attend."
+        "Blue tarps under the trees. Cardboard trays, paper cups, a radio turned low enough that only the table can hear it."
+        "The blossoms are already falling. The ground is pink everywhere nobody has walked."
     hikari "Hanami."
     mc "Flower viewing."
-    hikari "That is the translation. The flowers are an excuse. The sitting is the point."
+    if store.story_day >= 24:
+        hikari "That is the name. The flowers are an excuse in any season. The sitting is the point."
+    else:
+        hikari "That is the translation. The flowers are an excuse. The sitting is the point."
     mc "You sound like my father."
     hikari "He sounds like a sensible man. I'll take it."
 
@@ -1188,7 +1192,7 @@ label hikari_tour_ueno:
     mc "He is asleep in public."
     hikari "That is why. This is one of the few places in this city where you can fall asleep without it meaning anything."
     hikari "If you photograph it, it means something."
-    "I put the phone away. The blossoms keep coming down. One lands in the tea I am still holding."
+    "I put the phone away. The blossoms keep coming down. One lands on the rim of the cup in my hand."
 
     menu:
         "Watch the lines nobody crosses.":
@@ -1199,11 +1203,11 @@ label hikari_tour_ueno:
             $ reward_attributes_once("ueno_tour_lines", [("insight", "micro")], show="auto")
         "Ask why nobody photographs each other here.":
             mc "Why is nobody taking pictures? There are whole families here."
-            hikari "Because they are doing the thing, not reporting on it. That is the difference between this street and the ones we walked last week."
+            hikari "Because they are doing the thing, not reporting on it. That is the difference between this street and the ones we walked before it."
             hikari "You can tell which one a place is by looking at what people hold up."
             $ reward_attributes_once("ueno_tour_photos", [("insight", "micro")], show="auto")
-        "Let the blossom land in the tea.":
-            "I leave it. The petal sits in the sweet tea and slowly goes dark at the edges."
+        "Leave the blossom where it landed.":
+            "I leave it. The petal sits on the rim and slowly goes dark at the edges."
             hikari "You are watching it change."
             mc "It is a small thing."
             hikari "It is the entire point of the day, and you just did it without being told."
@@ -1219,6 +1223,7 @@ label hikari_tour_ueno:
     mc "Do you like museums?"
     hikari "I like that somebody decided these things were worth keeping. Even the ones I do not understand."
     "She says it to the doors, not to me. I let it stand."
+    hikari "My mother brought me here. I remember the tea was too sweet."
 
     menu:
         "Ask what she would keep.":
@@ -1235,7 +1240,6 @@ label hikari_tour_ueno:
             $ reward_attributes_once("ueno_tour_next_time", [("nerve", "micro")], show="auto")
         "Sit on the steps for a minute.":
             "We sit on the museum steps with our backs to the doors and the park going on without us."
-            hikari "My mother brought me here. I remember the tea was too sweet."
             mc "That is what I remember too."
             hikari "Then we agree about something."
             $ reward_attributes_once("ueno_tour_steps", [("grace", "micro")], show="auto")
@@ -1377,7 +1381,7 @@ label hikari_tour_shimokitazawa:
             hikari "That means I found it again. I would buy it and put it on a shelf and never play it."
             mc "Then buy it and play it."
             hikari "You are very practical today."
-            "She takes it to the counter anyway. She asks the clerk to play a track before she pays."
+            "She takes it to the counter anyway. She asks the clerk to play a track. She never gets as far as paying."
             $ reward_attributes_once("shimokita_tour_buy_record", [("grace", "micro")], show="auto")
         "Ask what the song sounds like.":
             mc "What does it sound like?"
@@ -1394,7 +1398,7 @@ label hikari_tour_shimokitazawa:
             "She looks almost impressed, which she immediately tries to hide."
             $ reward_attributes_once("shimokita_tour_ad_song", [("nerve", "micro")], show="auto")
 
-    "We leave the shop. She is carrying the record or she is not, and either way she walks with her hands tucked into her sleeves like she is keeping something warm."
+    "We leave the shop. She is not carrying the record, but she walks with her hands tucked into her sleeves like she is keeping something warm."
 
     scene bg_live_house with walk_fade
     "The live house has a hand-painted sign and a steel door with no window. It really does look like a fridge."
@@ -1472,7 +1476,7 @@ label hikari_tour_shimokitazawa:
             $ reward_attributes_once("shimokita_tour_silence", [("grace", "micro")], show="auto")
 
     "We walk back toward the station the long way. Shops are pulling their shutters down. A guitar case is leaning against a closed door with nobody around."
-    hikari "Last week I showed you a street where everybody is dressed to be looked at. This week it is a street where nobody is."
+    hikari "I showed you a street where everybody is dressed to be looked at. This one is a street where nobody is."
     mc "Which one is the real Japan?"
     hikari "Both. And neither, if you are asking which one is the whole country."
     hikari "A city is not one place. It is a hundred small rules about what you are allowed to do in each room. That is the thing to learn."
@@ -1486,7 +1490,7 @@ label hikari_tour_shimokitazawa:
             $ reward_attributes_once("shimokita_tour_rule", [("insight", "micro")], show="auto")
         "Say you liked this place more than Harajuku.":
             mc "I think I liked this more than Harajuku."
-            hikari "I know. That is why I brought you here second."
+            hikari "I know. That is why I left it until now."
             mc "You planned the order?"
             hikari "I planned the order. Do not tell me it did not work."
             $ reward_attributes_once("shimokita_tour_order", [("nerve", "micro")], show="auto")
@@ -1572,7 +1576,7 @@ label hikari_tour_omotesando:
             mc "Do you still have it?"
             hikari "Yes. I wear it when I want to feel like a person who belongs here."
             mc "You do belong here."
-            hikari "You have been in this country three months. You do not know that yet."
+            hikari "You have been in this country three weeks. You do not know that yet."
             "She says it lightly. She does not slow down to say it."
             $ reward_attributes_once("omotesando_tour_coat", [("insight", "micro")], show="auto")
         "Look up at the buildings instead of the windows.":

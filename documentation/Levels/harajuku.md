@@ -20,13 +20,14 @@ point. Beats:
    deciding what deserves attention. The weather is nice; meet at the station.
 2. Takeshita Street: a quiet lane behind the station until the boutiques came.
    Hikari's rules — look with your eyes, say 可愛い when something deserves it,
-   never laugh, buy nothing before the third shop.
+   never laugh, buy no clothes before the third shop.
 3. The food street: crepes, タピオカ, and cotton candy in every colour.
 4. A kawaii clothing shop: layers, socks over boots, one colour that should not
    work. She admits she dressed that way for a year. The assistant then pulls
    her into the fitting room; she comes out in the full outfit (the
    `sister_kawaii.png` portrait, selected by the `hikari_kawaii` flag), and he is
-   speechless. She keeps the dress, ribbon, and socks on for the rest of the day.
+   speechless. She keeps the dress, ribbon, and socks on through the candy shop
+   and onto the train, then changes back at the door.
 5. A cotton candy shop (綿菓子 / wataame): pink flowers and blue hearts. He eats
    his; she eats hers before he can photograph it.
 6. Home by train. At the door the ribbon is gone and she is in her own clothes

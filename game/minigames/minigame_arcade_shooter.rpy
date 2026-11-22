@@ -47,7 +47,10 @@ init python:
             "sentinel": {"hp": 2, "score": 50},
         }
 
-        def __init__(self):
+        def __init__(self, dream=False):
+            # Dream mode: the ship cannot move or fire, so the run always ends
+            # in a loss. Used by the Day 33 nightmare, never by a real play.
+            self.dream = dream
             self.playfield_width = 960
             self.playfield_height = 500
 
@@ -69,7 +72,7 @@ init python:
             self.rapid_fire_timer = 0.0
             self.spread_shot_timer = 0.0
             self.armor = 0
-            self.lives = 3
+            self.lives = 1 if dream else 3
 
             self.score = 0
             self.level = 1
@@ -256,13 +259,13 @@ init python:
         # -------------------------------------------------------------- player
 
         def move_player(self, direction, dt=0.06):
-            if self.phase == "lost":
+            if self.dream or self.phase == "lost":
                 return
             self.player_x += direction * self.player_speed * dt
             self.player_x = max(8.0, min(self.playfield_width - self.player_width - 8.0, self.player_x))
 
         def fire(self):
-            if self.phase != "playing" or self.fire_cooldown > 0.0:
+            if self.dream or self.phase != "playing" or self.fire_cooldown > 0.0:
                 return
 
             center_x = self.player_x + self.player_width / 2.0
@@ -680,18 +683,22 @@ screen arcade_shooter(engine):
                             yalign 0.5
                             vbox:
                                 spacing gui.scale(10)
-                                text "SHIP DISABLED" size gui.scale(26) bold True color "#ff7890" xalign 0.5
-                                text "REACHED LEVEL [engine.level]" size gui.scale(15) color "#8ca0b3" xalign 0.5
-                                text "FINAL SCORE  [engine.score]" size gui.scale(18) bold True color "#e4f1fa" xalign 0.5
-                                textbutton "CONTINUE":
-                                    xalign 0.5
-                                    action Return(False)
-                                    background Solid("#22628f")
-                                    hover_background Solid("#3188c4")
-                                    padding (gui.scale(24), gui.scale(10))
-                                    text_size gui.scale(13)
-                                    text_bold True
-                                    text_color "#ffffff"
+                                if engine.dream:
+                                    text "YOU CANNOT MOVE" size gui.scale(26) bold True color "#ff7890" xalign 0.5
+                                    text "THE CONTROLS DO NOT ANSWER" size gui.scale(15) color "#8ca0b3" xalign 0.5
+                                else:
+                                    text "SHIP DISABLED" size gui.scale(26) bold True color "#ff7890" xalign 0.5
+                                    text "REACHED LEVEL [engine.level]" size gui.scale(15) color "#8ca0b3" xalign 0.5
+                                    text "FINAL SCORE  [engine.score]" size gui.scale(18) bold True color "#e4f1fa" xalign 0.5
+                                    textbutton "CONTINUE":
+                                        xalign 0.5
+                                        action Return(False)
+                                        background Solid("#22628f")
+                                        hover_background Solid("#3188c4")
+                                        padding (gui.scale(24), gui.scale(10))
+                                        text_size gui.scale(13)
+                                        text_bold True
+                                        text_color "#ffffff"
 
             hbox:
                 xfill True
@@ -720,6 +727,10 @@ screen arcade_shooter(engine):
 
     timer 0.04 repeat True action Function(engine.tick, 0.04)
 
+    # In the dream there is no CONTINUE button. The loss wakes him up instead.
+    if engine.dream and engine.phase == "lost":
+        timer 2.0 action Return(False)
+
 
 label minigame_arcade_shooter:
     window hide
@@ -728,6 +739,14 @@ label minigame_arcade_shooter:
     call screen arcade_shooter(_arcade_engine)
     $ _arcade_success = _return
     return _arcade_success
+
+
+label minigame_arcade_shooter_dream:
+    window hide
+    $ _arcade_engine = ArcadeShooterEngine(dream=True)
+    play sound "audio/SFX/arcade_wave.wav"
+    call screen arcade_shooter(_arcade_engine)
+    return False
 
 
 label test_arcade_shooter:

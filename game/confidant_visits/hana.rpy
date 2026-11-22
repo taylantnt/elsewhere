@@ -36,11 +36,11 @@ label hana_common_open:
     return
 
 label hana_visit_02:
-    call hana_common_open
+    call hana_common_open from _call_hana_common_open
 
     "The book is in my bag. It has been in my bag for three days, and every time I take it out I put it back."
     "Today I am not putting it back."
-    "I told myself I would return it properly: find Hana, hand it over, apologize for keeping it even this long."
+    "I told myself I would return it properly: find Hana, hand it over, and hope she could tell I was sorry for keeping it this long."
     "I take the book out and stand near the returns cart, holding it with both hands like a confession."
 
     "It is *A Child's Garden of Verses*, a slim older volume with a spine faded soft at the corners."
@@ -82,12 +82,12 @@ label hana_visit_02:
     "The book is hers again. I am not carrying it anymore."
     "I don't know if that makes me lighter or more responsible. Probably both."
 
-    "The hour ends. Regulars drift out. I stay a little longer than I need to, turning over what she wrote inside the cover."
+    "The hour ends. Regulars drift out. I stay a little longer than I need to, turning over what her grandmother wrote inside the cover."
     "Allowed to be small. I did not know a book could give someone permission like that."
 
     $ hana_affection += 1
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 2)
-    $ remember("hana", "returned her grandmother's book and saw the dedication inside the cover")
+    $ log_memory("hana", "returned her grandmother's book and saw the dedication inside the cover")
     $ queue_message("hana", "You returned it. I... I didn't think anyone would. Thank you. For not... for not making me chase you.", day="yesterday")
     $ reward_attributes_once("hana_visit_02_close", [("grace", "micro")], show="card")
 
@@ -96,12 +96,12 @@ label hana_visit_02:
     return
 
 label hana_visit_03:
-    call hana_common_open
+    call hana_common_open from _call_hana_common_open_1
 
     "Rain outside. The club room feels smaller and warmer for it: coats over chair backs, umbrellas leaning by the door."
     "The window is a blur of grey light. Everyone reads a little slower on days like this."
 
-    "Three weeks now. The book is hers again. I keep thinking about the dedication inside the cover: allowed to be small."
+    "A few days now. The book is hers again. I keep thinking about the dedication inside the cover: allowed to be small."
     "I still haven't figured out how to say thank you in a way she'd let me finish."
 
     "I'm actually reading this time. Deep enough that I don't notice her until she's already there."
@@ -136,7 +136,7 @@ label hana_visit_03:
 
     "I stare at the side door."
 
-    "Almost. She almost said something. That has to mean something, right? You don't try four times with someone you want to forget."
+    "Almost. She almost said something. That has to mean something, right? You don't keep trying with someone you want to forget."
 
     "The hour ends. I pack up slowly. As I reach for my coat, I notice something on the floor by my chair: a thin corner of paper, half-tucked under the leg of the table."
     "I pull it free."
@@ -147,7 +147,7 @@ label hana_visit_03:
 
     $ hana_affection += 1
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 3)
-    $ remember("hana", "heard her first word attempt and found a rain window drawing she dropped")
+    $ log_memory("hana", "heard her first word attempt and found a rain window drawing she dropped")
     $ queue_message("hana", "I... I tried to say something. I couldn't. The words wouldn't come. I'm sorry.", day="yesterday")
     $ reward_attributes_once("hana_visit_03_close", [("insight", "micro")], show="card")
 
@@ -156,7 +156,7 @@ label hana_visit_03:
     return
 
 label hana_visit_04:
-    call hana_common_open
+    call hana_common_open from _call_hana_common_open_2
 
     "The room is nearly empty today. Two other readers, both lost in their own books."
     "The blinds are open for once, and the late sun lays a long bright stripe across the floor, right down the middle of the room."
@@ -186,22 +186,31 @@ label hana_visit_04:
         "Get up and pull a matching art book off the shelf.":
             mc "I walk to the art section, slow as I can. I put my hand on a book from the same row, another volume on the Impressionists, and take it back to my seat."
             "I don't look toward the shelves. I just open it, out in the open, where she can see. I read for the rest of the hour with a painting of a water garden on the cover."
+            $ hana_art_response = "matching"
             $ reward_attributes_once("hana_visit_04_match", [("nerve", "micro")], show="auto")
         "Stay where I am. Don't spook her.":
             mc "I don't move. If she's watching, I want her to see me stay. Staying is the only thing I have that costs nothing and says everything."
+            $ hana_art_response = "staying"
             $ reward_attributes_once("hana_visit_04_stay", [("grace", "micro")], show="auto")
 
     "Somewhere behind the shelves, a page turns. Then another. She's still here. She didn't leave the room this time."
 
-    "She's reading. Just on the other side of the row. Our books back to back across a wall of paper."
+    if hana_art_response == "matching":
+        "She's reading. Just on the other side of the row. Our books back to back across a wall of paper."
+    else:
+        "She's reading. Just on the other side of the row. I keep my own book open and don't move, and she stays where she is."
 
     "The hour ends. When I stand to leave, the gap in the art shelf is filled. She reshelved it, but not in its old place."
     "She put it right at the end of the row, where I'd have to walk past it. Right where someone sitting in my chair would see it on the way out."
 
     $ hana_affection += 1
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 4)
-    $ remember("hana", "she brought an art book and he responded with a matching one; they read back-to-back")
-    $ queue_message("hana", "You... you saw. The art book. You picked one too. That means... that means you understand.", day="yesterday")
+    if hana_art_response == "matching":
+        $ log_memory("hana", "she brought an art book and he answered with a matching one; they read back-to-back")
+        $ queue_message("hana", "You... you saw. The art book. You picked one too. That means... that means you understand.", day="yesterday")
+    else:
+        $ log_memory("hana", "she brought an art book and he stayed put; she stayed in the room with him")
+        $ queue_message("hana", "You... you stayed. You didn't move. I... I could feel it. Thank you. For staying.", day="yesterday")
     $ reward_attributes_once("hana_visit_04_close", [("nerve", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
@@ -209,7 +218,7 @@ label hana_visit_04:
     return
 
 label hana_visit_05:
-    call hana_common_open
+    call hana_common_open from _call_hana_common_open_3
 
     "Warm, drowsy afternoon light. Fewer readers than usual: just three of us and the ticking fan."
     "The room has that slumped, unhurried feel of a place that knows everyone is tired."
@@ -248,7 +257,7 @@ label hana_visit_05:
 
     hana "Arigatou... Thank you... for not giving up on me."
 
-    "Nothing else. No signature. No smiley. Just those seven words, and the ghost of an eraser mark beneath the final line, like she'd written it more than once before getting it right."
+    "Nothing else. No signature. No smiley. Just those words, and the ghost of an eraser mark beneath the final line, like she'd written it more than once before getting it right."
 
     "I read it three times standing by the door. The room's empty now. The fan ticks. Somewhere below, the library stacks whisper as someone reshelves a cart."
 
@@ -256,7 +265,7 @@ label hana_visit_05:
 
     $ hana_affection += 1
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 5)
-    $ remember("hana", "she sat at his table and left a note thanking him for not giving up")
+    $ log_memory("hana", "she sat at his table and left a note thanking him for not giving up")
     $ queue_message("hana", "The note... I was scared to leave it. But I wanted you to know. Thank you for staying.", day="yesterday")
     $ reward_attributes_once("hana_visit_05_close", [("grace", "micro")], show="card")
 
@@ -265,7 +274,7 @@ label hana_visit_05:
     return
 
 label hana_visit_06:
-    call hana_common_open
+    call hana_common_open from _call_hana_common_open_4
 
     "It's raining again. The room is almost empty: just Hana and me and one student asleep over a textbook in the corner."
     "The blinds are down. The fan ticks. The rain makes the whole room sound like it's wrapped in cloth."
@@ -330,7 +339,7 @@ label hana_visit_06:
 
     $ hana_affection += 1
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 6)
-    $ remember("hana", "she confessed her loneliness and showed him her sketchbook full of Tokyo drawings")
+    $ log_memory("hana", "she confessed her loneliness and showed him her sketchbook full of Tokyo drawings")
     $ queue_message("hana", "I showed you. The drawings. Everything. I was so scared. But you didn't look away. Thank you.", day="yesterday")
     $ reward_attributes_once("hana_visit_06_close", [("insight", "micro")], show="card")
 
@@ -339,7 +348,7 @@ label hana_visit_06:
     return
 
 label hana_visit_07:
-    call hana_common_open
+    call hana_common_open from _call_hana_common_open_5
 
     "The room is empty when I arrive. Blinds up, late sun, the shelves tidier than I've ever seen them: every spine aligned, every gap closed."
     "The fan ticks. It's the last hour the club meets this month."
@@ -391,8 +400,9 @@ label hana_visit_07:
 
     "I unwrap it. A small cloth strap, the kind you'd hang on a phone or a bag, with a tiny brush and a painter's palette stitched into it in coloured thread."
     "The stitching is uneven. Every stitch is deliberate."
+    $ add_item("hana_art_charm")
 
-    hana "Brush and palette. What I'm going to be... if I'm brave enough. Wanted you to carry it. So you don't... forget me."
+    hana "Brush and palette. What I'm going to be... if I'm brave enough. Wanted you to have it."
 
     menu:
         "\"I won't forget you.\"":
@@ -402,7 +412,7 @@ label hana_visit_07:
             mc "This means a lot to me. Thank you, Hana."
             $ reward_attributes_once("hana_visit_07_means", [("nerve", "micro")], show="auto")
 
-    hana "No, not like that. For you... so you don't forget me. Like... like you carried my dream. When I couldn't. You kept showing up. Every week. Nobody... ever kept showing up."
+    hana "It's not... a souvenir. It's so you remember. Like... like you carried my dream. When I couldn't. You kept showing up. Every week. Nobody... ever kept showing up."
 
     "She steps back and bows, slow and deep, the way she did at the door last time. Then she picks up her bag and walks out. Not fleeing. Walking."
     "At the door she stops for half a second and looks back one last time, and this time she holds my eyes for a full breath before she goes."
@@ -416,7 +426,7 @@ label hana_visit_07:
 
     $ hana_affection += 1
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 7)
-    $ remember("hana", "she told her parents the truth and gave him a handmade art charm before leaving")
+    $ log_memory("hana", "she told her parents the truth and gave him a handmade art charm before leaving")
     $ wire_contacts["hana"]["name"] = "Hana"
     $ queue_message("hana", "I... I told them. They listened. I'm... going to art school. Thank you.", day="yesterday")
     $ reward_attributes_once("hana_visit_07_close", [("nerve", "micro")], show="card")
@@ -448,6 +458,7 @@ label hana_visit_closed:
             $ reward_attributes_once("hana_visit_closed_quiet", [("grace", "micro")], show="auto")
         "Message her.":
             mc "I'll send her a message. Tell her the room misses her, but I'm glad she found her voice."
+            $ send_message("hana", "The room misses you. I'm glad you found your voice.")
             $ reward_attributes_once("hana_visit_closed_message", [("nerve", "micro")], show="auto")
 
     "The hour ends. I pack up slowly. The fan ticks. Somewhere in the library, a door closes."
@@ -458,7 +469,7 @@ label hana_visit_closed:
     if confidant_visits.get("hana", 0) < 8:
         $ hana_affection += 1
         $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 8)
-        $ remember("hana", "found the reading club without her; she left to pursue art")
+        $ log_memory("hana", "found the reading club without her; she left to pursue art")
         $ queue_message("hana", "The room is still there. The books are still there. But I'm not, and that's the point. Thank you for everything.", day="yesterday")
     $ reward_attributes_once("hana_visit_closed_close", [("grace", "micro")], show="card")
 

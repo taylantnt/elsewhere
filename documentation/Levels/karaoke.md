@@ -11,14 +11,14 @@
 
 ## Tour
 
-The third Message Hikari outing. She is late on purpose and gives him a reason
-to accept before he can refuse: she needs to let something out tonight. She
-frames it as stress relief and as something to do *with him*, not as a
-performance. Beats:
+The third Message Hikari outing. She has to stay after seminar to finish
+something and gives him a reason to accept before he can refuse: she needs to
+let something out tonight. She frames it as stress relief and as something to do
+*with him*, not as a performance. Beats:
 
-1. Text hook: "I hope you like singing. Or — better — that you like letting
-   things out." He is shy; she says that is why she asked him and not somebody
-   else: "You can be shy in a room with me."
+1. Text hook: "I hope you like singing. Or, better, that you like letting things
+   out. I need to let something out tonight." He is shy; she says that is why she
+   asked him and not somebody else: "You can be shy in a room with me."
 2. Outside Kuru Fuku Neko (来る福猫 — "the cat that brings luck when it comes"):
    karaoke is a private room rented by the hour, not a stage. Cost by the hour
    plus drinks, or 飲み放題 / nomihōdai for a fixed-price flow. Costumes (cat

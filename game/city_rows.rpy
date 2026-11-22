@@ -231,7 +231,7 @@ label city_row_combini:
     play sound "audio/SFX/combini.mp3"
 
     if not tanaka_met:
-        call combini_first_counter
+        call combini_first_counter from _call_combini_first_counter
     else:
         scene bg_combini with walk_fade
         "The door chimes twice going in. Tanaka is at the register, doing three things at once."
@@ -338,58 +338,28 @@ label combini_first_counter:
     $ tanaka_met = True
     $ combini_poster_seen = True
     $ combini_job_unlocked = True
+    # The combini has its own introduction: the first counter visit on Day 8.
+    # Unlock its city row here so the hub opens it up without waiting for a
+    # Hikari tour (combini is not one of her tour destinations).
+    $ unlock_hikari_tour_destination("combini")
 
     "I take the snack and go outside. The door chimes once going out."
     "I look back through the glass. A handwritten card is taped to the window at eye height."
-    "Evenings. Two shifts. Ask for the manager."
+    "Afternoons. Two shifts. Ask for the manager."
     mc "(No Japanese conversation needed beyond what just happened. I can do what just happened.)"
     mc "(I can be a person the store recognizes.)"
     return
 
 
-## The night shift lives in `game/job_combini/`: one label per teaching shift
+## The afternoon shift lives in `game/job_combini/`: one label per teaching shift
 ## (`tanaka_visit_01` ... `tanaka_visit_07`), dispatched by `tanaka_shift` from
 ## `tanaka_story`. This row only opens the door.
 
 
-label confidant_visit_fortune:
-    scene bg_fortune_stall with walk_fade
-    "I take the train back to Asakusa. The afternoon is already going orange. The crowd is thinner than it was yesterday."
-    "She is at the same folding table, between the incense burner and the souvenir stalls. She does not look surprised."
-    fortune_teller "You came back."
-    mc "You said the cards would change."
-    fortune_teller "I said you would change them. The cards are only paper."
-    "She lays two cards face down. There is no third card on the table."
-    fortune_teller "The first card is a street. The second is a corner. The third is already in your pocket."
-    mc "The omikuji."
-    fortune_teller "The paper remembers what the hand forgets."
-    "She turns over the first card. A narrow street with crepe stands and vintage shops. The crowd is a river of color."
-    fortune_teller "Harajuku. You will walk it and forget why. That is not a warning. It is what the street is for."
-    mc "And the second?"
-    "She turns over the second card. A street corner at night. A streetlight. A house that looks like every other house."
-    fortune_teller "The corner near your house. You will see me there. I will not have a table."
-    mc "What will you have?"
-    fortune_teller "The last thing I am allowed to give you."
-    "She puts the cards away. She does not offer a third question. She does not offer a price."
-    fortune_teller "One true thing, and two pieces of noise. That is the rule."
-    mc "Which is which?"
-    fortune_teller "If I told you, it would be three true things. That is not the rule."
-    "She looks at me for a long moment. The smoke from the burner drifts between us."
-    fortune_teller "The person who put you here is not the person you think."
-    fortune_teller "Beware of vending machines that do not take coins."
-    fortune_teller "The cat on the wall is not a cat."
-    mc "(One of those is true. I do not know which. I think I do. I hope I am wrong.)"
-    "She folds the table. This time I watch her hands. They are ordinary hands. They are not doing anything unusual."
-    fortune_teller "That is all three. The deck is closed."
-    mc "Will I see you again?"
-    fortune_teller "You will see me on the corner. That is not the same as seeing me again."
-    "She walks into the crowd. The table is gone. The brass bowl is gone. There is only the smoke and the sound of the temple."
-    $ confidant_visits["fortune"] = max(confidant_visits.get("fortune", 0), 3)
-    $ remember("hikari", "went back to the fortune teller alone and was told the deck was closed")
-
-    scene bg_home_exterior_night with walk_fade
-    $ night_street()
-    return
+## The Fortune Teller's arc lives in `game/confidant_visits/fortuneteller.rpy`:
+## visit 1 was the Day 13 reading in `special_day_13_asakusa.rpy`, and visits 2-7 plus
+## the corner epilogue are written there. `confidant_visit_fortune` is the
+## dispatcher `free_afternoon` routes to.
 
 
 label city_row_odaiba:
@@ -500,17 +470,22 @@ label city_row_yokohama:
 label city_row_ueno:
     $ phone_map_visit("ueno")
     scene bg_ueno with walk_fade
-    "Ueno Park in April is a picnic that the whole city has agreed to attend."
-    "Blue tarps. Cardboard. Salarymen in suits sitting on the ground with their ties loosened. A group of old men with a bottle and a radio."
-    "The blossoms are already falling. The ground is pink in the places where people have not walked."
+    if store.story_day >= 24:
+        "Ueno Park in May is a picnic that the whole city has agreed to attend."
+        "Blue tarps. Cardboard. Salarymen in suits sitting on the ground with their ties loosened. A group of old men with a bottle and a radio."
+        "The blossoms are gone. The trees are green and heavy, and the tarps are out anyway."
+    else:
+        "Ueno Park in April is a picnic that the whole city has agreed to attend."
+        "Blue tarps. Cardboard. Salarymen in suits sitting on the ground with their ties loosened. A group of old men with a bottle and a radio."
+        "The blossoms are already falling. The ground is pink in the places where people have not walked."
     mc "(Hanami. The flowers are an excuse. The sitting is the point.)"
     mc "(I know what to do with a cup now. I know not to photograph the people sleeping. I know the museum is not a door I have to open. Today, maybe I will.)"
 
     menu:
-        "Sit under the blossoms and watch.":
+        "Sit under the trees and watch.":
             "I find a patch of grass and sit. Nobody asks me to move. A man nearby is asleep with his mouth open. This time I do not raise my phone."
-            "The petals come down slowly, like the park is being paid in small coins."
-            "A week. That is all this lasts. I think that is why everybody is here."
+            "The light comes down slowly, like the park is being paid in small coins."
+            "A week. That is what the flowers get. I think that is why everybody is here."
             $ reward_attributes_once("city_ueno_watch", [("insight", "micro")], show="auto")
         "Accept the cup from the old men.":
             "One of the old men holds up a paper cup. I take it with both hands and say いただきます the way she taught me."
@@ -550,7 +525,7 @@ label city_row_ueno:
             $ reward_attributes_once("city_ueno_postcard", [("grace", "micro")], show="auto")
         "Leave before I understand anything.":
             "I walk out after twenty minutes. Understanding can wait."
-            "Outside, the blossoms are still coming down over the park that was a temple and is now everybody's."
+            "Outside, the park that was a temple is everybody's again."
             $ reward_attributes_once("city_ueno_leave", [("nerve", "micro")], show="auto")
 
     scene bg_home_exterior_night with walk_fade
@@ -599,7 +574,7 @@ label city_row_shimokitazawa:
         "Buy a used record.":
             scene bg_record_shop with walk_fade
             "The record shop is the size of a closet and smells of cardboard. I go to the third crate, because she said the good things sink."
-            "I flip through it and find a faded sleeve with a street at night on the cover."
+            "I flip through it and find a sleeve with a band I half-recognize from a train commercial."
             $ spend_money(1200)
             "The owner puts it in a paper sleeve and says something about the band. I nod. I will look them up later."
             mc "(I do not have a record player. That is a problem for future me.)"
@@ -614,7 +589,7 @@ label city_row_shimokitazawa:
             $ reward_attributes_once("city_shimokita_live", [("nerve", "micro")], show="auto")
         "Sit in a coffee shop and listen.":
             scene bg_shimokita_cafe with walk_fade
-            "The coffee shop has six seats and one table. The owner makes each cup by hand and does not ask what I want. He remembers nothing about me, which is fine."
+            "The coffee shop has six tables and a window onto the alley. The owner makes each cup by hand and does not ask what I want. He remembers the person I came with, not me, which is fine."
             "Two women at the next table are talking about a friend who moved to Osaka. A man is reading a book with a cracked spine."
             mc "(Nobody is in a hurry. Nobody is taking a photo. This is what a Tuesday feels like when it is allowed to be a Tuesday.)"
             $ reward_attributes_once("city_shimokita_coffee", [("grace", "micro")], show="auto")
@@ -675,7 +650,7 @@ label city_row_omotesando:
             mc "(Everybody is dressed for somebody. Nobody is dressed for me.)"
             $ reward_attributes_once("city_omotesando_watch", [("grace", "micro")], show="auto")
         "Check my pocket for a five-yen coin.":
-            "There is one in my wallet, under the train card. It has a hole in the middle and I have had it since the airport."
+            "There is one in my wallet, under the train card. It has a hole in the middle, and I have carried it since she told me to bring one."
             "Go-en. A connection. I still do not know who I am supposed to have one with."
             mc "(I put it in my other pocket so I do not spend it by accident.)"
             $ reward_attributes_once("city_omotesando_coin", [("insight", "micro")], show="auto")
@@ -683,7 +658,7 @@ label city_row_omotesando:
     "The shops end. The trees change. The pavement becomes gravel and the sound of the city goes out like a light."
     "The torii is exactly where I left it. I bow once, from the chest, and step to the left of the path."
     "I do it without thinking. Then I notice I did it."
-    mc "(Three months ago I would have walked straight up the middle and taken a picture.)"
+    mc "(Three weeks ago I would have walked straight up the middle and taken a picture.)"
 
     "At the basin I take a ladle in my right hand, pour over my left, then the other way, then a little into my palm."
     "I rinse my mouth and do not drink from the ladle. I tip it so the water runs down the handle and put it back."

@@ -34,17 +34,22 @@ is the revelation and the endings.
 | Act | Title | What it covers | Ends on |
 |-----|-------|----------------|---------|
 | 1 | The Arrival | The plane, Narita terminal, the travel decision, the journey home, the house, the first dream | The end of the first dream, where `morning_call` begins Act 2 |
-| 2 | The Long Middle | The opening school days, the first weekend, the free-roam hub, the seven-visit confidant stories, the midterm week | **In progress** — days 1–21 built through the midterm and its aftermath; every confidant visit is written; ends when the glitches turn structural |
-| 3 | The Glitch | The simulation leaks stop being atmospheric and start breaking the world (treatment "Escalating Mystery" stages 1–5) | *not written* |
-| 4 | The End | Hikari's revelation at the river, the three endings, the epilogue coda | *not written* |
+| 2 | The Long Middle | The opening school days, the free-roam hub, the confidant stories, and the midterm | **Built** through Day 50, the firefly outing |
+| 3 | The Glitch | Incident (Days 51-53), slow burn (Days 54-63), then investigation (Days 64-83) | **Playable through Day 69** |
+| 4 | The End | Hikari's revelation at the river, the ending routes, and the coda (Days 84-90) | **Design draft only** |
 
-The prologue content and the first two school days are built end to end, and
-the script now continues through the first weekend, the second week, the
-Asakusa / combini material, and the third week's midterm arc to Tuesday,
-April 28 (Day 21). The hub (`label free_afternoon` + `screen location_hub`) is
-wired and reached on Day 7, Day 14 and every day of week 3; the confidant visit
-labels and the city rows are written scenes, not stubs. Day 21 lands on the
-end-of-build card.
+Day 7 has a forced introduction; the free-roam hub first opens on Day 8.
+After the midterm arc, Day 21 hands off to `act2_day_router`. The hub is
+unavailable during Days 51-53, reopens for Days 54-63, and closes permanently
+on Wednesday, June 10 (Day 64). Day 64 sets `current_act` to 3 and replaces
+the free afternoon with a scripted river visit. See [the day map](act2_day_map.md)
+for the playable sequence.
+
+**Day file naming (Act 2 onward):** files in `game/days/` are named
+`special_day_NN_slug.rpy` for hand-written set pieces and `common_day_NN`
+labels inside `common_days.rpy` for routine hub days. Every day ends with
+`jump act2_day_router` once the shared router takes over; it maps `story_day` to the next day's label,
+so inserting or filling a day never requires editing the previous one.
 
 > The older numbering (Act 1 = the airport, Act 2 = the journey, Act 3 = the
 > first day) is retired, and so is the intermediate numbering that made the
@@ -266,19 +271,23 @@ of Act 2.
   `first_evening_dinner`, then `end_of_first_day`. Three different afternoons,
   one unchanged evening. None of them returns to the hub.
 - **Only one afternoon route happens.** Within each route, selected answers
-  award small gains. Ramen has Japanese recommendation and appreciation replies;
-  the run has an empathetic silence choice plus **0.5 Nerve** for completion;
-  photography has participation, observation, and practical-help replies.
+  award small gains. Ramen pays one attribute per menu choice (mostly micro,
+  with an Insight nudge for the broth question); the run has an empathetic
+  silence choice plus **0.5 Nerve** for completion; photography has
+  participation, observation, and practical-help replies.
 - `after_school_walk_alone` — he cannot use the map without reception, gets
   lost, and finds the ramen shop, which is also the demonstration
   that the shop was always findable. Contains the **Chef's first visit** in full
   (`いらっしゃい` / `あいよ` / an unexpected broth / `どうぞ` / `うまい、だろ？`),
   spends 900 yen and sets `confidant_visits["chef"] = 1`.
   Three menus cover ordering, asking about the broth, and responding to the chef.
-  The recommendation earns Nerve, the broth question earns Insight, and the
-  Japanese appreciation earns Grace. Other replies earn nothing. The route then
+  Ordering pays Nerve, Insight or Grace by approach; the broth question pays
+  Insight, 「うまい」 meaning pays Insight, and thanking him pays Grace. Asking
+  about the smoky flavour or pointing at the bottle pays nothing. The route then
   closes with an Insight award for finding the shop. The counter background
-  returns before the chef's next line.
+  returns before the chef's next line. The same first visit also exists as a
+  standalone `chef_visit_01` in `game/confidant_visits/chef.rpy` for runs that
+  skipped this route, and both are playable in the Chef arc replay.
 - `after_school_run` — the sister's arc, not a numbered confidant chain. He walks
   home with Hikari, and she does not go into the house: she walks past it and
   changes her shoes, because the run is her daily thing and he has been handed the
@@ -400,9 +409,10 @@ continuous Saturday: morning, library, the walk home, and the night meal.
   Orson's visit count to at least 1, increments `orson_affection`, logs a
   memory, unlocks his WIRE contact, and pays a Nerve micro.
 - `home_sukiyaki` — the night meal: Mother explains sukiyaki properly ("what
-  you make when the people you want to feed are the ones coming home"), the
-  family clocks that he found a bar, and the night ends upstairs with him
-  thinking about the girl at the library.
+  you make when the people you want to feed are the ones coming home"), and
+  the family clocks that he found a bar. Before bed, Tetsuo drives everyone
+  to Honki! for pudding. The trip introduces the shop, marks it on the
+  phone map, and unlocks the station branch for later hub afternoons.
 
 ### 4.9 Sunday and Monday (`label sunday_morning` → `monday_morning` → `monday_lecture` → `tuesday_morning`)
 
@@ -520,9 +530,12 @@ is the index.
 - Japanese starts plain and turns coloured as fluency rises. The `{jp}` tag and
   the `language_tag` helper handle it; at `japanese_fluency >= 5` the text is
   `#87cefa`.
-- Murakami's Japanese elective (Days 10–12, `game/days/`) raises
-  `japanese_fluency` by 1 per lesson, capped at 5. The elective is chosen at the
-  Friday fair and continues through the weekend.
+- Murakami's Japanese elective raises `japanese_fluency` by 1 per lesson,
+  capped at 5: Days 10–17 in `game/days/` (fair, Jimbocho, old city, week two,
+  sound words) plus every office-hours visit in
+  `game/confidant_visits/murakami.rpy`. Day 10 is only the meeting; the choice
+  to enroll is the player's, on the night of Day 12 (`murakami_enrolled`),
+  with Murakami's daily ping offering a retry if he waits.
 - Hiragana and katakana are used freely; Kanji only where the font group covers it.
 - **The font has holes.** Kanji come from Kiwi Maru and everything else from
   mini-wakuwaku-maru (`game/gui.rpy`). Both accept a character they have no
@@ -553,7 +566,14 @@ is the index.
 
 ### 5.3 Money and the Bag
 - Money is the everyday resource: fares, food, a book from a stall. Starts at
-  ¥30,000 and only ever goes down through `spend_money()`.
+  ¥30,000. `spend_money()` handles chosen purchases; `pay_transit()` silently
+  removes ¥700 every day from Day 2 onward in the shared `day_transition` label.
+- The wallet has a sustain floor of ¥5,000, not a fail state. Below it, paid
+  outings drop out of the hub and the one-time line is "I don't have enough to
+  get by the day. I should take that shift." Work and the free walks stay open.
+  With ¥4,800 a shift and the job unlocked on Day 8, even a taxi arrival (¥17,600
+  on Day 1) still has ¥7,500 on Day 8; the floor cannot fire before the job
+  exists. A frugal train arrival first feels it around Day 35.
 - The cash indicator is hidden from the main overlay and visible only in the Bag.
 - The Bag is an RPG-style grid with a fixed description panel and per-item action
   verbs (`item_use_label(item)`, e.g. "Open" for the pamphlet).
@@ -646,10 +666,11 @@ fanning out into unmanageable branches. The bookkeeping and the screen live in
   day scene `call`s it after lunch; `None` from the screen means the
   afternoon was left unspent and the day continues. The first-afternoon fork
   (§4.6) stays hand-written dialogue because Hikari is asking the question
-  there — that is deliberate, not an oversight. The hub opens on Day 8; Day 7
-  (`tuesday_morning` → `tuesday_lecture`) is forced to the last first-week
-  confidant before `free_afternoon` begins, and every later hub day is this
-  shape with different content.
+  there — that is deliberate, not an oversight. The hub opens on Day 9; Day 8
+  (`wednesday_morning`) is a linear day whose afternoon is the combini
+  discovery, Day 7 (`tuesday_morning` → `tuesday_lecture`) is forced to the
+  last first-week confidant before `free_afternoon` begins, and every later
+  hub day is this shape with different content.
 
 #### Hikari's run chain (inside the hub)
 
@@ -677,22 +698,38 @@ five); visits 6–7 are written and wait for Act 3.
 
 `hub_destination_order()` in `locations.rpy` is now the single source of the
 hub list: the five confidants, the Fortune Teller once `fortune_arc_started`,
-the two walks, then the city rows. The night-shift row is filtered out until
-`combini_job_unlocked`.
+the two walks, then the city rows, then the job rows. The job row is filtered
+out until `combini_job_unlocked`. (The Fortune Teller is not a city row: she
+joins the people list once `fortune_arc_started`.)
 
 - **City rows** are not confidant arcs: no visits, no cap, no closure. The
   current list is `library`, `river`, `harajuku`, `karaoke`, `night_market`,
   `combini`, `odaiba`, `yokohama`, `ueno`, `shibuya`, `shimokitazawa`,
-  `omotesando`, and the conditional `tanaka` job. Each carries one cultural
+  `omotesando`. Each carries one cultural
   moment and a choice that does not have to pay; `last_afternoon_place` is the
   only state the evening reads.
-- **The Fortune Teller** is a three-card exception. `confidant_visits["fortune"]`
-  counts her readings, `confidant_visit_totals["fortune"] = 3`, and
-  `confidant_visit_fortune` turns cards two and three in one scene and then
-  closes the row. She is deliberately absent from `confidant_order`, so
-  `all_confidants_met()` and the five original arcs never depend on her.
+- **Job rows** (`job_order`) get their own JOBS section in the hub list,
+  separate from THE CITY: work is not wandering. Today it holds only
+  `tanaka`, shown as "Convenience Store" once `combini_job_unlocked`.
+- **The Fortune Teller** is a seven-visit confidant with one deliberate
+  exception: she is not in `confidant_order`, because she is met on Day 13 —
+  after the introduction gate opens — and requiring her would strand every
+  confidant revisit until then. She is still in `confidant_visits`, gets the
+  same cap and epilogue treatment (`confidant_visit_totals["fortune"] = 8`,
+  and `destination_state()` gives her the epilogue state at visit 7), and is
+  unlocked in WIRE on Day 13. Visit 1 is the Day 13 reading itself; visits
+  2–7 and the corner epilogue live in `game/confidant_visits/fortune.rpy`,
+  dispatched by `confidant_visit_fortune` from `free_afternoon`. Her arc is
+  meta on purpose: she reads the "pages" — the script itself — and comments
+  on choices before they are made, ending on the corner she promised in
+  visit 2.
 - **Tanaka and the combini job.** `combini_first_counter` is the first-visit
-  Q&A and sets `combini_job_unlocked`. The shift itself is structured like a
+  Q&A and sets `combini_job_unlocked`. It is no longer hub-gated: Day 8
+  (`wednesday_morning`) is a linear day whose afternoon is the discovery — he
+  finds the combini on his own, sees the HELP WANTED card, and goes in. The
+  `not tanaka_met` guards in `city_row_combini` and Day 13's Asakusa stop
+  remain as fallbacks for runs that somehow met him first (arc replay). The
+  shift itself is structured like a
   confidant arc: `label tanaka_shift` in `game/job_combini/tanaka_job.rpy` is a
   dispatcher that reads `tanaka_story` and jumps to one file per teaching
   shift, `tanaka_visit_01.rpy` … `tanaka_visit_07.rpy` — the register, the
@@ -755,7 +792,7 @@ what makes them textable.
 and one place to say which weekdays a destination is open.
 
 - **The anchor is fixed.** Day 1 is Wednesday, April 8; Day 2 is Thursday,
-  April 9; and the built story runs through Tuesday, April 28 (Day 21). Every day
+  April 9; and the built story runs through Monday, June 15 (Day 69). Every day
   label pins its absolute day at the top with `set_story_day()`, so a branch or
   a rollback cannot leave the calendar a day behind. The full date table lives
   in `documentation/calendar.md`.
@@ -850,7 +887,8 @@ or nightmare — so the calendar move is never lost to a missing dream.
 | `player_name` | name entry | Every line of his own; the name the family uses |
 | `money` | `start`, `spend_money()` | The wallet |
 | `inventory` | `start`, `add_item()` | The Bag |
-| `japanese_fluency` | initialised in `start`; raised by Murakami's elective (Days 10–12) | Colour and comprehension of Japanese; `{jp}` text turns `#87cefa` at 5 |
+| `japanese_fluency` | initialised in `start`; +1 per Murakami lesson (Days 10–17) and per office-hours visit, cap 5 | Colour and comprehension of Japanese; `{jp}` text turns `#87cefa` at 5 |
+| `murakami_enrolled` | the Day 12 night choice, or Murakami's enrollment text if he waits | Drives the WIRE meter and enrollment dialogue; the hub row opens on the Day 10 meeting instead; office-hours reminders start once set |
 | `travel_method` | `travel_choice` | Taxi vs train downstream (`home_arrival`, `dream_router`) |
 | `boarded_shinkansen` | `train_platform` | Express vs local |
 | `arrived_late` | train route | Which `home_arrival` opening plays |
@@ -920,30 +958,15 @@ These exist in `game_concept.md` and in the character files, but there is **no
 scene for them yet**. They are listed here so nobody goes looking for a label
 that does not exist.
 
-- **Act 3 and Act 4**: the glitch era and the endgame. The revelation (the
-  facility), the three endings (Escape / Blue Pill / Failure), and the
-  epilogue coda all live there. See `story_treatment.md` and `plan.md`.
-- **The day loop after the current build.** `free_afternoon` and the
-  `confidant_visit_*` labels exist (§5.7). The playable story now runs through
-  Tuesday, April 28 (Day 21), after the midterm week, and lands on the
-  end-of-build card (`end_of_build`), so the repeating day is not missing the terminal path;
-  it is simply still unwritten. A repeating day (morning → lecture → hub →
-  night) remains the missing skeleton.
-- **The confidant locations beyond their first visit.** All five confidants
-  now have their **first** visit in the script (§4.6, §4.7, §4.8): Chef, Sim
-  and Aya on their first afternoons, Hana and Orson on the Saturday. Their
-  later visits are written in `game/confidant_visits/chef.rpy`, `sim.rpy`, `aya.rpy`,
-  `hana.rpy`, and `orson.rpy`; the Act 2 cap makes visits 2–5 reachable and
-  visits 6–7 wait for Act 3.
-- **The later hub days that reach Hikari's remaining runs.** Visits 3–7 are
-  written in `game/confidant_visits/hikari.rpy` and wired through `confidant_visit_hikari`. The
-  Days 7–14 build reaches visits 2–5 (the Act 2 cap); visits 6–7 wait for Act 3.
-  The repeating day loop that carries the player through the rest of Act 2 is
-  still future work, not the run scenes themselves.
+- **The rest of Act 3 proper.** The build lands on `end_of_build` after Day 69.
+  Later scenes are scripted days, not an extension of the hub loop.
+- **Act 4.** The revelation, the facility, the ending routes, and the coda
+  are not playable. See [the Act 4 skeleton](act4_skeleton.md) for the
+  proposed sequence and decisions still open.
 - **The photography club's camera.** The first visit is built around arriving with
-  nothing to shoot (§4.6). The seven-interaction outline assumes a "beginner's
-  camera" by the third visit, so the camera still has to be acquired somewhere
-  between the first visit and the third.
+  nothing to shoot (§4.6). Circle hands over the camera at the end of that first
+  session, in both the Day 2 route and the standalone `sim_visit_01`; the phone
+  is what he actually shoots with until then.
 - **The fortune teller, and the city locations.** Asakusa, Harajuku, Odaiba,
   Yokohama Chinatown, Ueno, Shibuya, Shimokitazawa, and Omotesando / Meiji
   Shrine are playable city rows (§5.7, `game/city_rows.rpy`). The Fortune
@@ -962,8 +985,9 @@ that does not exist.
   `bg_or_placeholder(...)` prints its own name on screen until the asset arrives.
   The older Act 2 placeholders are the **ramen shop** (`bg_ramen.png`,
   `bg_ramen_empty.png`) and the **photography club room** (`bg_photo_club.png`).
-  The 2026-11-12 rows add `bg_fortune_stall`, `bg_combini`, `bg_odaiba`,
-  `bg_yokohama`, `bg_ueno`, `bg_shibuya`, `bg_shimokitazawa`, and
-  `bg_omotesando`. Drop any matching file into `images/backgrounds/` and the
-  picture takes over by itself. `screen photo_mode` also still references
+  The 2026-11-12 rows add `bg_fortune_stall` (real art now — renamed from
+  `bg_yokohama_fortune.png`), `bg_combini`, `bg_odaiba`, `bg_yokohama`,
+  `bg_ueno`, `bg_shibuya`, `bg_shimokitazawa`, and `bg_omotesando`. Drop any
+  matching file into `images/backgrounds/` and the picture takes over by
+  itself. `screen photo_mode` also still references
   `images/ui/camera_frame.png`, which does not exist, so calling it would fail.

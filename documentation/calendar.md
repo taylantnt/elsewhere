@@ -129,15 +129,15 @@ Days are `Monday = 0` through `Sunday = 6`.
 
 | Destination id | Place | Rule | Why |
 |----------------|-------|------|-----|
-| `sim` | Photography Club | Open **Thursdays only** | Sim's first text: "Next meeting is Thursday." |
+| `sim` | Photography Club | Open **Thursdays only** | Sim's first text: "Thursday. Bring the camera." |
 | `chef` | Ramen Shop | Closed **Wednesdays** | Chef's WIRE note: "Closed Wednesdays." |
 | `hana` | Reading Club | Open **Monday to Saturday** | Campus reading room; closed Sunday. |
 | `aya` | Maid Cafe | Open daily | No written closure. |
 | `orson` | Lupin's Den | Open daily | No written closure. |
 | `walk_hikari` | Walk home with Hikari | Always available | Not a scheduled place; plays the next river run when one is waiting, the first run if it was skipped, otherwise the ordinary walk. |
 | `walk_alone` | Walk home alone | Always available | Not a scheduled place. |
-| `fortune` | Asakusa: The Fortune Teller | Always available once `fortune_arc_started` | A three-card limited confidant, not a seven-visit arc. |
-| `tanaka` | Combini: Night Shift | Always available once `combini_job_unlocked` | A job row, not a confidant; shifts are tracked by `tanaka_story`. |
+| `fortune` | Asakusa: The Fortune Teller | Always available once `fortune_arc_started` | A seven-visit confidant kept out of `confidant_order` so she cannot gate the other arcs; visit 1 is the Day 13 reading, visits 2–7 and the corner epilogue live in `game/confidant_visits/fortune.rpy`. |
+| `tanaka` | Convenience Store | Always available once `combini_job_unlocked` | A job row under the hub's JOBS section, not a confidant; shifts are tracked by `tanaka_story`. |
 | city rows | Library, river, Harajuku, karaoke, night market, combini, Odaiba, Yokohama, Ueno, Shibuya, Shimokitazawa, Omotesando | No entry, so open every day | The city does not close. |
 
 Each entry has three fields:

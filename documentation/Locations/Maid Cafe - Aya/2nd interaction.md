@@ -37,18 +37,18 @@ Maid (thoughtful): “Mm… that’s true. It can feel like there’s a wall som
 
 If Choice 3:
 Maid (grinning): “Ha! You’re not the first to say that. It’s… well, it’s very real. Silly spells, short skirts, and all.”
-[She brings the dish, carefully sets it down, and leans forward with a marker.]
+[She brings the dish, carefully sets it down, and leans forward with a squeeze bottle of ketchup.]
 Maid: “Now… it’s time for your custom art again. Same request as before? Or do you trust my artistic vision today?”
 Player choice:
 “Surprise me.”
 “Same as last time, please.”
 If Choice 1:
-Maid (smiling mischievously): “Alright, but don’t complain if it looks like a… strange creature. I’m still practicing!”
+Maid (smiling mischievously): “Alright, but don’t complain if it looks like a… strange creature. I’m still practicing!” [She draws a rabbit holding a tiny train.]
 
 If Choice 2:
-Maid: “Consistency. I respect that. But next time, I’ll convince you to let me draw something fun.”
+Maid: “Consistency. I respect that. But next time, I’ll convince you to let me draw something fun.” [She draws the kitty again, a little neater than last time.]
 
-[She doodles quickly on the omurice, then sits back with a satisfied nod.]
+[She doodles quickly on the omurice in ketchup, then sits back with a satisfied nod.]
 Maid: “Perfect! Now— we must complete the ritual together. Ready?”
 Maid & Player (together, chanting):「もえもえ…きゅん！」 (Moe moe… kyun!)
 [After you’ve eaten, she returns to clear the table.]

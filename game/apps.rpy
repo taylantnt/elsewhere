@@ -28,6 +28,15 @@ init python:
     # pins both read from this one table.
     phone_map_locations = [
         {
+            "id": "honki",
+            "name": "Honki!",
+            "area": "Station Branch",
+            "summary": "A 24-hour discount market with groceries, stationery, and household goods.",
+            "note": "The branch by the station. Father drove us to the big one for four puddings.",
+            "image": "images/backgrounds/bg_honki_outside_dusk.png",
+            "position": (196, 118),
+        },
+        {
             "id": "school",
             "name": "University Campus",
             "area": "Bunkyo",
@@ -265,6 +274,7 @@ default phone_apps_inventory_item = None
 default phone_apps_inventory_open = False
 default phone_apps_backup_mode = None
 default phone_apps_settings_tab = "general"
+default phone_apps_journal_tab = "journal"
 default phone_apps_map_location = None
 default phone_apps_more_open = False
 default phone_apps_more_return_page = None
@@ -287,6 +297,7 @@ label _phone_apps_open:
     $ phone_apps_inventory_open = False
     $ phone_apps_backup_mode = None
     $ phone_apps_settings_tab = "general"
+    $ phone_apps_journal_tab = "journal"
     $ phone_apps_map_location = None
     $ phone_apps_more_open = False
     $ phone_apps_more_return_page = None
@@ -515,7 +526,7 @@ screen phone_app_maps_contents():
 screen phone_app_map_list():
     $ map_width = gui.scale(menu_phone_content_w)
     $ map_visited = [place for place in phone_map_locations if phone_map_is_visited(place["id"])]
-    $ map_unvisited = [place for place in phone_map_locations if not phone_map_is_visited(place["id"]) and place["id"] not in ("photo_club", "ramen_shop")]
+    $ map_unvisited = [place for place in phone_map_locations if not phone_map_is_visited(place["id"]) and place["id"] not in ("photo_club", "ramen_shop", "honki")]
     $ map_tip = GetTooltip()
 
     fixed:
@@ -843,49 +854,99 @@ screen phone_app_map_detail(location_id):
 
 screen phone_app_journal_contents():
     predict False
-    viewport:
-        xfill True
-        yfill True
-        mousewheel True
-        draggable True
-        pagekeys True
-        yinitial 1.0
-        style_prefix "phone_apps"
-        scrollbars "vertical"
-        vbox:
-            spacing gui.scale(10)
-            text "RECENT MOMENTS":
-                size gui.scale(12)
-                kerning gui.scale(2)
-                color "#71808b"
-                outlines []
+    vbox:
+        spacing gui.scale(8)
+        hbox:
+            xfill True
+            textbutton "JOURNAL":
+                style "phone_small_button"
+                text_color ("#e7c08d" if phone_apps_journal_tab == "journal" else "#aab4bb")
+                action [SetVariable("phone_apps_journal_tab", "journal"), With(Dissolve(0.16))]
+            textbutton "NOTES":
+                style "phone_small_button"
+                text_color ("#e7c08d" if phone_apps_journal_tab == "notes" else "#aab4bb")
+                action [SetVariable("phone_apps_journal_tab", "notes"), With(Dissolve(0.16))]
 
-            if _history_list:
-                for entry in _history_list:
-                    vbox:
-                        xfill True
-                        spacing gui.scale(4)
+        viewport:
+            xfill True
+            ysize gui.scale(425)
+            mousewheel True
+            draggable True
+            pagekeys True
+            yinitial 1.0
+            style_prefix "phone_apps"
+            scrollbars "vertical"
+            vbox:
+                spacing gui.scale(10)
 
-                        if entry.who:
-                            text entry.who:
-                                size gui.scale(13)
-                                color (entry.who_args.get("color", "#7fc8bd"))
-                                outlines []
+                if phone_apps_journal_tab == "notes":
+                    text "THINGS I NOTICED":
+                        size gui.scale(12)
+                        kerning gui.scale(2)
+                        color "#71808b"
+                        outlines []
 
-                        $ journal_text = renpy.filter_text_tags(entry.what, allow=gui.history_allow_tags)
-                        text journal_text:
+                    # A curated list: one small true thing per common day,
+                    # written when the day ends.
+                    if notebook_lines:
+                        for day, note in notebook_lines:
+                            vbox:
+                                xfill True
+                                spacing gui.scale(4)
+
+                                text "DAY %d" % day:
+                                    size gui.scale(11)
+                                    bold True
+                                    color "#7fc8bd"
+                                    outlines []
+
+                                text note:
+                                    size gui.scale(14)
+                                    color "#d0d8dd"
+                                    xmaximum gui.scale(218)
+                                    outlines []
+
+                                add Solid("#243139") xysize (gui.scale(218), gui.scale(1))
+                    else:
+                        text "Nothing written down yet.":
                             size gui.scale(14)
-                            color "#d0d8dd"
-                            xmaximum gui.scale(218)
-                            substitute False
+                            color "#a7b5c1"
                             outlines []
 
-                        add Solid("#243139") xysize (gui.scale(218), gui.scale(1))
-            else:
-                text "There are no recorded lines yet.":
-                    size gui.scale(14)
-                    color "#a7b5c1"
-                    outlines []
+                else:
+                    text "RECENT MOMENTS":
+                        size gui.scale(12)
+                        kerning gui.scale(2)
+                        color "#71808b"
+                        outlines []
+
+                    # The full dialogue history, restored from the old Journal.
+                    if _history_list:
+                        for entry in _history_list:
+                            vbox:
+                                xfill True
+                                spacing gui.scale(4)
+
+                                if entry.who:
+                                    text entry.who:
+                                        size gui.scale(13)
+                                        color (entry.who_args.get("color", "#7fc8bd"))
+                                        outlines []
+
+                                $ journal_text = renpy.filter_text_tags(entry.what, allow=gui.history_allow_tags)
+                                text journal_text:
+                                    size gui.scale(14)
+                                    color "#d0d8dd"
+                                    xmaximum gui.scale(218)
+                                    substitute False
+                                    outlines []
+
+                                add Solid("#243139") xysize (gui.scale(218), gui.scale(1))
+                    else:
+                        text "There are no recorded lines yet.":
+                            size gui.scale(14)
+                            color "#a7b5c1"
+                            outlines []
 
 
 screen phone_app_inventory_contents(selected_item):

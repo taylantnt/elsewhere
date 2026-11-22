@@ -41,7 +41,7 @@ define story_calendar_events = {
     1: "Arrival in Tokyo",
     2: "First school day",
     3: "Second school day",
-    4: "Library errand",
+    4: "Library errand and late-night shopping",
     5: "Hikari's practice quiz",
     6: "The haiku quiz",
     7: "The first hub afternoon",
@@ -53,12 +53,47 @@ define story_calendar_events = {
     13: "Asakusa with Hikari",
     14: "The second week",
     15: "The midterm gets a shape",
-    16: "The vending machine shrine",
+    16: "Mitate in class",
     17: "The house speaks Japanese",
     18: "The neighbourhood matsuri",
     19: "The mock exam",
     20: "The midterm",
     21: "Two words in red",
+    22: "See me",
+    23: "Umbrellas and distance",
+    24: "The week before the holiday",
+    25: "The sorting",
+    26: "Nakameguro: the last blossoms",
+    27: "A family day",
+    28: "The last night of the holiday",
+    29: "School returns",
+    30: "The slurp",
+    31: "The queue",
+    32: "The card",
+    33: "An absence",
+    34: "The machine",
+    35: "The coffee shop",
+    36: "The gap",
+    37: "The curtain",
+    38: "The last train",
+    39: "The cloth",
+    40: "The song",
+    41: "The leak",
+    42: "The water",
+    43: "The paw",
+    44: "The button",
+    45: "The lost thing",
+    46: "The market before dawn",
+    47: "The Buddha and the little green train",
+    48: "The bathhouse on the corner",
+    49: "The season of wet flowers",
+    50: "The lights that do not last",
+    64: "The rail",
+    65: "The answer",
+    66: "The notice",
+    67: "The lot",
+    68: "The detail",
+    69: "The copy",
 }
 
 ## Weekly opening rules, Monday = 0 through Sunday = 6.
@@ -70,10 +105,13 @@ define story_calendar_events = {
 ##
 ## Canon already in the script:
 ##   * Chef's WIRE note: "Closed Wednesdays."
-##   * Sim's first text: "Next meeting is Thursday."
+##   * Sim's first text: "Thursday. Bring the camera."
 ## Hana's reading room keeps campus hours; Aya's cafe and Orson's bar have no
 ## written closure, so they are open every day.
 define destination_schedules = {
+    "honki": {
+        "hours": "Open 24 hours",
+    },
     "sim": {
         "open_days": (3,),
         "hours": "Thursdays",
@@ -557,7 +595,11 @@ screen phone_app_calendar_contents():
                     color "#71808b"
                     outlines []
 
-                for place in confidant_order:
+                # Murakami is a confidant with no ending but not in
+                # confidant_order. Show her once the Day 10 fair has introduced
+                # her, using the same hours rules as everyone else (she has no
+                # schedule row, so she is simply always open).
+                for place in confidant_order + (["murakami"] if "murakami" in wire_unlocked else []):
                     $ place_open = destination_is_open(place, calendar_weekday)
                     $ place_note = destination_schedule_note(place, calendar_weekday)
 

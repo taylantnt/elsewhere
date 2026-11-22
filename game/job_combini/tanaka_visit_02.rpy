@@ -7,10 +7,10 @@
 ## keeps ordering him around is always the same man.
 
 label tanaka_visit_02:
-    call tanaka_common_open
+    call tanaka_common_open from _call_tanaka_common_open_2
 
-    "Tonight there is no register. There is a cart."
-    tanaka "The delivery comes at five. You have been standing in front of what it became. Tonight you see what it was."
+    "Today there is no register. There is a cart."
+    tanaka "The delivery comes at two. You have been standing in front of what it became. This afternoon you see what it was."
     "The back door is a rolling shutter. Behind it is a cage of cardboard, and the cardboard is the store in pieces."
     tanaka "New stock does not go where there is room. It goes where the store wants it."
     mc "The store wants things?"
@@ -29,6 +29,7 @@ label tanaka_visit_02:
             "Tanaka walks the aisle once. He fixes one label. Then he nods."
             tanaka "Tomorrow it will be wrong again. That is the job. Not the fixing. The doing it again."
             mc "(I could do that every day. I think that is what he is saying.)"
+            mc "(He never says who decides where the store wants things. He only says it like somebody told him.)"
             $ reward_attributes_once("tanaka_v2_labels", [("grace", "micro")], show="auto")
         "Ask what the store is for.":
             mc "Why does it matter? It is a combini. People come in, they grab, they go."
@@ -46,7 +47,7 @@ label tanaka_visit_02:
     mc "(He is not my boss. He is just the man who is always here. And he keeps ordering me around like the store is his.)"
     mc "(Maybe the manager should say something about that. Whoever the manager is.)"
 
-    call tanaka_wage_close
+    call tanaka_wage_close from _call_tanaka_wage_close_2
 
     tanaka "Why do you want this job?"
     mc "Money."
@@ -54,5 +55,5 @@ label tanaka_visit_02:
     mc "Is that all?"
     tanaka "That is enough. A job is a thing you make every day. The rest is a story you tell about it."
 
-    call tanaka_night
+    call tanaka_walk_home from _call_tanaka_walk_home_2
     return

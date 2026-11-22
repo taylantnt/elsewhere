@@ -15,7 +15,7 @@
 ##
 ## What Tanaka is: the tencho. The store manager. He never says so until visit
 ## 6, and the protagonist spends five visits assuming the manager is somebody
-## else, because a manager who spends his evenings telling a part-timer where
+## else, because a manager who spends his afternoons telling a part-timer where
 ## the daikon goes does not fit the word.
 ##
 ## After visit 7 the job keeps repeating (`tanaka_visit_repeat`): the same four
@@ -65,10 +65,11 @@ label tanaka_wage_close:
         $ wire_unlock("tanaka")
     return
 
-label tanaka_night:
-    scene bg_home_exterior_night with walk_fade
-    "The street is dark and wet. The combini light stays on behind me, the way it will stay on all night."
-    $ night_street()
+label tanaka_walk_home:
+    scene bg_river_dusk with walk_fade
+    stop music fadeout 1.5
+    "The sky over the canal has gone amber. Shop windows and streetlamps come on in the same order, each one handing the light to the next."
+    "The combini is a bright square behind me, already part of the street. The four hours stay in my hands a little longer, then drain away on the walk home."
     return
 
 
@@ -80,7 +81,7 @@ label tanaka_night:
 ## point: a job is the day you make twice.
 
 label tanaka_visit_repeat:
-    call tanaka_common_open
+    call tanaka_common_open from _call_tanaka_common_open
 
     "Tanaka is already there, counting the drawer. He hands me my shirt without looking up."
     tanaka "You know the job."
@@ -100,9 +101,11 @@ label tanaka_visit_repeat:
             mc "(The store is a machine. He is the part that decides which part matters.)"
             $ reward_attributes_once("tanaka_repeat_watch", [("nerve", "micro")], show="auto")
 
-    call tanaka_wage_close
+    call tanaka_wage_close from _call_tanaka_wage_close
+    mc "(The lessons stop. The shifts do not. I think that is the whole thing he was trying to teach.)"
+    mc "(Somewhere there is another shift in a room I cannot remember. I keep thinking he is working that one too.)"
     tanaka "Same time next shift."
     mc "Same time."
     tanaka "Good. A store is a thing that is open. Everything else is decoration."
-    call tanaka_night
+    call tanaka_walk_home from _call_tanaka_walk_home
     return

@@ -1,6 +1,6 @@
 [Rain outside. The club room feels smaller and warmer for it — coats over chair backs, umbrellas leaning by the door. The window is a blur of grey light. Everyone reads a little slower on days like this.]
 
-[Narration]: Three weeks now. The book I returned is hers again. I keep thinking about the dedication inside the cover — allowed to be small. I still haven't figured out how to say thank you in a way she'd let me finish.
+[Narration]: A few days now. The book I returned is hers again. I keep thinking about the dedication inside the cover — allowed to be small. I still haven't figured out how to say thank you in a way she'd let me finish.
 
 [I'm actually reading this time. Deep enough that I don't notice her until she's already there.]
 
@@ -26,7 +26,7 @@ Student: "She does that. Every few weeks, some new person, some new half-word. T
 
 [I stare at the side door.]
 
-[Narration]: Almost. She almost said something. That has to mean something, right? You don't try four times with someone you want to forget.
+[Narration]: Almost. She almost said something. That has to mean something, right? You don't keep trying with someone you want to forget.
 
 [The hour ends. I pack up slowly. As I reach for my coat, I notice something on the floor by my chair — a thin corner of paper, half-tucked under the leg of the table. I pull it free.]
 

@@ -17,7 +17,7 @@ MONOLOGUE - black screen[
   },
   {
 	"speaker": "",
-	"text": "It doesn’t feel real yet. The signs, the announcements, the air—it’s all so different."
+	"text": "It doesn’t feel real yet. The signs, the announcements, the air. It’s all so different."
   },
   {
 	"speaker": "",

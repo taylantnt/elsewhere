@@ -45,14 +45,17 @@ the miss.
 | Monday, April 20 (Day 13) | The city as a text; Asakusa with Hikari; the Fortune Teller's first reading. |
 | Tuesday, April 21 (Day 14) | The city as a conversation; one free afternoon (the first reachable hub day after the expansion). |
 | Wednesday, April 22 (Day 15) | The midterm is announced: written, practical and a map from memory. 予習 (yoshuu, preview) vs 復習 (fukushuu, review). The exam plum. |
-| Thursday, April 23 (Day 16) | Circle at the photo club; 見立て (mitate), seeing one thing as another; a figure in the vending machine reflection. |
+| Thursday, April 23 (Day 16) | In class, the professor teaches 見立て (mitate), seeing one thing as another; a white-coated figure appears in a classroom/corridor reflection; the afternoon is the hub. |
 | Friday, April 24 (Day 17) | Murakami on 擬音語 (giongo) and 擬態語 (gitaigo); the house has been speaking Japanese since Day 8. He writes カチ (kachi). |
-| Saturday, April 25 (Day 18) | The neighbourhood matsuri: happi coats, yakitori, kingyo sukui, the mikoshi, Father on the rope, the white mask. |
+| Saturday, April 25 (Day 18) | A free afternoon via the hub, then the neighbourhood matsuri in the evening: happi coats, yakitori, kingyo sukui, the goldfish Mister Plum, the mikoshi with Father on the rope, the white mask. |
 | Sunday, April 26 (Day 19) | The mock exam he writes and Hikari answers; できる (dekiru) vs わかる (wakaru); a fourth question in his own handwriting. |
-| Monday, April 27 (Day 20) | **The midterm.** Three parts: written, practical at the combini, and the map. The fourth question appears on the paper; the professor writes "See me." in red. |
+| Monday, April 27 (Day 20) | **The midterm** in the morning and class: three parts, written, practical at the combini, and the map; the fourth question appears on the paper and the professor writes "See me." in red; a free afternoon via the hub follows before dinner. |
 | Tuesday, April 28 (Day 21) | Results: he passed, the map was the best in the class, and the professor asks about the corridor. End of the current build. |
 | Act 2, late | The wider exam period — later exams, optional `run_quiz` sets, results echoing in later dialogue. |
 | Act 3 | No classes — the world is breaking. (Deliberate contrast.) |
+
+The midterm week keeps the same beats as earlier hub days: morning, class, a
+free afternoon via `free_afternoon`, dinner, night.
 
 The first quiz sits at the end of the haiku unit, in the second week of Act 2.
 The wider exam period is undecided; mid-to-late Act 2 is the right window

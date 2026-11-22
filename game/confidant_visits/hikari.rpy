@@ -15,10 +15,11 @@
 ## ordinary walk home (`afternoon_walk_hikari`), so the place never runs out of
 ## something to do.
 ##
-## The seven beats are the ones in story_treatment.md, "The Run Becomes
-## Recurring": the route, the evening he keeps up, the night neither of them
-## says anything, the rain, the night she asks him to run somewhere that is not
-## home, and the last run. The arc ends on her question, not on an answer.
+## The six beats in this file are beats 2-7 of the seven in story_treatment.md,
+## "The Run Becomes Recurring" (the first run lives in script.rpy): the route,
+## the evening he keeps up, the night neither of them says anything, the rain,
+## the night she asks him to run somewhere that is not home, and the last run.
+## The arc ends on her question, not on an answer.
 ##
 ## Reward rule: every answered choice pays one attribute at micro size, one
 ## option per attribute per menu, and each run closes with a rotating micro
@@ -75,7 +76,7 @@ label hikari_visit_02:
     hikari "Four minutes."
     mc "You didn't time me."
     hikari "I always time you."
-    mc "(That is either affection or a warning. With her it is usually both.)"
+    mc "(She keeps time for me. I decide not to find out what that means.)"
 
     scene bg_river with walk_fade
     "The river path is the same as it was the first time. The same fence, the same trees, the same vending machines lit like aquariums."
@@ -150,29 +151,29 @@ label hikari_visit_02:
 
     $ hikari_visits = max(hikari_visits, 2)
     $ add_affection("sister", 1)
-    $ remember("hikari", "showed him her river route and admitted she needs it, not just likes it")
+    $ log_memory("hikari", "showed him her river route and admitted she needs it, not just likes it")
     $ queue_message("hikari", "The route is not the point. The point is that I know it without looking. Don't ask me why that bothers me.", day="yesterday")
     $ reward_attributes_once("hikari_visit_02_close", [("grace", "micro")], show="card")
 
     # The first job, as Hikari steers it. Not a push. A fact she has already
-    # placed. The convenience store next to the ramen shop is hiring; the
-    # tissue handing out is today's campaign. He does not need good Japanese.
-    hikari "You keep saying you need a job."
+    # placed. The convenience store next to the ramen shop is hiring; the card
+    # in its window says afternoons and two shifts. He does not need good Japanese.
+    hikari "You said you needed a job."
     mc "I meant it. I meant it the way I meant the ramen plan."
     hikari "Then I'm not going to stop you from meaning it."
     mc "You make it sound like you already know which one I'd choose."
     hikari "I know the one I would choose. There's a convenience store next to the ramen shop that's hiring."
     mc "The ramen shop is closed on Wednesdays."
-    hikari "This one is open. They're handing out tissues today - little white packets with the shop's mark on them, one per street. Real campaign. Small. Stupid. Perfect."
-    mc "A job that is handing out tissues."
+    hikari "This one is open. Afternoons. Ask for the manager."
+    mc "Standing in a store all afternoon."
     hikari "A job that is being a person in public. You don't need good Japanese. The customers are mostly foreign like you, and the rest are just tired. The pay is good. And the city pays you for standing. That's the part nobody puts on the flyer."
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
     "At the house gate she stops with her key in her hand."
-    hikari "Same time next week?"
-    mc "Same time next week."
-    hikari "Good. I'll be there."
+    hikari "Same time next time?"
+    mc "Same time next time."
+    hikari "Good. I'll be there. I always am."
     "She goes inside. The kitchen light is on. I stand at the gate for a moment longer than I need to."
     $ hikari_run = False
     return
@@ -198,7 +199,7 @@ label hikari_visit_03:
     hikari "I used it to be ready to leave. The running is incidental."
     mc "(She says it like a joke. I am starting to hear the difference between her jokes and the things she means.)"
 
-    "We do not go home. She takes the path from the school directly to the river, and it is shorter than the way I know, and I do not ask how she found it."
+    "We do not go home. I came in my running clothes; she takes the path from the school directly to the river, and it is shorter than the way I know, and I do not ask how she found it."
 
     scene bg_river with walk_fade
     "She sets a faster pace tonight. Not by much. Just enough that I have to decide whether to say something."
@@ -269,8 +270,8 @@ label hikari_visit_03:
 
     $ hikari_visits = max(hikari_visits, 3)
     $ add_affection("sister", 1)
-    $ remember("hikari", "kept up with her for ten minutes and saw the face she makes when she is not performing")
-    $ queue_message("hikari", "You kept up. I didn't think anyone would. I don't know what to do with that. Give me a week.", day="yesterday")
+    $ log_memory("hikari", "kept up with her for ten minutes and saw the face she makes when she is not performing")
+    $ queue_message("hikari", "I didn't think anyone would stay. I still don't know what to do with it. Give me a week.", day="yesterday")
     $ reward_attributes_once("hikari_visit_03_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -304,7 +305,7 @@ label hikari_visit_04:
     scene bg_home_exterior_day with walk_fade
     "At the house she changes without a word. I change without a word. We meet in the yard."
     $ hikari_run = True
-    "She does not time me. I do not ask why."
+    "Tonight she does not time me. She usually does. I do not ask why."
 
     scene bg_river_night with walk_fade
     "The run is quiet. Our footsteps find the same rhythm without either of us trying."
@@ -382,7 +383,7 @@ label hikari_visit_04:
 
     $ hikari_visits = max(hikari_visits, 4)
     $ add_affection("sister", 1)
-    $ remember("hikari", "sat with him in silence on the bridge and admitted she does not know where the performance ends")
+    $ log_memory("hikari", "sat with him in silence on the bridge and admitted she does not know where the performance ends")
     $ queue_message("hikari", "I meant what I said. I don't say that often. Don't make it weird.", day="yesterday")
     $ reward_attributes_once("hikari_visit_04_close", [("nerve", "micro")], show="card")
 
@@ -404,7 +405,7 @@ label hikari_visit_05:
     play music "audio/Music/(shibuya night?) rain_at_the_crossing.mp3" fadein 2.0
 
     scene bg_school_gate with walk_fade
-    "She is already in running clothes when I reach the gate. So am I. Neither of us mentions it."
+    "She is already in running clothes when I reach the gate. So am I. She has changed at school again. Neither of us mentions it."
     "The rain starts before we reach the river. She does not turn back. Neither do I."
 
     scene bg_river_night with walk_fade
@@ -488,7 +489,7 @@ label hikari_visit_05:
 
     $ hikari_visits = max(hikari_visits, 5)
     $ add_affection("sister", 2)
-    $ remember("hikari", "told him the amado sounds wrong and asked if the street looked right")
+    $ remember("hikari", "said the amado sounded wrong and asked whether the street looked right to him", "hikari_amado_street")
     $ queue_message("hikari", "The amado. He closes it left side first. Every night. I don't know why I noticed. I don't know why I can't stop noticing.", day="yesterday")
     $ reward_attributes_once("hikari_visit_05_close", [("grace", "micro")], show="card")
     $ hikari_run = False
@@ -514,7 +515,7 @@ label hikari_visit_06:
     hikari "Not home."
     mc "I can see that."
     hikari "Good."
-    "She turns and walks. I follow. I changed before I came. Her message said not home and nothing else, which was enough."
+    "She turns and walks. I follow. I changed before I came. She had said not home and nothing else, which was enough."
 
     scene bg_river_night with walk_fade
     "She takes a turn I have never seen her take. The path narrows. The houses fall away. The river widens."
@@ -592,14 +593,14 @@ label hikari_visit_06:
 
     $ hikari_visits = max(hikari_visits, 6)
     $ add_affection("sister", 1)
-    $ remember("hikari", "took him to the part of the river she keeps for herself and said the house was not what made it feel small")
+    $ log_memory("hikari", "took him to the part of the river she keeps for herself and said the house was not what made it feel small")
     $ queue_message("hikari", "I almost told you tonight. I'm sorry I didn't. I'm not sorry I brought you there.", day="yesterday")
     $ reward_attributes_once("hikari_visit_06_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
     "We walk back without talking. At the gate she stops."
-    hikari "You didn't ask again."
+    hikari "You didn't ask about the house again."
     mc "You said it wasn't the house. The rest sounded like yours to tell."
     hikari "I know."
     "She looks at the house. The porch light flickers once, then stays on."
@@ -695,19 +696,19 @@ label hikari_visit_07:
             $ reward_attributes_once("hikari_visit_07_afraid", [("insight", "micro")], show="auto")
 
     "She takes a step toward me. The railing is behind her. The water is below. The city is far away."
-    hikari "If I ever ask you to run somewhere that isn't home, say yes."
+    hikari "If I ever ask you to run somewhere I haven't taken you, say yes."
     mc "I will."
     hikari "Don't promise. Just remember."
-    "She smiles. It is the smile from the first run, the one she gave me when she said I was not unfit, just new."
+    "She smiles, quick and unguarded, the way she did at the end of the first run when she told me I had kept up."
     hikari "Race you back."
     "She runs. I do not catch her. I do not think I was supposed to."
 
     $ hikari_visits = max(hikari_visits, 7)
     $ hikari_run_finished = True
     $ add_affection("sister", 2)
-    $ remember("hikari", "asked if they had done this before and made him promise to say yes if she ever asked him to run somewhere that isn't home")
-    $ queue_message("hikari", "I meant what I said. About running somewhere that isn't home. I'm not asking yet. I'm just putting it somewhere you can find it.", day="yesterday")
-    $ reward_attributes_once("hikari_visit_07_close", [("insight", "small")], show="card")
+    $ remember("hikari", "asked if they had done this before and made him promise to say yes if she ever asks him to run somewhere she has not taken her", "hikari_threshold_promise")
+    $ queue_message("hikari", "I meant what I said. About running somewhere I haven't taken you. I'm not asking yet. I'm just putting it somewhere you can find it.", day="yesterday")
+    $ reward_attributes_once("hikari_visit_07_close", [("nerve", "small")], show="card")
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
@@ -715,7 +716,7 @@ label hikari_visit_07:
     "I stand there, breathing hard, and the river is still going one way and coming back the same way."
     mc "(She asked me if I ever feel like we've done this before.)"
     mc "(I did not know what to say. She did not expect me to.)"
-    mc "(But I keep thinking about the first run. The way she said same time next week. The way she said it like she already knew.)"
+    mc "(But I keep thinking about the first run. The way she said same time next time. The way she said it like she already knew.)"
     "The porch light flickers once. Then it stays on."
     "I go inside."
     $ hikari_run = False

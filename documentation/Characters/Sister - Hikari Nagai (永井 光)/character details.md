@@ -5,10 +5,10 @@
 | Field | Detail |
 | :--- | :--- |
 | **Role** | Host sister — and, in the real world outside the simulation, a programmer on the project |
-| **Location** | The host family home; she also appears at the Ramen Shop (Interactions 4 & 6) as translator |
+| **Location** | The host family home, the river, and the city tours she introduces |
 | **Archetype** | The Compass |
 | **Affection Variable** | `sister_affection` |
-| **Language** | Bilingual in effect — she is the protagonist's translator and therefore the bridge to every Japanese-only character |
+| **Language** | Bilingual in effect — she sets up WIRE and can explain a word when the story puts her in the room, but she is not a translator for every Japanese-only scene |
 | **Confidant Theme** | Truth, guilt, and the cost of waking up |
 | **Leaves / Closes?** | No — she is the one who stays. Her arc is about whether she helps you leave. |
 
@@ -23,14 +23,14 @@
 Hikari is the *essence* of a real-world programmer — not a deliberate avatar, but a fragment of her author that leaked into the code while the simulation was being built. That is why she is the first to sense the seams and the last to understand them. Because her essence went in accidentally, she is not fully aware of what she is: she experiences her suspicion as a private, unshakable anxiety rather than as knowledge.
 
 ## Confidant Arc
-Hikari's arc is not a numbered 1–7 chain like the location characters. It is a **gated progression** driven by `sister_affection`, and it runs *parallel* to the confidant arcs rather than ending them:
+Hikari's arc is not a numbered 1–7 chain like the location characters. It is a progression tracked by `hikari_visits`, and it runs *parallel* to the confidant arcs rather than ending them. (`sister_affection` tracks the relationship, but it is never read to gate scenes; only `hikari_visits` does.) In the shipped Act 2 build the runs move through warmth and the first stirrings of unease:
 
-| Stage | `sister_affection` | Beat |
+| Stage | `hikari_visits` | Beat |
 | :--- | :--- | :--- |
-| Warmth | 0–2 | She plays the host sister perfectly: warm, teasing, helpful. She translates for the protagonist at the Ramen Shop. |
-| Unease | 3–4 | She starts noticing things — a repeated face, a sentence she has said before, a memory that does not line up. She tests the protagonist with small questions. |
-| Small truths | 5–6 | She begins to sneak the protagonist information: a name, a date, a detail that could not exist inside the world. She never calls it a simulation. |
-| The Threshold | 7+ | She is ready to reveal what she is. The reveal itself belongs to Act 3/4; the seventh river run ends on the question that opens it. |
+| Warmth | 0–1 | She plays the host sister perfectly: warm, teasing, helpful. She set up WIRE and is the reason the protagonist can text anyone. |
+| Unease | 2–3 | She starts testing the protagonist with small questions and admits the run is something she needs. |
+| Small truths | 4–5 | She says the first true thing about the house and asks whether the street looks the same to him. **(Act 3/4 — not yet written):** a repeated face, a sentence she has said before, a memory that does not line up; a name, a date, a detail that could not exist inside the world. She never calls it a simulation. |
+| The Threshold | 6–7 | She asks whether they have done this before and asks him to remember. The reveal itself belongs to Act 3/4; the seventh river run ends on the question that opens it. |
 
 ## The River Run (Act 2)
 
@@ -38,11 +38,12 @@ The parallel arc's Act 2 spine is the recurring river run. The first run is the
 Day 2 afternoon fork (`after_school_run` in `script.rpy`); visits 2–7 live in
 `game/confidant_visits/hikari.rpy` and are routed by `confidant_visit_hikari` from the hub's
 "Walk home with Hikari" row. `hikari_visits` counts the runs and feeds the WIRE
-progress meter; `sister_affection` carries the relationship. The seven beats:
+progress meter; `sister_affection` carries the relationship but does not gate any
+scene. The seven beats:
 
 | Run | Label | Beat | What it costs her |
 | :--- | :--- | :--- | :--- |
-| 1 | `after_school_run` | He cannot keep up; she invites him anyway. | She lets someone see the thing she does for herself. |
+| 1 | `after_school_run` | He struggles; she invites him and tells him he kept up. | She lets someone see the thing she does for herself. |
 | 2 | `hikari_visit_02` | The route from memory. | She admits she needs the run, not just likes it. |
 | 3 | `hikari_visit_03` | He keeps up for ten minutes. | He sees her face when she is not performing. |
 | 4 | `hikari_visit_04` | The night neither of them says anything. | She admits she does not know where the performance ends. |
@@ -53,8 +54,8 @@ progress meter; `sister_affection` carries the relationship. The seven beats:
 The seventh run sets `hikari_run_finished = True`. The run chain does not
 resolve the Threshold; it ends on the question. After visit 7 the hub row falls
 back to the ordinary walk home (`afternoon_walk_hikari`), so she remains
-available without the run repeating. Only the second run is reachable in the
-current Day 7 build; visits 3–7 are wired for later hub days.
+available without the run repeating. Visits 2–7 are reachable from the shipped
+Day 8+ hub; after visit 7 the row falls back to the ordinary walk.
 
 ## How Her Arc Ends
 Her arc is the engine of the endgame, so it does not "close" — it forks:
@@ -63,17 +64,17 @@ Her arc is the engine of the endgame, so it does not "close" — it forks:
 - **Low affection** → she breaks under the pressure and withdraws. The protagonist wakes without a guide, and the simulation simply ends on its own terms.
 
 ## What She Symbolises in the Simulation
-She is the conscience of the project. The others leave because of ordinary human reasons; Hikari is the only one who leaves because the world itself is wrong. Her Japanese line style should stay casual and warm even when the content turns eerie.
+She is the conscience of the project. The others leave for ordinary human reasons; Hikari is the only one who tries to leave because the world itself is wrong — even though, within it, she is the one who stays. Her Japanese line style should stay casual and warm even when the content turns eerie.
 
 ## Writing Notes
-- She is the **translator device**. Whenever a Japanese-only scene needs to be understood, Hikari is the honest reason it is.
+- She is the **language bridge in principle** — she set up WIRE and can explain a word when the story puts her in the room — but she is not a walk-on translator for every Japanese scene. The Chef arc deliberately has the protagonist work things out from gesture, repetition, and the bowls in front of him.
 - Her warmth must be genuine, never sinister. The horror comes from *the reader*, not from her.
 - She is the only character who should ever say the word "real" in a way that lands.
 
 ## Signature Lines
-- "Ah… I thought I'd find you here."
-- "Tonight's different. He wanted you here."
-- "…He says eating together like this, it feels like family."
+- "You're late."
+- "The route is not the point. The point is that I know it without looking."
+- "I hear everything."
 - *(late game, quietly)* "Don't you ever feel like we've done this before?"
 
 ## Continuity Note

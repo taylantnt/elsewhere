@@ -19,6 +19,7 @@
 ## Appearance & Design
 - Maid uniform in early interactions; her own designs / hand-made details appear as her arc progresses.
 - Pink hair is her most recognisable trait — and the thing she stops hiding behind.
+- The replacement in the epilogue stays **unnamed** ("Maid" in the name box). The point is that the role is filled and the person is not. A portrait can be wired to `new_maid` later without changing any of her lines; it should read as a different girl in the same uniform, cheerfully reciting Aya's notes.
 
 ## Backstory
 Aya studied abroad briefly (Canada or Australia) and loved the freedom of it. Coming home reminded her of how much pressure there is to fit into a prescribed role. Her parents consider the café job frivolous, and she has never told them what she actually wants. She quietly tests her dreams in the margins of her life.
@@ -43,12 +44,12 @@ She chooses the unsafe thing. She leaves the café to chase her dream, and the p
 ## What She Symbolises in the Simulation
 Aya is the first argument for leaving the comfortable version of your life. Her line — *"staying here forever would've been safe, and I don't want to be safe anymore"* — is the thesis statement for the "Escape" ending.
 
-## Continuity Note (needs a decision)
-Two different dreams are on record for Aya:
-- `-Maid Cafe Progression Summary.md` describes a **singer / performer** ("dreamed of being a singer or on stage").
-- `7th interaction.md` and this profile describe **fashion / clothing design** ("Designing clothes").
-
-The Interaction 3 and 6 beats still support the performance read, so the two can be merged later (e.g. she designs costumes *for* a stage career). Until then, treat the 7th interaction as canon, since it is the written scene.
+## Continuity Note
+The performance and the clothing are the same dream, not two competing ones.
+Interactions 3 and 6 establish that she wants to sing on a stage; the sketchbook
+in Interaction 6 and her reason for leaving in Interaction 7 establish that she
+designs the clothes she would wear there. When she leaves, she is chasing both
+at once.
 
 ## Signature Lines
 - "I don't want to be safe anymore."

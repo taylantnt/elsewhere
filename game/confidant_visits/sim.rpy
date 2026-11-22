@@ -1,12 +1,12 @@
 # Defined late so type_sound (script.rpy) already exists when this runs.
 init 999 python:
-    # The four original members are still dialogue-only: no art on disk. Nami,
-    # Tapi and TT have portraits and use the same side-image system as Sim, so
-    # their image tags have to match the `image side` definitions in script.rpy.
+    # Everybody in Circle now has a portrait and uses the same side-image system
+    # as Sim, so every image tag here has to match an `image side` definition in
+    # script.rpy. Rika and Riku were the last two to get art.
     nami = Character("Nami", callback=type_sound, image="nami")
-    marco = Character("Marco", callback=type_sound)
-    rika = Character("Rika", callback=type_sound)
-    riku = Character("Riku", callback=type_sound)
+    marcus = Character("Marcus", callback=type_sound, image="marcus")
+    rika = Character("Rika", callback=type_sound, image="rika")
+    riku = Character("Riku", callback=type_sound, image="riku")
     # Tapi is a second model. TT is her boyfriend, a working photographer who
     # comes to the exhibition with a camera rather than as a club member.
     tapi = Character("Tapi", callback=type_sound, image="tapi")
@@ -58,7 +58,7 @@ label sim_common_open:
 ## invitation.
 
 label sim_visit_01:
-    call sim_common_open
+    call sim_common_open from _call_sim_common_open
 
     if not sim_campus_intro:
         "The corridor on the second floor is longer than it has any right to be."
@@ -70,20 +70,21 @@ label sim_visit_01:
 
     "The room smells of fixative and warm electronics and too much coffee. Four people are arguing in front of a whiteboard."
     sim "It is not lazy. It is just not thinking about the picture."
-    marco "It is a machine making the decision for you. That is the definition of lazy."
+    marcus "It is a machine making the decision for you. That is the definition of lazy."
     sim "It is a machine making a decision you would have made anyway, only faster. That is the definition of a tool."
     nami "You two have had this argument every week since March."
     sim "And every week I win."
-    marco "You do not win. You just talk longer."
+    marcus "You do not win. You just talk longer."
 
     "The man in the middle of it turns around. He is older than the students, with the kind of calm that comes from having been the youngest person in a room for a long time."
     sim "Ah. A guest. Or a member. It is hard to tell the difference before the first photograph."
     mc "I was in the corridor. The door was open."
     sim "The door is always open. That is the whole membership policy."
-    "He holds out a hand. His grip is dry and certain."
-    sim "Sim. I run Circle. Which is a grand way of saying I bring the coffee and lose the arguments."
-    marco "You do not lose the arguments."
-    sim "Not when I am right."
+    if not sim_campus_intro:
+        "He holds out a hand. His grip is dry and certain."
+        sim "Sim. I run Circle. Which is a grand way of saying I bring the coffee and lose the arguments."
+        marcus "You do not lose the arguments."
+        sim "Not when I am right."
     "He picks up a camera from the table and holds it out to me."
     sim "Here. Before we talk about anything, take one photograph of this room."
     mc "I don't know how to use this."
@@ -95,6 +96,7 @@ label sim_visit_01:
             sim "Something in this room that would be gone if you blinked. Not the people. The people will pose. Something else."
             mc "(I look. The light on the whiteboard. The tape on the door. The way the coffee cups are all on the same side of the table.)"
             sim "There. You found it. Now press the button."
+            "I press it, and the room keeps its secret either way."
             $ reward_attributes_once("sim_visit_01_look", [("insight", "micro")], show="auto")
         "Take the photograph without asking.":
             "I lift the camera and press the button before I can think about it."
@@ -105,6 +107,7 @@ label sim_visit_01:
             mc "Why do you run a club that's this hard to find?"
             sim "Because the people who find it are the ones who were looking. The rest would have left after one meeting anyway."
             sim "A club is not a room. It is the people who keep coming back to it."
+            "He nods at the camera in my hands. I lift it and take the photograph."
             $ reward_attributes_once("sim_visit_01_why", [("grace", "micro")], show="auto")
 
     "He takes the camera back, looks at the screen, and makes a sound that is not quite a laugh."
@@ -125,10 +128,11 @@ label sim_visit_01:
     sim "You will meet it. It is the most photographed wall in this building, and it has never once complained."
     $ sim_affection += 1
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 1)
+    $ sim_first_with_phone = False
     if sim_campus_intro:
-        $ remember("sim", "met Sim on the campus lawn and joined Circle")
+        $ log_memory("sim", "met Sim on the campus lawn and joined Circle")
     else:
-        $ remember("sim", "found Circle at the end of the second-floor corridor and photographed the tape on the door")
+        $ log_memory("sim", "found Circle at the end of the second-floor corridor and photographed the tape on the door")
     $ reward_attributes_once("sim_visit_01_close", [("grace", "micro")], show="card")
 
     # The same unlock as the Day 2 photo-club route: Circle hands him a camera.
@@ -140,13 +144,13 @@ label sim_visit_01:
 
 
 label sim_visit_02:
-    call sim_common_open
+    call sim_common_open from _call_sim_common_open_1
 
     "The room smells of fixative, warm electronics, and too much coffee."
     "My name is already known here. Somebody has put it on the board beside Thursday, in a different hand."
     "Nami is not holding a reflector. She is holding a roll of gaffer tape and trying to make it obey her."
 
-    sim "You made it. I checked the door twice in case I had imagined saying Tuesday."
+    sim "You made it. I checked the door twice in case I had imagined the whole invitation."
     mc "I only checked once. I assumed the door would tell me if I was wrong."
     sim "The door would. This door is very honest."
     nami "That was a terrible pun, Sim."
@@ -157,13 +161,13 @@ label sim_visit_02:
     sim "Camera first, introductions second. Nami, stop fighting the tape."
     nami "I am not fighting it. It is fighting the tripod."
     sim "Those are the same war from different sides."
-    "Marco is at the table with a camera he clearly believes is more serious than his expression."
-    marco "We have been arguing for ten minutes about whether autofocus is lazy."
+    "Marcus is at the table with a camera he clearly believes is more serious than his expression."
+    marcus "We have been arguing for ten minutes about whether autofocus is lazy."
     sim "It is not lazy. It is just not thinking about the picture."
-    marco "Then what is it thinking about?"
+    marcus "Then what is it thinking about?"
     sim "Batteries. Probably."
 
-    sim "You have a real camera now. Good."
+    sim "You have something to shoot with now. Good."
     sim "Today we are not making art. We are learning to hear what the machine is saying."
     sim "Full automatic is useful when the moment is moving. Manual is useful when you need to make a decision before it disappears."
     sim "Neither is better. One just puts the decision somewhere else."
@@ -192,15 +196,15 @@ label sim_visit_02:
     sim "That is what makes it useful."
     "She does not look up from the tripod, but something in her face changes at being introduced at all."
 
-    sim "Marco, at the table. He will tell you the poster matters as much as the photograph."
-    marco "Because it does. Nobody sees the photograph if the poster is ugly."
+    sim "Marcus, at the table. He will tell you the poster matters as much as the photograph."
+    marcus "Because it does. Nobody sees the photograph if the poster is ugly."
     sim "And Riku, by the window. He has been here twenty minutes without once asking to be included."
     riku "I was included. I just did not say anything."
     sim "That is a form of inclusion. It is my favourite form."
 
     "The door opens before he can get to anybody else."
     "A girl with a short dark bob and a black knit sweater comes in with two paper cups. She hands one to Nami without looking."
-    sim "And this is Tapi. She models for us when Rika is not in the room, and sometimes when she is."
+    sim "And this is Tapi, in person. She models for us when Rika is not in the room, and sometimes when she is."
     tapi "Only when somebody asks nicely. Sim asked nicely."
     sim "I am very good at asking nicely."
     tapi "You are very good at asking repeatedly."
@@ -233,7 +237,7 @@ label sim_visit_02:
             $ reward_attributes_once("sim_visit_02_tapi_coffee", [("nerve", "micro")], show="auto")
 
     "Sim glances toward the door, then back at Tapi."
-    sim "There is one more person you should know about, but he does not come to meetings."
+    sim "One more person worth knowing, though he does not come to meetings."
     mc "Not a member?"
     tapi "No. He is my boyfriend. TT."
     tapi "He shoots for a living. Weddings, shops, things with a budget."
@@ -242,7 +246,7 @@ label sim_visit_02:
     mc "TT?"
     tapi "That is what everybody calls him. Even me."
     "She goes to find a bin for the empty cup. The room takes its own noise back."
-    mc "(The first week I came here, six people sat in a circle and nobody said my name. Now I know who brings the coffee.)"
+    mc "(The first week I came here, six people sat in a circle and nobody said my name. Now I know which cup is hers.)"
 
     sim "Put it on manual. Aperture wide enough that the background disappears, shutter slow enough that the room is still paying attention."
     sim "Do not look at the settings yet. Look at the frame."
@@ -262,15 +266,15 @@ label sim_visit_02:
 
     "Sim turns the camera toward himself and makes the worst self-portrait I have ever seen."
     sim "This is my portrait for the month."
-    marco "It is a very convincing photograph of a ceiling."
+    marcus "It is a very convincing photograph of a ceiling."
     nami "You held the camera upside down."
     sim "I know. It is my first deliberately bad photograph this month. I need to keep the average honest."
     sim "Some weeks I make something I like. Some weeks I make evidence that I was here."
     "He sets the camera on the table like a tool rather than a trophy."
-    sim "Come back Thursday. We are going outside, and I promise the walls will not cooperate."
+    sim "Come back Thursday. We are putting a model in front of you, and I promise she will not hold still."
 
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 2)
-    $ remember("sim", "learned manual exposure by photographing the damaged wall")
+    $ log_memory("sim", "learned manual exposure by photographing the damaged wall")
     $ queue_message("sim", "The stain photograph is better than the window photograph. Please do not tell Nami I said that.", day="yesterday")
     $ reward_attributes_once("sim_visit_02_close", [("grace", "micro")], show="card")
 
@@ -279,7 +283,7 @@ label sim_visit_02:
     return
 
 label sim_visit_03:
-    call sim_common_open
+    call sim_common_open from _call_sim_common_open_2
 
     "The circle is smaller than last week, and more purposeful."
     "A sheet of paper is taped beside the door: models wanted, one hour, all skill levels, payment in cake and honest criticism."
@@ -290,9 +294,9 @@ label sim_visit_03:
     rika "Oh. The photographer who learned from the wall."
     mc "I prefer stain photographer. It sounds less accidental."
     rika "The stain has range."
-    sim "Rika has offered to model. Marco is checking the light. Nami is pretending she is not excited about the cake."
+    sim "Rika has offered to model. Marcus is checking the light. Nami is pretending she is not excited about the cake."
     nami "I am very professional."
-    marco "You brought two slices."
+    marcus "You brought two slices."
     nami "One is mine."
     sim "Tapi is here for the cake and the criticism. She has spent enough time on the other side to know which one is worth more."
     tapi "The cake is worth more. The criticism is longer."
@@ -305,6 +309,8 @@ label sim_visit_03:
     "The room laughs. Sim does not join in loudly, but his mouth stays curved while he adjusts a light."
     "He has learned to let the room have its own weather."
 
+    scene bg_photo_club_shooting with Dissolve(0.6)
+
     menu:
         "I can do this.":
             mc "I can do this. I may not be good yet, but I can make a decision and live with it."
@@ -313,6 +319,7 @@ label sim_visit_03:
         "I need more time.":
             mc "I want to do it, but I need a little more time before the room watches."
             sim "Then we will give you a little more time. The model is patient, and so are we."
+            "Rika holds the pose. I wait until my hands stop moving, then lift the camera."
             $ reward_attributes_once("sim_visit_03_wait", [("grace", "micro")], show="auto")
         "Tell me exactly what to do.":
             mc "Tell me exactly what to do. I trust the process more than my own instincts right now."
@@ -352,7 +359,7 @@ label sim_visit_03:
     "Rika considers that for a second and accepts it with a nod, which from her is a kind of friendship."
 
     sim "Keep the file. Name it after what you were trying to learn, not what you hoped to get."
-    sim "Next time, you shoot."
+    sim "Next time, shoot without me telling you when."
 
     "After the session, Sim stays behind to coil a cable."
     "For a while, neither of us says anything."
@@ -369,10 +376,10 @@ label sim_visit_03:
 
     "Rika appears with the second slice of cake and puts it in front of Sim without comment."
     "He looks at it, then at her, and accepts it with both hands."
-    sim "Next week we are going outside. Bring shoes you do not mind ruining."
+    sim "Next week we decide what stays on the wall. Bring the file you just made."
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 3)
-    $ remember("sim", "captured Rika's unguarded expression and heard about his rejected first photograph")
-    $ queue_message("sim", "The frame where Rika looked away from the camera is the one I would keep. Do not let Marco talk you out of it.", day="yesterday")
+    $ log_memory("sim", "captured Rika's unguarded expression and heard about his rejected first photograph")
+    $ queue_message("sim", "The frame where Rika looked away from the camera is the one I would keep. Do not let Marcus talk you out of it.", day="yesterday")
     $ reward_attributes_once("sim_visit_03_close", [("insight", "micro")], show="card")
 
     scene bg_campus_interior with walk_fade
@@ -380,7 +387,7 @@ label sim_visit_03:
     return
 
 label sim_visit_04:
-    call sim_common_open
+    call sim_common_open from _call_sim_common_open_3
 
     "The room has changed without announcing it."
     "There are two tables now. Prints cover every wall, including some that appear to have been claimed by the wall itself."
@@ -388,9 +395,9 @@ label sim_visit_04:
 
     nami "White reflector. No, the other one. Sim said soft, but I think he meant 'stop making Rika look like a certificate photo.'"
     rika "That was specific and accurate."
-    marco "We have eleven submissions for the hallway."
+    marcus "We have eleven submissions for the hallway."
     sim "Nine. Two are duplicates with better titles."
-    marco "Titles matter."
+    marcus "Titles matter."
     sim "They matter after the photograph does."
 
     sim "You are late, which means you are exactly on time. The universe has a sense of humor."
@@ -431,7 +438,7 @@ label sim_visit_04:
     sim "「みんな、聞いて。最後に展覧会をしよう。」"
     "He catches me looking and repeats it, slower, in English."
     sim "There is a community exhibition at the end of the term. Small room, local artists, no fees."
-    marco "A real one? With a program and everything?"
+    marcus "A real one? With a program and everything?"
     sim "With labels and everything."
     nami "Are we actually doing this?"
     sim "I am asking whether we should."
@@ -457,10 +464,10 @@ label sim_visit_04:
 
     "Sim writes EXHIBITION on the board in letters large enough to make the room feel suddenly official."
     sim "My first show, I mislabeled half the prints. The other half I labeled correctly, and nobody looked. I still made the next one."
-    "Riku offers to design the labels. Nami claims the lighting plan. Marco says he will make the posters and immediately begins explaining why Helvetica is a political choice."
+    "Riku offers to design the labels. Nami claims the lighting plan. Marcus says he will make the posters and immediately begins explaining why Helvetica is a political choice."
     "Tapi writes her name on a sticky note and puts it on the board. Under it, in smaller letters, she writes: plus one."
-    sim "Is that the photographer?"
-    tapi "TT. He will bring a camera. He cannot help it."
+    sim "Is TT bringing his own camera?"
+    tapi "He will bring two. He cannot help it."
     sim "Then he can photograph the room. We have never had a picture of this place from outside it."
     tapi "He will also tell us the lighting is wrong."
     sim "That is what makes it a photograph instead of a snapshot."
@@ -473,7 +480,7 @@ label sim_visit_04:
     $ sim_affection += 1
 
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 4)
-    $ remember("sim", "helped judge Circle's prints and agreed to make the community exhibition")
+    $ log_memory("sim", "helped judge Circle's prints and agreed to make the community exhibition")
     $ queue_message("sim", "The exhibition is real enough to worry about now. Bring your three strongest candidates, and bring your worst one too.", day="yesterday")
     $ reward_attributes_once("sim_visit_04_close", [("nerve", "micro")], show="card")
 
@@ -482,7 +489,7 @@ label sim_visit_04:
     return
 
 label sim_visit_05:
-    call sim_common_open
+    call sim_common_open from _call_sim_common_open_4
 
     "The room is almost empty."
     "One light stand is folded. The projector is dark. The prints have been taken down for cleaning, leaving pale rectangles on the walls."
@@ -493,7 +500,7 @@ label sim_visit_05:
     sim "Busy, mostly. Exams, part-time jobs, the ordinary business of being eighteen and trying to become something."
     sim "Nami sent a photograph of her cat sitting on the whiteboard. It is technically perfect and spiritually chaotic."
     "He holds it up. The cat has the expression of a creature that has read the minutes and disagreed with them."
-    sim "Riku is in Osaka until Sunday. Marco is making posters at his cousin's print shop. Rika is asleep on the floor of the library."
+    sim "Riku is in Osaka until Sunday. Marcus is making posters at his cousin's print shop. Rika is asleep on the floor of the library."
     sim "Tapi is at work. She says standing still in a shop window pays better than standing still here."
     sim "It is just us and the rectangles."
 
@@ -527,7 +534,7 @@ label sim_visit_05:
     "Sim takes a roll of tape from his pocket and begins repairing the corner of a print that has started to curl."
     sim "I used to name my folders someday. Someday-show, someday-portfolio, someday-enough."
     sim "Now I name them after the person who made me look again."
-    "He writes riku-osaka-dusk on the label of a sleeve, then pauses before closing it."
+    "He writes riku-campus-dusk on the label of a sleeve, then pauses before closing it."
     sim "There. Even a photograph taken by accident becomes less lonely when it has a name."
     sim "You are in a folder now, by the way."
     mc "That sounds ominous."
@@ -546,7 +553,7 @@ label sim_visit_05:
     "He sets a clean sleeve on the table."
     sim "I'll keep whichever one you are embarrassed by."
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 5)
-    $ remember("sim", "heard why he built Circle and photographed the empty room")
+    $ log_memory("sim", "heard why he built Circle and photographed the empty room")
     $ queue_message("sim", "The empty-room photograph is my favorite thing anyone has made this month. Do not let the club make you delete it.", day="yesterday")
     $ reward_attributes_once("sim_visit_05_close", [("grace", "micro")], show="card")
 
@@ -555,7 +562,7 @@ label sim_visit_05:
     return
 
 label sim_visit_06:
-    call sim_common_open
+    call sim_common_open from _call_sim_common_open_5
 
     "The room is loud in the way of a place that has run out of pretending it is casual."
     "The selection wall is covered in sticky notes. Someone has labelled each photograph with a number, a title, and a small drawing of a face expressing an opinion."
@@ -564,7 +571,7 @@ label sim_visit_06:
     sim "「みんな、落ち着いて。メールは本当です。」"
     "He switches to English mid-sentence, the way he does when he remembers I am here."
     sim "Before anyone asks: yes, the email is real. No, I have not slept properly since Tuesday."
-    marco "You look fantastic."
+    marcus "You look fantastic."
     sim "That is because panic is excellent for circulation."
     rika "Say it slowly. What exactly did they say?"
 
@@ -601,9 +608,9 @@ label sim_visit_06:
     "He looks around the circle, taking in the sticky notes, the cables, the half-empty cups, and the wall where every member has left something they are proud of."
     sim "I do not know yet. That is the honest answer."
     sim "But I know this: I will not turn the exhibition into a farewell until I have decided what I am actually saying goodbye to."
-    "Marco writes something on a sticky note and puts it beside Sim's phone. It says: decide after cake."
+    "Marcus writes something on a sticky note and puts it beside Sim's phone. It says: decide after cake."
     sim "That is either profound or the stupidest thing anyone has written all semester."
-    marco "It is both."
+    marcus "It is both."
 
     "Tapi has been sitting very still through all of it. She only speaks once."
     tapi "Will you still take photographs?"
@@ -618,9 +625,9 @@ label sim_visit_06:
             mc "Make the exhibition for the room, not for the magazine. Let it be about us."
             sim "Yes. If I cannot do that, then I do not deserve the attention."
             $ reward_attributes_once("sim_visit_06_room", [("grace", "micro")], show="auto")
-        "Tell them you need time.":
-            mc "Tell them you need time. A real answer does not have to arrive before the exhibition."
-            sim "I will. They can be patient. I have learned that from this room."
+        "Give yourself until after the exhibition.":
+            mc "Give yourself until after the exhibition. A real answer does not have to arrive tonight."
+            sim "Then I will not answer them yet. They can wait. I have learned that from this room."
             $ reward_attributes_once("sim_visit_06_time", [("nerve", "micro")], show="auto")
         "What would you do if the magazine disappeared?":
             mc "What would you do if the magazine disappeared tomorrow?"
@@ -640,7 +647,7 @@ label sim_visit_06:
     $ sim_affection += 1
 
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 6)
-    $ remember("sim", "received a magazine offer and promised to decide after the exhibition")
+    $ log_memory("sim", "received a magazine offer and promised to decide after the exhibition")
     $ queue_message("sim", "The editor can wait until after the exhibition. Cake cannot. Bring your worst photograph.", day="yesterday")
     $ reward_attributes_once("sim_visit_06_close", [("insight", "micro")], show="card")
 
@@ -649,8 +656,11 @@ label sim_visit_06:
     return
 
 label sim_visit_07:
-    scene bg_photo_club with walk_fade
+    scene bg_photo_club_exhibition with walk_fade
     stop music fadeout 1.0
+    # Unlike the other visits this one does not call sim_common_open, so reset
+    # the pose explicitly after the epilogue has left Nami sitting on the steps.
+    $ nami_pose = "standing"
 
     "The room has been transformed."
     "The prints are no longer held on with tape. They are mounted, labelled, and lit by a photographer who has borrowed equipment he cannot afford to replace."
@@ -660,11 +670,11 @@ label sim_visit_07:
     sim "You came. Good. I was beginning to think the exhibition was a rumor circulated by optimistic printers."
     mc "It looks like a real gallery."
     sim "It is a school hallway with ambitions. That is the difference."
-    "Rika is standing beside a portrait of herself that she claims she did not pose for. The photographer, a quiet second-year named Aya's cousin, has captioned it: consent pending."
+    "Rika is standing beside a portrait of herself that she claims she did not pose for. The photographer, a quiet second-year who mentioned he is Aya's cousin, has captioned it: consent pending."
     nami "That is the best caption in the show."
-    marco "I designed the map. It has a legend."
+    marcus "I designed the map. It has a legend."
     riku "The legend is a drawing of a confused pigeon."
-    marco "The pigeon represents the visitor."
+    marcus "The pigeon represents the visitor."
 
     "A man in a dark cap and thick glasses comes in behind Tapi with a camera hanging at his chest. He is older than everybody else here by enough that the doorway seems to get shorter as he passes through it."
     sim "There he is. TT, this is the photographer who learned from a stain on the wall."
@@ -726,6 +736,7 @@ label sim_visit_07:
     sim "I am not giving it away because I am done with it. I am giving it away because I want you to carry it."
     sim "When you take photographs in the city I am leaving, remember that someone once built a room for you to practice in."
     "He places it in my hand. The leather is warm from his pocket."
+    $ add_item("sim_camera_strap")
     sim "It is not a trophy. It is a reminder that you are allowed to keep seeing."
 
     menu:
@@ -743,14 +754,15 @@ label sim_visit_07:
             $ reward_attributes_once("sim_visit_07_future", [("nerve", "micro")], show="auto")
 
     "Sim gathers everyone for a final photograph."
+    "He balances the camera on a stack of print boxes and sets the timer."
     "The room crowds close, elbows and shoulders and the soft rustle of jackets."
-    "Sim stands in the center, camera raised, smiling wider than he has all evening."
+    "Sim steps into the center, one hand raised the way Marcus has been asking him to pose all evening."
     sim "「さあ、みんな集まって。カメラを見て！」"
-    "He translates for my benefit without breaking stride."
+    "He says it again in English over his shoulder as he joins us."
     sim "Everyone look at the lens! Not at me, ha, at the lens. That's the one."
     "The shutter clicks."
     "The image is slightly imperfect, slightly overexposed, and completely alive."
-    sim "There. That is the last photograph I will take in this room."
+    sim "There. That is the last frame I will set up in this room."
     sim "It is not the best one. It is the one I will remember."
 
     "TT has been standing off to one side with his camera down. He raises it now."
@@ -773,7 +785,7 @@ label sim_visit_07:
     sim "...I was."
     $ sim_affection += 1
     $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 7)
-    $ remember("sim", "left for a magazine commission, gave the protagonist his camera strap, and was photographed by TT")
+    $ log_memory("sim", "left for a magazine commission, gave the protagonist his camera strap, and was photographed by TT")
     $ queue_message("sim", "The exhibition was the best thing I have ever made. Thank you for being in the room. I will send photographs from the new city.", day="yesterday")
     $ reward_attributes_once("sim_visit_07_close", [("nerve", "micro")], show="card")
 
@@ -810,7 +822,7 @@ label sim_visit_closed:
 
     nami "Oh. You heard."
     mc "I heard the club was on hold."
-    nami "The school says a club needs a faculty advisor and a student host. Sim was the host. The advisor retired. So we are a club with no adults and no founder."
+    nami "The school says a club needs a faculty advisor and a student host. Sim was the host. The advisor retired. So we are a club with no adults and no host."
     "She holds up the notice. The font is the school's, careful and square."
     nami "They did not close us. They put us on hold. It sounds gentler when they say it."
 
@@ -828,13 +840,13 @@ label sim_visit_closed:
             $ reward_attributes_once("sim_visit_closed_help", [("grace", "micro")], show="auto")
         "Ask her who might take over.":
             mc "Do you think anyone will?"
-            nami "Marco asked. The school said he is a first-year and the club needs a second-year host. Rika said she would do it if they let her run it like a zine. They are thinking about it."
+            nami "Marcus asked. The school said he is a first-year and the club needs a second-year host. Rika said she would do it if they let her run it like a zine. They are thinking about it."
             nami "Tapi said she will help whenever somebody decides. TT offered to photograph the reopening, which is the least surprising sentence he has ever said."
             nami "Someone will. The room is too good to leave empty."
             $ reward_attributes_once("sim_visit_closed_ask", [("insight", "micro")], show="auto")
         "Look through the prints.":
-            "I kneel beside the box. The portrait of Rika. Marco's map. The last photograph, the one Sim took of all of us, slightly overexposed and completely alive."
-            "Sim is in the center, camera raised, smiling wider than he did all evening. He is not looking at the lens. He is looking at the people he arranged around it."
+            "I kneel beside the box. The portrait of Rika. Marcus's map. The last group photograph, the one Sim set up on the timer, slightly overexposed and completely alive."
+            "Sim is in the center, one hand raised, smiling wider than he did all evening. He is not looking at the lens. He is looking at the people he arranged around it."
             "At the bottom of the box is the one print that nobody in Circle made: TT's photograph of Sim, hands half raised, caught in the act of not knowing where to put them."
             "It is not mounted. Nami kept it loose so it could be moved around."
             $ reward_attributes_once("sim_visit_closed_look", [("nerve", "micro")], show="auto")
@@ -845,13 +857,15 @@ label sim_visit_closed:
     nami "It is the kind we have."
 
     "She carries the box toward the building. I stay on the steps until the second-floor light comes on."
+    scene bg_photo_club_closed with Dissolve(0.7)
+    "Upstairs, Nami sets the box down with the rest. You can still see the rectangles on the wall where the frames kept the light out."
     "It is a storage light. It is still a light."
     "The club is on hold. The campus still smells like it."
 
     if confidant_visits.get("sim", 0) < 8:
         $ sim_affection += 1
         $ confidant_visits["sim"] = max(confidant_visits.get("sim", 0), 8)
-        $ remember("sim", "found Circle on hold after Sim left; the exhibition came down into a box")
+        $ log_memory("sim", "found Circle on hold after Sim left; the exhibition came down into a box")
         $ queue_message("sim", "Nami told me about the hold. A club is not a room. It is the people who keep showing up. Keep showing up.", day="yesterday")
     $ reward_attributes_once("sim_visit_closed_close", [("grace", "micro")], show="card")
 

@@ -8,7 +8,7 @@ Player (frowning): “…What do you mean?”
 Orson (mask tilts as if he doesn’t want to say it but does anyway): “It’s not one thing. It’s all of it. Rent that keeps rising. A neighborhood that’s sprinting ahead without me. Too many nights when the till doesn’t quite balance. And me… I’m tired. More tired than I let on.”
 Player (quietly): “But you built something real here. For people like me.”
 Orson (his voice steadies, but softer): “I built it as a refuge. A place where people could breathe. Where being hidden meant being seen in a different way. I thought if I gave others that freedom, maybe I’d feel it too.”
-(he looks around the dim bar — the shelves, the lights, the empty stools)
+(he looks around the dim bar, the shelves, the lights, the empty stools)
 Orson: “But sometimes even the places we love most can’t hold us up forever. The city doesn’t wait. It just keeps moving.”
 Player (after a pause): “What do you mean..? So this… is goodbye?”
 Orson (meets their gaze, warmth in his tired voice): “Not the kind that erases anything. Endings don’t erase what happened. You came here. You made this place alive. That doesn’t vanish.”
@@ -22,7 +22,7 @@ If “I’ll miss this place”:
 Orson: “Good. Missing something means it mattered. It means it left its mark.”
 
 If “I’ll carry it with me”:
-Orson: “Exactly. The bar, the mask, the laughter—they’re just tools. What you really take with you is the warmth, the courage, the lessons. That’s what lasts.”
+Orson: “Exactly. The bar, the mask, the laughter. They’re just tools. What you really take with you is the warmth, the courage, the lessons. That’s what lasts.”
 
 [There's silence. Orson studies the player for a long moment. Then he exhales slowly and reaches up. For the first time, he pulls the wolf mask free. The sound of it leaving his face is strangely final. He sets it on the counter, eyes bare and tired, but kind.]
 Orson (softly): “I don’t do this for anyone. But you… you deserve to see me, not just the mask.”
@@ -30,6 +30,6 @@ Orson (softly): “I don’t do this for anyone. But you… you deserve to see m
 Orson: “Here. Something to remember me by. Might not look like much, but sometimes the smallest things carry the most weight.”
 Player (turning it in their hand): “I’ll keep it safe.”
 Orson (smiles faintly, without the mask’s grin to hide behind): “Don’t keep it too safe. Carry it. Let it remind you. One day, you’ll walk into a place like this, and you won’t need me. You’ll be part of the warmth yourself. Maybe even be the reason someone else feels at home.”
-[The bar is utterly still now. Orson leans back, mask beside him, the wolf paw badge warm in the player’s hand. His eyes glimmer—not with mystery, but with raw gratitude and the quiet weight of farewell.]
+[The bar is utterly still now. Orson leans back, mask beside him, the wolf paw badge warm in the player’s hand. His eyes glimmer, not with mystery, but with raw gratitude and the quiet weight of farewell.]
 [When the player finally stands to leave, the door closes behind them with a soft thud. The hum of the bar lingers in memory, warm and fleeting, already almost gone.]
 [Scene fades.]

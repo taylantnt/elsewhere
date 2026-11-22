@@ -1,30 +1,31 @@
-[The night air carries a drizzle. The ramen shop feels like shelter, glowing warmly against the quiet street. Inside, the chef looks up, surprised but pleased.]
-Chef: 「おお、また来たね！」 (Oh, you came again!)
-Player: “Konbanwa! Yes, uh… ramen, please.”
-[The chef chuckles, wiping his hands on a towel. He gestures to the counter, already setting out a bowl and spoon.]
-Chef: 「今日はどうする？しょうゆ？みそ？」 (What will it be today? Shoyu? Miso?)
-Player: “…Shoyu… onegaishimasu.”
-[The chef nods, but rattles off another phrase too quickly. The player blinks, lost. Just then, the door slides open—Hikari, your host sister, steps in, umbrella dripping.]
-Hikari: “Ah! You’re here too? What a coincidence.”
-Player: “Oh! Hikari—hey! Uh… yeah, I was just…”
-[You gesture vaguely at the chef, who smirks knowingly.]
-Chef: 「ご家族？友だち？」 (Family? Friend?)
-Hikari (laughing): “Host family. He stays with us.”
-Player: “…That’s what he said?”
-Hikari: “More or less.”
-[She sits beside you, orders quickly in Japanese. The chef bustles happily, clearly relieved someone understands him fully.]
-Hikari (teasing): “You always come here? No wonder you smell like ramen sometimes.”
-Player: “Wait—do I? …oh no.”
-[She laughs. The chef chuckles too, not understanding, but catching the rhythm.]
-Chef: 「いただきます、忘れないでね。」 (Don’t forget to say itadakimasu.)
-Hikari (softly translating): “He’s reminding you… it’s what we say before eating.”
-Player: “Ita… itadakimasu.”
-[The chef grins, giving a proud nod, almost like a teacher pleased with his student.]
-[The three of you eat together, steam curling between laughter and broken translations. For the first time, the silence in the ramen shop feels easy, almost homelike.]
-Hikari (quietly, over her bowl): “See? You’re learning. Even without words, people can understand.”
-Player: “…Feels good. Warm.”
-Chef: 「そうそう！あったかいラーメン、あったかいこころ。」 (Yes, yes! Warm ramen, warm heart.)
-Hikari (smiling at you): “He said… warm ramen, warm heart.”
-[The chef raises his ladle like a toast; Hikari laughs and mimics it. You copy them both, awkward but grinning. Something about this small ritual binds you all together, beyond words.]
-[Scene fades with the sound of rain softening outside, and the quiet clink of bowls.]
+[The sign in the window says CLOSED FOR TRAINING in Japanese and English. The door is unlocked. Chef is inside, sitting at the counter with a notebook open in front of him. He points to the stool beside him: 「座れ。」 (Sit.) He is not taking orders today; he is asking for company.]
 
+[The notebook is filled with precise, hurried numbers, times, temperatures — the chemistry of broth in another language.]
+
+Chef: 「見るか？」 (Look?)
+Player: "May I?"
+
+[He slides it over. The page is headed with a date from twenty years ago. The recipe is simpler than the one he makes now, with fewer ingredients and longer notes.]
+
+Player choice:
+- "Did you change the recipe?" — 「毎日、変える。同じじゃ、つまらない。」 (I change it every day. The same is boring.) (Insight)
+- "What are you trying to improve?" — 「バランス。昨日、濃かった。今日、薄くする。」 (Balance. Yesterday it was strong; today, lighter.) (Insight)
+- "How long have you been making ramen?" — 「三十年。まだ、分からない。」 (Thirty years. I still don't understand.) The player writes the number down. (Grace)
+
+[Chef takes the notebook back and turns to a blank page. He writes today's date, then 味, 香, 色 — taste, aroma, color — the three things a bowl must have. Taste comes first, but the other two matter.]
+
+Player choice:
+- "What about the texture?" — he touches his throat: 「喉で食べる。喉が満足する。」 (Eat with the throat; the throat is satisfied.) (Insight)
+- "What about the temperature?" — 「熱すぎない。冷たすぎない。体温に近い。」 (Not too hot, not too cold; close to body temperature.) (Insight)
+- "What makes a bowl perfect?" — 「完璧なんてない。でも、頑張る。」 (There is no such thing as perfect. But I try.) (Grace)
+
+[He closes the notebook and sets it on the shelf beside the stove. He has not made ramen today, but he has explained why the ramen is the way it is.]
+
+Chef: 「今日、作らない。」 (No cooking today.)
+Player (thinking): The notebook is closed now. I think that is the reason.
+Chef: 「明日、来て。」 (Come tomorrow.)
+Player: "I'll be here."
+
+[He grunts, satisfied with the promise.]
+
+[WIRE message: he changed the recipe again but served it to nobody today; tomorrow he will. If anyone says it tastes different, that is fine.]

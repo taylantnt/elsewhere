@@ -508,7 +508,7 @@ screen photography_review(engine):
                         vbox:
                             yalign 0.5
                             text "SIM" size gui.scale(16) bold True color "#add8e6"
-                            text "Circle Founder & Guide" size gui.scale(11) color "#688299"
+                            text "Circle Host & Guide" size gui.scale(11) color "#688299"
 
                     frame:
                         background Solid("#060c12")
@@ -689,7 +689,7 @@ label test_photography:
         sim "Remarkable work. You've earned your place in Circle."
         "You feel a deeper grasp of observation and perspective."
     else:
-        sim "A great first attempt. We'll head out again next Tuesday."
+        sim "A great first attempt. We'll head out again next Thursday."
         "You take the prints home to study."
 
     "Test complete. Returning to game."

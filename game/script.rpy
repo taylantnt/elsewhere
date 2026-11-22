@@ -346,6 +346,7 @@ image bg_room_bed_day = Transform("images/backgrounds/bg_room_bed_day.png", xysi
 image bg_room_bed_night = Transform("images/backgrounds/bg_room_bed_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_room_day = Transform("images/backgrounds/bg_room_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_train_interior = Transform("images/backgrounds/bg_train_interior.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_train_interior_day = Transform("images/backgrounds/bg_train_interior_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_home_exterior_night = Transform("images/backgrounds/bg_home_exterior_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_home_exterior_day = Transform("images/backgrounds/bg_home_exterior_day.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_sukiyaki = Transform("images/backgrounds/bg_sukiyaki.png", xysize=(config.screen_width, config.screen_height), fit="cover")
@@ -397,6 +398,7 @@ image bg_fortune_stall = bg_or_placeholder("bg_fortune_stall", "#2a211b", "ASAKU
 # arrives; dropping the matching file into images/backgrounds/ replaces it with
 # no code change.
 image bg_combini = bg_or_placeholder("bg_combini", "#26302a", "COMBINI\nNIGHT SHIFT")
+image bg_combini_working = Transform("images/backgrounds/bg_combini_working.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_odaiba = bg_or_placeholder("bg_odaiba_walkway", "#202b33", "ODAIBA\nARTIFICIAL ISLAND")
 # The rest of the island. The base Odaiba art was renamed to the walkway so the
 # tour can use the statue, the beach and the night view as separate places.
@@ -422,6 +424,7 @@ image bg_karaoke_drink = Transform("images/backgrounds/bg_karaoke_drink.png", xy
 image bg_karaoke_room = Transform("images/backgrounds/bg_karaoke_room.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_ueno = bg_or_placeholder("bg_ueno", "#2c3025", "UENO PARK\nAPRIL")
 image bg_ueno_museum = bg_or_placeholder("bg_ueno_museum", "#3a3630", "TOKYO NATIONAL MUSEUM\nTHE STEPS")
+image bg_nakameguro = bg_or_placeholder("bg_nakameguro", "#2a2530", "NAKAMEGURO\nTHE CANAL")
 image bg_shibuya = bg_or_placeholder("bg_shibuya", "#25222f", "SHIBUYA\nSCRAMBLE CROSSING")
 image bg_shimokitazawa = bg_or_placeholder("bg_shimokitazawa", "#262321", "SHIMOKITAZAWA\nSMALL THEATERS")
 # The Shimokitazawa tour moves through a record shop, a live house and a coffee
@@ -437,17 +440,23 @@ image bg_omotesando = bg_or_placeholder("bg_omotesando", "#252a26", "OMOTESANDO\
 image bg_meijijingu_entrance = bg_or_placeholder("bg_meijijingu_entrance", "#2a2f28", "MEIJI JINGU\nTHE TORII")
 image bg_meijijingu_forest = bg_or_placeholder("bg_meijijingu_forest", "#1f2a22", "MEIJI JINGU\nTHE FOREST PATH")
 image bg_meijijingu_temple = bg_or_placeholder("bg_meijijingu_temple", "#2f2a24", "MEIJI JINGU\nTHE SANCTUARY")
+image bg_shrine = bg_or_placeholder("bg_shrine", "#2b2a24", "A SMALL SHRINE\nTHE STEPS")
 
 # The two rooms the first free afternoon can end in. The ramen shop has art now
 # (it lives at images/backgrounds/bg_ramen_shop.png, which is why the scene name
 # and the file name differ slightly). The club room is still being drawn, so it
 # keeps printing its own name until bg_photo_club.png arrives.
 image bg_ramen_shop = bg_or_placeholder("bg_ramen_shop", "#2b2118", "RAMEN SHOP\nLATE")
+image bg_ramen_shop_closed = bg_or_placeholder("bg_ramen_shop_closed", "#231c17", "RAMEN SHOP\nCLOSED")
+image bg_ramen_shop_destroyed = bg_or_placeholder("bg_ramen_shop_destroyed", "#292724", "RAMEN SHOP\nDEMOLISHED")
 image bg_ramen = bg_or_placeholder("bg_ramen", "#2b2118", "RAMEN\nLATE")
 # The same counter a few minutes later, with the bowl finished. Every route through
 # the shop ends on this shot, right before he pays.
 image bg_ramen_empty = bg_or_placeholder("bg_ramen_empty", "#2b2118", "EMPTY BOWL\nLATE")
 image bg_photo_club = bg_or_placeholder("bg_photo_club", "#2f3230", "PHOTOGRAPHY CLUB\nCIRCLE / CLUB ROOM")
+image bg_photo_club_shooting = bg_or_placeholder("bg_photo_club_shooting", "#2f3230", "PHOTOGRAPHY CLUB\nPORTRAIT SESSION")
+image bg_photo_club_exhibition = bg_or_placeholder("bg_photo_club_exhibition", "#2f3230", "PHOTOGRAPHY CLUB\nEXHIBITION")
+image bg_photo_club_closed = bg_or_placeholder("bg_photo_club_closed", "#2f3230", "PHOTOGRAPHY CLUB\nSTORAGE")
 
 # The river path Hikari runs. Real art, so no placeholder label.
 image bg_river = bg_or_placeholder("bg_river_dusk", "#1a2230", "RIVER PATH\nEVENING")
@@ -459,6 +468,7 @@ image bg_river_night = Transform("images/backgrounds/bg_river_night.png", xysize
 # moves the light down.
 
 image bg_lupins_alley_night = Transform("images/backgrounds/bg_lupins_alley_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_lupins_alley_night_closed = bg_or_placeholder("bg_lupins_alley_night_closed", "#181d25", "LUPIN'S DEN\nCLOSED")
 image bg_alley = bg_or_placeholder("bg_alley", "#2a2320", "SIDE STREET\nDUSK")
 image bg_alley_night = Transform("images/backgrounds/bg_alley_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_lupins_den = Transform("images/backgrounds/bg_bar.png", xysize=(config.screen_width, config.screen_height), fit="cover")
@@ -475,6 +485,27 @@ image hospital_flash = bg_or_placeholder("bg_hospital", "#d9e6ee", "HOSPITAL")
 # while he tries to read it. The original is 1920x1408, so it is scaled down to
 # sit inside the 1280x720 screen instead of swallowing it whole.
 image pamphlet = Transform("images/ui/pamphlet.png", xysize=(720, 528))
+
+# Day 33's arcade art is declared like the other backgrounds so `scene` covers
+# the stage exactly: bg_space leaves bare edges at native size.
+image bg_arcade_entrance = Transform("images/backgrounds/bg_arcade_entrance.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_arcade_claw = Transform("images/backgrounds/bg_arcade_claw.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_space = Transform("images/arcade/bg_space.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+
+# The days after the story's first block: the outer market before dawn, the old
+# capital, the neighbourhood bathhouse, the rainy-season garden and the river at
+# night. None of these has art yet, so each prints its own name until the
+# matching file arrives in images/backgrounds/.
+image bg_tsukiji_dawn = bg_or_placeholder("bg_tsukiji_dawn", "#20262b", "TSUKIJI\nBEFORE DAWN")
+image bg_tsukiji_stalls = bg_or_placeholder("bg_tsukiji_stalls", "#242a2a", "TSUKIJI\nTHE LANES")
+image bg_kamakura_station = bg_or_placeholder("bg_kamakura_station", "#2b2b24", "KAMAKURA\nTHE STATION")
+image bg_kamakura_daibutsu = bg_or_placeholder("bg_kamakura_daibutsu", "#2e2c22", "KAMAKURA\nTHE GREAT BUDDHA")
+image bg_enoden = bg_or_placeholder("bg_enoden", "#2a2f26", "THE ENODEN\nLITTLE GREEN TRAIN")
+image bg_kamakura_shore = bg_or_placeholder("bg_kamakura_shore", "#1d2833", "KAMAKURA\nTHE SHORE")
+image bg_sento_outside = bg_or_placeholder("bg_sento_outside", "#26232a", "THE SENTO\nBLUE CURTAIN")
+image bg_sento_bath = bg_or_placeholder("bg_sento_bath", "#2a2e30", "THE SENTO\nSTEAM AND TILE")
+image bg_ajisai_temple = bg_or_placeholder("bg_ajisai_temple", "#232a2e", "HYDRANGEA GARDEN\nIN THE RAIN")
+image bg_river_fireflies = bg_or_placeholder("bg_river_fireflies", "#0f1512", "THE RIVER\nFIREFLIES")
 
 # --- VARIABLES ---
 default japanese_fluency = 0
@@ -563,6 +594,20 @@ default plant_index = 0
 default money = 0
 default inventory = []
 
+# The quiet pressure under the long middle. Every day of school and city travel
+# costs a little; the wallet is not a score to drain to zero but a floor to stay
+# above. Below the floor, optional outings close and the combini shift is the
+# obvious answer. There is no deadline and no fail state: he can always walk.
+# Arithmetic (start 30,000, arrival 1,300 by train or 17,600 by taxi):
+#   Day 8 balance   train 23,800 / taxi 7,500   - job is already unlocked
+#   floor first hit train Day 35 / taxi Day 12  - both after the unlock
+#   one shift pays 4,800, roughly seven more days of getting around
+define daily_transit_cost = 700
+define sustain_floor = 5000
+
+# Shown once, the first time the floor closes the optional rows.
+default low_funds_nudge_shown = False
+
 # --- THE PLAYER ---
 # The name asked for before the story starts, and the name the family and Hikari
 # use when they talk to him. Kept to twelve characters so it never pushes the
@@ -597,6 +642,10 @@ default day6_dinner_declined = False
 # Day 7's campus greeting hands off to `sim_visit_01` with the corridor/door
 # intro skipped, because the meeting already happened outside.
 default sim_campus_intro = False
+# The Day 2 session starts with the protagonist's phone; the standalone
+# `sim_visit_01` hands him a camera instead. Evening narration has to know
+# which first meeting actually happened.
+default sim_first_with_phone = False
 
 # The haiku lesson is the first topic the player is asked to study deliberately.
 # Keep their chosen approach in save data so a later exam can acknowledge it.
@@ -682,9 +731,16 @@ default remembered_choices = {}
 # reward: the attribute system says what he is becoming, this says what he did.
 default character_memories = {}
 
+# The curated notebook: one "small true thing" per common day. The phone Journal
+# renders this on its NOTES tab; its JOURNAL tab holds the raw dialogue history.
+# Kept separate from character_memories because this is what he noticed, not
+# what somebody heard.
+default notebook_lines = []
+
 # How those people are named on screen. The memory keys are lowercase ids, but
 # the notice is a sentence about a person, so it needs the name rather than the id.
 default memory_names = {
+    "mc": "I",
     "hikari": "Hikari",
     "clerk": "the clerk",
     "professor": "the professor",
@@ -715,6 +771,14 @@ init python:
 
     def can_afford(amount):
         return store.money >= amount
+
+    def can_afford_day():
+        """True while the wallet can still carry him through an ordinary day."""
+        return store.money >= store.sustain_floor
+
+    def pay_transit():
+        """The daily IC-card tap. Silent, so the coin sound stays a choice cue."""
+        store.money = max(0, store.money - store.daily_transit_cost)
 
     def spend_money(amount):
         """Pay if you can. Returns True and deducts, or False and changes nothing."""
@@ -1208,18 +1272,33 @@ init python:
         """
         store.remembered_choices[person] = answer
 
-    def remember(who, note):
-        """Log something he said that an important character will hold onto.
+    def log_memory(who, note):
+        """Record a journal entry without promising a story consequence."""
+        notes = store.character_memories.setdefault(who, [])
+        if note not in notes:
+            notes.append(note)
 
-        The attribute system records what he is becoming; this records what he
-        did, in the words of the person who will bring it up again later.
+    def remember(who, note, story_key, show_notice=True):
+        """Mark a choice that another scene explicitly pays off.
+
+        The on-screen notice is rare. It is reserved for moments where what he
+        saw changes the world, or a planted object or promise crosses a line.
+        Quiet debts still latch their story key but stay in the journal, so a
+        later scene can pay them off without announcing every small question.
         """
-        store.character_memories.setdefault(who, []).append(note)
+        log_memory(who, note)
+        if story_key in store.story_memory_keys:
+            return
+        store.story_memory_keys.append(story_key)
+        if not show_notice:
+            return
         # Same hide-then-show trick as the tick chip: a second memory replaces the
         # first on screen and replays the entrance instead of stacking.
         renpy.hide_screen("memory_notice")
         renpy.show_screen("memory_notice",
                           who=store.memory_names.get(who, who.capitalize()))
+
+default story_memory_keys = []
 
 
 # --- ITEMS ---
@@ -1267,13 +1346,85 @@ init python:
             "usable": False,
         },
 
+        "sakura_petal": {
+            "name": "Sakura Petal",
+            "icon": "images/ui/petal.png",
+            "desc": "The last petal Hikari found by the canal. It is already drying, but I can still carry a piece of that afternoon.",
+            "usable": False,
+        },
+
+        "sim_camera_strap": {
+            "name": "Sim's Camera Strap",
+            "icon": "images/items/sim_camera_strap.png",
+            "desc": "Sim's worn black camera strap. It reminds me that I am allowed to keep seeing.",
+            "usable": False,
+        },
+
+        "orson_wolf_coaster": {
+            "name": "Wolf Coaster",
+            "icon": "images/items/orson_wolf_coaster.png",
+            "desc": "A paper coaster with Lupin's slightly off-centre wolf logo. Orson said small things outlast us.",
+            "usable": False,
+        },
+
+        "orson_wolf_paw_badge": {
+            "name": "Wolf Paw Badge",
+            "icon": "images/items/orson_wolf_paw_badge.png",
+            "desc": "A worn wolf's paw badge from Orson. He gave it to me so I would carry the warmth of his bar with me.",
+            "usable": False,
+        },
+
+        "chef_personal_chopsticks": {
+            "name": "Chef's Chopsticks",
+            "icon": "images/items/chef_personal_chopsticks.png",
+            "desc": "Chef's old dark-wood chopsticks, polished by years of use. 心 is burned into the side.",
+            "usable": False,
+        },
+
+        "aya_sketchbook_page": {
+            "name": "Aya's Sketch",
+            "icon": "images/items/aya_sketchbook_page.png",
+            "desc": "A drawing of Aya's cat in a streetwear hoodie. She gave it to me as a reminder to be brave.",
+            "usable": False,
+        },
+
+        "hana_art_charm": {
+            "name": "Hana's Art Charm",
+            "icon": "images/items/hana_art_charm.png",
+            "desc": "A handmade cloth strap with a tiny brush and palette stitched into it. The uneven stitches are all deliberate.",
+            "usable": False,
+        },
+
+        "fortune_corner_card": {
+            "name": "The Corner Card",
+            "icon": "images/items/fortune_corner_card.png",
+            "desc": "The final card from the Fortune Teller's deck. It shows a streetlight, a step, and a corner with no table.",
+            "usable": False,
+        },
+
+        "murakami_certificate": {
+            "name": "Murakami's Certificate",
+            "icon": "images/items/murakami_certificate.png",
+            "desc": "A certificate Murakami printed, stamped, and signed herself. It is not official, but it is real to her, and to me.",
+            "usable": False,
+        },
+
+        "kuma_lucky_bear": {
+            "name": "Kuma, the Lucky Bear",
+            "icon": "images/characters/plushie.png",
+            "desc": "A limited-edition bear with a red ribbon. Hikari won him at an arcade in Shibuya and hugged him all the way home. As long as you hold him, nothing bad happens.",
+            "usable": False,
+        },
+
     }
 
     def item_name(item):
         return item_data.get(item, {}).get("name", item)
 
     def item_desc(item):
-        return item_data.get(item, {}).get("desc", "")
+        description = item_data.get(item, {}).get("desc", "")
+        note = store.keepsake_observations.get(item)
+        return description + "\n\n" + note if note else description
 
     def item_usable(item):
         return item_data.get(item, {}).get("usable", False)
@@ -1284,7 +1435,10 @@ init python:
 
     def item_icon(item, size):
         """The item's picture, or a soft placeholder until its art exists."""
-        path = item_data.get(item, {}).get("icon")
+        data = item_data.get(item, {})
+        if "honki_icon" in data:
+            return honki_item_icon(data["honki_icon"], size)
+        path = data.get("icon")
 
         if path and renpy.loadable(path):
             return Transform(path, xysize=(size, size), fit="contain")
@@ -1337,7 +1491,7 @@ define orson = Character("Orson", color="#a9a9a9", callback=type_sound, image="o
 define chef = Character("Chef", color="#deb887", callback=type_sound, image="chef")
 define sim = Character("Sim", color="#add8e6", callback=type_sound, image="sim")
 define aya = Character("Aya", color="#dda0dd", callback=type_sound, image="aya")
-define maid = Character("Maid", color="#dca0dd", callback=type_sound, image="Maid")
+define maid = Character("Maid", color="#dca0dd", callback=type_sound, image="maid")
 define hana = Character("Hana", color="#98fb98", callback=type_sound, image="hana")
 # Lei Lei runs the gyoza shop in Yokohama Chinatown. She is old, loud, and has
 # no patience for a customer who has not decided yet.
@@ -1396,9 +1550,11 @@ define clerk = Character("Student Relations", color="#b8c6bd", callback=type_sou
 # city who treats the protagonist like a customer instead of a foreigner.
 define yamada = Character("Yamada", color="#b6d2e8", callback=type_sound, image="yamada")
 
-# The regular who explains how the reading room works. A name in the box, no
-# portrait: she is furniture with a voice, and the scene is about Hana anyway.
-define quiet_student = Character("Student", color="#9aa48f", callback=type_sound)
+# The regular who explains how the reading room works. She stays unnamed on
+# purpose: "Student" is the whole point, the room is full of people Hana knows
+# better than we do. She is furniture with a voice; her portrait is wired as a
+# side image below without changing a line of her dialogue.
+define quiet_student = Character("Student", color="#9aa48f", callback=type_sound, image="quiet_student")
 
 # --- PORTRAITS ---
 # The picture in the left gutter belongs to whoever is talking. Two things are
@@ -1498,7 +1654,22 @@ default hikari_kawaii = False
 # her larger; the image keeps its aspect ratio inside the box.
 define hikari_kawaii_box = (576, 384)
 
+# A prop on screen can be the whole point of a beat, with no room for her own
+# picture as well. Set this around those lines to keep her portrait out of the
+# way, then clear it so she comes back for the next line.
+default hikari_portrait_hidden = False
+
+# The lucky bear she wins in Shibuya. While she is hugging him the bear-hugging
+# drawing replaces her normal portrait altogether, as a side image like every
+# other portrait: same size, same place behind the textbox, and never stacked on
+# top of her usual picture. Set before the "He is mine" beat and clear after it.
+default hikari_hugging_bear = False
+
 image side sister = At(ConditionSwitch(
+    "hikari_portrait_hidden",
+    Null(),
+    "hikari_hugging_bear",
+    Transform("images/characters/sister_plushie.png", xysize=(256, 384), fit="contain"),
     # sister_kawaii.png is a 1536x1024 landscape composition (uncropped). At a
     # 256-wide box it renders much shorter than the 2:3 portraits, so this one
     # gets a wider box. Tune hikari_kawaii_box to make her sit like the others.
@@ -1511,6 +1682,14 @@ image side sister = At(ConditionSwitch(
     True,
     Transform("images/characters/sister.png", xysize=(256, 384), fit="contain"),
 ), portrait_idle)
+
+# Kuma himself, as a prop when Hikari first spots him in the claw machine. The
+# raw art is 1227x1281, so on its own it would tower over the 1280x720 stage;
+# shrink him to a small bear instead of letting him fill the screen.
+# xysize controls how BIG he is; yoffset nudges him from the position `at center`
+# gives him. Negative yoffset moves him UP, positive moves him DOWN.
+image plushie = Transform("images/characters/plushie.png", xysize=(240, 250), fit="contain", yoffset=-200)
+
 image side taxi_driver = At(Transform("images/characters/taxidriver.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
 # The professor already has a portrait on disk, so he uses it.
@@ -1525,7 +1704,7 @@ image side fortune_teller = At(Transform("images/characters/fortuneteller.png", 
 image side tanaka = At(Transform("images/characters/combini_worker.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side yamada = At(Transform("images/characters/yamada.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side aya = At(Transform("images/characters/aya.png", xysize=(256, 384), fit="contain"), portrait_idle)
-image side Maid = At(Transform("images/characters/maid.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side maid = At(Transform("images/characters/maid.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
 # The two people whose stories the first free afternoon can open: the ramen chef
 # near home, and Sim, who runs the photography club, Circle. Both portraits are already
@@ -1548,8 +1727,37 @@ image side nami = At(ConditionSwitch(
 # photographer who comes to the exhibition and takes pictures of the room.
 image side tapi = At(Transform("images/characters/circle_tapi.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side tt = At(Transform("images/characters/circle_tt.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# Marcus makes the exhibition posters and map. His portrait is marcus.png.
+image side marcus = At(Transform("images/characters/marcus.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side hana = At(Transform("images/characters/hana.png", xysize=(256, 384), fit="contain"), portrait_idle)
 image side orson = At(Transform("images/characters/orson.png", xysize=(256, 384), fit="contain"), portrait_idle)
+
+# The two late side-character portraits. The reading-room regular is quiet_student
+# (defined above); the new maid is defined in confidant_visits/aya.rpy. Both keep
+# their nameless name-boxes on purpose, but now get a face while they talk.
+image side quiet_student = At(Transform("images/characters/quietstudent.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side new_maid = At(Transform("images/characters/new_maid.png", xysize=(256, 384), fit="contain"), portrait_idle)
+
+# The supporting cast from the elective and the two confidant arcs. All eight are
+# 1024x1536 RGBA portraits with a real alpha channel, so they use the same 256x384
+# side-image box as everybody else. The `image=` tags on their Character() definitions
+# (murakami.rpy, chef.rpy, sim.rpy) have to match the names below exactly.
+# Wei - China. Reads kanji, cannot read kana. Certain he understands.
+image side wei = At(Transform("images/characters/wei.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# Priya - India. Asks the questions nobody else thinks to ask.
+image side priya = At(Transform("images/characters/priya.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# Oliver - England. Treats every custom like a puzzle with a punchline.
+image side oliver = At(Transform("images/characters/oliver.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# Prakash - Nepal. Quiet until he is not. Then devastating.
+image side prakash = At(Transform("images/characters/prakash.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# Saman - Sri Lanka. Studies anime Japanese. Speaks like a documentary.
+image side saman = At(Transform("images/characters/saman.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# The woman in the suit who comes into the ramen shop during the lunch rush.
+image side woman = At(Transform("images/characters/womansuit.png", xysize=(256, 384), fit="contain"), portrait_idle)
+# Rika and Riku, the last two Circle members to get art. Rika is the theatrical
+# model; Riku is the quiet one who designs the exhibition labels.
+image side rika = At(Transform("images/characters/rika.png", xysize=(256, 384), fit="contain"), portrait_idle)
+image side riku = At(Transform("images/characters/riku.png", xysize=(256, 384), fit="contain"), portrait_idle)
 
 # Lei Lei has three drawings: arms crossed and unimpressed (lei_normal),
 # arms crossed and shouting (lei_shout), and the one where the whole room goes
@@ -1608,8 +1816,10 @@ init python:
     for _standing_tag in (
         "assistant", "veteran", "security", "security2", "mother", "father",
         "sister", "taxi_driver", "professor", "yamada", "chef", "sim",
-        "nami", "tapi", "tt",
+        "nami", "tapi", "tt", "marcus",
         "hana", "orson", "clerk", "timid_man", "cheerful_woman",
+        "wei", "priya", "oliver", "prakash", "saman",
+        "woman", "rika", "riku",
     ):
         renpy.image(_standing_tag + "_standing", At("side " + _standing_tag, standing))
     del _standing_tag
@@ -1642,30 +1852,22 @@ define config.speaking_attribute = "talking"
 #              pause 0.12
 #              repeat
 
-# Dream characters
+# Dream characters. hood.png is reserved for her but stays unwired until the
+# "Wake up" scenes exist: right now she is presence, not a speaker.
 define robed_figure = Character("Robed Figure", color="#000000", callback=type_sound)
 
 # "doctor" is kept for the day the room finally speaks to him as a person. Until
 # then, the voices that bleed into the dream are deliberately written as plain
 # narration: no name, no portrait, so they arrive as sentences he overhears
-# rather than as somebody talking to him.
+# rather than as somebody talking to him. doctor.png is on disk but intentionally
+# NOT wired: he is the same man as Tanaka under a white coat and a surgical mask,
+# and the face is held back until the laboratory scenes. See
+# documentation/Characters/Tanaka - The Doctor/character details.md.
 define doctor = Character("Doctor", color="#ff4444", callback=type_sound)
 
 # Narration (a bare "quoted line") goes through the built-in narrator, so it needs
 # the click as well. Declaring it here stops 00definitions.rpy from replacing it.
 define narrator = Character(None, kind=adv, what_style="say_thought", callback=type_sound)
-
-# --- SCREENS: PHOTO MODE PREVIEW ---
-# This is a basic skeleton for the photo mode you requested
-screen photo_mode(bg_image):
-    add bg_image
-    
-    # Simple camera frame overlay
-    add "images/ui/camera_frame.png" align (0.5, 0.5)
-    
-    # Zoom/Pan controls could be added here
-    textbutton "Take Photo" action Return(True) align (0.9, 0.9)
-    textbutton "Exit" action Return(False) align (0.1, 0.9)
 
 ## The notice ##################################################################
 ##
@@ -2212,15 +2414,14 @@ label prologue:
     
     
     "The seat in front of me is still reclined into my lap. A baby three rows back has been crying since we crossed the coast."
-    "New university. Host family. A year in Japan."
+    "New university. Host family. Three months in Japan."
     "I remember the application. The wait. The acceptance email on a Tuesday morning."
     "I was thrilled when it came through. My friends said I was brave."
     "I remember packing a bag. I don't remember the day I decided to leave home."
     "The last ordinary day before the flight is a room I can describe without being in it."
     "I can't remember what made me choose Japan."
     "A professor, a brochure, something I turned into a plan. I can feel the shape of the reason, but the reason itself won't come."
-    "Everything before the airport feels like it happened to someone I used to know. Maybe that's what leaving home does."
-    "Maybe it's the flight. Or the nerves. Maybe this is what arriving somewhere alone feels like."
+    "Everything before the airport feels like it happened to someone I used to know. That's what leaving home does."
 
     
     # The wallet, established before he has spent a single yen of it.
@@ -2274,8 +2475,6 @@ label airport_arrival:
     call screen airport_phone
     "..."
     "No signal."
-    "So much for the map."
-    "I should ask someone how to get there."
 
 label airport_exploration:
     menu:
@@ -2310,7 +2509,7 @@ label talk_security:
         mc "(Her expression doesn't change.)"
         security2 "ここは立入制限区域です。この先は関係者以外通れません。"
         mc "(I don't get the words, but she wants me to move. I just want the exit.)"
-        mc "Excuse me. Which way is...."
+        mc "Excuse me. Which way is..."
         security2 "総合案内所はあちらです。"
         mc "(She points behind me without turning around.)"
         security2 "私は持ち場を離れられません。他の人に聞いてください。"
@@ -2352,7 +2551,6 @@ label answer_security_bow:
     $ reward_attributes_once("answer_security_bow", [("grace", "tiny")], show="auto")
     mc "Sumimasen. Sumimasen."
     mc "(I bowed. I have no idea why I bowed. My body just did it.)"
-    mc "(Maybe the information desk can help.)"
     jump airport_exploration
 
 label answer_security_press:
@@ -2360,12 +2558,10 @@ label answer_security_press:
     mc "Excuse me. 中野3丁目. Please."
     mc "(They glanced at the phone, then at me, and turned away.)"
     mc "(I don't know if they understood. Either way, I need to try someone else.)"
-    mc "(Maybe the information desk can help.)"
     jump airport_exploration
 
 label answer_security_watch:
     mc "(Never mind. If I follow where people are going, I might find the exit.)"
-    mc "(Maybe someone at the information desk might be able to help.)"
     jump airport_exploration
 
 label talk_timid_man:
@@ -2399,12 +2595,11 @@ label answer_timid_again:
     mc "Sorry. Information desk?"
     mc "(He repeated himself at the same speed.)"
     mc "(Maybe he just doesn't have time for me.)"
-    mc "(I'll leave him alone.)"
     jump airport_exploration
 
 label answer_timid_aside:
     mc "Ah, sorry. Sorry."
-    mc "(I'll leave him alone.)"
+    mc "(He didn't look up. To him I am background.)"
     jump airport_exploration
 
 label answer_timid_listen:
@@ -2412,7 +2607,6 @@ label answer_timid_listen:
     mc "(Isogashii. Busy. I practised that one on the plane.)"
     mc "(Ah.. He isn't angry. He's busy.)"
     $ reward_attributes_once("answer_timid_listen", [("insight", "micro")], show="auto")
-    mc "(I'll leave him alone.)"
     jump airport_exploration
 
 label talk_cheerful_woman:
@@ -2475,7 +2669,6 @@ label talk_assistant:
     if has_pamphlet:
         assistant "Good luck! がんばってください！"
         mc "Thanks. I'll give it a try."
-        "Now I need to figure out how to make sense of this pamphlet..."
         jump airport_exploration
 
     assistant "いらっしゃいませ～。ようこそ。"
@@ -3063,7 +3256,7 @@ label home_arrival:
     elif boarded_shinkansen:
         "The walk from the station is short. Streetlights give the neighbourhood a warm glow."
         "Low houses line the street, most with a tiny garden or a bicycle by the wall."
-        mc "Managed to catch the express and transfer at the right station. Not bad for my first time navigating solo."
+        mc "Express, right transfer. One thing went right today."
     else:
         "The walk from the station takes forever."
         mc "That local stopped at every station between here and the airport. Twice, it felt like."
@@ -3071,7 +3264,7 @@ label home_arrival:
 
 
     "I stand in front of a narrow two-storey house with one light on behind the curtains."
-    mc "Home, for a year. I'll find out what that means in the morning."
+    mc "Home, for three months. I'll find out what that means in the morning."
     mc "What was the greeting again? Konnichiwa. That should work."
     "I reach for the doorbell."
     # The chime lands at the same moment as the line describing it, so the sound
@@ -3148,7 +3341,7 @@ label home_arrival:
 
     # The room, and the boxes that arrived before he did.
     "The stairs creak under both of us."
-    mother "Well, it's not a lot, but this will be your room for the year."
+    mother "Well, it's not a lot, but this will be your room for the summer."
     mother "Hikari's room is next door, so please try not to make too much noise. She's a light sleeper."
     mother "Oh, and the things you shipped over arrived yesterday. They're still down by the door."
     mother "Would you help your old host mother carry them up?"
@@ -3188,12 +3381,10 @@ label home_arrival:
 
     "Somewhere in the middle of it the room stops looking like a spare room and starts looking like somewhere a person lives."
     mc "I'm tired, but it finally feels like my room."
-    mc "I'm grateful to have a place of my own."
     if travel_method == "train":
         mc "I slept on the train. So why am I tired again?"
     else:
         mc "I slept in the taxi. So why am I tired again?"
-    mc "Maybe I should sleep."
     mc "My first night in Japan."
 
     window hide
@@ -3408,7 +3599,7 @@ label morning_call:
     $ current_act = 2
     # Day 2: Thursday, April 9. The first school day.
     $ set_story_day(2)
-    call day_transition
+    call day_transition from _call_day_transition_23
 
     # Waking up. The dream lets go of him slowly, the way a hand does once it has
     # decided you can stand on your own.
@@ -3484,23 +3675,28 @@ label morning_call:
     hikari "A few people in the department have been asking when you'd arrive."
     hikari "I told them today. No pressure."
     menu:
+        "[tag_insight] Rank 2: Notice she said no pressure before you asked." if has_attribute("insight", 2):
+            mc "You told them today. No pressure. You said that before I asked whether it was a problem."
+            mc "You were telling me people would ask, so I would not be surprised."
+            hikari "I say the useful thing first. It saves time."
+            $ reward_attributes_once("answer_breakfast_notice", [("insight", "micro")], show="auto")
         "What have you told them about me?":
             # Wanting to know what people have heard is curiosity, not a lapse.
             $ reward_attributes_once("answer_breakfast_questions", [("insight", "micro")], show="auto")
             mc "What have you told them about me?"
             hikari "That you're in our department and you ask a lot of questions."
             mc "Accurate, unfortunately."
-            $ remember("hikari", "asked what the department knew about him")
+            $ log_memory("hikari", "asked what the department knew about him")
         "Should I introduce myself today?":
             mc "Should I introduce myself, or wait until I'm less jet-lagged?"
             hikari "Today. Nobody remembers introductions anyway. It's a free practice run."
-            $ remember("hikari", "asked about meeting the other students")
+            $ log_memory("hikari", "asked about meeting the other students")
         "I never said this properly. The emails you made this less frightening.":
             $ reward_attributes_once("answer_breakfast_emails", [("grace", "small")], show="auto")
             mc "I never said this properly. The emails you made this less frightening."
             hikari "You did thank me. Several times."
             hikari "But you're welcome."
-            $ remember("hikari", "thanked her for the emails")
+            $ log_memory("hikari", "thanked her for the emails")
 
     # Tetsuo's one piece of advice for the year, and it is also the thesis of his
     # character: keep to the routine and nothing bad can happen.
@@ -3582,11 +3778,11 @@ label leaving_house:
             mc "Does he close it differently when he's angry?"
             hikari "It's the speed. An angry amado is fast, and a fast one bounces off the frame."
             hikari "You'll hear it in a month. Everybody does. It's the first thing this house teaches you."
-            $ remember("hikari", "asked her how she hears a door")
+            $ log_memory("hikari", "asked her how she hears a door")
         "I didn't hear anything.":
             mc "...I didn't hear anything. Sorry. It was a door closing."
             hikari "You will. The frame rattles when somebody slams it."
-            $ remember("hikari", "admitted he did not hear the door")
+            $ log_memory("hikari", "admitted he did not hear the door")
 
     # The rule, and the reason for it, because Hikari never gives a rule without a
     # reason. The mosquitoes are not a metaphor.
@@ -3673,8 +3869,6 @@ label school_morning:
     "And then there it is."
     "A wall, a gate, a building behind the gate, and a few hundred people my age going through it like water through a grate."
     hikari "So. This is it. That's the school."
-    mc "It's big."
-    hikari "It's a school. They're all big."
 
     # The pamphlet he picked up at the airport had a photograph of a school on the
     # back page. Only fires if he actually took one, which is why it is worth
@@ -3712,18 +3906,18 @@ label school_morning:
             hikari "...I walked in the wrong door. Twice. There are two entrances and I used the wrong one for a week."
             hikari "Nobody tells you that either. That's the whole thing about this place."
             mc "(She has been giving me a list of everything she had to learn the hard way. I only just noticed.)"
-            $ remember("hikari", "asked what her first day was like")
+            $ log_memory("hikari", "asked what her first day was like")
         "I had a list. It was wrong.":
             mc "I had a list. In my head. On the plane."
             mc "Shoes at the door. Bow to the teacher. Stand up when somebody older walks in."
             hikari "How much of it survived the morning?"
             mc "The bowing. Maybe."
             hikari "That's a better score than most. Come on."
-            $ remember("hikari", "admitted the list he brought was wrong")
+            $ log_memory("hikari", "admitted the list he brought was wrong")
         "Where do I check room changes?":
             mc "If a class moves, where do I check? The department board?"
             hikari "The board and the student portal. Check the portal before you leave home."
-            $ remember("hikari", "asked how to check room changes")
+            $ log_memory("hikari", "asked how to check room changes")
     hikari "Ready?"
     mc "No."
     hikari "Honest answer. Come on."
@@ -3764,19 +3958,19 @@ label campus_grounds:
         "Which building is ours?":
             mc "Which building is ours? I want to recognise it when I'm on my own."
             hikari "The grey one behind the trees. I'll take you there."
-            $ remember("hikari", "asked which building belonged to their department")
+            $ log_memory("hikari", "asked which building belonged to their department")
         "These buildings are different ages.":
             $ reward_attributes_once("answer_courtyard_buildings", [("insight", "micro")], show="auto")
             mc "Stone, glass, concrete. Was this built in stages?"
             hikari "Yes. The gym was here first. They kept adding things around it."
-            $ remember("hikari", "noticed the campus had been built in stages")
-        "Let's keep moving.":
-            mc "I'll look around later. I don't want to make us late."
-            hikari "Good call. This way."
+            $ log_memory("hikari", "noticed the campus had been built in stages")
+        "Ask which one was here first.":
+            mc "Which of these was here before the others?"
+            hikari "The gym. It is the ugly one. Come on."
 
     "She walks fast, which I am starting to understand is just how everyone here walks."
     "She points at things the way a person points at their own house."
-    hikari "Library. Open until ten. You will not care about that in September and you will care about it very much in December."
+    hikari "Library. Open until ten. You will not care about that in April and you will care about it very much in June."
     hikari "That is the cafeteria, and that is the other cafeteria, and there is a reason there are two, and the reason is terrible."
     hikari "Past those, the gym. Nobody uses the gym."
     mc "Was that here before the rest?"
@@ -3787,7 +3981,7 @@ label campus_grounds:
     "She turns down a path and the courtyard narrows into a plain grey building with a set of steps and too many doors."
     hikari "And this is ours."
     mc "Ours."
-    hikari "You and me. Same department, so same building, so for the next year that door is the one you will get tired of."
+    hikari "You and me. Same department, so same building, so for the rest of your time here that door is the one you will get tired of."
     mc "(She says that like it's a good thing. I think it is.)"
 
 
@@ -3818,18 +4012,18 @@ label department_tour:
         "The film screening.":
             mc "The film screening. Can anyone go?"
             hikari "Anyone with a student card. They show one every Thursday."
-            $ remember("hikari", "picked the film screening poster")
+            $ log_memory("hikari", "picked the film screening poster")
         "The three rooms for rent.":
             mc "There are three of those. Three different flats, three different people who all took the same photograph."
             hikari "Same agent, probably. People pass the adverts around when they move out."
-            $ remember("hikari", "picked the three rooms for rent")
+            $ log_memory("hikari", "picked the three rooms for rent")
         "[tag_insight] The lost cat." if has_attribute_points("insight", 0.5):
             mc "The cat one. The tape has gone yellow and both bottom corners have curled."
             hikari "...Huh."
             mc "There's a date at the bottom. Last semester. Has anyone checked whether they found it?"
             hikari "I don't know. The number's still there. We could ask later."
             $ reward_attributes_once("answer_wall_cat", [("insight", "micro")], show="auto")
-            $ remember("hikari", "picked the lost cat nobody had taken down")
+            $ log_memory("hikari", "picked the lost cat nobody had taken down")
 
     "She stops at the far end, in front of a set of double doors, and reads a timetable taped to the glass."
     hikari "Right. That's your first lecture. History and literature, four floors up, and we have about ten minutes."
@@ -3905,16 +4099,16 @@ label student_relations:
             mc "If it was you. Out of all of them. Which one would you pick?"
             clerk "The reading circle. Four people and a great deal of silence, and they have never once asked me for anything."
             clerk "That is the highest praise I can give a circle."
-            $ remember("clerk", "asked which circle she would pick")
+            $ log_memory("clerk", "asked which circle she would pick")
         "When does the photography club meet?":
             mc "When does the photography club meet? Can I visit before joining?"
             clerk "This afternoon. Second floor. They welcome visitors."
-            $ remember("clerk", "asked when he could visit the photography club")
+            $ log_memory("clerk", "asked when he could visit the photography club")
         "[tag_grace] You've made this much easier." if has_attribute_points("grace", 0.6):
             mc "You've made this much easier. I was worried I'd miss something important."
             clerk "You're welcome. Keep the booklet. There's a lot to remember on your first day."
             $ reward_attributes_once("answer_circles_back", [("grace", "micro")], show="auto")
-            $ remember("clerk", "told her the orientation had helped")
+            $ log_memory("clerk", "told her the orientation had helped")
 
     mc "Thank you. Really."
     clerk "You are welcome. Come back when something breaks. Something always breaks."
@@ -3979,8 +4173,7 @@ label first_class:
     professor "Every generation since is smaller than the one before it. That is not a mystery. It is arithmetic."
     professor "By the time the people in this room are my age, there will be fewer of you than there are seats."
     professor "The country has to decide what it does about that. And it is deciding. Slowly, and in rooms like this one."
-    mc "(Something in my chest goes cold for a moment and does not say why.)"
-    mc "(I'm tired. Long flight, longer morning. That's all it is.)"
+    mc "(My hand stops on the page. I do not know why.)"
 
     "The hour ends and he closes his notebook on a sentence he does not finish, and forty people stand up at once."
     hikari "Go."
@@ -4007,12 +4200,12 @@ label first_class:
         "I'll write it down and check the room on the portal.":
             "I open my notebook and write the class time at the top of the page, then check the room on the portal."
             $ reward_attributes_once("answer_clock_write", [("insight", "micro")], show="auto")
-            $ remember("professor", "wrote down the attendance rule")
+            $ log_memory("professor", "wrote down the attendance rule")
         "It won't happen again.":
             mc "I'm sorry. I'll be here early from now on. I mean it."
             professor "Yes. You will."
             $ reward_attributes_once("answer_clock_promise", [("grace", "micro")], show="auto")
-            $ remember("professor", "apologised and promised to come early")
+            $ log_memory("professor", "apologised and promised to come early")
         "[tag_nerve] Can we discuss today's late mark?" if has_attribute_points("nerve", attribute_reward_value("nudge")):
             mc "Could we discuss today's late mark? Student Relations asked me to register before coming here."
             professor "..."
@@ -4020,7 +4213,7 @@ label first_class:
             mc "Thank you. I'll bring it tomorrow."
             # The gate tests nerve; the answer should reward the same behavior.
             $ reward_attributes_once("answer_clock_ask", [("nerve", "micro")], show="auto")
-            $ remember("professor", "asked him to review the registration delay")
+            $ log_memory("professor", "asked him to review the registration delay")
 
     professor "Coming on time is late."
     professor "You are seated, ready, notebook open, pen out, five minutes before the class begins."
@@ -4062,16 +4255,15 @@ label first_class:
             $ reward_attributes_once("answer_hikari_warning", [("nerve", "small")], show="auto")
             mc "Next time, warn me before you go. I can't follow a route I don't know."
             hikari "Fair. I will."
-            $ remember("hikari", "asked her not to leave without warning")
-        "Thanks for saving me a seat.":
-            mc "Thanks for saving me a seat, at least."
+            $ remember("hikari", "asked her to tell him before she went on ahead", "hikari_warning", show_notice=False)
+        "I did see the seat you saved me.":
+            mc "I did see the seat you saved me. I know you were trying to help."
             hikari "Window side. You'll want it when the heating starts."
             $ reward_attributes_once("answer_hikari_seat", [("grace", "micro")], show="auto")
-            $ remember("hikari", "thanked her for saving him a seat")
-        "I'd rather just move on. Let's eat.":
-            mc "I'd rather just move on. Let's eat."
-            hikari "That is a very good plan."
-            $ remember("hikari", "chose to move on after the lecture")
+            $ log_memory("hikari", "thanked her for saving him a seat")
+        "I need a minute before we go.":
+            mc "I need a minute before we go."
+            "She leans against the wall beside me. She doesn't look at the clock."
     hikari "Come on. I'm hungry, and I know a bad cafeteria and a worse one."
     mc "You said there were two."
     hikari "There are two."
@@ -4146,7 +4338,7 @@ label after_school_walk_alone:
     scene black with walk_fade
 
     "The street I turn into is already in shadow, and it is not the shadow of a building. It is the time of day."
-    "Was it this left? or the next one? Maybe I passed it?"
+    "Was it this left, or the next one? Maybe I passed it?"
     "I remember a crossing with mirrors on the poles. A bakery with a cat painted on the glass. I do not remember which came first."
     "So I take a turn, on the grounds that it looks like a turn."
     "Ten minutes later the road is narrow. No mirrors on any pole, no cat on any window, and two convenience stores in a row."
@@ -4228,11 +4420,16 @@ label after_school_walk_alone:
     # Both answers lead to the same meal. Restore the counter shot before the
     # chef speaks, so his portrait never covers the food close-up.
     menu:
+        "[tag_grace] Rank 2: Thank him and leave the bowl where he set it." if has_attribute("grace", 2):
+            mc "Arigatou gozaimasu."
+            "I leave the bowl where he placed it and do not ask another question."
+            mc "(He gave me the answer by not needing another one.)"
+            $ reward_attributes_once("answer_ramen_quiet_thanks", [("grace", "micro")], show="auto")
         "Ask what kind of broth it is.":
             mc "Sumimasen. Shoyu? Miso?"
             "He follows my finger towards the bowl."
             "He points to the dark bottle beside the stove."
-            mc "(Soy sauce. That answers that.)"
+            mc "(Soy sauce, in a pork broth. That answers that.)"
             "I stop talking. He pushes the bowl half a centimetre towards me with one finger."
             $ reward_attributes_once("answer_ramen_broth", [("insight", "nudge")], show="auto")
             chef "どうぞ。"
@@ -4268,8 +4465,8 @@ label after_school_walk_alone:
         "Ask what gives it the smoky flavour.":
             mc "The pork? Is that where the smoky taste comes from?"
             "He taps the edge of the grill with his ladle."
-        "Smile and keep eating.":
-            "I nod with the spoon still in my hand. He turns back to the stove."
+        "Point at the bottle and wait for him to name it.":
+            "I point at the dark bottle beside the stove with the spoon. He says its name slowly, and watches to see if I got it."
 
     "He snorts. A small sound, killed immediately. Something in his face moves for a quarter of a second before he turns back to the pots."
     "He says nothing else. I slurp, badly, and get broth on the counter, and he does not comment."
@@ -4293,7 +4490,7 @@ label after_school_walk_alone:
     mc "(Not what I expected. I'd order it again.)"
 
     $ confidant_visits["chef"] = 1
-    $ remember("chef", "sat down in his shop and finished the bowl")
+    $ log_memory("chef", "sat down in his shop and finished the bowl")
 
     # Back to the counter shot for this, for the same reason the whole scene
     # works this way: he does not say anything that is not sitting in front of
@@ -4302,7 +4499,7 @@ label after_school_walk_alone:
     # takes the whole frame.
     scene bg_ramen_shop with walk_fade
 
-    "He has been looking at the phone on the counter since I put the money down."
+    "He has been looking at the phone I left on the counter beside the money."
     chef "「WIRE、やってるか」"
     "Two English sounds, dropped into a Japanese sentence, at the exact volume of the pots."
     mc "(I caught two English sounds in the middle of Japanese. I let myself nod as if that was understanding.)"
@@ -4397,6 +4594,7 @@ label after_school_run:
         "Which turn is ours?":
             mc "Which turn is ours? The one after the bakery?"
             hikari "Yes. Then straight until you see the blue gate."
+            $ reward_attributes_once("answer_run_turn", [("grace", "micro")], show="auto")
 
     "We get to the house and she does not go in."
     mc "(She is not going inside.)"
@@ -4414,6 +4612,10 @@ label after_school_run:
             hikari "..."
             hikari "Yes. You can come."
             $ reward_attributes_once("answer_run_join", [("nerve", "micro")], show="auto")
+        "I'd like to see it.":
+            mc "I'd like to see it."
+            hikari "Then you will."
+            $ reward_attributes_once("answer_run_see", [("grace", "micro")], show="auto")
 
     hikari "Go and change into something you can move in."
     mc "Oh? You're serious."
@@ -4469,6 +4671,7 @@ label after_school_run:
     hikari "You're not unfit. That was a hard route. I chose it, and you kept up."
     mc "Thank you."
     hikari "You're welcome. I meant it."
+    "She smiles, quick and unguarded, then looks away."
 
     "We drink them under the lamp, listening to the water move past."
 
@@ -4504,9 +4707,9 @@ label after_school_run:
 
     hikari "Right. That was your lap."
     mc "That was not a lap."
-    hikari "It was a lap. A generous one. Same time next week?"
-    mc "Same time next week."
-    hikari "Good. I'll see you then."
+    hikari "It was a lap. A generous one. Same time next time?"
+    mc "Same time next time."
+    hikari "Good. I'll see you then. I always do."
     scene bg_river_night with walk_fade
 
 
@@ -4515,7 +4718,7 @@ label after_school_run:
     # similar weight. Walk and photo use the same size on their forced beat.
     $ reward_attributes_once("run_first_river", [("nerve", "small")], show="card")
     $ add_affection("sister", 1)
-    $ remember("hikari", "ran the river path with her on the first afternoon")
+    $ log_memory("hikari", "ran the river path with her on the first afternoon")
 
     # WIRE is already hers from the morning; the run is where she uses it for the
     # thing she will not say in the kitchen. She does it the way she does
@@ -4583,7 +4786,7 @@ label after_school_photo_club:
     #   1  the argument, and the fact he arrives with nothing to shoot
     #   2  the club learns his name, and the basics, in two languages at once
     #   3  the first frame that is actually his, and Sim prouder of it than he is
-    #   4  the club filling up, and the exhibition Sim introduces as somebody else's idea
+    #   4  the club filling up, the print judging, and the exhibition Sim proposes to the room
     #   5  the quiet week, and the reason he started Circle, told as a joke
     #   6  the editor's email, and the promise he makes to the room
     #   7  the exhibition, and the strap he gives away
@@ -4640,7 +4843,7 @@ label after_school_photo_club:
 
     sim "So. Here is the whole club, and then you can decide about us."
     sim "Some come to build a portfolio. Some for the practice."
-    sim "Some because they wanted somewhere to be on a Tuesday and this room was open."
+    sim "Some because they wanted somewhere to be on a Thursday and this room was open."
     sim "Everybody gives what they have and takes what they need. It works both ways. Nobody pays, and nobody has to be any good."
     mc "(Two rooms in one day, and both of them told me who they were for before they told me anything else.)"
 
@@ -4676,11 +4879,13 @@ label after_school_photo_club:
         "I tilted the phone.":
             mc "I tilted the phone. The door looks like it's falling over."
             sim "Easy to do. Try lining it up with the side of the screen."
+            "I take another, with the door straight this time."
             # Naming his own framing mistake.
             $ reward_attributes_once("answer_circle_tilt", [("insight", "micro")], show="auto")
         "I'm not sure what to look for yet.":
             mc "I'm not sure what to look for yet."
             sim "That's fine. Take a second one and compare them. Start with what changes."
+            "I take another and hold the two side by side."
             # Admitting uncertainty in front of the room.
             $ reward_attributes_once("answer_circle_unsure", [("nerve", "micro")], show="auto")
 
@@ -4734,7 +4939,8 @@ label after_school_photo_club:
     mc "(My phone has two new photographs on it. Neither looks like the ones on the wall.)"
 
     $ confidant_visits["sim"] = 1
-    $ remember("sim", "joined the first session with his phone camera")
+    $ sim_first_with_phone = True
+    $ log_memory("sim", "joined the first session with his phone camera")
 
     # He does not gate the club behind anything, so the group is the one thing he
     # has to give that costs him nothing and asks nothing. He gives it the same
@@ -5581,8 +5787,8 @@ label first_evening_dinner:
                 $ declined_dinner = True
                 # Telling the truth about being full is honesty, not rudeness.
                 $ reward_attributes_once("first_dinner_declined", [("nerve", "micro")], show="auto")
-                $ remember("father", "told him he was still full from ramen on his first night")
-                $ remember("hikari", "covered for him when he skipped dinner")
+                $ log_memory("father", "told him he was still full from ramen on his first night")
+                $ log_memory("hikari", "covered for him when he skipped dinner")
                 jump end_of_first_day
             "Say you're hungry, and sit down to eat with them.":
                 mc "I'm starving, actually. What is natto?"
@@ -5590,8 +5796,8 @@ label first_evening_dinner:
                 # He chose the table over the easier exit. That is the thing
                 # Tetsuo was actually asking for.
                 $ add_affection("father", 2)
-                $ remember("father", "ate dinner with the family even though he was still full")
-                $ remember("hikari", "he covered for being too full to explain")
+                $ log_memory("father", "ate dinner with the family even though he was still full")
+                $ log_memory("hikari", "he covered for being too full to explain")
 
     menu:
         "Try the natto. Admit you're not sure about it yet.":
@@ -5604,7 +5810,7 @@ label first_evening_dinner:
             # Honesty at the table, offered without making it a performance.
             $ add_affection("father", 1)
             $ reward_attributes_once("first_dinner_natto", [("nerve", "micro")], show="auto")
-            $ remember("father", "was honest about trying natto")
+            $ log_memory("father", "was honest about trying natto")
         "How long did it take to get used to the neighborhood?":
             mc "How long did it take to get used to the neighborhood?"
             father "I grew up two stops away. Your mother moved here after we married."
@@ -5615,7 +5821,7 @@ label first_evening_dinner:
             # He asked about Tetsuo's life instead of only his own.
             $ add_affection("father", 1)
             $ reward_attributes_once("first_dinner_neighborhood", [("grace", "micro")], show="auto")
-            $ remember("father", "talked about learning the neighborhood")
+            $ log_memory("father", "talked about learning the neighborhood")
         "I'm sorry I kept you waiting. I should have called.":
             mc "I'm sorry I kept you waiting. I should have called."
             father "You didn't have a working connection. Next time, ask someone to call."
@@ -5625,7 +5831,7 @@ label first_evening_dinner:
             # polite apology after the fact.
             $ add_affection("father", 2)
             $ reward_attributes_once("first_dinner_apology", [("grace", "micro")], show="auto")
-            $ remember("father", "apologized for keeping the family waiting")
+            $ log_memory("father", "apologized for keeping the family waiting")
 
     father "The rule isn't there to make you ask permission for everything."
     father "If you're late, we need to know you're safe. That's all."
@@ -5696,6 +5902,11 @@ label end_of_first_day:
     hikari "It is. Get some sleep. I'll come get you in the morning."
 
     menu:
+        "[tag_nerve] Rank 2: Ask her to stay a minute before she goes." if has_attribute("nerve", 2):
+            mc "Stay a minute. Before you go."
+            "She sits on the edge of the bed and does not look at the clock."
+            mc "(I asked for something and nothing broke. That is worth remembering.)"
+            $ reward_attributes_once("first_night_stay", [("nerve", "micro")], show="auto")
         "Thank her for helping me figure it out.":
             mc "Thanks for helping me figure it out. I don't know how any of this works yet."
             hikari "That's why I'm explaining it."
@@ -5795,7 +6006,7 @@ label test_memory_match:
 label second_morning:
     # Day 3: Friday, April 10. The second school day.
     $ set_story_day(3)
-    call day_transition
+    call day_transition from _call_day_transition_24
 
     # Anything queued while the phone had no signal lands here, with the buzz.
     $ flush_pending_messages()
@@ -5898,9 +6109,9 @@ label first_connection_messages:
     elif arrived_from == "sim":
         hikari "That was your phone. Sim already found you."
         $ run_chat("sim", [])
-        hikari "He posted your photographs, didn't he."
-        mc "The window one has replies."
-        hikari "Of course it does. He probably replied first."
+        hikari "He pulled you into that group, didn't he."
+        mc "He did. I can't see the posts yet."
+        hikari "Of course you can't. Give it a day."
 
     return
 
@@ -6223,7 +6434,7 @@ label second_school_day:
         "Please recommend something.":
             $ reward_attributes_once("maid_cafe_first_recommendation", [("grace", "micro")], show="auto")
             mc "A recommendation would be nice."
-            aya "Then I suggest the omurice. It's fluffy, and I'll draw a rabbit on it. That's what I draw when I'm happy."
+            aya "Then I suggest the omurice. It's fluffy, and I'll draw a kitty on it. With a bow. That's what I draw when I'm happy."
             mc "Sounds good. Let's do that."
         "I'll try choosing for myself.":
             $ reward_attributes_once("maid_cafe_first_independent_order", [("nerve", "micro")], show="auto")
@@ -6307,11 +6518,11 @@ label second_school_day:
             {"label": "\"I went in. Ordered lunch. Did the spell.\"",
              "send": "I went in. Ordered lunch. Did the spell.",
              "them": ["Good. First-timer rites complete.",
-                      "The photo better be good."]},
+                      "The kitty better be good."]},
             {"label": "\"I went in. Mostly for lunch, honestly.\"",
              "send": "I went in. Mostly for lunch, honestly.",
              "them": ["Mostly.",
-                      "The photo better be interesting.",
+                      "The kitty better be interesting.",
                       "I'll allow it."]},
         ]},
     ])
@@ -6423,16 +6634,14 @@ label second_school_day:
             hikari "He's learning."
             $ reward_attributes_once("night_table_boundary", [("nerve", "micro")], show="auto")
             $ add_affection("father", 1)
-        "[tag_nerve] I'll tell you. All of it. You might want to put the newspaper down." if has_attribute_points("nerve", 0.8):
-            mc "I'll tell you. All of it. You might want to put the newspaper down."
+        "[tag_nerve] Put the paper down and I'll tell you." if has_attribute_points("nerve", 0.8):
+            mc "Put the paper down and I'll tell you."
             "Hikari's chopsticks stop halfway to her mouth."
             father "..."
             "The newspaper comes down an inch. Not all the way. An inch."
-            mc "That's enough. I'll start with the plan."
-            father "I have been dreading this since you arrived."
-            "Something moves at the corner of his mouth. It is gone before I can be sure."
-            hikari "Oh no. He's got a sense of humor."
-            mother "Don't encourage him."
+            mc "The plan was the easy part. I almost bought a case for a phone I don't own."
+            "He folds the paper the rest of the way."
+            father "I've done that with a set of tires."
             # The gate should be worth opening: the bolder answer pays more.
             $ reward_attributes_once("night_table_nerve", [("nerve", "nudge")], show="auto")
             $ add_affection("father", 1)
@@ -6546,14 +6755,14 @@ label night_room_visit:
         "\"I'll be at the library first thing.\"":
             mc "I'll be at the library first thing."
             hikari "Good. Go to bed, then."
-            $ remember("hikari", "promised to study at the library before anything else")
+            $ log_memory("hikari", "promised to study at the library before anything else")
             $ reward_attributes_once("night_room_library_promise", [("insight", "micro")], show="auto")
             $ add_affection("sister", 1)
         "\"What do I actually need to study?\"":
             mc "What do I actually need to study?"
             hikari "The haiku handout. The history notes. Everything the professors said that sounded like it mattered."
             hikari "If you only have an hour, do the handout. If you have three, do everything and then some."
-            $ remember("hikari", "asked her what to study before the quiz")
+            $ log_memory("hikari", "asked her what to study before the quiz")
             # Asking what to study is planning, not social grace.
             $ reward_attributes_once("night_room_study_plan", [("insight", "micro")], show="auto")
             $ add_affection("sister", 1)
@@ -6562,7 +6771,7 @@ label night_room_visit:
             hikari "..."
             hikari "Maybe."
             mc "(She is. I know she is. She has been waiting all evening to do this.)"
-            $ remember("hikari", "teased her about quizzing him before the exams")
+            $ log_memory("hikari", "teased her about quizzing him before the exams")
             $ reward_attributes_once("night_room_tease", [("grace", "micro")], show="auto")
             $ add_affection("sister", 1)
 
@@ -6605,6 +6814,13 @@ label free_afternoon:
 
     # Overnight and between-visit texts arrive here if the line is live.
     $ flush_pending_messages()
+    # The wallet floor closes optional outings in hub_destination_order(). Say
+    # why once, the first time, then let the shorter list speak for itself.
+    if store.combini_job_unlocked and not can_afford_day() and not store.low_funds_nudge_shown:
+        $ store.low_funds_nudge_shown = True
+        mc "I don't have enough to get by the day. I should take that shift."
+    elif can_afford_day():
+        $ store.low_funds_nudge_shown = False
     $ place = renpy.call_screen("location_hub", places=hub_destination_order())
 
     # Home is not an empty afternoon: Hikari is always there with a reason to
@@ -6636,6 +6852,8 @@ label free_afternoon:
         jump confidant_visit_hana
     elif place == "fortune":
         jump confidant_visit_fortune
+    elif place == "murakami":
+        jump confidant_visit_murakami
     elif place == "walk_hikari":
         jump confidant_visit_hikari
     elif place == "walk_alone":
@@ -6652,6 +6870,8 @@ label free_afternoon:
         jump city_row_night_market
     elif place == "combini":
         jump city_row_combini
+    elif place == "honki":
+        jump city_row_honki
     elif place == "odaiba":
         jump city_row_odaiba
     elif place == "yokohama":
@@ -6686,7 +6906,7 @@ label free_afternoon:
 label saturday_off:
     # Day 4: Saturday, April 11. The library, Hana, and Lupin's Den.
     $ set_story_day(4)
-    call day_transition
+    call day_transition from _call_day_transition_25
 
     # Overnight texts land here if the line is live.
     $ flush_pending_messages()
@@ -6857,7 +7077,7 @@ label reading_club_first:
 
     $ confidant_visits["hana"] = max(confidant_visits.get("hana", 0), 1)
     $ hana_affection += 1
-    $ remember("hana", "left her book and a handmade WIRE card")
+    $ log_memory("hana", "left her book and a handmade WIRE card")
     $ wire_unlock("hana")
     $ queue_message("hana", "The book... you have it now. I... I couldn't take it back. I'm sorry. It was... it was mine. But maybe... maybe that's okay.", day="yesterday")
 
@@ -6975,7 +7195,7 @@ label lupins_den_first:
 
     $ confidant_visits["orson"] = max(confidant_visits.get("orson", 0), 1)
     $ orson_affection += 1
-    $ remember("orson", "found Lupin's Den after getting lost on the way home and took the WIRE card")
+    $ log_memory("orson", "found Lupin's Den after getting lost on the way home and took the WIRE card")
     $ reward_attributes_once("lupins_den_first", [("nerve", "micro")], show="auto")
 
     scene bg_lupins_alley_night with walk_fade
@@ -7030,14 +7250,15 @@ label home_sukiyaki:
     "That is enough. That is more than enough."
 
     stop ambient fadeout 1.5
+    call honki_family_trip from _call_honki_family_trip
+
     scene bg_room_bed_night with stair_fade
     $ room_ambient(True)
     "Upstairs, the house winds down the way it always does, father's newspaper, mother's tea things,"
     "Hikari's footsteps on the stairs that creak under her anyway."
     "I lie in the dark and try to remember the girl's face at the library. It doesn't stay."
     "She didn't want it to."
-    "Tomorrow the quiz study continues. Tonight there is sukiyaki and sleep,"
-    "and both of them were earned."
+    "Tomorrow there's a quiz to study for and a pudding with my name on it."
 
     stop music fadeout 2.0
     scene black with Dissolve(1.5)
@@ -7056,7 +7277,7 @@ label home_sukiyaki:
 label sunday_morning:
     # Day 5: Sunday, April 12. The practice quiz at home.
     $ set_story_day(5)
-    call day_transition
+    call day_transition from _call_day_transition_26
 
     $ flush_pending_messages()
 
@@ -7066,8 +7287,8 @@ label sunday_morning:
     "Sunday arrives the way Sundays do, late, and without apology."
     "I wake to the smell of miso soup and the sound of father reading the sports page out loud,"
     "which is somehow worse than the newspaper staying folded."
-    mc "(Saturday is already a story I tell myself. Library, a girl made of held breath,"
-    mc "a bar full of masks, sukiyaki. It took one day to become the best day I've had here.)"
+    mc "(Saturday is already a story I tell myself. Library, the girl who barely spoke,"
+    mc "a bar full of masks, sukiyaki. One day, and it is already mine.)"
 
     scene bg_kitchen with walk_fade
     "The kitchen is doing its Sunday version: everybody in the clothes they wear when nobody has to be anywhere."
@@ -7153,25 +7374,25 @@ label sunday_morning:
         hikari "Huh."
         hikari "Maybe you'll survive midterms after all. Don't let it go to your head,"
         hikari "the real quiz has a professor watching."
-        $ remember("hikari", "passed her Sunday practice quiz without help")
+        $ log_memory("hikari", "passed her Sunday practice quiz without help")
         $ add_affection("sister", 2)
     elif sunday_quiz_score == 2:
         if not sunday_q3_correct:
             hikari "Two out of three. The attendance one almost got you,"
             hikari "that one's the one people forget until it costs them."
-            $ remember("hikari", "nearly forgot the three-absences rule on her quiz")
+            $ log_memory("hikari", "nearly forgot the three-absences rule on her quiz")
         elif not sunday_q1_correct:
             hikari "Two out of three. You lost the kigo, which is the one I would have bet on you getting."
             hikari "The seasonal word is the door into the whole poem. Remember that."
-            $ remember("hikari", "missed the kigo definition on her quiz")
+            $ log_memory("hikari", "missed the kigo definition on her quiz")
         else:
             hikari "Two out of three. You can name the season, but the count still trips you."
             hikari "Sounds, not words. The professor will not let that one slide twice."
-            $ remember("hikari", "lost the counting question on her quiz")
+            $ log_memory("hikari", "lost the counting question on her quiz")
         $ add_affection("sister", 1)
     else:
         hikari "We're doing this again before midterms. Same table, same handout, and this time you read before I ask."
-        $ remember("hikari", "struggled through her Sunday practice quiz")
+        $ log_memory("hikari", "struggled through her Sunday practice quiz")
         $ add_affection("sister", 1)
 
     "She collects the handout, squares it against the table edge,"
@@ -7239,7 +7460,7 @@ label sunday_morning:
 label monday_morning:
     # Day 6: Monday, April 13. The haiku quiz and the last built scene.
     $ set_story_day(6)
-    call day_transition
+    call day_transition from _call_day_transition_27
 
     $ flush_pending_messages()
 
@@ -7346,7 +7567,7 @@ label monday_lecture:
     if monday_quiz_score == 3:
         mc "(Three for three. Hikari's quiz was real training.)"
         mc "I should tell her. No, she'll find out. She always does."
-        $ remember("professor", "answered all three quiz questions correctly")
+        $ log_memory("professor", "answered all three quiz questions correctly")
     elif monday_quiz_score == 2:
         if not monday_q1_correct:
             mc "(Two out of three. The kigo question was the trick, the pond was right there and still wrong.)"
@@ -7387,10 +7608,10 @@ label monday_lecture:
                 $ reward_attributes_once("day6_combini_long", [("nerve", "micro")], show="auto")
         if day6_route == "chef_train":
             $ day6_chef_route = "train"
-            call day6_walk_home_chef
+            call day6_walk_home_chef from _call_day6_walk_home_chef
         elif day6_route == "chef_combini":
             $ day6_chef_route = "combini"
-            call day6_walk_home_chef
+            call day6_walk_home_chef from _call_day6_walk_home_chef_1
         elif day6_route == "hikari_run":
             $ run_chat("hikari", [
                 {"them": "You alive?", "options": [
@@ -7402,7 +7623,7 @@ label monday_lecture:
                      "them": ["The library can wait.", "Come home. Now."]},
                 ]},
             ])
-            call hikari_first_run
+            call hikari_first_run from _call_hikari_first_run
     elif first_day_activity == "walk_alone":
         "The chef's card is in my pocket. Hikari's name is already at the top of WIRE."
         "My phone buzzes before I can decide anything."
@@ -7420,7 +7641,7 @@ label monday_lecture:
             ]},
         ])
         mc "(She didn't say run. She said come home and wear something you can move in. That is the same thing.)"
-        call hikari_first_run
+        call hikari_first_run from _call_hikari_first_run_1
     else:
         "Hikari ran with me on day one. Today the river can wait; the city cannot."
         "I have one afternoon and one rule: one place, then home."
@@ -7438,7 +7659,7 @@ label monday_lecture:
                 mc "(The path she runs. I know where it starts. I do not know where it ends.)"
                 $ day6_chef_route = "river"
                 $ reward_attributes_once("day6_solo_river", [("insight", "micro")], show="auto")
-        call day6_walk_home_chef
+        call day6_walk_home_chef from _call_day6_walk_home_chef_2
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()
@@ -7479,14 +7700,14 @@ label monday_lecture:
                 mother "I left a bowl out. In case you're still hungry later. You never say."
                 $ day6_dinner_declined = True
                 $ reward_attributes_once("day6_dinner_declined", [("nerve", "micro")], show="auto")
-                $ remember("father", "told him he was still full from ramen on Monday")
-                $ remember("hikari", "teased him for getting lost again")
+                $ log_memory("father", "told him he was still full from ramen on Monday")
+                $ log_memory("hikari", "teased him for getting lost again")
             "Say you're starving, and sit down to eat with them." :
                 mc "I'm starving, actually. I'll eat."
                 $ reward_attributes_once("day6_dinner_covered", [("grace", "small")], show="auto")
                 $ add_affection("father", 1)
-                $ remember("father", "ate dinner with the family even though he was still full")
-                $ remember("hikari", "let him hide being too full")
+                $ log_memory("father", "ate dinner with the family even though he was still full")
+                $ log_memory("hikari", "let him hide being too full")
         if day6_dinner_declined:
             "I push the bowl away and let the soup go cold. Father does not say anything else."
         else:
@@ -7530,7 +7751,7 @@ label day6_walk_home_chef:
     "And then I smell it."
     mc "(Pork and soy, and something that has been simmering all day.)"
     $ day6_ate_out = True
-    call confidant_visit_chef
+    call confidant_visit_chef from _call_confidant_visit_chef
     return
 
 
@@ -7553,9 +7774,9 @@ label hikari_first_run:
     scene bg_home_exterior_day with walk_fade
     $ hikari_run = True
     "She is outside at the bottom of the steps, arms crossed, weight on one foot."
-    hikari "Four minutes."
-    mc "You didn't time me."
-    hikari "I always time you."
+    hikari "Why did that take so long?"
+    mc "Four minutes."
+    hikari "Exactly. Nobody changes in four minutes."
 
     scene bg_river with walk_fade
     play music "audio/Music/(shibuya night?) rain_at_the_crossing.mp3" fadein 2.0
@@ -7568,6 +7789,7 @@ label hikari_first_run:
     mc "(My legs are arguing. Hers are not. That is the whole difference between us.)"
 
     hikari "You're not unfit. That was a hard route. I chose it, and you kept up."
+    "She smiles, quick and unguarded, then looks away."
     "We sit on the wall. She buys two cans without asking and hands me one."
     menu:
         "This is the only hour that's yours?" :
@@ -7577,26 +7799,26 @@ label hikari_first_run:
         "Why the river?" :
             mc "Why the river?"
             hikari "Because it goes one way and comes back the same way and it never asks me anything."
-            $ reward_attributes_once("hikari_first_run_river", [("grace", "micro")], show="auto")
-        "Same time next week?" :
-            mc "Same time next week?"
+            $ reward_attributes_once("hikari_first_run_river", [("nerve", "micro")], show="auto")
+        "Will we do this again?" :
+            mc "Will we do this again?"
             hikari "If you can keep up."
             mc "(She says it like a challenge. It is an invitation.)"
-            $ reward_attributes_once("hikari_first_run_next", [("nerve", "micro")], show="auto")
+            $ reward_attributes_once("hikari_first_run_next", [("grace", "micro")], show="auto")
 
     "We walk back. She talks less on the way back. Not nothing. Less."
     scene bg_home_exterior_night with walk_fade
     $ night_street()
     "At the gate she stops with her key in her hand."
-    hikari "Same time next week?"
-    mc "Same time next week."
-    hikari "Good. I'll see you then."
+    hikari "Same time next time?"
+    mc "Same time next time."
+    hikari "Good. I'll see you then. I always do."
     scene bg_home_night with walk_fade
     $ hikari_run = False
     $ hikari_visits = max(hikari_visits, 1)
     $ reward_attributes_once("run_first_river", [("nerve", "small")], show="card")
     $ add_affection("sister", 1)
-    $ remember("hikari", "ran the river path with her after the quiz")
+    $ log_memory("hikari", "ran the river path with her after the quiz")
     return
 
 
@@ -7614,7 +7836,7 @@ label hikari_first_run:
 label tuesday_morning:
     # Day 7: Tuesday, April 14. The forced second-confidant afternoon.
     $ set_story_day(7)
-    call day_transition
+    call day_transition from _call_day_transition_28
     $ last_afternoon_place = None
     $ last_afternoon_was_run = False
 
@@ -7770,15 +7992,15 @@ label tuesday_lecture:
     elif hikari_visits <= 0:
         $ day7_missing = "hikari"
     if day7_missing == "sim":
-        call day7_sim_campus
+        call day7_sim_campus from _call_day7_sim_campus
     elif day7_missing == "chef":
-        call day7_missing_chef
+        call day7_missing_chef from _call_day7_missing_chef
     elif day7_missing == "hikari":
-        call day7_missing_hikari
+        call day7_missing_hikari from _call_day7_missing_hikari
     else:
         # Defensive only. Day 2 plus Day 6 always leave one of the three unmet,
         # so normal play never reaches this branch.
-        call free_afternoon
+        call free_afternoon from _call_free_afternoon_14
 
     # Every visit and every walk returns here. `last_afternoon_place` is the
     # hub row that was picked, or None for Head Home.
@@ -7833,11 +8055,23 @@ label tuesday_lecture:
         mc "The reading room. She was there. She stayed."
         mc "(We did not talk much. It was enough.)"
     elif last_afternoon_place == "orson":
-        mc "Lupin's Den. The bar was empty enough to hear the ice."
-        mc "(He taught me a phrase I am still turning over.)"
+        mc "Lupin's Den. The wolf is still on the door."
+        mc "(I leave with less noise in my head than I came with.)"
     elif last_afternoon_place == "sim":
-        mc "The photography club. Sim put a camera in my hands before he knew my name."
-        mc "(I took one photograph. He looked at it longer than it deserved.)"
+        if confidant_visits.get("sim", 0) >= 8:
+            mc "The photography club. The room is still there. Sim isn't."
+            mc "(Nami has the box. Somebody left the door open anyway.)"
+        elif confidant_visits.get("sim", 0) == 7:
+            mc "The exhibition. Sim is gone, and the strap is still warm in my hand."
+            mc "(He left us a room full of photographs.)"
+        elif confidant_visits.get("sim", 0) == 1 and sim_first_with_phone:
+            mc "The photography club. Sim took my phone and told me to look at the light."
+            mc "(I took two photographs. He looked at the second one longer than it deserved.)"
+        elif confidant_visits.get("sim", 0) == 1:
+            mc "The photography club. Sim put a camera in my hands before he knew my name."
+            mc "(I took one photograph. He looked at it longer than it deserved.)"
+        else:
+            mc "The photography club. Sim made us photograph something ordinary until it stopped being ordinary."
     elif last_afternoon_place == "walk_hikari":
         if last_afternoon_was_run:
             mc "The river path. She ran the whole way and barely looked at the water."
@@ -7851,18 +8085,18 @@ label tuesday_lecture:
             mc "That's not how I remember it."
             hikari "That's how I remember it. I'm glad you came with me."
     elif last_afternoon_place == "walk_alone":
-        mc "Nowhere. I walked until the light changed, and then I walked home."
+        mc "Nowhere. Just the street until the light changed."
         father "Nowhere is a place. Just not a destination."
-        mc "(That is either wisdom or a warning. I am not sure which.)"
+        mc "(He says it the way he says everything. I decide not to ask what he means.)"
     else:
         mc "Nowhere. I came straight home."
         mother "Good. Eat."
-        mc "(She does not ask why. I am grateful for that.)"
+        mc "(She lets it be. That is the nicest thing she could have done.)"
 
-    father "And the midterm?"
-    mc "Two weeks. Essays. A practical."
-    father "Then you have two weeks."
-    mc "That's what two weeks means."
+    father "The midterm. How far off?"
+    mc "Two weeks. Essays and a practical."
+    father "Then you have two weeks to be ready."
+    mc "That's the idea."
     if day7_walked_with_hikari:
         hikari "He's been like this all afternoon."
     else:
@@ -7919,11 +8153,11 @@ label tuesday_lecture:
 
     scene bg_room_night with Dissolve(1.5)
     $ room_ambient(True)
-    "I wake in my room. It is still Tuesday. The clock says 2:14."
+    "I wake in my room. It is still dark. The clock says 2:14."
     mc "(Wednesday. The ramen shop is closed.)"
     "I do not know why that is the first thing I think of. It is almost funny."
     "I lie there until the numbers on the clock change, and then I sleep again."
-    "The week has started. Whatever it turns into, it started."
+    "The week is underway. Whatever it becomes, it is becoming."
 
     stop music fadeout 2.0
     scene black with Dissolve(1.5)
@@ -7955,7 +8189,7 @@ label day7_sim_campus:
     "He turns and walks toward the studio room at the end of the corridor, camera still in hand."
     sim "Come on. The others are setting up. You can watch, or you can stand there looking mysterious."
     $ sim_campus_intro = True
-    call sim_visit_01
+    call sim_visit_01 from _call_sim_visit_01
     $ sim_campus_intro = False
     return
 
@@ -7969,7 +8203,7 @@ label day7_missing_chef:
     mc "(It is not a decision. It is a door.)"
     $ last_afternoon_place = "chef"
     $ last_afternoon_was_run = False
-    call confidant_visit_chef
+    call confidant_visit_chef from _call_confidant_visit_chef_1
     return
 
 
@@ -7987,7 +8221,7 @@ label day7_missing_hikari:
         ]},
     ])
     mc "(She did not say run. She said come home and wear something I can move in. That is the same thing.)"
-    call confidant_visit_hikari
+    call confidant_visit_hikari from _call_confidant_visit_hikari
     return
 
 
@@ -8035,13 +8269,24 @@ label afternoon_walk_hikari:
             $ reward_attributes_once("hub_walk_hikari_glad", [("nerve", "micro")], show="auto")
 
     # The first job, as Hikari steers it. This is the fallback path (the run
-    # never happened), so the steer has to stand on its own here too: no route
-    # behind it, just the fact she has already placed.
-    hikari "You keep saying you need a job."
-    mc "I meant it. I meant it the way I meant the ramen plan."
-    hikari "Then I'm not going to stop you from meaning it. There's a convenience store next to the ramen shop that's hiring. They're handing out tissues today, little white packets with the shop's mark on them, one per street. Real campaign. Small. Stupid. Perfect."
-    mc "A job that is handing out tissues."
-    hikari "A job that is being a person in public. You don't need good Japanese. The customers are mostly foreign like you, and the rest are just tired. The pay is good. And the city pays you for standing. That's the part nobody puts on the flyer."
+    # never happened, or all seven runs are over), so the steer only plays
+    # while the job is still unclaimed: no route behind it, just the fact she
+    # has already placed.
+    if not combini_job_unlocked:
+        hikari "You said you needed a job."
+        mc "I meant it. I meant it the way I meant the ramen plan."
+        hikari "Then I'm not going to stop you from meaning it. There's a convenience store next to the ramen shop that's hiring. Afternoons. Ask for the manager."
+        mc "Standing in a store all afternoon."
+        hikari "A job that is being a person in public. You don't need good Japanese. The customers are mostly foreign like you, and the rest are just tired. The pay is good. And the city pays you for standing. That's the part nobody puts on the flyer."
+    elif combini_shifts == 0:
+        hikari "Have you started at the store?"
+        mc "Not yet. The card is still in the window."
+        hikari "Then it will still be there tomorrow. Stores are patient that way."
+        hikari "A job should not be something you are afraid of. If it is, the store is wrong for you, not the other way around."
+    else:
+        hikari "How is the store?"
+        mc "Tanaka asks the same questions every time. I have started to like the order of them."
+        hikari "Good. A job should have a shape you can learn."
 
     scene bg_home_exterior_night with walk_fade
     $ night_street()

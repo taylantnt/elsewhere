@@ -74,7 +74,7 @@ The resolution of her arc.
     •    They were angry—not because of her dream, but because she hid it so long.
     •    They apologized for not listening, and she apologized for not speaking.
     •    The conversation ended with mutual understanding. She will pursue art.
-    •    Hana: “…You gave me courage. Without you, I… I’d still be hiding.”
+    •    Hana: “Like… like you carried my dream, when I couldn't. You kept showing up. Every week.”
     •    She hands you a small handmade charm — a tiny cloth strap with a brush-and-palette stitched in thread.
     •    “For you… so you don’t forget me. Like… you carried my dream, when I couldn’t.”
 

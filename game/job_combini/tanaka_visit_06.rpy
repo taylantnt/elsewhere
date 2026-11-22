@@ -7,10 +7,10 @@
 ## has been his voice the whole time.
 
 label tanaka_visit_06:
-    call tanaka_common_open
+    call tanaka_common_open from _call_tanaka_common_open_6
 
     "The shift starts normally. That is the last normal thing about it."
-    "At seven, the phone behind the counter rings. It is an old phone with a cord and it rings like a threat."
+    "At four, the phone behind the counter rings. It is an old phone with a cord and it rings like a threat."
     "Tanaka picks it up. He listens. He says four words in a row that I do not catch, and then he says one that I do."
     tanaka "店長です。"
     mc "(A word I do not know, said like a name. I will ask what it means.)"
@@ -45,13 +45,15 @@ label tanaka_visit_06:
     mc "(Why does the other worker order me around? Because he was never the other worker. The question was always: why does the owner of the whole machine choose to stand in the smallest room?)"
 
     "For a second the register light is too bright and the wall of slips is a wall of white. A door at the end of it, and someone standing behind the counter of the world."
-    call leak_flash
+    call leak_flash from _call_leak_flash_2
     "Then it is a combini again, and Tanaka is counting the drawer, and I am holding tongs."
     mc "(He runs this. The lights, the oil, the order, the disposal bag. A man in the smallest room, running the biggest thing in the street.)"
     mc "(Somewhere, someone like him runs a room I cannot remember. White. Cleaner than this. The same posture. The same patience.)"
     mc "(I do not know why that thought arrives with the smell of hot oil. I keep it anyway.)"
+    mc "(If that voice had a face, it would look like this one.)"
+    mc "(He keeps this store in line. The voice keeps the white room in line. I am beginning to think it is the same job seen from two sides.)"
 
-    call tanaka_wage_close
+    call tanaka_wage_close from _call_tanaka_wage_close_6
 
     tanaka "Now you know."
     mc "Does it change anything?"
@@ -61,5 +63,5 @@ label tanaka_visit_06:
     tanaka "The tencho is not the person who signs. The tencho is the person the store answers to. While I stand here, it answers to me. When you stand here, it will answer to you."
     mc "(He is not my boss. He is the building wearing a striped shirt.)"
 
-    call tanaka_night
+    call tanaka_walk_home from _call_tanaka_walk_home_6
     return

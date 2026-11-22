@@ -1,3 +1,10 @@
+> **Design draft:** the transcript below keeps the original pitch, where the
+> protagonist arrives with a beginner's camera and Sim stages a debut. The
+> shipped visit 3 is a quieter Rika modelling session: he photographs her
+> unguarded expression, keeps the file, and hears how Sim's first proud
+> photograph was rejected. See `game/confidant_visits/sim.rpy`, label
+> `sim_visit_03`.
+
 [The studio feels lively tonight. Tripods clatter, laughter mixes with shutter clicks. You arrive with your beginner’s camera. Sim notices immediately, waving you over with that cheerful, magnetic energy.]
 Sim: “You brought it! Good—good. Tonight, you shoot. Not just watching.”
 [He turns to the group, switching to Japanese.]
@@ -62,9 +69,9 @@ Player Choice:
 
 
 [Sim leans closer, his tone shifting softer.]
-Sim: “See? First good shot. Treasure it. For me… my first good shot was ten years ago. I thought—ah, finally, this will change everything.”
+Sim: “See? First good shot. Treasure it. For me… my first good shot was ten years ago. I thought, finally, this will change everything.”
 [He laughs quietly, a little bitter under the warmth.]
-Sim: “But… magazine said no. Another magazine—no. Always no. Years of no. That’s why… I made this place. If I cannot get in the big world yet… at least I can make a small one here. Friends. Practice. Connection.”
+Sim: “In a drawer. It was rejected by four places. The fifth never replied. I kept it because the rejection did not make the light less true. That’s why I made this place. If I cannot get in the big world yet… at least I can make a small one here. Friends. Practice. Connection.”
 [He looks around at the bustle—the laughter, cameras flashing.]
 Sim: “And now, maybe… this is even better.”
 Player Choice:
@@ -84,8 +91,8 @@ Player Choice:
 
 
 
-Player: “…So, you’ve really never been published?”
-Sim: “Not yet. But one day. One day, yes. Until then—we keep shooting.”
+Player: “…So nobody ever showed it?”
+Sim: “Not that one. But one day. One day, yes. Until then, we keep shooting.”
 [He claps your shoulder again, cheerful mask sliding back on.]
 Sim: “And today? You shot. That’s a beginning.”
 

@@ -1,24 +1,31 @@
-[The ramen shop feels emptier tonight. A single couple finishes quietly at the far end. The lantern outside sways in the late evening wind. You take your usual seat. The chef greets you with a nod, slower than usual. His movements in the kitchen seem deliberate, almost heavy.]
-Chef: 「今日も来てくれてありがとさん。」 (Thanks for coming again today.)
-Player: “Always.”
-[You smile faintly, but his voice doesn’t carry the usual warmth. Hikari pushes the door open a moment later, brushing rain from her umbrella.]
-Hikari: “Oh, you too? Guess this is becoming our regular meeting spot.”
-[She sits beside you, ordering quickly in Japanese. The chef perks up slightly at her presence but his expression remains clouded.]
-Chef: 「……実はね。」 (Actually… there’s something.)
-[He sets down two steaming bowls but hesitates with the ladle still in his hand.]
-Hikari (glancing between you two): “He wants to say something important.”
-Player: “Important?”
-Chef: 「田舎の両親が、もう年で……。」 (My parents back home… they’re getting old.)
-Hikari (softly, translating): “His parents live outside Tokyo. They’re not well. He may need to return soon.”
-[You feel the weight in the air settle. The ramen steam curls slowly between you three.]
-Player: “…Leave the shop?”
-[Hikari translates. The chef nods, eyes lowered.]
-Chef: 「店は……どうすればいいのか、まだ分からない。」 (I don’t know what to do with the shop yet.)
-Hikari: “He doesn’t know who will take care of it if he leaves.”
-[For the first time, the chef looks older than he is. The lines around his eyes seem deeper, his usual energy dulled. The silence between you isn’t uncomfortable, but heavy, meaningful.]
-Player: “…This place means a lot. To you. To… us.”
-[You gesture vaguely at yourself, at Hikari, at the walls steeped with warmth and memory. The chef gives a small, tired smile.]
-Chef: 「分かってる。だからこそ……つらい。」 (I know. That’s why… it’s hard.)
-[Hikari doesn’t translate this time. She doesn’t need to. The meaning carries without words.]
-[The three of you sit quietly. The sound of rain outside grows louder, filling the silence. The ramen before you grows cooler, but you don’t lift your chopsticks yet. Something in the air has shifted—change is coming.]
+[The shop is empty, unusually so for this hour. Chef sits at the counter with a young man the player has never seen. The young man has a notebook like Chef's, but the handwriting is shaky and unsure. Chef lets the player choose a seat.]
 
+Chef: 「これ、弟子。」 (This is my apprentice.) 「名前、健太。」 (His name is Kenta.)
+Player (thinking): Kenta. A name I do not know yet.
+
+[Kenta bows too deeply, too quickly. Chef tells him 「もっと、緩く。」 (Looser). The player stops himself from copying the bow.]
+
+Chef: 「健太、聞いた？」 (Kenta, did you hear?)
+
+Player choice:
+- "Ask how long he's been learning." — three weeks; 「一生、かかる。」 (It takes a lifetime.) (Insight)
+- "Ask what he's working on." — chopping green onions; Chef says his rhythm is wrong: 「リズム、全部。」 (Rhythm is everything.) (Insight)
+- "Tell him it takes time." — 「時間、かかる。急ぐな。」 (It takes time. Don't rush.) (Grace)
+
+[Chef stands and goes to the pots. Kenta follows, notebook in hand. 「見て。」 (Watch.) Chef makes a bowl without explaining or measuring with tools; Kenta writes furiously, trying to capture instinct in handwriting.]
+
+Player choice:
+- "Kenta, you can't write everything down." — 「忘れる、いい。」 (Forgetting is fine.) Kenta writes it down; the player lets the sentence sit. (Insight)
+- "Watch Chef, not the notebook." — the player does not say it; Chef catches his eye and nods. (Grace)
+- "Chef, explain what you're doing." — 「説明できない。感じるしかない。」 (I can't explain it. You have to feel it.) (Insight)
+
+[Chef finishes the bowl and sets it in front of the player. 「食べて。」 (Eat.) It is deeper than before, the noodles alive with spring — the best bowl he has made the player so far.]
+
+Chef: 「どう？」 (How is it?)
+Player: "It's... it's the best one you've ever made me."
+
+[He nods, satisfied with the truth, then turns the lesson back to Kenta.]
+
+Chef: 「健太、聞いた？」 (Kenta, did you hear?) 「一番大事なのは、客の顔。」 (The most important thing is the customer's face.) 「顔、見れば、分かる。」 (Look at the face and you will know.)
+
+[WIRE message: Kenta is learning little by little, his knife work is improving, his notebook is getting thicker — and he has started practicing how to forget.]

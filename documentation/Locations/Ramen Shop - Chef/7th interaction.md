@@ -1,24 +1,45 @@
-[The shop feels strangely still tonight. The usual chatter, clatter of bowls, even the faint radio in the back—it’s all absent. Just the faint simmer of broth. You step in, and the chef looks up. His eyes crinkle as usual, but the smile doesn’t quite reach them.]
-Chef: 「いらっしゃい。」 (Welcome.)
-[The word carries extra weight, like he knows this is the last time he’ll say it to you. You take your usual seat. He begins cooking slowly, movements steady but heavy, as though savoring each action.]
-[The door slides open again. Hikari steps in, glancing around the quiet shop.]
-Hikari: “Ah… I thought I’d find you here.”
-[She takes the seat next to you, close but respectful. She greets the chef warmly, then lowers her voice to you.]
-Hikari: “Tonight’s different. He wanted you here.”
-[The chef places a bowl before you—beautifully made, toppings arranged with care. Then he sets one before Hikari, too. Finally, he pours himself a small sake cup and sits across from both of you. You’ve never seen him sit while customers were still here.]
-Chef: 「家族のように…」 (Like family…)
-[He gestures between the three of you, his voice low. Hikari blinks, surprised, then translates softly.]
-Hikari: “…He says eating together like this, it feels like family. He’s not a man of many words… but I don’t think I’ve ever heard him say that before.”
-[Silence falls, not awkward but thick with meaning. You eat slowly, each bite heavy with the awareness that this is the last time. After a long pause, the chef gets up, disappears briefly, and returns with a small wrapped object.]
-[He sets it down carefully in front of you. You unwrap it—a wooden ramen spoon, hand-polished, the shop’s name carved into the handle.]
-Chef: 「思い出に…」 (For the memory…)
-[His voice cracks slightly at the end. He clears his throat, but his hands linger on the counter, rough fingers brushing the wood as though reluctant to let go.]
-Hikari (quietly, translating): “He says… this shop has been his whole life. But people like you, who came back again and again, even when it was difficult to understand… that’s what made it worth it. He wants you to remember him when you eat ramen. Even if it’s not here.”
-[The chef exhales slowly. His eyes are wet, though he doesn’t wipe them. He bows deeply, a gesture of profound respect, holding it longer than he ever has before. Hikari lowers her gaze too, shoulders trembling slightly.]
-Player: “…Thank you. Truly.”
-[Your words are simple, but your throat feels tight. You grip the spoon tightly, as if it anchors this fleeting moment.]
-[The chef straightens, manages a faint smile, and raises his sake cup in a small toast.]
-Chef: 「ありがとう。」 (Thank you.)
-[You and Hikari echo softly—she in Japanese, you in English. The sound overlaps, imperfect but heartfelt, like your entire journey with him.]
-[When you step outside later, the lantern above the door glows faintly in the warm night air. The spoon feels heavy in your pocket, a weight that is both grief and gratitude. The shop behind you grows quiet, but the bond remains, carved into memory deeper than words.]
+[The shop feels different — not because of the people or the decor, but because it has decided what it is. Chef is at the counter; Kenta is beside him, moving with a confidence he did not have before. He is still learning, but no longer terrified.]
 
+[Chef points the player to the regular seat, the one that has developed his memory, and asks Kenta 「いつもの？」 (The usual?). The player answers "Hai. The usual." This is a test of Kenta, not of the player.]
+
+[Kenta cooks. Chef watches with hands clasped. The bowl arrives: Kenta's work with Chef's guidance in it. Good, not perfect; firm noodles, a runny egg in the right way.]
+
+Chef: 「どう？」 (How is it?)
+
+Player choice:
+- "It's good. He's learning." — 「まだ、遠い。でも、進んでる。」 (Still far away, but getting closer.) (Grace)
+- "It needs more time." — "The rhythm isn't quite there yet." Chef does not defend him. (Insight)
+- "It reminds me of your first bowl for me." — the player remembers a bowl he did not understand and loved; Chef calls it a good review, then 「正直、一番。」 (Honest above all.) (Grace)
+
+[Chef takes a small cloth-wrapped package from under the counter and sets it in front of the player. Inside is a pair of personal dark-wood chopsticks, polished by years of use, with a single character burned into the side: 心.]
+
+Chef: 「私の、昔。」 (Mine, before.) 「今、あなたの。」 (Now yours.) He slides them towards the player.
+
+Player choice:
+- "I can't take these. They're yours." — 「使わないと、死ぬ。」 (If you don't use them, they die.) The player knows the word for die now. (Grace)
+- "I will use them well." — 「約束、いらない。ただ、来て。」 (No promise. Just come.) (Grace)
+- "I cannot read this. What does it mean?" — 「全部。」 (All of it: heart, spirit, mind.) He taps the character on the wood, then his own chest. 「食事は、心だ。」 (Food is heart.) (Insight)
+
+[The player takes the chopsticks; the wood is warm from under the counter. He goes back to the bowl with them and the ramen tastes different — not because the broth changed, but because he is holding part of Chef's history.]
+
+Chef: 「うまい、だろ？」 (Tasty, right?)
+Player: "Hai. Umai."
+
+[He grunts, satisfied. Then he turns back to the pots. Whatever he was performing for Kenta is over.]
+
+Chef: 「実は、言いたいことがある。」 (There's something I need to say.) 「店、閉める。」 (I'm closing the shop.)
+
+Player choice:
+- "Close the shop? Why?" — 「実家、帰る。」 (I'm going back to my parents' home.) 「跡継ぎ、いない。」 (There is no one to take over.) (Insight)
+- "What about Kenta? He's your apprentice." — 「健太は、いい子だ。でも、まだ早い。」 (Kenta is a good boy. But it's too early.) (Grace)
+- "Can't you stay until he learns more?" — 「無理だ。親が、待ってる。」 (I can't. My parents are waiting.) (Nerve)
+
+Kenta: "Sensei...?"
+Chef: 「お前の道を、行け。ラーメンは、お前を待ってる。」 (Go your own way. Ramen will wait for you.)
+
+Chef: 「あなたにも、来てほしい。」 (I want you to come too.) 「最後まで、食べていけ。」 (Eat it to the last.)
+[My bowl is still in front of me. The player finishes it: Kenta's best, and the last one this shop will ever serve him.]
+
+[WIRE message: he has decided to close the shop; that was the player's last bowl; the chopsticks are his now, so use them well.]
+
+[Next time the player walks down the street the noren is gone and a printed notice is taped to the glass: CLOSED. PERMANENTLY. The owner has returned to his family home to care for his parents.]

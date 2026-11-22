@@ -12,9 +12,9 @@ in `story_treatment.md` and the per-location interaction docs; this file is the
 | Act | Title | Covers | Status |
 |-----|-------|--------|--------|
 | 1 | The Arrival | Airport → home → first dream → first night | **Built** |
-| 2 | The Long Middle | First day, second day, the hub, all confidant visits, the midterm week | **In progress** — days 1–21 built through the midterm and its aftermath; all confidant visits 2–7 and the repeatable epilogues written; the repeating loop after Day 21 is still open |
-| 3 | The Glitch | The leaks stop being atmospheric and start being structural (treatment "Escalating Mystery" stages 1–5) | Not written |
-| 4 | The End | The revelation, the three endings, and the epilogue coda | Not written |
+| 2 | The Long Middle | First day, second day, the hub, all confidant visits, the midterm week | **Built** — days 1–50 complete; all confidant visits 2–8 and the repeatable epilogues written |
+| 3 | The Glitch | The leaks turn structural, and the free afternoons end | **In progress**: Days 51-69 playable; investigation continues to Day 83 |
+| 4 | The End | The revelation, the ending routes, and the epilogue coda | [Design draft](act4_skeleton.md) for Days 84-90, not playable |
 
 Notes:
 
@@ -24,9 +24,9 @@ Notes:
 - Act 4 begins at the river talk where Hikari tells him what she is.
 - The **epilogue** is the short coda after an ending where the characters'
   thoughts play one last time — it is not a separate act.
-- Act boundary is one line: `$ current_act = 2` at `morning_call`, `$ current_act = 3`
-  / `4` at the future act breaks. If Act 2 should officially start on the
-  *second* morning instead, move that one line.
+- `current_act` becomes 2 at `morning_call` and 3 on Day 64 at
+  `special_day_64_the_rail`. The story's Act 3 incident begins on Day 51.
+  The Act 4 runtime boundary is not wired yet.
 
 ## Confidant visit caps (act_confidant_cap)
 
@@ -106,14 +106,18 @@ which is the simulation removing people as the test measures his equilibrium.
       morning, elective (the city as a conversation), one free afternoon,
       dinner, night, then `end_of_build`. The build now runs to the second
       Tuesday instead of stopping on Day 12.
-- [x] 2026-11-18 — Week 3 written as seven separate day files
+- [x] 2026-11-18: Week 3 written as seven separate day files
       (`game/days/day_15_wednesday.rpy` … `day_21_tuesday.rpy`) for Wednesday,
-      April 22 through Tuesday, April 28. A midterm week: 予習/復習 and the exam
-      plum (Day 15), Sim's 見立て photo lesson and a figure in the reflection
-      (16), Murakami's giongo/gitaigo lesson and the word カチ (17), the
-      neighbourhood matsuri with Father on the mikoshi rope (18), the mock exam
-      and できる/わかる with a fourth question in his own handwriting (19), the
-      three-part midterm with the combini practical and "See me." in red (20),
+      April 22 through Tuesday, April 28. All seven afternoons use the shared
+      `free_afternoon` hub, as on Days 8 to 14. A midterm week: 予習/復習 and the
+      exam plum (15), 見立て (mitate) taught in class by the professor with a
+      white-coated figure in a classroom/corridor reflection (16), Murakami's
+      giongo/gitaigo lesson and the word カチ (17), the neighbourhood matsuri in
+      the evening after the hub with happi coats, yakitori, kingyo sukui, the
+      goldfish Mister Plum, the mikoshi with Father on the rope and the white
+      mask (18), the mock exam and できる/わかる with a fourth question in his own
+      handwriting (19), the three-part midterm in the morning with the combini
+      practical and "See me." in red, followed by the hub before dinner (20),
       and the result conversation where the professor asks about the corridor
       (21). Day 14 now jumps to `wednesday_preview`; Day 21 jumps to
       `end_of_build`. Calendar beats, docs and the menu flags synced. Lint passes.
@@ -161,10 +165,10 @@ which is the simulation removing people as the test measures his equilibrium.
       `game/confidant_visits/hikari.rpy`, routed by `confidant_visit_hikari` from the hub's
       `walk_hikari` row. Each run has two 3-option menus, one attribute per
       option at micro; close rewards rotate Grace / Insight / Nerve and the
-      final run closes at Insight small (0.5). Visit 7 sets
+      final run closes at Nerve small (0.5). Visit 7 sets
       `hikari_run_finished = True`; `last_afternoon_was_run` lets the Day 7
-      dinner tell a run from the ordinary walk. Only visit 2 is reachable in
-      the current build; 3–7 are wired for later hub days. Lint passes.
+      dinner tell a run from the ordinary walk. Visits 2–7 are reachable from
+      the shipped Day 8+ hub. Lint passes.
 - [x] 2026-11-09 — Day 7 (Tuesday, April 14) written end to end:
       `tuesday_morning` (breakfast fork) → `tuesday_lecture` (haiku) →
       forced last first-week confidant afternoon → dinner/night → dream →
@@ -285,11 +289,26 @@ which is the simulation removing people as the test measures his equilibrium.
       current build remains open).
 - [x] Script confidant visits 2–8 (chef 2–8, sim 2–8, orson 2–8, aya 2–8,
       hana 2–8). Verified in the 2026-11-12 audit: every visit label writes its
-      counter. The Act 2 cap makes 2–5 reachable now; 6–7 wait for Act 3 and the
+      counter. The Act 2 cap is 8, so 2–7 are all reachable now; the
       eighth epilogue waits for Act 4 (or an unlocked cap).
-- [x] Hikari's recurring run beats 2–7 (written in `game/confidant_visits/hikari.rpy`; the
-      Days 7–14 build reaches 2–5, visits 6–7 wait for Act 3).
-- [ ] Act 3 glitch content (treatment "Escalating Mystery" stages 1–5).
+- [x] Hikari's recurring run beats 2–7 (written in `game/confidant_visits/hikari.rpy`;
+      all visits 2–7 are reachable in the shipped Act 2 hub).
+- [x] 2026-11-22 — Act 3 incident written: Days 51–53 (`the_line`, `same_face`,
+      `fragment`). Hub closed. Three hard days that crack the world open.
+      ChromaGlitch fires on Day 51. Lint passes.
+- [x] 2026-11-22 — Act 3 slow burn written: Days 54–63 (`the_return` through
+      `the_threshold`). Hub reopens. Lecture + hub + dinner structure preserved
+      with corruption escalating from level 1 (deniable) through level 3
+      (undeniable). Corruption system in `game/corruption.rpy` with
+      `corruption_level` flag (0–3) and three callable labels. ChromaGlitch
+      fires on Days 62 and 63. Notebook accumulates four foreign-handwriting
+      lines. Lint passes.
+- [x] Act 3 proper opens on Day 64 (`the_rail`): the hub closes, and the
+      firefly silhouettes from Day 50 are identified.
+- [x] Days 65-69: the ghost question returns, the ramen shop closes and is
+      later found destroyed, and keepsakes prompt optional one-off revisits.
+- [ ] Days 70-83: continue the investigation. Tetsuo and Hikari break through;
+      keep the folded page's payoff optional at the threshold.
 - [ ] Act 4 revelation + endings + epilogue.
 - [x] Fortune teller encounters: built as three cards, not one per chapter.
       Day 13 first reading + one hub return that turns cards two and three.
@@ -315,15 +334,23 @@ which is the simulation removing people as the test measures his equilibrium.
       (drop file in `images/backgrounds/`).
 - [x] Fortune Teller portrait: `images/characters/fortuneteller.png` is wired.
       Tanaka uses `images/characters/combini_worker.png`.
-- [ ] Side-character portraits still missing (Circle members, combini
-      regulars). Hana's and Orson's portraits are in place for their Saturday
-      scenes.
+- [x] Reserved art, identified but intentionally unwired: `doctor.png` (same
+      face as Tanaka, masked; hold until the laboratory scenes), `nurse.png`
+      (the real, older Hikari for the Escape ending), `hood.png` (Robed
+      Figure), `orson_unmasked.png` (visit 7 payoff). Wire them in the scene
+      that earns them, not before.
+- [x] Side-character portraits: the quiet reading-room student
+      (`images/characters/quietstudent.png`) and the new maid
+      (`images/characters/new_maid.png`) are now wired as side images. Circle
+      members (Nami, Tapi, TT), combini regulars (Tanaka), and Hana's and
+      Orson's portraits were already in place for their scenes.
 - [ ] `images/ui/camera_frame.png` referenced by `screen photo_mode`.
 - [ ] `images/messages/notebook_page.png` is a generated placeholder for the
       notebook-cat photo texted on the train — replace with real art when
       ready (swap the path in `script.rpy` `run_chat` or drop a new file in).
-- [ ] Sim's supporting cast portraits (user will provide): Rika, Nami,
-      Marco, Riku — see `Characters/characters overview.md`.
+- [ ] Sim's supporting cast portraits still needed (user will provide): Rika,
+      Riku. Nami, Tapi, TT and Marcus are wired as side images — see
+      `Characters/-Side Characters/Circle members.md`.
 
 ### Design decisions still open
 

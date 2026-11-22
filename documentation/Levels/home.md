@@ -21,7 +21,7 @@ MONOLOGUE - after credits{
 	},
 	{
 	  "speaker": "Player",
-	  "text": "Still can’t believe I’m actually here. My home—at least for the next year."
+	  "text": "Still can’t believe I’m actually here. My home, at least for the next three months."
 	},
 	{
 	  "speaker": "Player",
@@ -54,7 +54,7 @@ MONOLOGUE - after credits{
 	},
 	{
 	  "speaker": "Mother",
-	  "text": "Come on in—you must be exhausted.",
+	  "text": "Come on in. You must be exhausted.",
 	  "action": "transition_to_home"
 	}
   ]
@@ -63,17 +63,17 @@ MONOLOGUE - after credits{
 Family Dialogue[
   {
 	"speaker": "Miharu Nagai",
-	"text": "Ah, you must be our guest! Welcome, welcome—I'm Miharu Nagai.",
+	"text": "Ah, you must be our guest! Welcome, welcome. I'm Miharu Nagai.",
 	"portrait": "res://images/mother.png"
   },
   {
 	"speaker": "Tetsuo Nagai",
-	"text": "And I'm Tetsuo Nagai. So, you finally found our home. Good—Miharu told us you'd be arriving today.",
+	"text": "And I'm Tetsuo Nagai. So, you finally found our home. Good. Miharu told us you'd be arriving today.",
 	"portrait": "res://images/father.png"
   },
   {
 	"speaker": "Tetsuo Nagai",
-	"text": "We keep things the proper way here—none of that new gadget nonsense. A good letter or a face-to-face talk works best.",
+	"text": "We keep things the proper way here. None of that new gadget nonsense. A good letter or a face-to-face talk works best.",
 	"portrait": "res://images/father.png"
   },
   {
@@ -98,13 +98,13 @@ MONOLOGUE - after credits{
   },
   {
 	"speaker": "Miharu Nagai",
-	"text": "Of course. Please, follow me—your room is just upstairs.",
+	"text": "Of course. Please, follow me. Your room is just upstairs.",
 	"portrait": "res://images/mother.png"
   }
 ]
 
-Mother Dialogue		{"text": "Well, this is not a lot but this will be your room for a year.", "speaker": "Miharu Nagai", "portrait": "res://images/mother.png"},
-		{"text": "Miharu's room is next door so please try not to make a lot of noise. She is a light sleeper.", "speaker": "Miharu Nagai", "portrait": "res://images/mother.png"},
+Mother Dialogue		{"text": "Well, it's not a lot, but this will be your room for the next three months.", "speaker": "Miharu Nagai", "portrait": "res://images/mother.png"},
+		{"text": "Hikari's room is next door, so please try not to make a lot of noise. She is a light sleeper.", "speaker": "Miharu Nagai", "portrait": "res://images/mother.png"},
 		{"text": "Oh, by the way, your clothes and belongings that you sent before coming here with shipping have already arrived yesterday.", "speaker": "Miharu Nagai", "portrait": "res://images/mother.png"},
 		{"text": "Would you help your old host mother to bring it to your room?", "speaker": "Miharu Nagai", "portrait": "res://images/mother.png"}
 	]

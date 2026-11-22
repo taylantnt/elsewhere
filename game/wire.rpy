@@ -42,7 +42,7 @@
 ## The order the roster lists people in. It is fixed rather than
 ## most-recent-first so that the list does not reshuffle itself every time
 ## somebody is added, which is how a real contact list behaves.
-define wire_order = ["hikari", "chef", "sim", "aya", "hana", "orson", "murakami", "tanaka"]
+define wire_order = ["hikari", "chef", "sim", "aya", "hana", "orson", "murakami", "tanaka", "fortune"]
 
 define wire_contacts = {
 
@@ -120,15 +120,17 @@ define wire_contacts = {
     "murakami": {
         "name": "Murakami",
         "handle": "@murakami",
-        # Not a confidant and never going to be one of the seven-visit chains:
-        # she is the elective, and the phone only knows her as the woman who
-        # hands out homework. The meter counts lessons, not visits.
+        # The elective teacher, and now a confidant in her own right: the hub
+        # row "Japanese Elective" routes to confidant_visit_murakami. The
+        # meter counts lessons, embedded and office-hours alike; the arc has
+        # ten written visits and then repeats forever, so the total is a
+        # floor, not a finish line.
         "note": "Read the page. Bring a question you cannot answer.",
         "color": "#c9b38a",
         "photo": "images/characters/teacher2.png",
         "photo_crop": (0.25, 0.0, 0.50, 0.333),
         "progress": ("murakami_lessons",),
-        "total": 8,
+        "total": 14,
     },
 
     "tanaka": {
@@ -137,12 +139,26 @@ define wire_contacts = {
         # The name on the badge, and the only name he gives. The meter counts
         # teaching shifts, not visits, because the job is the relationship.
         # Seven shifts, and then the work simply repeats.
-        "note": "Night shift. Ask about the point card.",
+        "note": "Afternoon shift. Ask about the point card.",
         "color": "#b8c4c8",
         "photo": "images/characters/combini_worker.png",
         "photo_crop": (0.25, 0.0, 0.50, 0.333),
         "progress": ("tanaka_story",),
         "total": 7,
+    },
+
+    "fortune": {
+        "name": "Fortune Teller",
+        "handle": "@thirtysix",
+        # She never gave a name, only a table, a rule about true things, and a
+        # square code pressed into his hand. The note is the rule she keeps
+        # repeating, which is also a warning about what she is.
+        "note": "One true thing. Two pieces of noise.",
+        "color": "#d8b580",
+        "photo": "images/characters/fortuneteller.png",
+        "photo_crop": (0.25, 0.0, 0.50, 0.333),
+        # The meter follows confidant_visit_totals: eight visits, the last one
+        # the empty corner.
     },
 }
 

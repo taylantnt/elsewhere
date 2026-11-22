@@ -795,10 +795,10 @@ weekends, not for this batch.
 answered choice at micro size, so a player who answers all twelve menus earns
 exactly 2.4 points spread across whichever attributes they choose. The forced
 close rewards rotate Grace (v2), Insight (v3), Nerve (v4), Grace (v5), Insight
-(v6), and Insight small (v7); the final small close is the arc's recognition
+(v6), and Nerve small (v7); the final small close is the arc's recognition
 beat and the larger size marks it as the last run. Across the six visits the
-forced rewards are Grace 0.4, Insight 0.9, Nerve 0.2; adding the first run's
-Nerve small gives Grace 0.4, Insight 0.9, Nerve 0.7. That keeps Grace — already
+forced rewards are Grace 0.4, Insight 0.4, Nerve 0.7; adding the first run's
+Nerve small gives Grace 0.4, Insight 0.4, Nerve 1.2. That keeps Grace — already
 the highest ceiling on every route — from inflating further, and gives the run
-route its Insight-forward identity. The menus are listed as M61–M66 in
+route its Nerve-forward identity. The menus are listed as M61–M66 in
 `attribute_rewards_checklist.md`.

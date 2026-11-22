@@ -7,7 +7,8 @@
 ## You can also jump straight to one arc:
 ##
 ##   jump arc_replay_sim      jump arc_replay_orson
-##   jump arc_replay_aya      jump arc_replay_hana
+##   jump arc_replay_chef     jump arc_replay_aya
+##   jump arc_replay_hana
 ##
 ## This calls the real visit labels, so the dialogue, menus, attribute cards,
 ## memories and WIRE messages are exactly the ones from play. It snapshots the
@@ -15,9 +16,9 @@
 ## live save does not permanently spend your rewards or advance your counters.
 ## Quitting in the middle of a replay skips the restore: finish the arc.
 ##
-## Visit 1 for Orson, Aya and Hana is inside the Day 1/2 routes, not a separate
-## label, so those arcs start at visit 2. Sim's visit 1 is standalone and is
-## included.
+## Visit 1 for Aya is inside the Day 1/2 route; Orson and Hana first appear on
+## Day 4. None of the three has a standalone visit-1 label, so those arcs start
+## at visit 2. Sim's and Chef's visit 1 are standalone and are included.
 
 init python:
     import copy
@@ -29,10 +30,14 @@ init python:
         global _arc_replay_saved
         names = (
             "confidant_visits", "sim_affection", "orson_affection",
-            "aya_affection", "hana_affection", "attribute_reward_flags",
-            "character_memories", "memory_names", "pending_messages",
-            "wire_unlocked", "wire_contacts", "camera_unlocked",
-            "phone_map_unlocked", "phone_map_visited", "sim_campus_intro",
+            "chef_affection", "aya_affection", "hana_affection",
+            "attribute_reward_flags", "character_memories", "memory_names",
+            "notebook_lines",
+            "pending_messages", "message_threads", "message_unread",
+            "wire_unlocked", "wire_contacts",
+            "camera_unlocked", "phone_map_unlocked", "phone_map_visited",
+            "sim_campus_intro", "sim_first_with_phone", "nami_pose",
+            "money", "money_hint_shown", "inventory",
         )
         _arc_replay_saved = {}
         for name in names:
@@ -46,11 +51,18 @@ init python:
         store.character_memories = {}
         store.memory_names = {}
         store.pending_messages = []
+        store.message_threads = {}
+        store.message_unread = {}
         store.sim_campus_intro = False
+        store.sim_first_with_phone = False
+        store.nami_pose = "standing"
         store.sim_affection = 0
         store.orson_affection = 0
+        store.chef_affection = 0
         store.aya_affection = 0
         store.hana_affection = 0
+        # Chef's first bowl is paid for; give the replay enough to buy it.
+        store.money = max(store.money, 10000)
 
     def arc_replay_end():
         """Put the live save back the way it was before the replay."""
@@ -72,6 +84,8 @@ label arc_replay:
             call arc_replay_sim from _arc_hub_sim
         "Orson: Lupin's Den (visits 2-7 and the epilogue)":
             call arc_replay_orson from _arc_hub_orson
+        "Chef: the Ramen Shop (visit 1 through the epilogue)":
+            call arc_replay_chef from _arc_hub_chef
         "Aya: the Maid Cafe (visits 2-7 and the epilogue)":
             call arc_replay_aya from _arc_hub_aya
         "Hana: the Reading Club (visits 2-7 and the epilogue)":
@@ -97,7 +111,7 @@ label arc_replay_sim:
     call sim_visit_03 from _arc_sim_03
 
     scene black with Dissolve(0.5)
-    "SIM // VISIT 4: THE EXHIBITION"
+    "SIM // VISIT 4: THE EXHIBITION IDEA"
     call sim_visit_04 from _arc_sim_04
 
     scene black with Dissolve(0.5)
@@ -158,6 +172,46 @@ label arc_replay_orson:
     return
 
 
+label arc_replay_chef:
+    $ arc_replay_begin()
+    scene black with Dissolve(0.5)
+    "CHEF // VISIT 1: THE FIRST BOWL"
+    call chef_visit_01 from _arc_chef_01
+
+    scene black with Dissolve(0.5)
+    "CHEF // VISIT 2: REST IS WORK"
+    call chef_visit_02 from _arc_chef_02
+
+    scene black with Dissolve(0.5)
+    "CHEF // VISIT 3: THE STUDENTS AND THE EGG"
+    call chef_visit_03 from _arc_chef_03
+
+    scene black with Dissolve(0.5)
+    "CHEF // VISIT 4: THE NOTEBOOK"
+    call chef_visit_04 from _arc_chef_04
+
+    scene black with Dissolve(0.5)
+    "CHEF // VISIT 5: THE RUSH"
+    call chef_visit_05 from _arc_chef_05
+
+    scene black with Dissolve(0.5)
+    "CHEF // VISIT 6: THE APPRENTICE"
+    call chef_visit_06 from _arc_chef_06
+
+    scene black with Dissolve(0.5)
+    "CHEF // VISIT 7: THE LAST BOWL"
+    call chef_visit_07 from _arc_chef_07
+
+    scene black with Dissolve(0.5)
+    "CHEF // EPILOGUE: THE COLD SHOP"
+    call chef_visit_closed from _arc_chef_closed
+
+    $ arc_replay_end()
+    scene black with Dissolve(0.8)
+    "END OF CHEF'S ARC"
+    return
+
+
 label arc_replay_aya:
     $ arc_replay_begin()
     scene black with Dissolve(0.5)
@@ -177,7 +231,7 @@ label arc_replay_aya:
     call aya_visit_05 from _arc_aya_05
 
     scene black with Dissolve(0.5)
-    "AYA // VISIT 6: THE NAME SHE CHOSE"
+    "AYA // VISIT 6: BOTH THINGS AT ONCE"
     call aya_visit_06 from _arc_aya_06
 
     scene black with Dissolve(0.5)
@@ -201,27 +255,27 @@ label arc_replay_hana:
     call hana_visit_02 from _arc_hana_02
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 3: OBSERVATION"
+    "HANA // VISIT 3: THE WHISPER"
     call hana_visit_03 from _arc_hana_03
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 4: SMALL ATTEMPTS"
+    "HANA // VISIT 4: THE ART BOOK"
     call hana_visit_04 from _arc_hana_04
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 5: THE ART BOOK"
+    "HANA // VISIT 5: SHARED SILENCE"
     call hana_visit_05 from _arc_hana_05
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 6: SHARED SILENCE"
+    "HANA // VISIT 6: THE CONFESSION"
     call hana_visit_06 from _arc_hana_06
 
     scene black with Dissolve(0.5)
-    "HANA // VISIT 7: THE CONFESSION"
+    "HANA // VISIT 7: THE FAREWELL"
     call hana_visit_07 from _arc_hana_07
 
     scene black with Dissolve(0.5)
-    "HANA // EPILOGUE: THE LAST FAREWELL"
+    "HANA // EPILOGUE: THE EMPTY ROOM"
     call hana_visit_closed from _arc_hana_closed
 
     $ arc_replay_end()

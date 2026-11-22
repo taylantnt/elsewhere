@@ -18,7 +18,7 @@ If Choice 2:
 Maid (smiles wide): “Dangerous answer! Now I get to pick… I hope you’re ready for a real ‘maid café classic.’”
 
 If Choice 3:
-Maid (slightly touched): “You actually asked for my opinion? Well then… let’s see. Today’s curry rice is good. I’ll make sure it looks cute for you.”
+Maid (slightly touched): “You actually asked for my opinion? Well then… let’s see. Today’s omurice is especially good. I’ll make sure it looks cute for you.”
 
 [She lingers again instead of walking away right away, resting her tray against her hip.]
 Maid (curious): “So… why do you keep coming back here? Is it really the food? Or…”
@@ -39,10 +39,10 @@ Maid (tilts head, amused): “Silent type, huh? That’s fine… I’ll just kee
 
 Maid: “You know… I really like this job. It’s fun, it’s silly, and it makes people happy. But…”
 [She looks away for a second before forcing a bright smile back on.]
-Maid: “Ah, never mind. That’s too serious for curry rice time, isn’t it?”
+Maid: “Ah, never mind. That’s too serious for an ordinary afternoon, isn’t it?”
 Narration (Player’s thoughts): For a moment, she almost let something real slip out. Then, just like that, the mask came back on.
 Maid: “Now then! Let’s make this plate magical, shall we?”
-[She doodles a little heart on the curry with sauce, then clasps her hands together.]
+[She doodles a little heart on the omurice in ketchup, then clasps her hands together.]
 Maid & Player (together):「もえもえ…きゅん！」 (Moe moe… kyun!)
 [As the player finishes eating, she comes to clear the table. She pauses for a moment, looking thoughtful.]
 Maid: “Hey… do you think it’s silly? All of this. The costumes, the spells, the chants.”

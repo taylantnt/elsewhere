@@ -49,11 +49,11 @@ init python:
             "day": day,
             "eyebrow": "DAY %d" % day,
             "month": story_month_names[date_value.month - 1].upper(),
-            "number": "%02d" % date_value.day,
+            "number": "%d" % date_value.day,
             "weekday": weekday,
             "weekday_color": weekday_color,
             "meta": "WEEK %d" % story_week_number(day),
-            "event": story_calendar_events.get(day, ""),
+            "event": "",
         }
 
     def day_transition_cards(from_day, to_day):
@@ -288,13 +288,6 @@ screen day_transition_date_card(card):
 
         add Solid("#c8a06a") xysize (56, 1) xalign 0.5 ypos 262 at day_transition_rule
 
-        if card["event"]:
-            text card["event"]:
-                style "day_transition_event"
-                xalign 0.5
-                xsize 280
-                ypos 276
-
         text card["meta"]:
             style "day_transition_meta"
             xalign 0.5
@@ -396,6 +389,12 @@ label day_transition:
     # ends of the move without counting anything itself.
     if story_day <= 1:
         return
+
+    # Every day of school and city travel costs something. This is the one
+    # shared choke point all day labels pass through, so the charge lands once
+    # per day whether the day is routine or a set piece. The silent helper
+    # clamps at zero; there is no debt and no fail state.
+    $ pay_transit()
 
     $ dt_from = max(1, int(story_day) - 1)
     $ dt_to = int(story_day)

@@ -1,11 +1,17 @@
 > **Written version:** this is the session where Sim finally does the
 > introductions he keeps putting off. After the manual-exposure exercise he names
-> Nami, Marco and Riku, then Tapi arrives with coffee. Tapi is a second model,
+> Nami, Marcus and Riku, then Tapi arrives with coffee. Tapi is a second model,
 > quiet and dry where Rika is theatrical, and mentions TT — her boyfriend, a
 > working photographer who will come to the exhibition with a camera. The three
 > answers about Tapi pay Insight / Grace / Nerve micro rewards. See
 > `game/confidant_visits/sim.rpy`, label `sim_visit_02`, and
 > `documentation/Characters/-Side Characters/Circle members.md`.
+>
+> The transcript below is the earlier design draft. The shipped scene has no
+> new camera bag to inspect: Sim talks through auto versus manual, names Nami
+> (holding gaffer tape, not a reflector), Marcus and Riku, has Tapi arrive with
+> coffee, and teaches exposure on a stain in the wall rather than a portrait of
+> Nami.
 
 (A week later, you arrive at the small studio again. This time you’re carrying a brand-new camera bag, looking slightly nervous. The sound of shutters clicking fills the room. Sim spots you immediately, waving with his usual bright grin.)
 Sim: “Hey! You came back. …And what’s this? Ohh, you upgraded already?”
@@ -39,8 +45,8 @@ If 3: Sim (impressed): “That’s the spirit. Alright then, let’s dive in.”
 
 (He switches the dial to M.)
 Sim: “Manual mode. Scary, right? But this is where the art starts.”
-(A tall guy with a tripod nearby—Marco—leans over.)
-Marco: “He’s right. My first time on manual? All my photos were black. Just… nothing. But when I figured it out—boom! Magic.”
+(A tall guy with a tripod nearby—Marcus—leans over.)
+Marcus: “He’s right. My first time on manual? All my photos were black. Just… nothing. But when I figured it out—boom! Magic.”
 Sim (grinning): “See? Black photos are the rite of passage.”
 (He hands the camera back to you.)
 Sim: “Okay, try something simple. Frame Nami over there. Use this aperture, this shutter speed. Don’t overthink.”
@@ -74,6 +80,6 @@ Sim: “One day, this camera might show you things about yourself you didn’t e
 Sim (Japanese, to the room): 「じゃあ、今日はチームで練習しよう！」 (Alright, let’s practice in teams today!)
 (In English, back to you.)
 Sim: “You and me, partners. Don’t worry—I won’t let you drown in settings.”
-(Marco laughs, Nami grabs a reflector, and the group shuffles into little pockets of activity. Sim keeps close, answering your questions with patience, mixing English and Japanese as he teaches. Even as you fumble, the group’s laughter and Sim’s encouragement make the studio feel like a safe place to fail—and grow.)
+(Marcus laughs, Nami grabs a reflector, and the group shuffles into little pockets of activity. Sim keeps close, answering your questions with patience, mixing English and Japanese as he teaches. Even as you fumble, the group’s laughter and Sim’s encouragement make the studio feel like a safe place to fail—and grow.)
 (Scene fades with the low hum of shutters clicking, laughter spilling through the room, and Sim’s steady voice guiding you forward.)
 

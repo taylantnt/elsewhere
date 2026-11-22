@@ -1,3 +1,10 @@
+> **Design draft:** the shipped visit 5 is the quiet, almost empty room. Sim
+> sits on the floor sorting memory cards, admits he was lonely and bad at
+> asking for company, names folders after people, and asks the protagonist to
+> photograph the empty wall. The "wouldn't speak above a whisper" note about
+> Nami below describes an earlier draft, not her written voice. See
+> `game/confidant_visits/sim.rpy`, label `sim_visit_05`.
+
 [Studio, later evening. Music low, snacks on a folding table. People huddle over the back of a camera, laughing. Sim stands a little apart, watching with that soft, content smile. He notices you and waves you over.]
 Sim: “Hey—glad you made it.”
 Player: “Wouldn’t miss it.”

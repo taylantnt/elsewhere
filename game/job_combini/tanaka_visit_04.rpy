@@ -6,9 +6,9 @@
 ## Quality is not a slogan here; it is a schedule.
 
 label tanaka_visit_04:
-    call tanaka_common_open
+    call tanaka_common_open from _call_tanaka_common_open_4
 
-    "Tonight the fryer. It is the size of a suitcase and it is hotter than the argument about whether it should be open."
+    "Today the fryer. It is the size of a suitcase and it is hotter than the argument about whether it should be open."
     tanaka "The fryer is the only machine in the store that cannot be argued with. Oil does not negotiate."
     tanaka "Karaage. Four minutes. Fries. Two fifty. When the timer speaks, the basket comes up. Not when you feel like it."
     "He sets the timer and does not watch it. He watches me."
@@ -20,7 +20,7 @@ label tanaka_visit_04:
     mc "Goes where?"
     tanaka "Disposed. Logged. Counted against the batch. It goes in the disposal bag and it goes outside of the store."
     mc "That seems like a waste."
-    tanaka "It is a cost. Waste is when you did not know. A cost is when you chose. We choose every night, on purpose."
+    tanaka "It is a cost. Waste is when you did not know. A cost is when you chose. We choose every shift, on purpose."
 
     menu:
         "Pull the basket on the timer.":
@@ -37,20 +37,21 @@ label tanaka_visit_04:
             $ reward_attributes_once("tanaka_v4_why", [("insight", "micro")], show="auto")
         "Log the disposal properly.":
             "The disposal bag gets a tag: what, how many, what time. Tanaka checks the tag the way other people check passports."
-            tanaka "A record is how a store tells itself the truth. The garbage is the only honest part of the night."
+            tanaka "A record is how a store tells itself the truth. The garbage is the only honest part of the afternoon."
             mc "(He likes endings. Receipts, records, timers. Everything here ends on purpose.)"
             $ reward_attributes_once("tanaka_v4_log", [("grace", "micro")], show="auto")
 
-    "At nine the fryer gets drained and wiped and covered, and the kitchen stops being hot."
-    mc "(He orders me around like the clock orders him. I keep being grateful, and I keep wondering why the other worker is allowed to run the night.)"
+    "At six the fryer gets drained and wiped and covered, and the kitchen stops being hot."
+    mc "(He orders me around like the clock orders him. I keep being grateful, and I keep wondering why the other worker is allowed to run the close.)"
     mc "(Somebody should ask the manager why one employee does everything. If we ever meet him.)"
+    mc "(One day I am going to ask him who he reports to. I say it every shift and I never say it out loud.)"
 
-    call tanaka_wage_close
+    call tanaka_wage_close from _call_tanaka_wage_close_4
 
     tanaka "You are not the worst."
     mc "Is that a compliment?"
     tanaka "It is a schedule. You are reliable. Reliability is rarer than talent."
     mc "(I am going to count that as a promotion.)"
 
-    call tanaka_night
+    call tanaka_walk_home from _call_tanaka_walk_home_4
     return

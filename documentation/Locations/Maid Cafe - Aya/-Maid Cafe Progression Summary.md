@@ -21,8 +21,7 @@ Encounter 2 — Recognition
     •    She comments on how most foreigners only visit once out of curiosity, but he returned.
     •    They talk lightly about food choices; she teases him if he orders the same thing.
     •    Small personal reveal: She mentions she’s been studying English on her own, which is why she was chosen to help foreign customers.
-    •    She asks the player:
-    •    “What surprised you most about Japan so far?” (Choice-driven dialogue, but outcomes are flavor text).
+    •    She asks whether being the only bridge between languages sounds lonely, or whether he wants to travel for real (choice-driven dialogue, but outcomes are flavor text).
     •    Tone: a little less formal, a little more playful. 
 
 Encounter 3 — Opening Up

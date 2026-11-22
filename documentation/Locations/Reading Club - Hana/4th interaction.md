@@ -28,8 +28,14 @@ Player (if 2): [I don't move. If she's watching, I want her to see me stay. Stay
 
 [Somewhere behind the shelves, a page turns. Then another. She's still here. She didn't leave the room this time.]
 
-[Narration]: She's reading. Just on the other side of the row. Our books back to back across a wall of paper.
+[Narration (if 1)]: She's reading. Just on the other side of the row. Our books back to back across a wall of paper.
+
+[Narration (if 2)]: She's reading. Just on the other side of the row. I keep my own book open and don't move, and she stays where she is.
 
 [The hour ends. When I stand to leave, the gap in the art shelf is filled. She reshelved it — but not in its old place. She put it right at the end of the row, where I'd have to walk past it. Right where someone sitting in my chair would see it on the way out.]
+
+[WIRE message, delivered later (if 1): "You... you saw. The art book. You picked one too. That means... that means you understand."]
+
+[WIRE message, delivered later (if 2): "You... you stayed. You didn't move. I... I could feel it. Thank you. For staying."]
 
 [Scene fades.]

@@ -2,7 +2,7 @@
 
 [Narration]: I came back. This time it is not for the books — it is for hers.
 
-[The book has been in my bag for three days. Every time I take it out, I put it back. Today I am not putting it back. I told myself I would return it properly: find Hana, hand it over, apologize for keeping it even this long.]
+[The book has been in my bag for three days. Every time I take it out, I put it back. Today I am not putting it back. I told myself I would return it properly: find Hana, hand it over, and hope she could tell I was sorry for keeping it this long.]
 
 [I take the book out and stand near the returns cart, holding it with both hands like a confession.]
 
@@ -34,7 +34,7 @@ Student: "Yeah. She doesn't lend anything. She barely lets people touch her book
 
 [Narration]: I look at the empty space where she was standing. The book is hers again. I am not carrying it anymore. I don't know if that makes me lighter or more responsible. Probably both.
 
-[The hour ends. Regulars drift out. I stay a little longer than I need to, turning over what she wrote inside the cover. Allowed to be small. I did not know a book could give someone permission like that.]
+[The hour ends. Regulars drift out. I stay a little longer than I need to, turning over what her grandmother wrote inside the cover. Allowed to be small. I did not know a book could give someone permission like that.]
 
 [Mechanics: hana_affection +1, confidant_visits["hana"] = 2, memory logged, queued WIRE message, Grace micro close reward.]
 

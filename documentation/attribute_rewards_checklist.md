@@ -1,12 +1,12 @@
 # Attribute Rewards Checklist
 
-Current code snapshot: November 7, 2026.
+Current code snapshot: November 18, 2026.
 
 This is an editable checklist of the current story choice menus kept here —
 M01–M54, the Monday dinner still-full fork (M54A), the retired weekend-plan
 menu (M47), the retired camera menu (M31), the walk-alone still-full fork
 (M35A), M55–M57 for Tuesday's forced day, M57A for the forced-afternoon reward,
-and M58–M60 for the hub walks and generic hub day, plus the Days 8–12 beats and
+and M58–M60 for the hub walks and generic hub day, plus the Days 8–12 beats, Hikari's six run menu groups (M61–M66), and
 the six Message Hikari tours (M67 Yokohama, M68 Harajuku, M69 Kuru Fuku Neko,
 M70 Ueno, M71 Shimokitazawa, M72 Omotesando / Meiji Shrine) — including every
 answer with no attribute reward. The current
@@ -361,31 +361,32 @@ award extra points beyond the route closer in E04 (Insight +0.5,
 
 ### M27. Walking Home With Hikari
 
-Source: [`after_school_run`](../game/script.rpy#L4032), menu at line 4055.
+Source: [`after_school_run`](../game/script.rpy#L4369), menu at line 4392.
 Context: the two are walking home through the neighbourhood.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M27.01 | Thanks for coming back with me. | Grace +0.3 | Acknowledges that she might have had other plans; flag `answer_run_thanks`. |
 | M27.02 | How long have you lived here? | Insight +0.3 | Asks whether she has always lived on this street; flag `answer_run_history`. |
-| M27.03 | Which turning is ours? | No rewards | Checks the route home. |
+| M27.03 | Which turn is ours? | Grace +0.2 | Checks the route home; flag `answer_run_turn`. |
 
 ### M28. Before Going For A Run
 
-Source: [`after_school_run`](../game/script.rpy#L4032), menu at line 4072.
+Source: [`after_school_run`](../game/script.rpy#L4369), menu at line 4411.
 Context: Hikari walks past the house and says she is going out again.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
 |---|---|---|---|
 | M28.01 | Out where? | Insight +0.2 | Asks where she is going; flag `answer_run_where`. |
 | M28.02 | Can I come? | Nerve +0.2 | Asks to join her; flag `answer_run_join`. |
+| M28.03 | I'd like to see it. | Grace +0.2 | Takes the offer without asking; flag `answer_run_see`. |
 
-Both answers lead to the run. M28.02's small Nerve reward is separate from
+All three answers lead to the run. M28.02's small Nerve reward is separate from
 the completion reward in E02.
 
 ### M29. Resting Beside The River
 
-Source: [`after_school_run`](../game/script.rpy#L4032), menu at line 4139.
+Source: [`after_school_run`](../game/script.rpy#L4369), menu at line 4485.
 Context: they drink under a lamp and listen to the water.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
@@ -398,7 +399,7 @@ Context: they drink under a lamp and listen to the water.
 
 ### M30. Entering Circle
 
-Source: [`after_school_photo_club`](../game/script.rpy#L4230), menu at line 4277.
+Source: [`after_school_photo_club`](../game/script.rpy#L4579), menu at line 4627.
 Context: the room turns to look at the newcomer and Sim welcomes him.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
@@ -409,7 +410,7 @@ Context: the room turns to look at the newcomer and Sim welcomes him.
 
 ### M31. Answering The Camera Question
 
-Source: [`after_school_photo_club`](../game/script.rpy#L4230), menu at line 4299.
+Source: [`after_school_photo_club`](../game/script.rpy#L4662), now dialogue rather than a menu.
 Context: the scene used to ask whether the protagonist had a camera. **Retired.**
 Prompt: "So. Do you have a camera?"
 
@@ -424,7 +425,7 @@ menu back without also adding its reward row.
 
 ### M32. Looking At The First Photograph
 
-Source: [`after_school_photo_club`](../game/script.rpy#L4230), menu at line 4313.
+Source: [`after_school_photo_club`](../game/script.rpy#L4579), menu at line 4673.
 Prompt: "What do you notice?"
 
 | ID | Answer / Choice | Reward (editable) | Notes |
@@ -435,7 +436,7 @@ Prompt: "What do you notice?"
 
 ### M33. Asking Sim About Photography
 
-Source: [`after_school_photo_club`](../game/script.rpy#L4230), menu at line 4331.
+Source: [`after_school_photo_club`](../game/script.rpy#L4579), menu at line 4697.
 Context: Sim explains that he works in an office and guides Circle outside work.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
@@ -445,7 +446,7 @@ Context: Sim explains that he works in an office and guides Circle outside work.
 
 ### M34. Preparing For The Model Session
 
-Source: [`after_school_photo_club`](../game/script.rpy#L4230), menu at line 4346.
+Source: [`after_school_photo_club`](../game/script.rpy#L4579), menu at line 4712.
 Context: a volunteer is modelling and the theme is a natural smile.
 
 | ID | Answer / Choice | Reward (editable) | Notes |
@@ -1056,8 +1057,9 @@ unlocks the Harajuku hub row and marks it visited on the phone map.
 
 Source: [`hikari_tour_karaoke`](../game/confidant_visits/hikari_tour.rpy).
 
-Context: the third Message Hikari tour. She runs late on purpose and frames the
-outing as letting something out with him, not as a performance. It introduces
+Context: the third Message Hikari tour. She has to stay after seminar to finish
+something and frames the outing as letting something out with him, not as a
+performance. It introduces
 the karaoke box, its culture and costs, the drink bar, and the art of choosing a
 group song, then unlocks the karaoke hub row for solo visits.
 
@@ -1305,7 +1307,7 @@ rotated across Insight, Grace and Nerve instead of paying Grace twice in a row.
 | 5 | What would you do instead (Insight), parents (Grace), carrying (Nerve); doing (Grace), bravery (Nerve), what would make you stay (Insight) | Grace micro |
 | 6 | Audition (Nerve), kind (Insight), different (Grace); felt (Insight), again (Nerve), proud (Grace); more? (Insight), show someone (Nerve), already good (Grace); both (Grace), brave (Nerve) | Insight micro |
 | 7 | Leaving (Insight), happened (Nerve), sorry (Grace); proud (Grace), braver (Nerve), miss (Grace); treasure (Grace), perfect (Nerve) | Nerve micro |
-| Epilogue | Tell her it is good (Grace), ask about Aya (Insight), eat in silence (Nerve) | Insight micro |
+| Epilogue | Tell her the cat looks like Aya's (Grace), ask about Aya (Insight), ask what Aya taught her about the cat (Nerve) | Insight micro |
 
 ### Hana — the Reading Club (visits 2–8)
 
@@ -1337,8 +1339,8 @@ The first run is `after_school_run` (M27–M29); the other six are in
 `game/confidant_visits/hikari.rpy`. Hikari is not one of the five confidant chains — the run is
 tracked by `hikari_visits` — but the reward shape is the same: every menu pays
 one attribute per option at micro size, and the close rewards rotate Grace /
-Insight / Nerve. The final run closes at **Insight small (0.5)** because the
-recognition beat is the arc's turn.
+Insight / Nerve across visits 2–6; visit 7 closes at **Nerve small (0.5)** because
+the recognition beat is the arc's turn.
 
 | Visit | Answered choices (reward) | Close reward |
 |---|---|---|
@@ -1347,7 +1349,7 @@ recognition beat is the arc's turn.
 | 4 | Say something (Nerve), leave the silence (Grace), listen to the river (Insight); keep me (Nerve), perform (Grace), not be anything (Insight) | Nerve micro |
 | 5 | What changed (Insight), good memory (Grace), get out of the rain (Nerve); looks like a street (Insight), looks like home (Grace), something's off (Nerve) | Grace micro |
 | 6 | Why here (Insight), beautiful (Grace), house small (Nerve); checked (Insight), doesn't need to work (Grace), further (Nerve) | Insight micro |
-| 7 | Yes (Nerve), what do you mean (Insight), I'm here (Grace); stop running (Grace), run the other way (Nerve), afraid (Insight) | Insight small |
+| 7 | Yes (Nerve), what do you mean (Insight), I'm here (Grace); stop running (Grace), run the other way (Nerve), afraid (Insight) | Nerve small |
 
 ## Rewards Outside Dialogue Choices
 
@@ -1369,7 +1371,7 @@ Three readings are available; only an incorrect reading reduces the counter.
 
 ### E02. Completing Hikari's First Run
 
-Source: [`after_school_run`](../game/script.rpy#L4032), reward at line 4169.
+Source: [`after_school_run`](../game/script.rpy#L4369), reward at line 4526.
 
 | ID | Outcome / Action | Reward (editable) | Notes |
 |---|---|---|---|

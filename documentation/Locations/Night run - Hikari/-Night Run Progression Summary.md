@@ -9,13 +9,13 @@ everything is. It is the one place she is allowed to be tired.
 The first run is written in `after_school_run` (`game/script.rpy`); visits 2–7
 live in `game/confidant_visits/hikari.rpy`. The hub's **Walk home with Hikari** row
 (`walk_hikari`) routes through `confidant_visit_hikari`, which plays the next
-run or falls back to the ordinary walk home (`afternoon_walk_hikari`) when the
-first run was skipped or the chain is finished.
+run, the shorter `hikari_first_run` fallback if the first run was skipped, or the
+ordinary walk once the chain is finished.
 
 ## The Seven Beats
 
-1. **The first run** — `after_school_run` — he cannot keep up, and she invites
-   him anyway. The run is her daily thing, and she lets him see it.
+1. **The first run** — `after_school_run` — he struggles, and she invites him
+   anyway and tells him he kept up. The run is her daily thing, and she lets him see it.
 2. **The route** — `hikari_visit_02` — she knows every vending machine, every
    crack in the path. She runs it the way the chef makes ramen: from memory,
    without thinking. She admits she needs it, not just likes it.
@@ -62,22 +62,21 @@ left where he can find it.
 | `hikari_run_finished` | `hikari_visit_07` | Act 3/4 threshold, future scenes |
 | `last_afternoon_was_run` | each run (set), `free_afternoon` and `afternoon_walk_hikari` (cleared) | the Day 7 dinner branch |
 
-`confidant_visit_hikari` dispatches on `hikari_visits`: `0` falls back to the
-ordinary walk, `1`–`6` play visits 2–7, and `7` falls back to the ordinary walk.
+`confidant_visit_hikari` dispatches on `hikari_visits`: `0` plays the
+hikari_first_run fallback, `1`–`6` play visits 2–7, and `7+` falls back to the
+ordinary walk.
 The run does not touch `confidant_visits`, so it does not affect the confidant
 caps or the "all confidants met" gate.
 
 ## Rewards
 
-Each run has two 3-option menus, one option per attribute at micro (0.2). The
+Each of visits 2–7 has two 3-option menus, one option per attribute at micro (0.2); the first run has three (M27–M29). The
 close rewards rotate Grace (v2), Insight (v3), Nerve (v4), Grace (v5), Insight
-(v6), and Insight small (0.5, v7). The final small close marks the recognition
-beat as the last run. The twelve menus are M61–M66 in
+(v6), and Nerve small (0.5, v7). The final small close marks the recognition
+beat as the last run. The six menu groups are M61–M66 (twelve menus, M61.01–M66.06) in
 `attribute_rewards_checklist.md`.
 
 ## Current Build
 
-Only visit 2 is reachable now: the first run is the Day 2 afternoon fork, and
-Day 7 can force `hikari_first_run` when Hikari is the missing first-week
-confidant. Visits 3–7 are written and wired, waiting for hub days from Day 8. The ordinary walk home remains available after visit 7, so
+Visits 2–7 are reachable from the Day 8+ hub. The ordinary walk home remains available after visit 7, so
 the Hikari row never runs out of something to do.

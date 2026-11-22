@@ -1,6 +1,6 @@
 # Attribute Balance Audit — Elsewhere
 
-Scope: all active `reward_attributes_once` calls in `game/script.rpy`, `game/confidant_visits/chef.rpy`, `game/confidant_visits/sim.rpy`, `game/confidant_visits/aya.rpy`, `game/confidant_visits/hana.rpy`, and `game/confidant_visits/orson.rpy`, through the end of Day 6 (`monday_lecture`). Excluded: `game/quiz.rpy` L23 (commented out), `attribute_test_rank_up` (L592, dev shortcut), and the archived board in `dream_archive.rpy` L430.
+Scope: all active `reward_attributes_once` calls in `game/script.rpy`, `game/confidant_visits/chef.rpy`, `game/confidant_visits/sim.rpy`, `game/confidant_visits/aya.rpy`, `game/confidant_visits/hana.rpy`, and `game/confidant_visits/orson.rpy`, through the end of Day 6 (`monday_lecture`). The Sim section below has been refreshed against the Day 21 build. Excluded: `game/quiz.rpy` L23 (commented out), `attribute_test_rank_up` (L592, dev shortcut), and the archived board in `dream_archive.rpy` L430.
 
 Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0.5, medium = 1.0. Rank thresholds (cumulative): 0 / 2 / 5 / 9.5 / 15.
 
@@ -38,7 +38,7 @@ Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0
 | 3466 | `answer_wall_cat` | Insight micro (0.2) |
 | 3551 | `answer_circles_back` | Grace micro (0.2) |
 | 3654 | `answer_clock_ask` | Grace micro_loss (-0.2) |
-| 3693 | `answer_hikari_warning` | Nerve small (0.5), Grace micro_loss (-0.2) |
+| 3693 | `answer_hikari_warning` | Nerve small (0.5) |
 | **Day 2 afternoon: walk_alone** | | |
 | 3840 | `answer_ramen_recommendation` | Nerve small (0.5) |
 | 3862 | `answer_ramen_broth` | Insight nudge (0.3) |
@@ -46,11 +46,11 @@ Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0
 | 3892 | `chef_first_umai` | Grace small (0.5) |
 | 3949 | `walk_first_found` | Insight small (0.5) |
 | **Day 2 afternoon: walk_hikari (run)** | | |
-| 4017 | `answer_run_thanks` | Grace nudge (0.3) |
-| 4021 | `answer_run_history` | Insight nudge (0.3) |
-| 4039 | `answer_run_join` | Nerve micro (0.2) |
-| 4103 | `answer_river_quiet` | Grace small (0.5) |
-| 4136 | `run_first_river` | Nerve small (0.5) |
+| 4396 | `answer_run_thanks` | Grace nudge (0.3) |
+| 4400 | `answer_run_history` | Insight nudge (0.3) |
+| 4421 | `answer_run_join` | Nerve micro (0.2) |
+| 4490 | `answer_river_quiet` | Grace small (0.5) |
+| 4526 | `run_first_river` | Nerve small (0.5) |
 | **Day 2 afternoon: photo_club** | | |
 | 4246 | `answer_circle_join` | Nerve small (0.5) |
 | 4276 | `sim_circle_first` | Insight small (0.5) |
@@ -62,7 +62,7 @@ Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0
 | 4965 | `first_dinner_natto` | Nerve micro (0.2) |
 | 4976 | `first_dinner_neighborhood` | Insight micro (0.2) |
 | 4986 | `first_dinner_apology` | Grace micro (0.2) |
-| 5062 | `first_night_hikari_thanks` | Grace micro (0.2) |
+| 5716 | `first_night_hikari_thanks` | Grace micro (0.2) |
 | 5069 | `first_night_hikari_observation` | Insight micro (0.2) |
 | 5074 | `first_night_hikari_promise` | Nerve micro (0.2) |
 | 5118 | `first_night_memory_pairs` | Insight nudge (0.3) |
@@ -175,40 +175,58 @@ Reward sizes: tiny = 0.1, micro = 0.2, micro_loss = -0.2, nudge = 0.3, small = 0
 
 | Line | Flag | Reward |
 |---:|---|---|
+| **Sim visit 1** | | |
+| 100 | `sim_visit_01_look` | Insight micro (0.2) |
+| 105 | `sim_visit_01_shoot` | Nerve micro (0.2) |
+| 111 | `sim_visit_01_why` | Grace micro (0.2) |
+| 136 | `sim_visit_01_close` | Grace micro (0.2) |
 | **Sim visit 2** | | |
-| 60 | `sim_visit_02_manual` | Insight micro (0.2) |
-| 64 | `sim_visit_02_time` | Nerve micro (0.2) |
-| 98 | `sim_visit_02_close` | Grace micro (0.2) |
+| 179 | `sim_visit_02_manual` | Insight micro (0.2) |
+| 183 | `sim_visit_02_time` | Nerve micro (0.2) |
+| 189 | `sim_visit_02_learn` | Grace micro (0.2) |
+| 224 | `sim_visit_02_tapi_other_side` | Insight micro (0.2) |
+| 230 | `sim_visit_02_tapi_why` | Grace micro (0.2) |
+| 237 | `sim_visit_02_tapi_coffee` | Nerve micro (0.2) |
+| 279 | `sim_visit_02_close` | Grace micro (0.2) |
 | **Sim visit 3** | | |
-| 132 | `sim_visit_03_decide` | Nerve micro (0.2) |
-| 136 | `sim_visit_03_wait` | Grace micro (0.2) |
-| 140 | `sim_visit_03_frame` | Insight micro (0.2) |
-| 186 | `sim_visit_03_close` | Grace small (0.5) |
+| 316 | `sim_visit_03_decide` | Nerve micro (0.2) |
+| 321 | `sim_visit_03_wait` | Grace micro (0.2) |
+| 325 | `sim_visit_03_frame` | Insight micro (0.2) |
+| 381 | `sim_visit_03_close` | Insight micro (0.2) |
 | **Sim visit 4** | | |
-| 218 | `sim_visit_04_collective` | Grace small (0.5) |
-| 222 | `sim_visit_04_choice` | Insight micro (0.2) |
-| 253 | `sim_visit_04_commit` | Nerve small (0.5) |
-| 257 | `sim_visit_04_fear` | Grace micro (0.2) |
-| 275 | `sim_visit_04_close` | Grace small (0.5) |
+| 413 | `sim_visit_04_collective` | Grace micro (0.2) |
+| 417 | `sim_visit_04_choice` | Insight micro (0.2) |
+| 422 | `sim_visit_04_simple` | Nerve micro (0.2) |
+| 452 | `sim_visit_04_commit` | Nerve micro (0.2) |
+| 456 | `sim_visit_04_fear` | Grace micro (0.2) |
+| 461 | `sim_visit_04_decides` | Insight micro (0.2) |
+| 483 | `sim_visit_04_close` | Nerve micro (0.2) |
 | **Sim visit 5** | | |
-| 311 | `sim_visit_05_honest` | Insight micro (0.2) |
-| 315 | `sim_visit_05_real` | Grace small (0.5) |
-| 344 | `sim_visit_05_close` | Grace small (0.5) |
+| 520 | `sim_visit_05_honest` | Insight micro (0.2) |
+| 524 | `sim_visit_05_real` | Grace micro (0.2) |
+| 530 | `sim_visit_05_keepgoing` | Nerve micro (0.2) |
+| 556 | `sim_visit_05_close` | Grace micro (0.2) |
 | **Sim visit 6** | | |
-| 374 | `sim_visit_06_validate` | Grace small (0.5) |
-| 379 | `sim_visit_06_future` | Insight micro (0.2) |
-| 383 | `sim_visit_06_fear` | Nerve micro (0.2) |
-| 403 | `sim_visit_06_room` | Grace small (0.5) |
-| 407 | `sim_visit_06_time` | Nerve micro (0.2) |
-| 425 | `sim_visit_06_close` | Grace small (0.5) |
+| 588 | `sim_visit_06_validate` | Grace micro (0.2) |
+| 593 | `sim_visit_06_future` | Insight micro (0.2) |
+| 597 | `sim_visit_06_fear` | Nerve micro (0.2) |
+| 625 | `sim_visit_06_room` | Grace micro (0.2) |
+| 629 | `sim_visit_06_time` | Nerve micro (0.2) |
+| 634 | `sim_visit_06_disappear` | Insight micro (0.2) |
+| 650 | `sim_visit_06_close` | Insight micro (0.2) |
 | **Sim visit 7** | | |
-| 465 | `sim_visit_07_accept` | Grace small (0.5) |
-| 469 | `sim_visit_07_stay` | Grace micro_loss (-0.2) |
-| 473 | `sim_visit_07_carry` | Insight small (0.5) |
-| 501 | `sim_visit_07_promise` | Grace small (0.5) |
-| 505 | `sim_visit_07_meaning` | Grace small (0.5) |
-| 509 | `sim_visit_07_future` | Nerve micro (0.2) |
-| 523 | `sim_visit_07_close` | Grace small (0.5) |
+| 707 | `sim_visit_07_accept` | Grace micro (0.2) |
+| 711 | `sim_visit_07_stay` | Nerve micro (0.2) |
+| 715 | `sim_visit_07_carry` | Insight micro (0.2) |
+| 743 | `sim_visit_07_promise` | Grace micro (0.2) |
+| 747 | `sim_visit_07_meaning` | Grace micro (0.2) |
+| 751 | `sim_visit_07_future` | Nerve micro (0.2) |
+| 787 | `sim_visit_07_close` | Nerve micro (0.2) |
+| **Sim epilogue** | | |
+| 837 | `sim_visit_closed_help` | Grace micro (0.2) |
+| 843 | `sim_visit_closed_ask` | Insight micro (0.2) |
+| 849 | `sim_visit_closed_look` | Nerve micro (0.2) |
+| 865 | `sim_visit_closed_close` | Grace micro (0.2) |
 
 ### `game/confidant_visits/aya.rpy`
 
@@ -415,13 +433,13 @@ Appropriate examples worth keeping: `answer_wall_cat` L3466 (Insight for noticin
 - `breakfast` L3122: "Should I introduce myself today?" pays nothing; questions pays Nerve -0.2, emails pays Grace 0.5.
 - `department_tour` L3452: film and rooms pay nothing; the gated lost cat pays Insight 0.2.
 - `student_relations` L3538: the first two options pay nothing; the gated thank-you pays Grace 0.2.
-- `after_school` L3691: thanks and move-on pay nothing; warn pays Nerve 0.5/Grace -0.2.
+- `after_school` L4066: thanks and move-on pay nothing; warn pays Nerve 0.5 only.
 - Ramen order L3827: English and point pay nothing; recommendation pays Nerve 0.5.
 - Ramen broth L3855: "Try it before asking" pays nothing; asking pays Insight 0.3.
 - Umai L3878: smoky-flavour and smile options pay nothing; ask-meaning/thank pay Grace 0.5 (same flag).
-- Run L4013: "Which turn is ours?" (Insight) pays nothing; thanks pays Grace 0.3, history pays Insight 0.3.
-- Run L4031: "Out where?" pays nothing; "Can I come?" pays Nerve 0.2.
-- River L4098: "Do you do this every day?" and "Why the river?" (Insight) pay nothing; "Let her enjoy the quiet" pays Grace 0.5.
+- Run L4404: "Which turn is ours?" pays Grace 0.2.
+- Run L4411: all three options pay (Insight/Nerve/Grace micro).
+- River L4485: quiet pays Grace small; the other two pay Insight/Nerve micro.
 - Circle L4239: "Is this the photography club?" and "Hikari told me" pay nothing; "Could I join today?" pays Nerve 0.5.
 - Circle L4270: tilted phone and "not sure what to look for" pay nothing; window observation pays Insight 0.5.
 - Circle L4288: **both** options ("How did Circle start?" and "Do you shoot outside the club too?") pay nothing — a dead menu.
@@ -545,14 +563,7 @@ M55–M60 plus the confidant visit reward tables. See
 
 The six new river-run visits (`hikari_visit_02`–`07` in `game/confidant_visits/hikari.rpy`)
 follow the same rule as the rest of the pass: each of the twelve menus has one
-option per attribute at micro size. The forced close rewards rotate Grace (v2),
-Insight (v3), Nerve (v4), Grace (v5), Insight (v6), and Insight small (v7). The
-final small close is deliberate: the recognition beat is the arc's turn, and
-the larger size marks it as the last run. Across the six visits the forced
-totals are Grace 0.4, Insight 0.9, Nerve 0.2; with the first run's Nerve small
-the chain totals Grace 0.4, Insight 0.9, Nerve 0.7. The run route stays
-Insight-forward without adding to Grace, which was the highest ceiling on every
-route in §4. The menus are M61–M66 in `attribute_rewards_checklist.md`; the
+option per attribute at micro size. The forced close rewards rotate Grace (v2), Insight (v3), Nerve (v4), Grace (v5), Insight (v6), and **Nerve small (v7)**. The final small close is deliberate: the recognition beat is the arc's turn, and the larger size marks it as the last run. Across the six visits the forced totals are **Grace 0.4, Insight 0.4, Nerve 0.7**; with the first run's Nerve small the chain totals **Grace 0.4, Insight 0.4, Nerve 1.2**. The run route stays Nerve-forward without adding to Grace, which was the highest ceiling on every route in §4. The menus are M61–M66 in `attribute_rewards_checklist.md`; the
 progression summary is under `documentation/Locations/Night run - Hikari/`.
 
 ## Follow-up — 2026-11-10 (Days 8–12 and the hub first visits)

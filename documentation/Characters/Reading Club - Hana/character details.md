@@ -21,7 +21,8 @@
 - Always carrying something to hide behind: a book, a stack of returns, an art book hugged to her chest.
 - **`A Child's Garden of Verses` is her book, not a loan.** The flyleaf dedication — *"when the house gets too loud, read this and remember you are allowed to be small"* — is why she keeps it with her.
 - The earned-contact object is a **handmade WIRE card**: *Hana — volunteer, student library desk. Reading club. @hana.* It slides out of the book when she panics.
-- **`hana.png` is not in the assets folder yet** — she needs a portrait before her interactions can be scripted.
+- **`images/characters/hana.png` is in place** — it supplies her portrait, side image and WIRE tile.
+- The reading-room regular is a **girl about the protagonist's age with a pencil behind her ear**, reading at the low table. She explains the room in flat one-liners without looking up, then goes back to her book. She stays unnamed on purpose. `quiet_student` has a name box but no `image=`, so a portrait can be wired with one line whenever the art arrives.
 
 ## Backstory
 Her parents are strict lawyers who have already decided what her life is going to be. Art is the one thing that is hers, and so it is the thing she hides. She volunteers at the club because it is a room where nobody expects her to perform, and reads art books there in secret. Her grandmother's poetry book is the permission she carries with her: *when the house gets too loud… you are allowed to be small.* She has no friends. She hates that about herself and cannot seem to fix it.

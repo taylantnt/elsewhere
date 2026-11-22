@@ -17,7 +17,7 @@ Encounter 1 – First Visit
 
 Encounter 2 – Breaking the Ice
     •    Orson initiates small talk, asking where the player is from.
-    •    Explains why masks exist here: “You can be whoever you want when you wear one.”
+    •    Explains why masks exist here: “With a mask, you can be anyone. Even yourself, if you’re lucky.”
     •    Gives a gentle piece of advice: sometimes hiding lets you be more honest than showing your face.
     •    Player begins to feel less out of place.
     •    Theme: Acceptance and the first step toward belonging.
@@ -29,7 +29,7 @@ Encounter 3 – Stories & Observations
     •    Theme: Finding humor and humanity in little stories; learning through observation.
 
 Encounter 4 – Deeper Reflection
-    •    Orson talks more about himself — hints that he hasn’t always run a bar.
+    •    Orson talks more about himself. He hints that he hasn’t always run a bar.
     •    Drops subtle wisdom: “People come here to be seen without being recognized.”
     •    Asks the player what they think of Japan so far, making them reflect.
     •    Theme: Masks as metaphor, duality of identity. 
@@ -37,20 +37,20 @@ Encounter 4 – Deeper Reflection
 Encounter 5 – Personal Advice
     •    Orson notices the player seems more comfortable and teases them a bit.
     •    Talks about how everyone carries hidden struggles.
-    •    Offers advice about loneliness, telling the player: “It’s okay to feel lost — just don’t stop walking.”
+    •    Offers advice about loneliness, telling the player: “It’s okay to feel lost; just don’t stop walking.”
     •    Theme: Trust deepening, from simple bartender to confidant. 
 
 Encounter 6 – Vulnerability
     •    Orson reveals more about his past: hints at failed ventures, maybe family expectations.
     •    Explains that running the bar and wearing the mask gave him freedom to build a place for misfits.
-    •    Tells the player they remind him of when he first came to Tokyo — uncertain, but curious.
+    •    Tells the player they remind him of when he first came to Tokyo: lost, stubborn, and curious.
     •    Theme: Revealing his personal philosophy and humanity.
 
 Encounter 7 – Farewell
     •    Orson announces the bar won’t stay open much longer (reasons can vary: financial strain, personal choice, city development pushing them out).
-    •    Thanks the player for visiting so often: “People like you remind me why I built this place.”
-    •    Leaves the player with a final piece of advice about carrying their own “mask” proudly.
+    •    Thanks the player for visiting so often: “You reminded me why I kept the doors open. Not for the money. For this.”
+    •    Gives the player a worn wolf-paw badge and tells him to carry it, not keep it safe.
     •    Player leaves with a bittersweet sense of closure.
     •    Theme: Endings, memories, and carrying lessons forward. 
 
-    Bar is closed replaced with a generic coffee shop with no familiar faces.
+    Bar is closed and empty. The wolf sign is still up, the window is dark, and a letting notice is taped at eye level. The room is between tenants, not a new cafe.

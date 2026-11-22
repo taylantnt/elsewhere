@@ -1,3 +1,10 @@
+> **Design draft:** the transcript below is the original scene. In the shipped
+> visit 4 the group judges which prints stay on the wall, Riku's accidental
+> campus-gate photograph wins them over, and Sim proposes the exhibition
+> himself. Nami runs the light and Marcus claims the posters. The "Kenji" named
+> below is a draft-only name with no counterpart in the shipped cast. See
+> `game/confidant_visits/sim.rpy`, label `sim_visit_04`.
+
 [The studio is buzzing tonight—tripods scraping, laughter, bursts of camera shutters. You’re no longer just a guest; people greet you when you enter.]
 Member A (grinning): “Hey, you’re here! Good, we need more lenses on Rika—she won’t stop posing today.”
 Rika (mock offense): “Hey! It’s not me, it’s the light! Look at this golden glow!”

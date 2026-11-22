@@ -37,11 +37,13 @@ Hana: "This is for you. I made it. Not... very good."
 
 [I unwrap it. A small cloth strap — the kind you'd hang on a phone or a bag — with a tiny brush and a painter's palette stitched into it in coloured thread. The stitching is uneven. Every stitch is deliberate.]
 
-Hana: "Brush and palette. What I'm going to be... if I'm brave enough. Wanted you to carry it. So you don't... forget me."
+Hana: "Brush and palette. What I'm going to be... if I'm brave enough. Wanted you to have it."
 
-Player (quietly): "I won't forget you."
+Player (choice):
+"I won't forget you."
+"This means a lot to me. Thank you, Hana."
 
-Hana (shakes her head, smiling, eyes wet): "No — not like that. For you… so you don't forget me. Like… like you carried my dream, when I couldn't. You kept showing up. Every week. Nobody's ever kept showing up."
+Hana (shakes her head, smiling, eyes wet): "It's not... a souvenir. It's so you remember. Like... like you carried my dream, when I couldn't. You kept showing up. Every week. Nobody's ever kept showing up."
 
 [Narration]: She steps back and bows — slow, deep, the way she did at the door last time. Then she picks up her bag and walks out. Not fleeing. Walking. At the door she stops for half a second and looks back one last time, and this time she holds my eyes for a full breath before she goes.]
 

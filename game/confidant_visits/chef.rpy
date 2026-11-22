@@ -7,7 +7,7 @@ init 999 python:
     kenta = Character("Kenta", callback=type_sound)
     student1 = Character("Student", callback=type_sound)
     student2 = Character("Student", callback=type_sound)
-    woman = Character("Woman in a Suit", callback=type_sound)
+    woman = Character("Woman in a Suit", callback=type_sound, image="woman")
 
 label confidant_visit_chef:
     $ visit = confidant_visits.get("chef", 0)
@@ -51,7 +51,7 @@ label chef_common_open:
 ## cannot read, and the WIRE card that makes him a contact.
 
 label chef_visit_01:
-    call chef_common_open
+    call chef_common_open from _call_chef_common_open
 
     "Broth, and steam, and fat hitting a hot pan behind a wall. My whole body turns towards it before I have decided anything."
     "A doorway with a cloth over it, dark blue and gone soft at the hem. A bowl painted on it in white. No glass, no sign I can read."
@@ -111,7 +111,7 @@ label chef_visit_01:
             mc "Sumimasen. Shoyu? Miso?"
             "He follows my finger towards the bowl."
             "He points to the dark bottle beside the stove."
-            mc "(Soy sauce. That answers that.)"
+            mc "(Soy sauce, in a pork broth. That answers that.)"
             "I stop talking. He pushes the bowl half a centimetre towards me with one finger."
             $ reward_attributes_once("answer_ramen_broth", [("insight", "nudge")], show="auto")
             chef "どうぞ。"
@@ -148,7 +148,7 @@ label chef_visit_01:
             mc "The pork? Is that where the smoky taste comes from?"
             "He taps the edge of the grill with his ladle."
         "Point at the bottle and wait for him to name it.":
-            "I point at the bottle with the spoon. He says the word again, slower this time, and watches to see if I got it."
+            "I point at the dark bottle beside the stove with the spoon. He says its name slowly, and watches to see if I got it."
 
     "He snorts. A small sound, killed immediately. Something in his face moves for a quarter of a second before he turns back to the pots."
     "He says nothing else. I slurp, badly, and get broth on the counter, and he does not comment."
@@ -172,7 +172,7 @@ label chef_visit_01:
     mc "(Not what I expected. I'd order it again.)"
 
     $ confidant_visits["chef"] = 1
-    $ remember("chef", "sat down in his shop and finished the bowl")
+    $ log_memory("chef", "sat down in his shop and finished the bowl")
 
     # Back to the counter shot for this, for the same reason the whole scene
     # works this way: he does not say anything that is not sitting in front of
@@ -181,7 +181,7 @@ label chef_visit_01:
     # takes the whole frame.
     scene bg_ramen_shop with walk_fade
 
-    "He has been looking at the phone on the counter since I put the money down."
+    "He has been looking at the phone I left on the counter beside the money."
     chef "「WIRE、やってるか」"
     "Two English sounds, dropped into a Japanese sentence, at the exact volume of the pots."
     mc "(I caught the English sounds and none of the Japanese. I nod anyway.)"
@@ -198,8 +198,8 @@ label chef_visit_01:
     # The shop's only broadcast, sent while the phone still has no data. It
     # waits in the queue until the line goes live the next day.
     $ queue_message("chef", "新メニュー。900円。水曜日は休み。", day="yesterday")
-    # Forced closer for the walk route. Finding the shop by getting lost is the
-    # Insight beat that matches the run's Nerve and the club's Grace.
+    # The first meeting is the Insight beat either way: this fallback is for a
+    # run that reached the shop from the hub rather than the Day 2 walk.
     $ reward_attributes_once("walk_first_found", [("insight", "small")], show="card")
     $ chef_affection += 1
 
@@ -207,15 +207,16 @@ label chef_visit_01:
     "I come out from under the cloth and the street is dark, and I know exactly where I am."
     "Those two convenience stores are twenty metres away."
     mc "(That sign. That one there. I know that street.)"
-    mc "(I was on it this morning, on the way to school, and I did not look at it once.)"
-    "Home is four minutes away and it took me an hour to do it, and I would do it again exactly the same way."
-    mc "(I found a ramen shop. I found it by getting lost, which means it was always findable. It was there the whole time.)"
+    "Home is four minutes away, and I came here on foot. I could find the cloth again with my eyes shut."
+    mc "(I found a ramen shop. It was on this street the whole time, waiting for me to be hungry enough to notice.)"
 
+    scene bg_home_exterior_night with walk_fade
+    stop music fadeout 2.0
     return
 
 
 label chef_visit_02:
-    call chef_common_open
+    call chef_common_open from _call_chef_common_open_1
 
     "The shop is quieter than last time. Two seats are occupied by the same two men, eating with the focused silence of people who have made this ritual before."
     "Chef is at the stove, his back to the door, conducting the pots with chopsticks like an orchestra that knows exactly what to play."
@@ -233,7 +234,7 @@ label chef_visit_02:
     "I sit. The stool has developed a memory of my posture, or I have developed a memory of the stool."
 
     chef "前、うまかった？"
-    mc "(I recognize 'umai' from last time. Delicious? Did I like it?)"
+    mc "(I recognize the sound from last time. Delicious? Did I like it?)"
     mc "Hai. Umai."
     chef "そうか。"
     "He nods once, satisfied with the answer, and returns to the pots."
@@ -284,11 +285,11 @@ label chef_visit_02:
     chef "水曜、休み。"
     mc "(Wednesday, closed. The shop's card said so the first night. One day a week this man refuses to work, and he wants me to remember which one.)"
     chef "休むのも、仕事だ。"
-    mc "(Rest and work, in the same sentence. He says it like a rule. I will ask Hikari what he meant.)"
+    mc "(Rest and work, in the same sentence. He says it like a rule. That is one I will have to work out myself.)"
     $ chef_affection += 1
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 2)
-    $ remember("chef", "learned that resting is also work and had tonkotsu ramen")
+    $ log_memory("chef", "learned that resting is also work and had tonkotsu ramen")
     $ queue_message("chef", "スープは十二時間。残りは二日。どちらも一杯のうちに入っている。", day="yesterday")
     $ reward_attributes_once("chef_visit_02_close", [("grace", "micro")], show="card")
 
@@ -297,7 +298,7 @@ label chef_visit_02:
     return
 
 label chef_visit_03:
-    call chef_common_open
+    call chef_common_open from _call_chef_common_open_2
 
     "The shop is full when I arrive."
     "Every seat is taken. There is a line at the door, the quiet, patient line of people who know that good things do not arrive on a schedule."
@@ -322,10 +323,12 @@ label chef_visit_03:
             student1 "Oh, thanks! You speak English?"
             mc "Yeah. I'm also not from here."
             student2 "That makes me feel better about the pointing."
+            $ chef_visit_03_helped = "mc"
             $ reward_attributes_once("chef_visit_03_help", [("grace", "micro")], show="auto")
         "Let them figure it out.":
             "I watch them argue over the menu. The figuring out is part of the experience."
             "Chef catches my eye and nods, as if to say: you understand."
+            $ chef_visit_03_helped = None
             $ reward_attributes_once("chef_visit_03_watch", [("insight", "micro")], show="auto")
         "Ask Chef to recommend.":
             mc "Sumimasen. What do you recommend for them?"
@@ -333,6 +336,7 @@ label chef_visit_03:
             mc "(Men get tonkotsu. Women get salt. He says it like it is gravity, not preference.)"
             student1 "What did he say?"
             mc "He said: trust him."
+            $ chef_visit_03_helped = "chef"
             $ reward_attributes_once("chef_visit_03_recommend", [("nerve", "micro")], show="auto")
 
     "The orders go out. The students eat with the enthusiasm of people discovering something they did not know they needed."
@@ -344,8 +348,15 @@ label chef_visit_03:
     chef "特別。"
     mc "(Special. He made me something different.)"
     mc "For me?"
-    chef "英語、教えた。"
-    mc "(Something about English, and students. I helped, and there is an egg. I take the win.)"
+    if chef_visit_03_helped == "mc":
+        chef "英語、教えた。"
+        mc "(Something about English, and students. I helped, and there is an egg. I take the win.)"
+    elif chef_visit_03_helped == "chef":
+        chef "助けたかった。"
+        mc "(He wanted to help. He recommended, they ordered, and there is an egg. I take the win.)"
+    else:
+        chef "学生、自分で決めた。"
+        mc "(Something about the students deciding for themselves. I left them to it, and there is an egg. I take the win.)"
 
     menu:
         "I was just being helpful.":
@@ -365,7 +376,7 @@ label chef_visit_03:
             chef "見てた。"
             mc "(He says he was watching. I can tell from the way he says it.)"
             chef "最初、分からない。後、分かる。"
-            mc "(Something about before and after, and understanding. He says it like it is how the world works. I will ask Hikari.)"
+            mc "(Something about before and after, and understanding. He says it like it is how the world works. I will work that one out later.)"
             $ reward_attributes_once("chef_visit_03_understand", [("insight", "micro")], show="auto")
 
     "I eat the egg. It is perfect in the way that makes you angry at every other egg you have ever eaten."
@@ -379,8 +390,13 @@ label chef_visit_03:
     $ chef_affection += 1
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 3)
-    $ remember("chef", "helped foreign students order and received a special bowl with ajitsuke tamago")
-    $ queue_message("chef", "学生たちが昨日戻ってきた。日本語で注文した。下手だが、日本語だ。それでも進歩だ。", day="yesterday")
+    $ log_memory("chef", "met foreign students at the shop and received a special bowl with ajitsuke tamago")
+    if chef_visit_03_helped == "mc":
+        $ queue_message("chef", "学生たちに二番目を教えた。英語で。彼らはうまそうに食べていた。助かった。", day="yesterday")
+    elif chef_visit_03_helped == "chef":
+        $ queue_message("chef", "学生たちに豚骨を勧めた。彼らはうまそうに食べていた。助かった。", day="yesterday")
+    else:
+        $ queue_message("chef", "学生たちは自分で注文した。指さして、笑って、食べていた。それでいい。", day="yesterday")
     $ reward_attributes_once("chef_visit_03_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -388,7 +404,7 @@ label chef_visit_03:
     return
 
 label chef_visit_04:
-    call chef_common_open
+    call chef_common_open from _call_chef_common_open_3
 
     "The shop is closed. The sign in the window says CLOSED FOR TRAINING, in both Japanese and English."
     "But the door is unlocked, and Chef is inside, sitting at the counter with a notebook open in front of him."
@@ -427,7 +443,7 @@ label chef_visit_04:
             chef "三十年。"
             mc "(Thirty years. The number I understand. The rest is in his face.)"
             chef "まだ、分からない。"
-            mc "(Still don't understand, he says. After thirty years. Kenta writes it down.)"
+            mc "(Still don't understand, he says. After thirty years. I write it down.)"
             $ reward_attributes_once("chef_visit_04_time", [("grace", "micro")], show="auto")
 
     "Chef takes the notebook back and turns to a blank page."
@@ -466,7 +482,7 @@ label chef_visit_04:
     "He stands up and goes to the pots. He has not made ramen for me today, but he has made me understand why the ramen is the way it is."
 
     chef "今日、作らない。"
-    mc "(No cooking today, he says. The notebook is open. I think that is the reason.)"
+    mc "(No cooking today, he says. The notebook is closed now. I think that is the reason.)"
     chef "明日、来て。"
     mc "(Tomorrow. I know that one. He points at the pots, and I understand the rest.)"
 
@@ -476,8 +492,8 @@ label chef_visit_04:
     $ chef_affection += 1
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 4)
-    $ remember("chef", "saw his recipe notebook and learned that he changes the broth every day")
-    $ queue_message("chef", "またレシピを変えた。学生たちは気づいた。「違うけど、まだうまい」と言った。それで十分だ。", day="yesterday")
+    $ log_memory("chef", "saw his recipe notebook and learned that he changes the broth every day")
+    $ queue_message("chef", "またレシピを変えた。今日は誰にも出していない。明日、出そう。違うと言われたら、それでいい。", day="yesterday")
     $ reward_attributes_once("chef_visit_04_close", [("nerve", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -485,7 +501,7 @@ label chef_visit_04:
     return
 
 label chef_visit_05:
-    call chef_common_open
+    call chef_common_open from _call_chef_common_open_4
 
     "The shop is loud in the way of a place that has become a destination."
     "There are people I have never seen before. They are speaking languages I do not recognize, but they are all eating with the same focused silence."
@@ -512,7 +528,7 @@ label chef_visit_05:
             chef "ようこそ。"
             mc "(Welcome. He says it to the pot, but she hears it in the tone.)"
             chef "豚骨、いいよ。"
-            mc "(Tonkotsu is good. His recommendation for everyone, because it is the one he believes in.)"
+            mc "(Tonkotsu is good. I remember the rule he gave the students about men and women. Apparently it bends for a first-timer.)"
             $ reward_attributes_once("chef_visit_05_introduce", [("grace", "micro")], show="auto")
         "Let her discover it herself.":
             "I let her figure it out. The discovery is part of the experience."
@@ -564,7 +580,7 @@ label chef_visit_05:
     "Chef brings me a bowl. It is the regular bowl, but there is something different about it today."
     "The broth is richer. The noodles are springier. It is the bowl of a man who found his rhythm and rode it."
 
-    chef "今日、いいだった。"
+    chef "今日、よかった。"
     mc "(Good, he says, and looks at the empty bowls. I understand that much.)"
     mc "The shop was full."
     chef "うん。"
@@ -572,8 +588,8 @@ label chef_visit_05:
     $ chef_affection += 1
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 5)
-    $ remember("chef", "saw the shop at its busiest and heard that he will never retire")
-    $ queue_message("chef", "スーツの女性が今日も来た。同僚を連れていた。常連になりつつある。店は、俺がやろうがやるまいが育つ。", day="yesterday")
+    $ log_memory("chef", "saw the shop at its busiest and heard why he keeps going")
+    $ queue_message("chef", "スーツの女性が今日、初めて来た。同僚の紹介だった。また来るかな。店は、俺がやろうがやるまいが育つ。", day="yesterday")
     $ reward_attributes_once("chef_visit_05_close", [("grace", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -581,7 +597,7 @@ label chef_visit_05:
     return
 
 label chef_visit_06:
-    call chef_common_open
+    call chef_common_open from _call_chef_common_open_5
 
     "The shop is empty. Unusually empty for this hour."
     "Chef is sitting at the counter with a young man I have never seen before."
@@ -591,14 +607,14 @@ label chef_visit_06:
     "The young man is watching Chef with terrified reverence."
 
     chef "これ、弟子。"
-    mc "(He introduces the boy with one word. Kenta bows, so I know what it meant.)"
+    mc "(He introduces the boy with one word. The bow tells me what it meant.)"
     chef "名前、健太。"
-    mc "(Kenta. The name I have heard him say before.)"
+    mc "(Kenta. A name I do not know yet.)"
 
     "Kenta bows. Too deeply. Too quickly."
     kenta "Nice to meet you. I mean, はじめまして。"
     chef "もっと、緩く。"
-    mc "(Something about being looser. Kenta straightens less. I copy him.)"
+    mc "(Something about being looser. Kenta straightens up a little. I stop myself from copying his bow.)"
 
     menu:
         "Ask how long he's been learning.":
@@ -634,7 +650,7 @@ label chef_visit_06:
             mc "Kenta, you can't write everything down. Some of this you have to feel."
             kenta "But if I don't write it, I'll forget."
             chef "忘れる、いい。"
-            mc "(Something about forgetting and remembering. Kenta writes it down. I copy him.)"
+            mc "(Something about forgetting and remembering. Kenta writes it down. I let the sentence sit.)"
             $ reward_attributes_once("chef_visit_06_forget", [("insight", "micro")], show="auto")
         "Watch Chef, not the notebook.":
             "I want to tell him to look up, but I don't. He has to learn that himself."
@@ -674,8 +690,8 @@ label chef_visit_06:
     $ chef_affection += 1
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 6)
-    $ remember("chef", "met his apprentice Kenta and ate the best bowl he has ever made")
-    $ queue_message("chef", "健太は少しずつ覚えている。包丁さばきが良くなっている。ノートが厚くなっている。忘れ方が始まっている。", day="yesterday")
+    $ log_memory("chef", "met his apprentice Kenta and ate the best bowl he has ever made")
+    $ queue_message("chef", "健太は少しずつ覚えている。包丁さばきが良くなっている。ノートが厚くなっている。忘れる練習も、始めた。", day="yesterday")
     $ reward_attributes_once("chef_visit_06_close", [("insight", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -683,7 +699,7 @@ label chef_visit_06:
     return
 
 label chef_visit_07:
-    call chef_common_open
+    call chef_common_open from _call_chef_common_open_6
 
     "The shop is different. Not because of the people or the decor, but because of the feeling."
     "It feels like a place that has decided what it is."
@@ -722,11 +738,11 @@ label chef_visit_07:
             mc "(Kenta's name again. He says it like a lesson. Kenta listens.)"
             $ reward_attributes_once("chef_visit_07_time", [("insight", "micro")], show="auto")
         "It reminds me of your first bowl for me.":
-            mc "It reminds me of the first bowl you made me. Simpler, but honest."
+            mc "It reminds me of the first bowl you made me. I had no idea what I was eating, and it was the best thing I had ever tasted."
             chef "いい評価だ。"
-            mc "(He smiles. Kenta is good. I think that is what he said.)"
+            mc "(That is a good review. He smiles, and I think he means Kenta.)"
             chef "正直、一番。"
-            mc "(Honest, he says. One word I know. He has been saying it all week.)"
+            mc "(Honest, he says. One word I know, and the way he says it is the whole lesson.)"
             $ reward_attributes_once("chef_visit_07_honest", [("grace", "micro")], show="auto")
 
     "Chef reaches under the counter and takes out a small wrapped package."
@@ -736,19 +752,19 @@ label chef_visit_07:
     mc "(This. He is giving me something.)"
 
     "I unwrap it. It is a pair of chopsticks. Not restaurant chopsticks. Personal chopsticks, made of dark wood, polished by years of use."
-    "There is a single character burned into the side: 心."
-    "Heart. Or spirit. Or mind. The word means all of them at once."
+    "There is a single character burned into the side: 心. I cannot read it, but I know it matters."
+    $ add_item("chef_personal_chopsticks")
 
     chef "私の、昔。"
     mc "(Before, he says, and shows me the wood. I understand the gesture.)"
     chef "今、あなたの。"
-    mc "(He puts them in my hand. I do not need the words for that.)"
+    mc "(He slides them towards me. I do not need the words for that.)"
 
     menu:
         "I can't take these. They're yours.":
             mc "I can't take these. They're yours. They have your history in them."
             chef "使わないと、死ぬ。"
-            mc "(Something about using them, or losing them. He gives me a small look. I will use them.)"
+            mc "(Use them, or they die. I know the word for die now. He means the chopsticks, and I will not let that happen.)"
             chef "あなたの手で、生きる。"
             mc "(He taps my hand, then the chopsticks. That is the whole sentence, I think.)"
             $ reward_attributes_once("chef_visit_07_refuse", [("grace", "micro")], show="auto")
@@ -757,20 +773,20 @@ label chef_visit_07:
             chef "約束、いらない。"
             mc "(No promise, he says. He points at the chopsticks. Use them. I understand.)"
             chef "ただ、来て。"
-            mc "(Come, he says. That word I know. The rest is in the way he holds the door.)"
+            mc "(Come, he says. That word I know. The rest is in the way he looks at the shop.)"
             $ reward_attributes_once("chef_visit_07_promise", [("grace", "micro")], show="auto")
         "What does the character mean?":
-            mc "What does 心 mean? Heart? Spirit?"
+            mc "I cannot read this. What does it mean?"
             chef "全部。"
-            mc "(He taps the 心 on the box, then his own chest. I cannot read all of it, but I know which part he means.)"
+            mc "(All of them. Heart, spirit, mind. He taps the character on the wood, then his own chest. I know which part he means.)"
             chef "食事は、心だ。"
-            mc "(Heart again, and cooking. I know those two words. The rest is in how he says it.)"
+            mc "(Heart again, and food. I know those two words. The rest is in how he says it.)"
             $ reward_attributes_once("chef_visit_07_meaning", [("insight", "micro")], show="auto")
 
-    "I take the chopsticks. The wood is warm from his pocket."
+    "I take the chopsticks. The wood is warm from under the counter."
     "They feel alive in my hand, as if they have been waiting for the right hands to hold them."
 
-    "I eat with the new chopsticks. The ramen tastes different somehow."
+    "I go back to the bowl with the new chopsticks. The ramen tastes different somehow."
     "Not because the broth changed. Because I am holding part of Chef's history in my hand."
 
     chef "うまい、だろ？"
@@ -779,19 +795,19 @@ label chef_visit_07:
     chef "おう。"
 
     "He grunts, satisfied, and for a moment the shop is only steam and quiet."
-    "Then he sets his bowl down. Whatever he was performing for Kenta is over."
+    "Then he turns back to the pots. Whatever he was performing for Kenta is over."
 
     chef "実は、言いたいことがある。"
     mc "(Something he needs to say. I do not follow the words, but he says them to the pot, not to me. That is how he says the important things.)"
 
     chef "店、閉める。"
-    mc "(店. Shop. That word I know. The rest I read in his face, and in the lantern going out.)"
+    mc "(店. Shop. That word I know. The rest I read in his face, and in the way he looks at Kenta, then at the door.)"
 
     menu:
         "Close the shop? Why?":
             mc "You're closing the shop? Why?"
             chef "実家、帰る。"
-            mc "(Family, he says. Parents. Old. Three words I know, and the way he says them is enough.)"
+            mc "(His parents' home. He is going back. Two things I know, and the way he says them is enough.)"
             chef "跡継ぎ、いない。"
             mc "(No one, he says. He looks at Kenta, then at the pots. I understand the shape of it.)"
             $ reward_attributes_once("chef_visit_07_why", [("insight", "micro")], show="auto")
@@ -817,17 +833,17 @@ label chef_visit_07:
     "Kenta's shoulders drop. He understood before I did."
 
     chef "あなたにも、来てほしい。"
-    mc "(He says my name in among the Japanese. I understand that I am being asked for something.)"
-    chef "最後の一杯、食べていけ。"
-    mc "(Eat, he says. And one word I know: last. The bowl is set in front of me.)"
+    mc "(He says 'you' in among the Japanese. I understand that I am being asked for something.)"
+    chef "最後まで、食べていけ。"
+    mc "(Eat, he says. And one word I know: last. My bowl is still in front of me.)"
 
-    "I finish the bowl. It is the best he has ever made me, and it is the last."
+    "I finish the bowl. Kenta's best, and the last one this shop will ever serve me."
     "The steam rises between us like it always does. Today I can see all the way through it."
     $ chef_affection += 1
 
     $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 7)
-    $ remember("chef", "received his personal chopsticks and learned the shop is closing forever")
-    $ queue_message("chef", "月末で店を閉める。あれがお前の最後の一杯だった。箸はお前のものだ。大切に使え。", day="yesterday")
+    $ log_memory("chef", "received his personal chopsticks and learned the shop is closing forever")
+    $ queue_message("chef", "店を閉めることにした。あれがお前の最後の一杯だった。箸はお前のものだ。大切に使え。", day="yesterday")
     $ reward_attributes_once("chef_visit_07_close", [("nerve", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade
@@ -835,7 +851,7 @@ label chef_visit_07:
     return
 
 label chef_visit_closed:
-    scene bg_ramen_shop with walk_fade
+    scene bg_ramen_shop_closed with walk_fade
     stop music fadeout 2.0
     $ phone_map_visit("ramen_shop")
 
@@ -845,7 +861,7 @@ label chef_visit_closed:
 
     "CLOSED. PERMANENTLY.\nThe owner has returned to his family home to care for his parents.\nThank you for the meals.\nChef"
 
-    mc "(He wrote it himself. The English is better than his Japanese, which is to say it is not good, but it is his.)"
+    mc "(He wrote it himself. The English is rough, but it is his.)"
     mc "(I read it twice. I was looking for a trick. There isn't one. The broth stopped because the man who made it had to go home.)"
 
     menu:
@@ -854,6 +870,7 @@ label chef_visit_closed:
             $ reward_attributes_once("chef_visit_closed_leave", [("grace", "micro")], show="auto")
         "Write him a message.":
             mc "I'll send him a message. Tell him the bowl was worth it."
+            $ send_message("chef", "The bowl was worth it. Thank you for every one.")
             $ reward_attributes_once("chef_visit_closed_message", [("nerve", "micro")], show="auto")
         "Sit at the counter anyway.":
             "I sit at the counter. The stool remembers my posture. The shop is closed, but it is still his."
@@ -868,8 +885,8 @@ label chef_visit_closed:
         $ chef_affection += 1
 
         $ confidant_visits["chef"] = max(confidant_visits.get("chef", 0), 8)
-        $ remember("chef", "found the ramen shop permanently closed; he had gone home to care for his parents")
-        $ queue_message("chef", "これを読んでいるなら：店はもう完全に閉めた。両親の方が、鍋よりも俺を必要としている。スープは元々俺のものではなかった。食べた全員のものだ。", day="yesterday")
+        $ log_memory("chef", "found the ramen shop permanently closed; he had gone home to care for his parents")
+        $ queue_message("chef", "店はもう完全に閉めた。両親の方が、鍋よりも俺を必要としている。スープは元々俺のものではなかった。食べた全員のものだ。", day="yesterday")
     $ reward_attributes_once("chef_visit_closed_close", [("grace", "micro")], show="card")
 
     scene bg_home_exterior_night with walk_fade

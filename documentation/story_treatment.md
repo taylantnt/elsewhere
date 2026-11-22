@@ -129,75 +129,80 @@ remains, and the person who made it matter does not.
 
 ### The Ramen Chef — Seven Bowls
 
-The chef never speaks English. Hikari translates on visits 4 and 6. Every other
-visit is a conversation conducted in gestures, food, and the few Japanese
-words the protagonist slowly accumulates. The arc is about earning a place at a
+The chef is Japanese-dominant with a few English loanwords and a hand-written
+English closing notice. Nobody translates him on screen: the protagonist works
+from gestures, repeated phrases, bowls, and the handful of words he accumulates
+— *umai*, *hai*, *iie*, *tonkotsu*, *水曜*. The arc is about earning a place at a
 counter where nobody invited him, and then watching the counter empty.
 
 **Visit 1: The Wrong Bowl** *(already scripted)*
-He points blindly, gets something he did not order, and it is the best thing he
-has eaten in Japan. The chef watches him eat without comment, then says one
-word at the bowl: umai. If the protagonist asks what it means, the chef says it
-again, slower, and points at the bowl until he repeats it back. That is the
-lesson — the first word of the language he owns, taught mid-bite by the man
-who never speaks it.
+The menu is unreadable, so the protagonist orders in English, points, or asks
+for a recommendation. All three roads lead to the same dark pork-and-shoyu bowl
+with a hill of green onions. He eats badly and loves it; the chef watches and
+mutters 「うまい、だろ？」. If the protagonist asks what it means, the chef says it
+again, slower, points at the bowl, and waits for the word back. The bowl costs
+900 yen, and the laminated WIRE card makes the chef a contact.
 
-**Visit 2: Recognition**
-The chef looks up when the cloth door moves. That is the greeting. He puts down
-a bowl without being asked, and it is the same bowl as last time. Then he says
-one word slowly, pointing at it: oishii. The protagonist repeats it badly. The
-chef says it again, slower. The protagonist tries again. The chef nods once and
-goes back to the pots. That is the lesson.
+**Visit 2: Rest Is Work**
+The chef knows his step now and points him at the same line. 「前、うまかった？」
+checks whether the bowl landed; the protagonist answers with the only word he
+has. Today's bowl is tonkotsu. Between mouthfuls the chef teaches the shop's
+closed day and his rule: 「休むのも、仕事だ。」 — resting is work too. The lesson is
+not a new Japanese word but a way of living.
 
-**Visit 3: The Spicy Misfire**
-The protagonist tries to order something new. He points at a different line. The
-chef looks at him, looks at the line, and makes it anyway. It is karai. The
-protagonist eyes water. The chef watches this happen, says karai, and puts a
-glass of water in front of him without being asked. Then he laughs. It is the
-first time the protagonist has heard him laugh, and it is a short, rough sound
-that dies immediately. The miscommunication has become part of the charm.
+**Visit 3: The Students and the Egg**
+The shop is full and the chef promotes the protagonist to the corner table.
+Two foreign students struggle with the menu. He can tell them the house special,
+leave them to figure it out, or ask Chef to recommend; the follow-up line and
+the queued message remember which. After the rush the chef brings a special bowl
+with a soft-boiled egg. The gesture is thank-you, not translation.
 
-**Visit 4: Hikari at the Counter**
-The protagonist brings Hikari. She orders for both of them in Japanese that moves
-too fast for him to follow, and the chef responds in sentences instead of grunts
-for the first time. Through Hikari, he learns the recipe is his grandmother. The
-shop is fifteen years old. He came to Tokyo from the countryside and never went
-back. Hikari translates a joke about the photograph on the wall that the chef
-has never explained before. The protagonist is starting to feel like part of
-the local rhythm, not just a visitor.
+**Visit 4: The Notebook**
+CLOSED FOR TRAINING, but the door is unlocked and the chef is at the counter
+with a recipe notebook. A page dated twenty years ago holds a simpler recipe;
+he changes the broth every day because the same is boring. Thirty years in, he
+still says he does not understand it. He writes 味・香・色 — taste, aroma, color —
+and answers questions about texture, temperature and perfection in short
+Japanese and gesture. No ramen is made; he tells the protagonist to come
+tomorrow.
 
-**Visit 5: The Usual**
-The protagonist sits down and the bowl arrives without being ordered. It is the
-right one. The chef gestures at the photograph on the wall for the first time
-without being asked about it. A countryside shop. A woman in an apron. The
-protagonist does not need Hikari to understand what that photograph means. The
-chef puts a small paper coaster beside the bowl. It has the shop name printed on
-it. It is the closest thing to a gift he has ever given a customer.
+**Visit 5: The Rush**
+Word has traveled and the shop is a destination. The counter is the premium
+seat. A woman in a suit comes in for the first time, sent by a coworker; the
+protagonist introduces her, leaves her to discover the place, or tells her what
+to order. When the line dissolves the chef admits he is tired, refuses help
+with the cleaning, and deflects retirement with 「止まったら、死ぬ。」. He ends on a
+good bowl and a good day.
 
-**Visit 6: The Weight**
-Hikari translates again, and this time the words are heavier. The chef parents
-are old. They need him. He does not know who takes over the shop. He has been
-making the same bowl for fifteen years and he does not know who he is if he
-stops. The protagonist watches a man measure the end of something he built his
-whole life around. The chef does not ask for advice. He just needs someone to
-hear it.
+**Visit 6: The Apprentice**
+Kenta, a young apprentice with a shaky notebook, is introduced. The chef teaches
+by making a bowl in silence while Kenta writes furiously; the lesson is watching
+and, eventually, forgetting. At the end he asks Kenta whether he saw the most
+important thing: the customer's face. The protagonist eats the best bowl the
+chef has made him so far.
 
-**Visit 7: Omoide**
-The shop is too quiet. No steam. No radio. The chef makes one last bowl with the
-care of a ceremony. He serves it, waits for the protagonist to finish, and puts
-a small object on the counter. A wooden ramen spoon, hand-polished, the shop
-name carved into the handle. He says one word: omoide. Memory. Then he turns
-back to the pots, which is the conversation over. The next time the protagonist
-walks down that street, the shutter is down and the cloth is gone.
+**Visit 7: The Last Bowl**
+Kenta cooks the usual under his teacher's watch. The bowl is good rather than
+perfect. The chef gives the protagonist his own dark-wood chopsticks marked 心 —
+heart, spirit, mind — and then announces that he is closing the shop and going
+home to his parents. Kenta is told to walk his own road. The protagonist eats
+the bowl in front of him to the last mouthful: Kenta's best, and the last the
+shop will ever serve him. The next time he walks down that street the noren is
+gone and an English notice is taped to the glass.
 
 ---
 
 ### Sim — Seven Frames
 
+> This section is a design draft. The shipped arc lives in
+> `game/confidant_visits/sim.rpy`: the protagonist starts with a phone rather
+> than a camera, Sim proposes the exhibition himself in visit 4, the final
+> group photograph is in visit 7, and Circle goes on hold after he leaves.
+
 Sim arc is about the room, not just the man. The club fills up, the photographs
 get better, and the protagonist goes from observer to someone whose work is on
 the wall. Then Sim gets the call he has been waiting for his whole life, and the
-room he built dissolves the moment he succeeds.
+room he built goes on hold the moment he succeeds.
 
 **Visit 1: The Door with the Tape** *(already scripted)*
 He arrives with a phone and no camera. Sim seats him in the circle, has him
@@ -217,8 +222,8 @@ protagonist first photograph that is not an accident comes out here.
 **Visit 3: The Good Shot**
 The protagonist takes a photograph that is genuinely good. He knows it is good
 because the room goes quiet for a second when Sim holds it up. Sim tells him to
-keep it, and then tells him about the years of magazine submissions that came
-back with silence. He says it like a fact, not a complaint. That is the Sim rule:
+keep it, and then admits his first proud photograph was rejected by four places
+and ignored by a fifth. He says it like a fact, not a complaint. That is the Sim rule:
 what he says about himself is always smaller than the truth.
 
 **Visit 4: The Room Fills Up**
@@ -233,33 +238,35 @@ Few people come. The room is almost empty. Sim sits on the table instead of a
 chair, which he never does when the room is full. He tells the protagonist that
 before Circle he had no friends. No network. Only submissions that went
 unanswered. He built the group because he needed a reason to be in a room with
-people. He looks at the wall of prints and says: this group feels real because
-you are here too.
+people. He says the protagonist is in a folder now, named after the Thursday
+they kept showing up.
 
 **Visit 6: The Editor Email**
 Sim shows the protagonist an email on his phone. A magazine editor saw his work
-through the Circle group feed. They want to meet. They are in Osaka. It is real
-recognition, the kind he spent years chasing, and it means leaving Tokyo. He
-promises an exhibition first, and the room buzzes with it. He looks quietly
-conflicted, and the protagonist understands why before Sim says it.
+after seeing his work. They want to meet in another city. It is real
+recognition, the kind he spent years chasing, and it could mean leaving Tokyo.
+He promises the exhibition is still happening and that he will decide after it.
+He tells the protagonist this group feels real because they are here too, then
+sets the message down without answering.
 
 **Visit 7: The Exhibition**
 The club room becomes a gallery for one night. Prints on every wall. Members
 bring friends. The room is loud and proud. In the middle of it, Sim announces he
-is leaving. He gives the protagonist a camera strap identical to his own. He
-says someday we will walk with our cameras again. The group takes one last
-photograph together. The next week, the room is still there, the club still
-meets, but the person who made it glad to be somewhere is gone.
+is leaving. He gives the protagonist the worn strap he has used for years. In
+the "I hope we meet again" branch, he says someday we will walk with our cameras
+again. The group takes one last photograph on a timer, with Sim in it. The next
+week the room is still there, but the club is on hold until a new host is found
+and the person who made it glad to be somewhere is gone.
 
 ---
 
-### Orson — Seven Masks
+### Orson: Seven Masks
 
-Orson is found, not introduced. The protagonist takes a wrong turn after a late
-evening lecture, or walks a street he has not walked before, finds a narrow door
-with a cloth over it, and sees a small wolf painted on the sign. He means only to
-look, but curiosity carries him inside before he decides. Inside, a man in a wolf
-mask polishes a glass and says almost nothing.
+Orson is found, not introduced. On the Saturday walk home from the library, the
+protagonist takes a wrong turn, finds a narrow door with a cloth over it, and sees
+a small wolf painted on the sign. He means only to look, but curiosity carries him
+inside before he decides. Inside, a man in a wolf mask polishes a glass and says
+almost nothing.
 
 The mask never changes expression. That is the point: it is a wall, and he
 knows it. The bar is the one place in Tokyo where the protagonist speaks English
@@ -269,19 +276,19 @@ how fluent and unhurried the English is.
 
 **Visit 1: The Door Left Open**
 The protagonist sits down at the counter. Orson puts a glass of water in front of
-him without being asked and says almost nothing — until the protagonist is about
-to leave. Then, in fluent English, he says, "Easy. You look lost," and adds that
+him without being asked and says almost nothing until the protagonist is about to
+leave. Then, in fluent English, he says, "Easy. You look lost," and adds that
 curiosity and being lost are both allowed there. The player chooses whether to
 thank him or let the water answer for him. Either way Orson tilts the mask and
 says, "You found us. Most people don't." On the way out he adds, "The water's on
 the house. The conversation isn't. But you're welcome to it." The bar is narrow,
 dim, and warm. Three other customers sit along the counter, all in masks, none of
 them talking to each other. There is a small wooden bowl by the till for notes to
-the Master — he does not use it, but he notices it exists, and that is the hook
-that brings him back. Beside it is a black card with a square WIRE code; he says
-it is "a door with better manners." On the walk home the protagonist scans it,
-and Orson's name settles onto the WIRE list. The protagonist leaves unsure what
-he is feeling, but for some reason it feels good.
+the Master. He does not use it, but he notices it exists, and that is the hook that
+brings him back. Beside it is a black card with a square WIRE code; he says it is
+"a door with better manners." On the walk home the protagonist scans it, and
+Orson's name settles onto the WIRE list. The protagonist leaves unsure what he is
+feeling, but for some reason it feels good.
 
 **Visit 2: The Mask Explained**
 Orson initiates. He asks where the protagonist is from, and listens to the answer
@@ -292,12 +299,14 @@ weight is there. The protagonist notices that the mask makes Orson easier to
 talk to, not harder, and does not understand why yet.
 
 **Visit 3: Bar Stories**
-Orson tells stories about the people who come through. A businessman who comes
-every Friday in a fox mask and cries into his whisky. A university professor
-who wears a plain white face and reads the same newspaper for three hours. A
-tourist who found the bar by accident and comes back every trip to Japan. The
-stories are funny and warm and the protagonist starts to understand that the bar
-is a sanctuary for people who need to be seen without being recognised.
+Orson tells the story of a couple who came in with a map and a fight, and left
+with two paper cranes and a third they had to fold together. When the protagonist
+asks about the locals, Orson names a poet who will not publish, a barista who
+hates coffee, and a nurse who laughs too loud. He tells the protagonist to carry
+something to write on and put three real things a day in it. The stories are funny
+and warm, and the bar starts to read as a sanctuary for people who need to be seen
+without being recognised. The Friday fox, the plain white face, and the tourist
+who copies the regulars' orders turn up across the later visits.
 
 **Visit 4: The Past**
 Orson hints that he has not always run a bar. The protagonist asks and Orson
@@ -309,28 +318,31 @@ nothing else.
 
 **Visit 5: The Advice**
 Orson notices the protagonist seems more comfortable and teases him about it.
-Then he says the thing that lands: it is okay to feel lost. Just do not stop
-walking. He says it the way he says everything, lightly, without weight, but the
-protagonist carries it home. This is the visit where the bartender becomes a
-confidant.
+He points out the professor in the plain white face who reads the same paper for
+three hours, and the tourist who found the bar by accident and comes back every
+trip, copying the regulars' orders and calling it research. Then he says the thing
+that lands: it is okay to feel lost. Just do not stop walking. He says it the way
+he says everything, lightly, without weight, but the protagonist carries it home.
+This is the visit where the bartender becomes a confidant.
 
 **Visit 6: The Refuge**
-Orson is more open than he has ever been. He talks about failed ventures, the
-mask as both freedom and hiding place, and the bar as the one thing he built that
-worked. He tells the protagonist that he reminds him of himself when he first
-came to Tokyo: uncertain, curious, and too stubborn to leave. The protagonist
-asks if he would go back and do it differently. Orson says he would not change
-the bar. He would change arriving alone.
+Orson is more open than he has ever been. He talks about the company his family
+wanted and the shop with a bad location, and about the bar as a candle whose wax
+he cannot measure. He tells the protagonist that he reminds him of himself when
+he first came here: lost, stubborn, curious. The protagonist asks if he would
+change any of it. Orson says he would not change the bar. He would change arriving
+alone. He gives the protagonist a paper coaster from a stack under the counter and
+tells him to take it home for when the city gets too big.
 
 **Visit 7: The Mask Comes Off**
-Orson tells the protagonist the bar is closing. Rising rent, a neighbourhood
-moving on, a till that no longer balances. He does not pretend it is fixable. He
-thanks the protagonist for coming as often as he did. Then he reaches up and
-takes the mask off. It is the first and only time. His face is ordinary. Tired.
-Kind. He gives the protagonist a worn wolf-paw badge, small enough to fit in a
-pocket. The next time the protagonist walks down that street, Lupin's Den is a
-generic coffee shop, bright and anonymous, full of strangers whose faces mean
-nothing.
+Orson tells the protagonist the bar is closing. The lease is done, the
+neighbourhood is changing, and he is tired. He does not pretend it is fixable. He
+thanks the protagonist for coming as often as he did. Then he reaches up and takes
+the mask off. It is the first and only time. His face is ordinary. Tired. Kind. He
+gives the protagonist a worn wolf-paw badge, small enough to fit in a pocket, and
+tells him to carry it rather than keep it safe. The next time the protagonist walks
+down that street, the window is dark, the door is locked, and a letting notice is
+taped at eye level. The wolf sign is still on the wall.
 
 ---
 
@@ -351,10 +363,10 @@ than he expected. She says please come back.
 
 **Visit 2: Remembered**
 She remembers him. Welcome back, Master! She says it like it is a genuine
-surprise, and it might be. She asks what surprised him most about Japan so far,
-and listens to the answer. She mentions she taught herself English on her own.
-That is why she was chosen to serve foreign customers. She asks it like a
-question she has been saving.
+surprise, and it might be. She mentions she taught herself English on her own.
+That is why she was chosen to serve foreign customers. She asks whether being
+the only bridge between languages feels lonely, or whether he wants to travel
+for real. She asks it like a question she has been saving.
 
 **Visit 3: The Tired Smile**
 She sits at his table, which breaks the cafe rules, and does not seem to care.
@@ -410,7 +422,7 @@ corridor she describes. The door is open. Four chairs, a shelf of returns, and
 a girl who meets his eyes once and then looks away.
 
 A side character — one of the circle's own regulars — is reading in the corner.
-He explains in one line: she is like a ghost. She is here every week. Nobody
+She explains in one line: Hana is like a ghost. She is here every week. Nobody
 has heard her speak.
 
 **Visit 1: The Ghost**
@@ -438,17 +450,19 @@ not speaking to him, but the book is hers again, and he is no longer carrying
 it.
 
 **Visit 3: The Whisper**
-She tries to speak. The protagonist is close enough to hear. What comes out is
-inaudible, a breath shaped like a word that dies before it arrives. She panics,
-grabs a stack of returns, and disappears behind the shelves. The side character
-says, without looking up: she does that. Give her time.
+She tries to speak. The protagonist is close enough to see her mouth move. What
+comes out is inaudible, a breath shaped like a word that dies before it arrives.
+She flinches, bows too fast, and slips out the side door. The regular at the next
+table says, without looking up: she does that; everyone tries once.
 
 **Visit 4: The Art Book**
 She carries a book across the room, an oversized art book with Impressionist
 Masters on the cover. She gets halfway to the protagonist, freezes, hugs it to
-her chest, and retreats. The protagonist may pick up a similar art book from the
-shelf and leave it open on the table. When he leaves, his book is closed and hers
-is on the table, open to a page she chose.
+her chest, and retreats. The protagonist can get a matching volume and read it
+in the open, or stay put so he does not spook her. Either way she stays in the
+room behind the shelves. When he leaves, the gap in the art shelf is filled:
+she has reshelved her book at the end of the row, where he will pass it on his
+way out.
 
 **Visit 5: The Note**
 She sits at the same table, pretending to read, peeking over the top of her
@@ -468,9 +482,9 @@ him eat the first bowl.
 She told her parents the truth. They were angry that she had hidden it, then they
 apologised. She is leaving the reading circle to pursue art. She gives the
 protagonist a handmade charm: a tiny cloth strap with a brush and palette
-stitched in thread. She says: you gave me courage. Without you, I would still
-be hiding. Then she leaves, and the reading circle is just a room with chairs
-and shelves and quiet. The side character turns a page.
+stitched in thread. She says he carried her dream when she could not and kept
+showing up every week. Then she leaves, and the reading circle is just a room
+with chairs and shelves and quiet. The fan ticks.
 
 **Visit 8: The Empty Room**
 The reading club is still there — shelves, chairs, the ticking fan — but Hana is
@@ -506,8 +520,8 @@ threshold itself.
 
 The seven beats the game planned are now all written:
 
-1. **The first run** — *written in `after_school_run`* — how badly it goes, and
-that she invites him anyway.
+1. **The first run** — *written in `after_school_run`* — how hard it goes, and
+that she invites him and tells him he kept up.
 2. **The route** — *written as `hikari_visit_02`* — she knows every vending
 machine, every crack in the path. She runs it the way the chef makes ramen:
 from memory, without thinking. She admits she needs it, not just likes it.
@@ -519,9 +533,9 @@ is that he sees her face when she is not performing.
 and they walk home in silence. It is the most honest either of them has been.
 5. **The rain** — *written as `hikari_visit_05`* — the bridge in the rain, and
 the first true thing she says about the house. She says her father closes the
-amado the same way every night, and she used to think that was normal, and now
-she is not sure what normal means. She asks whether the street looks right to
-him.
+amado the same way every night, and she says she used to think the amado was what
+safety sounded like, and now she wonders who taught him to do it in that order.
+She asks whether the street looks right to him.
 6. **The night she asks him to run somewhere that is not home** — *written as
 `hikari_visit_06`* — she takes him to a part of the river he has never seen, and
 she says she comes here when the house feels too small. The scene turns on her
@@ -532,10 +546,9 @@ water. She says: don't you ever feel like we've done this before? He does not
 know what to say. She does not expect him to. She asks him to remember a
 promise: if she ever asks him to run somewhere that isn't home, say yes.
 
-Only the second run is reachable in the current Day 7 build. The first run is
-the Day 2 afternoon fork; the hub's Hikari row plays the second run on Day 7.
-Visits 3–7 are wired and waiting for later hub days, and the ordinary walk home
-remains available after the seventh.
+The first run is the Day 2 afternoon fork; visits 2–7 are reachable from the
+shipped Day 8+ hub, and the ordinary walk home remains available after the
+seventh.
 
 ### The Unease Grows
 
@@ -548,9 +561,9 @@ run? She is not asking because she is curious. She is asking because she is
 afraid. The written run chain folds the first of these tests into
 `hikari_visit_05`; the rest are Act 3/4 material.
 
-### The Small Truths
+### The Small Truths (Act 3/4 — unwritten)
 
-As sister_affection rises, she begins to sneak him information. A name he should
+*(Design direction only; none of these beats are shipped yet.)* As sister_affection rises, she begins to sneak him information. A name he should
 not know. A date that does not exist in the calendar. A detail about the house
 that could not be true and is. She never calls it a simulation. She says things
 like: I wrote that. I do not remember writing it, but I recognise the
@@ -770,6 +783,54 @@ broken things start appearing on purpose — repeated sentences, blurred faces,
 the dream bleeding into waking life — because the test is entering its hardest
 phase and the simulation is straining to hold the subject inside it.
 
+### When Act 3 Starts (Build Note, 2026-11-21)
+
+Act 3 begins on **Day 51** (Thursday, May 28, 2026). The build is playable
+through Day 69:
+
+| Phase | Days | Dates | Hub | Corruption | What happens |
+|---|---|---|---|---|---|
+| **Act 3 Incident** | 51-53 | May 28 - May 30 | closed | none | Three hard days. The line, the same face, the fragment. The world cracks open and the player cannot visit confidants. |
+| **Act 3 Slow Burn (hybrid)** | 54-63 | May 31 - Jun 9 | open | levels 1-3 | Ten days that look like Act 2 on the surface: lecture, hub, dinner. But the house, the family, and the city are wrong in escalating ways. The hub stays open so players can still finish confidant arcs, but each visit sits inside an escalating corruption frame. |
+| **Act 3 Proper** | 64-83 | Jun 10 - Jun 29 | closed | level 3 at entry | The rail, ghost question, and keepsake revisits are playable through Day 69. Days 70-83 are unwritten. |
+| **Act 4** | 84-90 | Jun 30 - Jul 6 | closed | to be decided | Final week: the river revelation and the ending choice. Design draft only. |
+
+The slow burn is the bridge. It exists because the player may still have
+confidant arcs unfinished at Day 51, and pulling the hub away then would strand
+those stories. So the hub reopens on Day 54, but the world around it is no
+longer the one the player remembers. The corruption lives in the day structure
+(morning, dinner, night), not in the confidant visits themselves: the visit is
+the eye of the storm, the one hour where things are almost normal, and the
+wrongness closes back in around it on the walk home.
+
+The corruption system is in `game/corruption.rpy`. A single flag,
+`corruption_level` (0-3), is set by each day label. Three callable labels
+(`corruption_morning`, `corruption_post_visit`, `corruption_night`) escalate
+per level:
+
+- **Level 1 (Days 54-57):** subtle, deniable. A laundry rack back in the
+  corner. A tile that squeaks at a different pitch. A combini card in
+  handwriting that is not the same. A word that echoes from the dream into the
+  lecture and back to the breakfast table.
+- **Level 2 (Days 58-60):** noticeable. Mother stalls when an object is moved
+  and resets without remembering. Hikari stands at the protagonist's door at
+  night, not responsive, then blinks and says she was getting water. Father's
+  sentence comes out of Hikari's mouth in his voice.
+- **Level 3 (Days 61-63):** undeniable. The house is growing: the hallway gains
+  steps, the kitchen gains tiles. The sentence spreads to multiple people in
+  the same room. The ChromaGlitch plugin fires on Days 62 and 63. The
+  protagonist becomes conscious inside the dream and sees a figure at the door.
+
+A notebook in the protagonist's room accumulates lines in handwriting that is
+not his: "She is leaking" (Day 56), "She does not know" (Day 60), "He can see"
+(Day 62), "He is at the door" (Day 63). It is the measurable spine of the
+escalation, sitting alongside the ambient wrongness.
+
+The stages below are the design direction the build is realizing. Stage 1 maps
+to the slow burn (Days 54-60); Stage 2 to the slow burn's later days and the
+start of proper; Stage 3 to the dream breakthrough that Day 63 seeds; Stages 4
+and 5 to Act 3 Proper (Day 64+), where Tetsuo and then Hikari break through.
+
 ### Stage 1: The World Repeats
 
 Tetsuo says the same sentence he said last Tuesday. Word for word, at the same
@@ -820,6 +881,10 @@ talking about the whole world.
 ---
 
 ## Act 4: The End
+
+The material below is the earlier treatment, not implemented ending logic.
+See [the Act 4 skeleton](act4_skeleton.md) for the latest proposal and open
+decisions about consolidation, the facility, and how the player chooses.
 
 Act 4 is short. It is the moment the coat comes off and the thriller underneath
 is visible. Everything the protagonist has built, everyone he has gotten close
