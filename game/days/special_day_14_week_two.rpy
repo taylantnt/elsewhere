@@ -153,7 +153,7 @@ label tuesday_week_two:
             mc "(I do not tell her he looks like someone. I do not know how to say it.)"
             $ log_memory("hikari", "told her about the combini job and Tanaka")
             $ reward_attributes_once("day14_night_job", [("grace", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Listen to the house.":
             "I do not say anything. The window is open. The city comes in a piece at a time."
             "Hikari listens with me. She does not fill the silence."
             mc "(A room two people build and then leave. We are still building.)"

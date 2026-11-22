@@ -203,6 +203,14 @@ label friday_sounds:
     call night_open from _call_night_open_10
 
     menu:
+        "[tag_insight] Rank 2: Ask whether the word came before the sound." if has_attribute("insight", 2):
+            mc "Which came first? The sound or the word for it?"
+            hikari "The sound. Always. The word is what you do afterward so you can stand it."
+            mc "So naming is not hearing."
+            hikari "Naming is agreeing to have heard. That is a different job."
+            mc "(Kachi. A latch. A decision. A word I agreed to.)"
+            $ log_memory("hikari", "asked whether the word came before the sound, and she said naming is agreeing to have heard")
+            $ reward_attributes_once("day17_night_first", [("insight", "micro")], show="auto")
         "Tell her the word.":
             mc "Kachi. It is the sound of a latch. Murakami says it is also a decision made too fast to see."
             hikari "What decision?"
@@ -221,7 +229,7 @@ label friday_sounds:
             $ reward_attributes_once("day17_night_corridor", [("grace", "micro")], show="auto")
         "Say nothing. Let the word sit on the desk.":
             "I do not say anything. The tea is hot. The word sits on the page, small and hard."
-            "Hikari has learned that I do not need her to fill the silence."
+            "Hikari turns her cup a slow quarter turn and leaves it there."
             $ log_memory("hikari", "left the word kachi on the desk and said nothing")
             $ reward_attributes_once("day17_night_quiet", [("nerve", "micro")], show="auto")
 

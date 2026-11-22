@@ -70,7 +70,7 @@ label saturday_recovery:
     father "For everyone?"
     mc "For everyone."
     "He sits down. He does not say anything for a while. Then he says:"
-    father "You are learning the house."
+    father "The house is learning you. That is harder."
     mc "(That is the second time. I am starting to collect them.)"
     $ add_affection("father", 1)
 
@@ -249,7 +249,7 @@ label saturday_recovery:
 
     scene bg_home_exterior_day with walk_fade
     "The afternoon is still mine. The book is in my bag. The city is where I left it."
-    mc "(One place. That is the rule I have given myself. One place, and then home.)"
+    mc "(One place, then the train, then the table. I keep the order in my head like a shopping list.)"
     call free_afternoon from _call_free_afternoon_3
 
     call dinner_open from _call_dinner_open_4

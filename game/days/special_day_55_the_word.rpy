@@ -91,7 +91,7 @@ label special_day_55_the_word:
             murakami "Because waiting is not empty. Waiting is the mind consolidating what it expects into what it will accept. You are doing it now. You are consolidating this lecture into a sentence you will remember."
             mc "(She is right. I am consolidating. I am gathering the word into a point and the point is sharp and I do not know where it is pointing.)"
             $ reward_attributes_once("day55_lec_b", [("grace", "micro")], show="auto")
-        "Copy the line into your notebook.":
+        "Write the word where the sentence broke.":
             "I write: matsu. Consolidation. The gathering of scattered things into one point."
             "My handwriting is my handwriting. The pen moves the way it moves. The word sits on the page like it belongs there, like it has always been there, like I am just catching up to it."
             mc "(I stare at the word. It stares back. It is a word. It is just a word. I am the one who is making it into something.)"
@@ -142,6 +142,15 @@ label special_day_55_the_word:
     call night_open from _call_night_open_55
 
     menu:
+        "[tag_nerve] Rank 3: Tell her you do not think the word is a coincidence either." if has_attribute("nerve", 3):
+            mc "I do not think it is a coincidence. The word. Your paper. The lecture. I think you know that."
+            hikari "I am trying not to know it."
+            mc "I know. I am telling you I know it too."
+            "She puts the pen down. The paper stays open between us, half a sentence long."
+            hikari "Then we are both carrying the same word, and neither of us put it there."
+            mc "(The rain fills the rest. It is enough.)"
+            $ log_memory("hikari", "admitted the word consolidation was not a coincidence, and she said neither of them put it there")
+            $ reward_attributes_once("day55_night_coincidence", [("nerve", "micro")], show="auto")
         "Ask how her seminar paper is going.":
             hikari "The paper. The rain. The word consolidation, which I have now written so many times it does not look like a word anymore."
             mc "It does that. Words dissolve if you look at them long enough."
@@ -158,7 +167,7 @@ label special_day_55_the_word:
             mc "(She is explaining it to me as narrative theory. She is also explaining it to me as something else. I do not think she knows which one she is doing.)"
             $ log_memory("hikari", "explained consolidation as both narrative theory and something else, and did not know which")
             $ reward_attributes_once("day55_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Let her keep writing.":
             "The rain is on the window. The city is doing its Monday sounds. A train. A bell. A dog that barks three times and stops, every Monday, like it has a schedule."
             "Hikari is on the floor with her paper. She is writing. The pen moves and stops and moves. Consolidation. The gathering of scattered things."
             $ log_memory("hikari", "was writing her paper about consolidation, pen moving and stopping")

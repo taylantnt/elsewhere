@@ -216,6 +216,14 @@ label special_day_28_gw_evening:
     call night_open from _call_night_open_19
 
     menu:
+        "[tag_insight] Rank 2: Ask what the torn carp is still trying to reach." if has_attribute("insight", 2):
+            mc "The torn one. What is it still trying to reach?"
+            hikari "The same thing as the others. It does not know it is torn."
+            mc "Then it is not brave."
+            hikari "No. It is honest. Bravery needs an audience. This one just has wind."
+            mc "(I think of the line. I think of who is holding it.)"
+            $ log_memory("hikari", "said the torn carp is not brave, only honest, and does not know it is torn")
+            $ reward_attributes_once("day28_night_torn", [("insight", "micro")], show="auto")
         "Ask Hikari about tomorrow." :
             mc "What do you think will be different?"
             hikari "Nothing. That is the problem. Everything will be the same and you will notice it for the first time."

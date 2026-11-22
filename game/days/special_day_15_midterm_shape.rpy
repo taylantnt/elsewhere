@@ -259,7 +259,7 @@ label wednesday_preview:
             $ reward_attributes_once("day15_night_hers", [("grace", "micro")], show="auto")
         "Say nothing. Wind the tomato timer.":
             "I wind the timer. It ticks once, twice, then stops. Hikari does not ask why I am winding something that is not plugged in."
-            "She has learned that I do not need her to fill the silence."
+            "The quiet sits between us like a third cup."
             $ log_memory("hikari", "wound the tomato timer in silence and she did not ask why")
             $ reward_attributes_once("day15_night_quiet", [("nerve", "micro")], show="auto")
 

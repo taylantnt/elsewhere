@@ -96,6 +96,14 @@ label special_day_54_the_return:
     call night_open from _call_night_open_54
 
     menu:
+        "[tag_insight] Rank 3: Ask what the book was that she forgot to eat over." if has_attribute("insight", 3):
+            mc "You forgot to eat because you were reading. What was the book?"
+            hikari "A person who keeps waking up in a house that is almost hers."
+            mc "Does it end well?"
+            hikari "I have not got there. I keep starting the same chapter."
+            mc "(She says it to the wall. I do not ask whether she means the book.)"
+            $ log_memory("hikari", "was holding a book about a person who keeps waking in a house that is almost hers")
+            $ reward_attributes_once("day54_night_book", [("insight", "micro")], show="auto")
         "Ask how she spent Sunday.":
             hikari "It was a Sunday. I read. I forgot to eat. You went out."
             mc "That is all?"
@@ -111,7 +119,7 @@ label special_day_54_the_return:
             mc "(She says that like she knows. Like she has received messages and heard them and moved on. I do not ask.)"
             $ log_memory("hikari", "said the dreams might have finished, that messages do not repeat once heard")
             $ reward_attributes_once("day54_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Let the city talk first.":
             "I do not talk. The rain is on the window and the city is doing its Sunday sounds: a distant train, a bell, a scooter that goes and does not come back."
             "Hikari is on the floor with her book. She is not reading. She is holding the book and looking at the wall, and I do not ask what she sees there."
             $ log_memory("hikari", "was holding a book and looking at the wall, and I did not ask what she saw")

@@ -504,6 +504,11 @@ label common_day_core:
     $ night_desk_line = beat.get("desk", "the window")
     call night_open from _call_night_open
 
+    # A few common days carry one rank-locked answer of their own. The label and
+    # lines live in COMMON_NIGHT_GATES so the shared skeleton stays readable.
+    $ cg = COMMON_NIGHT_GATES.get(int(today))
+    $ gate_label = cg["label"] if cg else ""
+
     menu:
         "Ask about the day.":
             call common_day_lines(beat["night_a"]) from _call_common_day_lines_15
@@ -529,6 +534,9 @@ label common_day_core:
             ])
             call common_day_lines(closed_line) from _call_common_day_lines_18
             $ reward_attributes_once("cd%d_night_d" % today, [("insight", "micro")], show="auto")
+        "[gate_label]" if cg and has_attribute(cg["attribute"], cg["rank"]):
+            call common_day_lines(cg["lines"]) from _call_common_day_lines_gate
+            $ reward_attributes_once("cd%d_night_gate" % today, cg["reward"], show="auto")
 
     call night_close from _call_night_close
     call common_day_lines(beat.get("close", [])) from _call_common_day_lines_19
@@ -1830,5 +1838,187 @@ init python:
             "notebook": "(Ochimono. Lost things. The shelf is full of them. Each one was carried by someone who set it down and walked away. I wonder how many of them are still being looked for.)",
             "desk": "the waiting shelf",
             "close": [("narr", "I turn off the lamp. The shelf is still waiting. The city is still keeping everything. I am still learning to wait.")],
+        },
+    }
+
+    # One optional rank-locked answer for the listed common days. Everything else
+    # about a common day stays shared.
+    COMMON_NIGHT_GATES = {
+        23: {
+            "attribute": "insight", "rank": 2,
+            "label": "[tag_insight] Rank 2: Ask whether naming a thing is knowing it.",
+            "lines": [
+                ("mc", "Benkyou suru. If I name the studying, have I done it?"),
+                ("hikari", "No. But you have agreed to do it. That is the first half."),
+                ("mc", "And the second half?"),
+                ("hikari", "The part where nobody is watching."),
+            ],
+            "reward": [("insight", "micro")],
+        },
+        25: {
+            "attribute": "grace", "rank": 2,
+            "label": "[tag_grace] Rank 2: Ask what the city throws away that it should keep.",
+            "lines": [
+                ("mc", "The garbage. The city is so careful with it. What does it throw away that it should keep?"),
+                ("hikari", "Nothing. That is the point. It keeps the sorting, not the thing."),
+                ("mc", "That sounds lonely."),
+                ("hikari", "It sounds like a city. You are allowed to find it both."),
+            ],
+            "reward": [("grace", "micro")],
+        },
+        30: {
+            "attribute": "nerve", "rank": 2,
+            "label": "[tag_nerve] Rank 2: Tell her you are not sorry for being loud about soup.",
+            "lines": [
+                ("mc", "I am not going to be quiet about the soup. It is good. I am going to say so."),
+                ("hikari", "I did not ask you to be quiet."),
+                ("mc", "I know. I am telling you anyway."),
+                ("hikari", "Then say it louder. The kitchen likes a verdict."),
+            ],
+            "reward": [("nerve", "micro")],
+        },
+        34: {
+            "attribute": "insight", "rank": 2,
+            "label": "[tag_insight] Rank 2: Ask what the vending machine is teaching you.",
+            "lines": [
+                ("mc", "The machine never answers. It just waits."),
+                ("hikari", "That is not waiting. That is inventory."),
+                ("mc", "Then what is it teaching me?"),
+                ("hikari", "That you can want something and not be answered, and the street goes on."),
+            ],
+            "reward": [("insight", "micro")],
+        },
+        38: {
+            "attribute": "grace", "rank": 3,
+            "label": "[tag_grace] Rank 3: Ask what she nods at when nobody is watching.",
+            "lines": [
+                ("mc", "The salaryman's nod. What do you nod at when nobody is watching?"),
+                ("hikari", "The house. The hallway. The light under your door."),
+                ("mc", "That is not nothing."),
+                ("hikari", "No. That is the whole of it."),
+            ],
+            "reward": [("grace", "micro")],
+        },
+        42: {
+            "attribute": "nerve", "rank": 3,
+            "label": "[tag_nerve] Rank 3: Tell her why you washed your hands twice.",
+            "lines": [
+                ("mc", "I washed them twice. At the temizu. I wanted the cold to stay longer."),
+                ("hikari", "Why?"),
+                ("mc", "Because yesterday something was warm that should not have been."),
+                ("hikari", "You are not going to tell me what."),
+                ("mc", "Not yet. But I am not going to pretend I did not feel it."),
+            ],
+            "reward": [("nerve", "micro")],
+        },
+        45: {
+            "attribute": "grace", "rank": 3,
+            "label": "[tag_grace] Rank 3: Ask her which lost thing she would take home.",
+            "lines": [
+                ("mc", "The shelf. If you could take one thing home, which one?"),
+                ("hikari", "The umbrella with the wooden handle. Somebody carved their initials in it."),
+                ("mc", "Why that one?"),
+                ("hikari", "Because it was made by hand and then lost by hand. It deserves a second owner."),
+            ],
+            "reward": [("grace", "micro")],
+        },
+        31: {
+            "attribute": "insight", "rank": 2,
+            "label": "[tag_insight] Rank 2: Ask what the announcement is really telling you.",
+            "lines": [
+                ("mc", "The train will arrive shortly. It has been arriving shortly for ten minutes."),
+                ("hikari", "That is the sentence doing its job. It is not a fact. It is a promise with a time attached."),
+                ("mc", "And if it never arrives?"),
+                ("hikari", "Then the sentence was still polite."),
+            ],
+            "reward": [("insight", "micro")],
+        },
+        32: {
+            "attribute": "grace", "rank": 2,
+            "label": "[tag_grace] Rank 2: Ask her why the card gets bowed to.",
+            "lines": [
+                ("mc", "People bow to the card. Not the machine."),
+                ("hikari", "The card is the part a person made. The machine is only where it lives."),
+                ("mc", "So the bow is for the hand."),
+                ("hikari", "The bow is for the hand."),
+            ],
+            "reward": [("grace", "micro")],
+        },
+        35: {
+            "attribute": "nerve", "rank": 2,
+            "label": "[tag_nerve] Rank 2: Tell her you like the rain because it gives you an excuse.",
+            "lines": [
+                ("mc", "I like the rain. It gives me an excuse."),
+                ("hikari", "For what?"),
+                ("mc", "For walking slower than I need to."),
+                ("hikari", "Then walk slower. You do not need the rain."),
+            ],
+            "reward": [("nerve", "micro")],
+        },
+        36: {
+            "attribute": "insight", "rank": 2,
+            "label": "[tag_insight] Rank 2: Ask what fills the gap between two people.",
+            "lines": [
+                ("mc", "Ma. The gap. What fills the gap between two people?"),
+                ("hikari", "Nothing. That is what makes it a gap."),
+                ("mc", "Then why does it feel full?"),
+                ("hikari", "Because you are both standing in it."),
+            ],
+            "reward": [("insight", "micro")],
+        },
+        37: {
+            "attribute": "nerve", "rank": 2,
+            "label": "[tag_nerve] Rank 2: Tell her you are afraid of open doors.",
+            "lines": [
+                ("mc", "Open doors. I do not trust them."),
+                ("hikari", "You trusted mine."),
+                ("mc", "Yours was already open. That is different."),
+                ("hikari", "It is. But you still came in."),
+            ],
+            "reward": [("nerve", "micro")],
+        },
+        39: {
+            "attribute": "grace", "rank": 3,
+            "label": "[tag_grace] Rank 3: Ask what she does with a maybe she cannot resolve.",
+            "lines": [
+                ("mc", "A maybe you cannot resolve. What do you do with it?"),
+                ("hikari", "I carry it until it gets lighter."),
+                ("mc", "Does it get lighter?"),
+                ("hikari", "Some of them. The ones I stop arguing with."),
+            ],
+            "reward": [("grace", "micro")],
+        },
+        40: {
+            "attribute": "insight", "rank": 3,
+            "label": "[tag_insight] Rank 3: Ask why the rain never asks permission.",
+            "lines": [
+                ("mc", "The rain does not ask. It just arrives."),
+                ("hikari", "That is why people forgive it."),
+                ("mc", "Would you forgive a person like that?"),
+                ("hikari", "I am trying to learn how."),
+            ],
+            "reward": [("insight", "micro")],
+        },
+        43: {
+            "attribute": "grace", "rank": 3,
+            "label": "[tag_grace] Rank 3: Ask what the cat is holding on to.",
+            "lines": [
+                ("mc", "The maneki-neko. It does not wave. It holds."),
+                ("hikari", "It holds the customers. That is the job."),
+                ("mc", "What does it hold when the shop is closed?"),
+                ("hikari", "The same thing. That is why it is still there."),
+            ],
+            "reward": [("grace", "micro")],
+        },
+        44: {
+            "attribute": "nerve", "rank": 3,
+            "label": "[tag_nerve] Rank 3: Tell her the silence between stations is where you hear yourself.",
+            "lines": [
+                ("mc", "Between stations. The silence. That is where I hear myself."),
+                ("hikari", "What do you hear?"),
+                ("mc", "Someone counting. I do not know if it is me."),
+                ("hikari", "Then do not count with him. Count with me."),
+            ],
+            "reward": [("nerve", "micro")],
         },
     }

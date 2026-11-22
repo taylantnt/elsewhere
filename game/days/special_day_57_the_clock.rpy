@@ -88,7 +88,7 @@ label special_day_57_the_clock:
             murakami "Because you are learning by repetition. Every day you say the same things. Good morning. Thank you. I am sorry. The words do not change. You change. That is the lesson."
             mc "(I am changing. The words are not. Father's words are not. Hikari's words are not. The house's words are not. I am the one who is changing, and the repetition is how I measure the change.)"
             $ reward_attributes_once("day57_lec_b", [("grace", "micro")], show="auto")
-        "Copy the line into your notebook.":
+        "Write the word the lecture keeps repeating.":
             "I write: kurikaeshi. Repetition is not failure. It is depth. The same gesture changes because you have changed."
             "I do not open the previous page. I do not look at the line that is not mine. I write on today's page and I close the notebook."
             mc "(I am not going to look. Not today. Today I am going to write my own words in my own handwriting and pretend the other page does not exist.)"
@@ -162,7 +162,7 @@ label special_day_57_the_clock:
             mc "(She is explaining it as fatigue. I am hearing it as a program skipping a line. Both are possible. One is more likely. I am not sure which.)"
             $ log_memory("hikari", "explained Father stopping mid-sentence as fatigue, said people get tired of their own sentences")
             $ reward_attributes_once("day57_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Listen to the stopped clock.":
             "The rain. The city. The Wednesday sounds."
             "Hikari is on the floor. She is not sleeping. She is looking at the ceiling."
             "I am looking at the ceiling."

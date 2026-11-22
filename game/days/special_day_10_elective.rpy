@@ -263,7 +263,7 @@ label friday_morning:
     hikari "The one from your first morning here. Only this time you look like you're glad you came."
     "She hands me a cup."
     hikari "The afternoon is yours. I have seminar until five."
-    mc "(One place. That is the rule I have given myself. One place, and then home.)"
+    mc "(One place after class. That was the rule. The rule is getting harder to find.)"
     call free_afternoon from _call_free_afternoon_2
 
     call dinner_open from _call_dinner_open_3

@@ -591,3 +591,28 @@ Scope: `game/days/day_8_wednesday.rpy` … `day_12_sunday.rpy`, plus the new
   deliberate play in Insight and Nerve.
 - **No duplicate flags.** The only repeated flag is `travel_route_attribute`
   (three mutually exclusive Day 1 branches), which is intentional.
+
+## Follow-up — 2026-11-23 (rank-gate and dialogue pass)
+
+The Day 1 to Day 69 pass added rank-locked answers to the days that still had
+none, and cleaned repeated filler from the late-game menus.
+
+- **Common days now have gates too.** `common_day_core` reads an optional
+  `COMMON_NIGHT_GATES` entry keyed by day. All sixteen common days (23, 25,
+  30–32, 34–40, 42–45) carry one rank-locked night answer. The gate lives in
+  data, so the shared skeleton stays readable.
+- **Special days gained one gate each** where the day had no attribute lock:
+  9, 12, 17, 26, 28, 46, 48, 49, 52, 53, 55, 56, 58, 59, 60, 62, 67. These use
+  Rank 2 in the early/mid game and Rank 3–4 after Day 45. Day 67 is the first
+  Rank 4 gate outside the finale; by that point a focused player has well over
+  the 9.5 points required.
+- **Reachability is unchanged.** Rank 2 still opens at 1.5 points, and the
+  earliest new rank gate is Day 9. A player who takes the matching choice in
+  the ordinary menus crosses 1.5 before Day 8.
+- **Repeated labels were varied.** The late-game night menus no longer all say
+  "Say nothing. Listen to the city.", the late lecture menus no longer all say
+  "Copy the line into your notebook.", and the six Hikari tour endings now
+  close differently at each destination.
+- **One action-as-dialogue bug was fixed.** The Day 8 combini doorway used
+  `mc` lines for narration and both options led to an identical beat; it is now
+  two narrated choices with their own micro rewards.

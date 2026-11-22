@@ -97,7 +97,7 @@ label special_day_63_the_threshold:
             murakami "Because you are at one. Every student is at one. You are crossing from not-knowing to knowing. You cannot go back. That is what a threshold is. A direction that does not reverse."
             mc "(A direction that does not reverse. I cannot go back to before the sentence. I cannot go back to before the laundry rack. I cannot go back to before the notebook. The threshold is a direction and it only goes one way.)"
             $ reward_attributes_once("day63_lec_b", [("grace", "micro")], show="auto")
-        "Copy the line into your notebook.":
+        "Write the threshold in your own hand.":
             "I write: mon. Threshold. A direction that does not reverse."
             "Below it, in my handwriting: I am on the other side."
             "I look at the page. Today's page. My words. My handwriting. And below them, the three lines from the other hand. She is leaking. She does not know. He can see."
@@ -184,7 +184,7 @@ label special_day_63_the_threshold:
             "She says it. I know. Twice. She says it the way she says everything. Flat. Warm. But underneath, something else. Something that is not flat. Something that is not warm."
             $ log_memory("hikari", "said she knows something is wrong with the house, twice, and there was something underneath the flatness")
             $ reward_attributes_once("day63_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Keep the door open.":
             "The rain. The city. The Tuesday sounds. No dog. No bell. Just the rain and the fridge and the silence between them."
             "Hikari is on the floor. She is not sleeping. She is looking at the wall. The same wall I am looking at. The wall that has the twelfth door on the other side of it."
             $ log_memory("hikari", "was looking at the same wall I was looking at, the wall with the twelfth door on the other side")

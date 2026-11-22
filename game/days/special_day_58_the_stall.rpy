@@ -105,7 +105,7 @@ label special_day_58_the_stall:
             murakami "Because every sentence is a fragment of a thought. Every conversation is a fragment of a relationship. Every word is a fragment of a language. You are learning fragments. You will never learn the whole. Nobody does."
             mc "(She says it like it is a comfort. It is not a comfort. It is a description of the condition.)"
             $ reward_attributes_once("day58_lec_b", [("grace", "micro")], show="auto")
-        "Copy the line into your notebook.":
+        "Write the fragment down exactly.":
             "I write: kakera. Fragment. The part that is left when the rest has broken or been taken."
             "I do not look at the previous pages. I write on today's page. My handwriting. My words."
             "But the pen feels different in my hand. Not heavier. Not lighter. Just different. Like the hand that holds it has shifted by a degree."
@@ -149,6 +149,15 @@ label special_day_58_the_stall:
     call night_open from _call_night_open_58
 
     menu:
+        "[tag_grace] Rank 3: Ask whether she is afraid of what she does not remember." if has_attribute("grace", 3):
+            mc "When you forget something. The way Mother does. Does it frighten you?"
+            hikari "I do not forget."
+            mc "I did not say you did. I asked if it frightens you."
+            "She is quiet. The rain keeps its side of the conversation."
+            hikari "Yes. It frightens me more than the thing I cannot see."
+            mc "(I do not tell her it will be all right. I do not know that. I stay.)"
+            $ log_memory("hikari", "admitted that forgetting frightens her more than the thing she cannot see")
+            $ reward_attributes_once("day58_night_afraid", [("grace", "micro")], show="auto")
         "Ask where she heard the word fragment.":
             hikari "The seminar. The paper. The rain. The fragment."
             mc "You said fragment."
@@ -167,7 +176,7 @@ label special_day_58_the_stall:
             mc "(She says it like it is normal. Like Mother has always done this. Like the stall is a quirk and the forgetting is a feature. Maybe she is right. Maybe I am the one who is hearing it wrong.)"
             $ log_memory("hikari", "said Mother has always stalled when the kitchen changes, and never remembers, and it is just how she is")
             $ reward_attributes_once("day58_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Let the stall close around you.":
             "The rain. The city. The Thursday sounds. The dog does not bark on Thursdays. Or I have not noticed it barking on Thursdays. The absence of a thing is not the same as the thing not being there."
             "Hikari is on the floor. She is sleeping. She is breathing the way she breathed last night, before the voice through the wall."
             $ log_memory("hikari", "was sleeping and breathing the same way as before the voice through the wall")

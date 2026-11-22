@@ -117,6 +117,14 @@ label special_day_53_fragment:
     call night_open from _call_night_open_53
 
     menu:
+        "[tag_insight] Rank 3: Ask why she stopped outside the door." if has_attribute("insight", 3):
+            mc "You stopped outside the door. Before you knocked. Why?"
+            hikari "I was listening to the rain. Then I heard you."
+            mc "What did you hear?"
+            hikari "A word I did not know. I still do not."
+            mc "(She says it without asking what it was. She already knows it was mine.)"
+            $ log_memory("hikari", "stopped outside the door and heard him say a word she did not know")
+            $ reward_attributes_once("day53_night_word", [("insight", "micro")], show="auto")
         "Ask Hikari what she heard.":
             mc "You said you heard me. Through the wall. Last night."
             hikari "I did."

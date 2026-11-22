@@ -179,6 +179,14 @@ label special_day_48_sento:
     hikari "I have to be up early for the run. So."
 
     menu:
+        "[tag_grace] Rank 3: Tell her you want to take her to the sento properly." if has_attribute("grace", 3):
+            mc "Next time, come with me. Not to wait outside. All the way in."
+            hikari "You would take me to a bathhouse."
+            mc "I would wash first, like the old man said. Then I would sit in the cold tub and complain."
+            hikari "That is the most specific invitation anyone has ever made me."
+            mc "(She is smiling at the floor. I decide not to say anything about it.)"
+            $ log_memory("hikari", "invited her to the sento properly, wash first, then the cold tub")
+            $ reward_attributes_once("day48_night_invite", [("grace", "micro")], show="auto")
         "Tell her the old man taught me.":
             mc "There was an old man. He told me to wash first."
             hikari "He was right."

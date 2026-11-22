@@ -254,11 +254,11 @@ label thursday_morning:
             $ reward_attributes_once("day9_class_line", [("grace", "micro")], show="auto")
 
     professor "Read the first chapter. Bring one sentence you do not understand. That is the assignment."
-    "The bell goes. The room folds itself up."
+    "The bell goes. Thirty people become thirty people again."
 
     scene bg_campus_interior with walk_fade
-    "Hikari has seminar until five. The afternoon is a door with nothing written on it."
-    mc "(One place. That is the rule I have given myself. One place, and then home.)"
+    "Hikari has seminar until five. The afternoon is an empty page and I have run out of things to write on it."
+    mc "(The Genji is heavy in my bag. That is a place, if I let it be one.)"
     call free_afternoon from _call_free_afternoon_1
 
     call dinner_open from _call_dinner_open_2
@@ -281,6 +281,14 @@ label thursday_morning:
     call night_open from _call_night_open_2
 
     menu:
+        "[tag_insight] Rank 2: Ask what the pause in her voice was doing." if has_attribute("insight", 2):
+            mc "When you read it, you stopped before the last word. Why there?"
+            hikari "Because the last word is the one the reader has to say themselves."
+            mc "So you leave it for me."
+            hikari "I leave it for you. That is what a pause is. A polite hand on the door."
+            mc "(I had been reading the sentence. She had been reading the room.)"
+            $ log_memory("hikari", "read the first line of Genji and left the last word for him to say")
+            $ reward_attributes_once("day9_night_pause", [("insight", "micro")], show="auto")
         "Ask her to read the first line aloud.":
             mc "Read the first line. The way you would read it."
             hikari "You want me to perform?"

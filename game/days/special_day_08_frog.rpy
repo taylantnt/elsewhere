@@ -117,7 +117,7 @@ label wednesday_morning:
     scene bg_home_exterior_day with walk_fade
     play music "audio/Music/(shibuya morning) scramble_hour.mp3" fadein 2.0
 
-    "The morning is cool enough for a jacket and warm enough to regret it by the station."
+    "Wednesday has its own colour: the grey of a sky that has not rained and is thinking about it."
     "Hikari walks a half-step ahead of me, the way she does when she is deciding something."
     hikari "Question."
     mc "Already?"
@@ -251,8 +251,8 @@ label wednesday_morning:
     call quiz_basho_lesson from _call_quiz_basho_lesson_1
 
     scene bg_campus_interior with walk_fade
-    "Hikari has seminar until five. The afternoon is a door with nothing written on it."
-    mc "(One place. That is the rule I have given myself. One place, and then home.)"
+    "Hikari's seminar runs until five. I have an afternoon and no plan that survives contact with it."
+    mc "(One detour, I told myself on Monday. Monday was a long time ago.)"
 
     ## DAY 8 IS A LINEAR DAY. The hub does not open until the next free
     ## afternoon; today the afternoon belongs to one errand he has not
@@ -274,11 +274,14 @@ label wednesday_morning:
 
         menu:
             "Go in and ask about the card.":
-                mc "I push the door. The chime goes off."
-            "Stand there a minute longer first.":
-                "I stand there a minute longer. The card does not move. The store does not care that I am reading it."
+                "I push the door before I can decide not to. The chime goes off."
+                $ reward_attributes_once("day8_combini_ask", [("nerve", "micro")], show="auto")
+            "Look through the window first.":
+                "Through the glass: a man at the register, a stack of bento, one customer reading a magazine he will not buy."
+                "The man looks up at me through the glass and nods. I nod back. The whole interview happens before I am inside."
                 mc "(A job that is being a person in public. That is what Hikari would call it.)"
-                mc "I push the door. The chime goes off, same as before."
+                "I push the door. The chime goes off, same as always."
+                $ reward_attributes_once("day8_combini_window", [("insight", "micro")], show="auto")
 
         call combini_first_counter from _call_combini_first_counter_1
         $ last_afternoon_place = "combini_first"
@@ -335,8 +338,8 @@ label wednesday_morning:
             $ reward_attributes_once("day8_night_aware", [("insight", "micro")], show="auto")
         "Say nothing. Drink the tea.":
             "I do not say anything. The tea is hot and the room is quiet."
-            "Hikari does not fill the silence. She has learned that I do not need her to."
-            mc "(Some things do not need a sentence. This is one of them.)"
+            "Hikari lets the quiet stand. Outside, a bicycle bell rings once and is gone."
+            mc "(The frog does not explain the pond either.)"
             $ log_memory("hikari", "sat with her in silence and did not fill it")
             $ reward_attributes_once("day8_night_quiet", [("nerve", "micro")], show="auto")
 

@@ -276,7 +276,7 @@ label sunday_mock:
             $ reward_attributes_once("day19_night_praise", [("grace", "micro")], show="auto")
         "Say nothing. Put the fourth card under the bowl.":
             "I slide the fourth card under Mister Plum's bowl. The question is still there, under the water and the fish."
-            "Hikari does not ask why. She has learned that I do not need her to fill the silence."
+            "Hikari does not ask why. She puts her hand flat on the table instead."
             $ log_memory("hikari", "put the fourth exam card under the goldfish bowl and said nothing")
             $ reward_attributes_once("day19_night_quiet", [("nerve", "micro")], show="auto")
 

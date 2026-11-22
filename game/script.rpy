@@ -468,6 +468,7 @@ image bg_river_night = Transform("images/backgrounds/bg_river_night.png", xysize
 # moves the light down.
 
 image bg_lupins_alley_night = Transform("images/backgrounds/bg_lupins_alley_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
+image bg_lupins_alley_night_further = Transform("images/backgrounds/bg_lupins_alley_night_further.png", xysize=(config.screen_width, config.screen_height), fit="cover")
 image bg_lupins_alley_night_closed = bg_or_placeholder("bg_lupins_alley_night_closed", "#181d25", "LUPIN'S DEN\nCLOSED")
 image bg_alley = bg_or_placeholder("bg_alley", "#2a2320", "SIDE STREET\nDUSK")
 image bg_alley_night = Transform("images/backgrounds/bg_alley_night.png", xysize=(config.screen_width, config.screen_height), fit="cover")
@@ -7126,12 +7127,13 @@ label reading_club_first:
     # She said come straight home. I take a different route instead, which is not
     # technically disobeying anything, and the neighborhood obliges by getting
     # worse at being a neighborhood with every turn.
-    scene bg_lupins_alley_night with walk_fade
+    scene bg_lupins_alley_night_further with walk_fade
     "The map has stopped helping me. Every street looks like the last one until the street gives up entirely."
     "I do not know where I am. I only know this is not the way home."
     "The shops are closed early, the signs are tired, the lights are the same pale blue everywhere."
     "A combini sign missing a character. A shuttered cleaner's. A wall of bicycles that do not belong to anyone."
     "Then there is a shop that does not belong to this street at all."
+    scene bg_lupins_alley_night with walk_fade
     "No menu board. No vending machine. No students deciding whether to hurry."
     "Only a low door with a cloth over it, and a small wolf painted on the sign beside it."
     "The paint is faded but deliberate, the kind of sign made by someone who cares about it."

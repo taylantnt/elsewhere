@@ -15,6 +15,12 @@ label special_day_67_the_lot:
     "She says it kindly and moves her bucket so I have room to pass."
 
     menu:
+        "[tag_nerve] Rank 4: Tell her you ate here yesterday." if has_attribute("nerve", 4):
+            mc "I ate here yesterday. Ramen. The broth was dark and the chef did not talk."
+            "She looks at me the way people look at a child who has said something true and impossible."
+            "She does not argue. She moves her bucket so I have room to pass, and that is worse."
+            mc "(I said it out loud. The street did not change. I did.)"
+            $ keepsake_observations["ramen_shop_claimed"] = "I told the neighbor I ate here yesterday. She let me pass."
         "Take out Chef's chopsticks." if has_item("chef_personal_chopsticks"):
             "I take the chopsticks out of their wrapping. I had been saving them for a meal I wouldn't eat in a hurry."
             "I almost ask her to look at them. I don't know what I'd expect her to see."

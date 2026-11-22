@@ -243,7 +243,7 @@ label monday_midterm:
 
     "The exam is over. My hand still feels like it is holding a pen."
     "The rest of the day is mine. Nobody is grading where I walk or what I buy."
-    mc "(One place. That is the rule. Then home.)"
+    mc "(One place, then home. The sentence has worn smooth from use.)"
 
     $ flush_pending_messages()
     call free_afternoon from _call_free_afternoon_11

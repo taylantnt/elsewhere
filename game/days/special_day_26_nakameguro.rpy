@@ -152,6 +152,14 @@ label special_day_26_nakameguro:
     call night_open from _call_night_open_17
 
     menu:
+        "[tag_grace] Rank 2: Ask her to keep the petal until you both forget." if has_attribute("grace", 2):
+            mc "Keep it. Not for me. Until we both forget what today felt like."
+            hikari "And if I forget first?"
+            mc "Then I will remind you. That is what the petal is for."
+            hikari "You are asking me to be your memory."
+            mc "(I am. She says it without flinching.)"
+            $ log_memory("hikari", "asked her to keep the petal until they both forget, and she agreed to be his memory")
+            $ reward_attributes_once("d26_night_keep_for_us", [("grace", "micro")], show="auto")
         "Ask her what she will remember about today.":
             mc "What will you remember?"
             hikari "The petals on the water. The little girl. The way you stood under the tree like you were being rained on."

@@ -101,7 +101,7 @@ label special_day_62_the_sentence:
             murakami "Because you are learning the contour of a language. The shape. The edge. The words are the filling. The grammar is the contour. You learn the shape first. The filling comes later. Or never."
             mc "(The shape first. The filling later. I have learned the shape of this house. The shape of this family. The shape of this week. The filling is what is wrong. The filling is the sentence that spreads.)"
             $ reward_attributes_once("day62_lec_b", [("grace", "micro")], show="auto")
-        "Copy the line into your notebook.":
+        "Write the sentence that is not yours.":
             "I write: rinkaku. Contour. The edge that tells you what the thing is."
             $ reward_attributes_once("day62_lec_c", [("nerve", "micro")], show="auto")
 
@@ -150,6 +150,16 @@ label special_day_62_the_sentence:
     call night_open from _call_night_open_62
 
     menu:
+        "[tag_insight] Rank 3: Ask what she thinks the sentence wants." if has_attribute("insight", 3):
+            mc "The sentence. Not who says it. What does it want?"
+            hikari "It wants to be repeated. That is what a sentence wants."
+            mc "Why?"
+            hikari "Because a sentence that is repeated starts to sound like a fact."
+            mc "(She is not looking at me. She is looking at the wall, counting it.)"
+            mc "Then we should stop saying it."
+            hikari "It does not need us to say it. That is the part I cannot explain."
+            $ log_memory("hikari", "said the sentence wants to be repeated because a repeated sentence starts to sound like a fact")
+            $ reward_attributes_once("day62_night_wants", [("insight", "micro")], show="auto")
         "Ask what the house was like before you arrived.":
             hikari "I asked you something at dinner. About before you came."
             mc "You did."
@@ -171,7 +181,7 @@ label special_day_62_the_sentence:
             mc "(She remembers. She did not remember at the time. She remembers now. The sentence moved through her and she caught it after. Like a cold you do not feel until the next day.)"
             $ log_memory("hikari", "remembered saying Father's sentence at breakfast, did not remember deciding to say it, caught it after like a cold")
             $ reward_attributes_once("day62_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Let the sentence stand.":
             "The rain. The city. The Monday sounds. The train. The bell. The dog."
             "The dog barks three times. It is Monday. The dog barks on Monday."
             "Hikari is on the floor. She is not sleeping. She is mouthing something. I can almost read it. The week is a machine. She is mouthing the sentence. In the dark. To the ceiling."

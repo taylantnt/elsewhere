@@ -491,11 +491,11 @@ label hikari_tour_harajuku:
     $ unlock_hikari_tour_destination("harajuku")
     $ phone_map_visit("harajuku")
     $ renpy.notify("Harajuku: Takeshita Street is now on your map.")
-    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    mc "(I can find Takeshita Street again. That is the thing she wanted to give me.)"
     hikari "Next time, go without me."
     mc "You are not coming?"
     hikari "I have shown you. That was the point."
-    mc "(She says it lightly. It does not land lightly.)"
+    mc "(She says it lightly. It does land. That is the problem.)"
     hikari "And if you get a crepe, get the one with the fruit. The tall one is for photographs."
     $ reward_attributes_once("hikari_tour_harajuku_complete", [("insight", "tiny")], show="auto")
 
@@ -510,8 +510,8 @@ label hikari_tour_harajuku:
     mc "We're home."
     hikari "You're welcome."
     mc "I didn't say thank you."
-    hikari "You were going to."
-    "She goes inside before I can prove her right."
+    hikari "You bought me a crepe. We are even."
+    "She goes inside before I can argue about who owes whom."
     "By the time I reach the front step, the ribbon is gone. She is wearing her own clothes again, and she never mentions the dress."
     $ hikari_kawaii = False
     return
@@ -696,11 +696,11 @@ label hikari_tour_karaoke:
     $ unlock_hikari_tour_destination("karaoke")
     $ phone_map_visit("karaoke")
     $ renpy.notify("Kuru Fuku Neko is now on your map.")
-    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    mc "(I know which buzzer, which floor, which room. The cat over the door will let me in.)"
     hikari "Next time, go without me."
     mc "You are not coming?"
     hikari "I have shown you. That was the point."
-    mc "(She says it lightly. It does not land lightly.)"
+    mc "(She says it like a fact she has practiced.)"
     hikari "And if you go, take the water. And pick a song I know."
     $ reward_attributes_once("hikari_tour_karaoke_complete", [("insight", "tiny")], show="auto")
 
@@ -714,9 +714,9 @@ label hikari_tour_karaoke:
     hikari "We're home."
     mc "We're home."
     hikari "You're welcome."
-    mc "I didn't say thank you."
-    hikari "You were going to."
-    "She goes inside before I can prove her right."
+    mc "I never said thank you."
+    hikari "You sang. That was the thank you."
+    "She goes inside before I can decide whether she is joking."
     return
 
 
@@ -1065,11 +1065,11 @@ label hikari_tour_yokohama:
     $ unlock_hikari_tour_destination("yokohama")
     $ phone_map_visit("yokohama")
     $ renpy.notify("Yokohama Chinatown is now on your map.")
-    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    mc "(Station, then the line home. The words arrive without me checking for her.)"
     hikari "Next time, you can come without me."
     mc "You're not coming?"
     hikari "I have shown you. That was the point."
-    mc "(She says it lightly. It does not land lightly.)"
+    mc "(She says it lightly. I do not think it is light for her.)"
     hikari "But if you go back to Lei Lei, order the gyoza. Not the ramen."
     mc "Why not the ramen?"
     hikari "Because the ramen is good, and the gyoza is hers."
@@ -1085,9 +1085,9 @@ label hikari_tour_yokohama:
     hikari "We're home."
     mc "We're home."
     hikari "You're welcome."
-    mc "I didn't say thank you."
-    hikari "You were going to."
-    "She goes inside before I can prove her right."
+    mc "I should have said thank you."
+    hikari "You said it to the woman who brought the gyoza. I heard you."
+    "She goes inside before I can explain that I meant her."
     return
 
 
@@ -1282,11 +1282,11 @@ label hikari_tour_ueno:
     $ unlock_hikari_tour_destination("ueno")
     $ phone_map_visit("ueno")
     $ renpy.notify("Ueno Park is now on your map.")
-    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    mc "(The park is on the map now. The same map she drew. The same hand.)"
     hikari "Next time, sit somewhere different."
     mc "You are not coming?"
     hikari "I have shown you. That was the point."
-    mc "(She says it lightly. It does not land lightly.)"
+    mc "(She says it the way she says things she decided in advance.)"
     hikari "And take a cup if somebody offers. You looked like you wanted to."
     $ reward_attributes_once("hikari_tour_ueno_complete", [("insight", "tiny")], show="auto")
 
@@ -1299,9 +1299,9 @@ label hikari_tour_ueno:
     hikari "We're home."
     mc "We're home."
     hikari "You're welcome."
-    mc "I didn't say thank you."
-    hikari "You were going to."
-    "She goes inside before I can prove her right."
+    mc "I forgot to say thank you."
+    hikari "You stayed until the light went. That counted."
+    "She goes inside before I can tell her it was not the same as saying it."
     return
 
 
@@ -1504,11 +1504,11 @@ label hikari_tour_shimokitazawa:
     $ unlock_hikari_tour_destination("shimokitazawa")
     $ phone_map_visit("shimokitazawa")
     $ renpy.notify("Shimokitazawa is now on your map.")
-    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    mc "(The small gate. The record shop. The cat. I have the whole route now.)"
     hikari "Next time, take the small gate. The cat will remember you."
     mc "You are not coming?"
     hikari "I have shown you. That was the point."
-    mc "(She says it lightly. It does not land lightly.)"
+    mc "(She says it lightly. I let her have the lightness.)"
     hikari "And if the record is still there, buy it."
     $ reward_attributes_once("hikari_tour_shimokitazawa_complete", [("insight", "tiny")], show="auto")
 
@@ -1521,9 +1521,9 @@ label hikari_tour_shimokitazawa:
     hikari "We're home."
     mc "We're home."
     hikari "You're welcome."
-    mc "I didn't say thank you."
-    hikari "You were going to."
-    "She goes inside before I can prove her right."
+    mc "I still haven't said thank you."
+    hikari "You asked me to come back. That was better."
+    "She goes inside before I can ask whether she meant it."
     return
 
 
@@ -1840,11 +1840,11 @@ label hikari_tour_omotesando:
     $ unlock_hikari_tour_destination("omotesando")
     $ phone_map_visit("omotesando")
     $ renpy.notify("Omotesando / Meiji Shrine is now on your map.")
-    mc "(I can come back here on my own now. She showed me the shape of it.)"
+    mc "(I can find the shrine again. I can stand where she stood. That is the gift.)"
     hikari "Next time, go in without me. Stand where I stood and do it badly."
     mc "You are not coming?"
     hikari "I have shown you. That was the point."
-    mc "(She says it lightly. It does not land lightly.)"
+    mc "(She says it lightly. Neither of us believes the lightness.)"
     hikari "And keep the coin."
     $ reward_attributes_once("hikari_tour_omotesando_complete", [("insight", "tiny")], show="auto")
 

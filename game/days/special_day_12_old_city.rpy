@@ -307,6 +307,14 @@ label sunday_practice:
     call night_open from _call_night_open_5
 
     menu:
+        "[tag_grace] Rank 2: Tell her she does not have to fill the pause." if has_attribute("grace", 2):
+            mc "You do not have to fill it. The quiet. I am not waiting for you to say something."
+            hikari "I know. I am not filling it for you."
+            mc "Then who?"
+            hikari "For the version of me that used to think silence was a door closing."
+            mc "(She says it to the cup. I leave the cup alone.)"
+            $ log_memory("hikari", "told her she did not have to fill the pause, and she said she was learning that too")
+            $ reward_attributes_once("day12_night_nofill", [("grace", "micro")], show="auto")
         "Tell her about the pause.":
             mc "Murakami says the pause is not empty. Ma. The space between."
             hikari "She would say that."
@@ -324,8 +332,8 @@ label sunday_practice:
             $ reward_attributes_once("day12_night_next", [("insight", "micro")], show="auto")
         "Turn the chipped bowl so the chip faces me.":
             "I turn the bowl a quarter turn. The chip faces me. Hikari does not comment."
-            "The tea is hot and the room is quiet. She has learned that I do not need her to fill it."
-            mc "(Some things do not need a sentence. This is one of them.)"
+            "The tea is hot and the room is quiet. She lets the quiet sit there like a third person at the table."
+            mc "(The chip faces me now. It is a small thing to be in charge of. I take it.)"
             $ log_memory("hikari", "drank the tea in silence on the last night of the week")
             $ reward_attributes_once("day12_night_quiet", [("nerve", "micro")], show="auto")
 

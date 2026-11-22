@@ -521,7 +521,7 @@ label monday_asakusa:
             $ reward_attributes_once("day13_night_omikuji", [("grace", "micro")], show="auto")
         "Say nothing. Let the day settle.":
             "I do not say anything. The tea is hot. The room is quiet. The fortune slip is on the desk."
-            "Hikari does not fill the silence. She has learned that I do not need her to."
+            "Hikari lets the quiet stay. After a week she trusts it."
             mc "(The slip stays on the desk. I let it.)"
             $ log_memory("hikari", "drank the tea in silence after Asakusa")
             $ reward_attributes_once("day13_night_quiet", [("nerve", "micro")], show="auto")

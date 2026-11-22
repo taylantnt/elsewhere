@@ -186,6 +186,15 @@ label special_day_52_same_face:
     call night_open from _call_night_open_52
 
     menu:
+        "[tag_nerve] Rank 3: Say you believe her, even if it makes you wrong." if has_attribute("nerve", 3):
+            mc "I believe you. About not seeing her. Even if that makes me the wrong one."
+            hikari "You do not have to do that."
+            mc "I know. That is why I am doing it."
+            "She looks at me for a long time. The rain fills the space where an answer would go."
+            hikari "Then we are both wrong, and the child is somewhere in the middle."
+            mc "(It is not a comfort. It is a place to stand.)"
+            $ log_memory("hikari", "said he believed her about not seeing the child, even if it made him the wrong one")
+            $ reward_attributes_once("day52_night_believe", [("nerve", "micro")], show="auto")
         "Ask Hikari about the child.":
             mc "The child in the yellow hat. You said you did not see her."
             hikari "I did not."

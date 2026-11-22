@@ -87,7 +87,7 @@ label special_day_56_the_repeat:
             murakami "Because language is mostly gaps. The words are the easy part. The pauses, the hesitations, the things you do not say. That is where the meaning lives."
             mc "(The things you do not say. Father does not say that he is repeating. Hikari does not say that she hears it. Mother does not say that the clock is stopped. The meaning lives in the gaps.)"
             $ reward_attributes_once("day56_lec_b", [("grace", "micro")], show="auto")
-        "Copy the line into your notebook.":
+        "Write the gap into the notebook.":
             "I write: ma. The gap. What is not there is what gives shape to what is there."
             "The pen moves. The handwriting is mine. The letters sit on the page."
             "Then I look at the previous page. The entry from last week. Day forty-nine."
@@ -142,7 +142,15 @@ label special_day_56_the_repeat:
     call night_open from _call_night_open_56
 
     menu:
-        "Ask how she ended her paper.":
+        "[tag_grace] Rank 3: Ask her what she would want to forget." if has_attribute("grace", 3):
+            mc "If you could forget one thing. Not the paper. Not the rain. One thing."
+            hikari "I would forget the week I stopped noticing you."
+            mc "I did not know there was one."
+            hikari "There was not. That is why I would forget it."
+            mc "(She turns her cup so the handle faces me. I do not know when she started doing that.)"
+            $ log_memory("hikari", "said she would forget the week she stopped noticing him, which never happened")
+            $ reward_attributes_once("day56_night_forget", [("grace", "micro")], show="auto")
+        "Ask what she did once the paper was done.":
             hikari "I slept. I ate. I am going to sleep again. That is the whole day."
             mc "That sounds good."
             hikari "It is good. The paper is done. The repetition is over. I found the ending."
@@ -161,7 +169,7 @@ label special_day_56_the_repeat:
             mc "(She does not hear it as a repetition. She hears it as a habit. I hear it as a pattern. One of us is right. I do not know which one.)"
             $ log_memory("hikari", "did not react to Father repeating the line, said people have sentences")
             $ reward_attributes_once("day56_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Let the rain keep count.":
             "The rain. The city. The Tuesday sounds. A train, a bell, the dog that barks three times."
             "Hikari is already asleep on the floor. The paper took everything she had. She is breathing the way people breathe when they have stopped counting the hours."
             $ log_memory("hikari", "fell asleep on the floor, exhausted from the paper, breathing like someone who stopped counting hours")

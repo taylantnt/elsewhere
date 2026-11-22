@@ -117,6 +117,16 @@ label special_day_60_the_question:
     call night_open from _call_night_open_60
 
     menu:
+        "[tag_nerve] Rank 3: Tell her you are afraid of the answer." if has_attribute("nerve", 3):
+            mc "I am afraid. Of what the third thing will be."
+            hikari "You did not say that before."
+            mc "I am saying it now. I did not want to be the person who was afraid."
+            hikari "You are the person who is afraid. That is a relief."
+            mc "Why?"
+            hikari "Because now there are two of us in the room and only one pattern."
+            mc "(It is not less frightening. It is less lonely.)"
+            $ log_memory("hikari", "said he was afraid of the third thing too, and she called it a relief")
+            $ reward_attributes_once("day60_night_afraid", [("nerve", "micro")], show="auto")
         "Ask what she found out about sleepwalking.":
             hikari "I was in the library. I read about sleepwalking. It is called somnambulism. It is common in children. It can return in adults under stress."
             mc "Are you under stress?"
@@ -138,7 +148,7 @@ label special_day_60_the_question:
             hikari "I do not want it to be three."
             $ log_memory("hikari", "learned her lips moved with Father's sentence, said two things is a pattern and she does not want it to be three")
             $ reward_attributes_once("day60_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Let the question stay open.":
             "The rain. The city. The Saturday sounds. No dog. The dog does not bark on Saturdays. Or I have not noticed."
             "Hikari is on the floor. She is sleeping. She is breathing the way she breathes when she is not at the door. The way she breathes when she is here."
             $ log_memory("hikari", "was sleeping and breathing the way she breathes when she is here, not at the door")

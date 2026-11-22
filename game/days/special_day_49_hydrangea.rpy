@@ -185,6 +185,14 @@ label special_day_49_hydrangea:
     hikari "The rain is loud tonight. It is a good night for it to be loud."
 
     menu:
+        "[tag_insight] Rank 3: Ask what her grandmother would have made of this garden." if has_attribute("insight", 3):
+            mc "Your grandmother. What would she have made of this garden?"
+            hikari "She would have said it was too blue and then stood in it for an hour."
+            mc "That sounds like a compliment."
+            hikari "It was. She did not give them any other way."
+            mc "(I try to picture a woman with sweets in her sleeve, standing in the rain, saying too blue.)"
+            $ log_memory("hikari", "said her grandmother would have called the garden too blue and then stood in it for an hour")
+            $ reward_attributes_once("day49_night_garden", [("insight", "micro")], show="auto")
         "Ask her what her father's mother was like.":
             mc "Your father's mother. The one who liked the flowers."
             hikari "I barely remember her. She died when I was small. I remember a room that smelled of citrus and old paper, and I remember she always had sweets in her sleeve."
@@ -203,9 +211,9 @@ label special_day_49_hydrangea:
             mc "Then say the other thing."
             hikari "I am not sure I should. You have a face like a person collecting evidence."
             mc "(She looks at me for a while. Then she decides, the way she decides things, all at once and completely.)"
-            hikari "I think a person is mostly what they were planted in. You have been planted in this house for six weeks. You are already a different color. You can feel it. I can see it."
+            hikari "I think a person is mostly what they were planted in. You have been planted in this house for seven weeks. You are already a different color. You can feel it. I can see it."
             mc "(She is right, and it is not comfortable, and I do not want her to take it back.)"
-            $ log_memory("hikari", "said I was already a different color from six weeks of being planted in this house")
+            $ log_memory("hikari", "said I was already a different color from seven weeks of being planted in this house")
             $ reward_attributes_once("day49_night_ground", [("grace", "micro")], show="auto")
         "Say nothing. Listen to the rain.":
             "I do not ask her anything. I let the rain take over the conversation, which is the only conversation rain is good at."

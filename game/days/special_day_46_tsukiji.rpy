@@ -203,6 +203,16 @@ label special_day_46_tsukiji:
     hikari "I stay exactly long enough. That is different."
 
     menu:
+        "[tag_nerve] Rank 2: Tell her you almost kept the knife for yourself." if has_attribute("nerve", 2):
+            mc "I thought about keeping it. Not for the kitchen. For me."
+            hikari "Why didn't you?"
+            mc "Because Mother would have found it and asked where it came from."
+            hikari "That is not a reason. That is a hiding place."
+            mc "Then because I wanted to bring something back. Not keep something away."
+            hikari "There. That is the reason."
+            mc "(She waits until I find the true one. She is good at that.)"
+            $ log_memory("hikari", "admitted he almost kept the knife for himself, then found the real reason he brought it back")
+            $ reward_attributes_once("day46_night_almost", [("nerve", "micro")], show="auto")
         "Tell her about the man at the cart.":
             mc "At the market, the carts. The men driving them never slow down."
             hikari "Why would they."

@@ -136,7 +136,7 @@ label special_day_61_the_geometry:
             hikari "But I believe you."
             $ log_memory("hikari", "could not see the room was bigger but said she believes me, which is different from believing the counting")
             $ reward_attributes_once("day61_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Let the hallway answer.":
             "The rain. The city. The Sunday sounds. The silence that is not silence. The house that is not doing its sounds."
             "Hikari is on the floor. She is not sleeping. She is measuring the room with her eyes. I can see her doing it. She is counting spans."
             $ log_memory("hikari", "was measuring the room with her eyes, counting spans, even though she said she could not tell")

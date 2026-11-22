@@ -95,7 +95,7 @@ label special_day_59_the_door:
             murakami "Because you are here. In this classroom. In this country. Learning this language. You are living. The question is whether you are living on purpose."
             mc "(Am I living on purpose. Am I here on purpose. Did I choose to come here or did the sentence choose me. The week is a machine. The machine runs a program. Am I the program.)"
             $ reward_attributes_once("day59_lec_b", [("grace", "micro")], show="auto")
-        "Copy the line into your notebook.":
+        "Write the question in the margin.":
             "I write: ikiru. To live. The verb does not need a purpose. The person does."
             "My handwriting. My words. Today's page."
             "I close the notebook. I do not look at the other pages."
@@ -148,6 +148,16 @@ label special_day_59_the_door:
     call night_open from _call_night_open_59
 
     menu:
+        "[tag_insight] Rank 3: Ask her to say the question again and listen for her own voice." if has_attribute("insight", 3):
+            mc "Say it again. The question. I want to hear where your voice goes."
+            hikari "Do you think people can be made for something."
+            mc "Again. Slower."
+            hikari "Do you think ... people can be made ... for something."
+            mc "(The first time it was hers. The second time it was a sentence she was holding for someone else.)"
+            hikari "You heard it."
+            mc "I heard where it changes hands."
+            $ log_memory("hikari", "said the question again, and he heard where her voice changed hands")
+            $ reward_attributes_once("day59_night_again", [("insight", "micro")], show="auto")
         "Ask whose question she thought it was.":
             hikari "I asked a question at dinner. I do not know why."
             mc "It was a good question."
@@ -169,7 +179,7 @@ label special_day_59_the_door:
             hikari "I do not know how I said it. That is the true thing I am telling you."
             $ log_memory("hikari", "could not explain how she said the same question Murakami asked in a lecture she did not attend")
             $ reward_attributes_once("day59_night_b", [("nerve", "micro")], show="auto")
-        "Say nothing. Listen to the city.":
+        "Say nothing. Stand in the doorway.":
             "The rain. The city. The Friday sounds. The dog barks three times. It is Friday. The dog barks on Friday. I did not know that. Or I forgot."
             "Hikari is on the floor. She is not sleeping. She is looking at the ceiling. She is mouthing something. I cannot read lips in the dark."
             $ log_memory("hikari", "was mouthing something in the dark, looking at the ceiling, and I could not read it")
