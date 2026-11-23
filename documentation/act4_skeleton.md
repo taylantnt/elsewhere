@@ -1,11 +1,15 @@
 # Act 4: Ending Skeleton
 
-**Status: proposal, not canon or playable.** The build ends after Day 69.
+**Status: playable.** Days 70-83 are written investigation days, and a bridge
+connects Day 83 to Day 90 and plays the revelation, one final choice, three
+ending routes, and the coda. See [act3_investigation.md](act3_investigation.md)
+for the clue system and the lab interludes, and
+[act4_bridge.md](act4_bridge.md) for what the ending currently does.
 Act 3 runs through Day 83. Act 4 is planned for Days 84-90, June 30 through
 July 6, 2026. Save the full reveal for that final week.
 This draft explores alternatives to the endings in the
-[story treatment](story_treatment.md). No ending rules or thresholds are
-implemented.
+[story treatment](story_treatment.md). No numeric ending rules or thresholds are
+implemented; the bridge reads the save for texture only.
 
 ## What the project measures
 
@@ -40,10 +44,10 @@ relationship-heavy route before tuning any numeric requirements.
 
 1. **Finish Act 3 first.** Days 64-69 cover the rail, the ghost exam question,
    the first hospital disagreement about a recorded answer, and optionally
-   revisiting places through keepsakes. In Days 70-83 let the pair test whether
-   anything survives a change they can reproduce, and let Tetsuo and Miharu's
-   response make the cost personal. Save the optional fortune page payoff for
-   the threshold so it is never required.
+   revisiting places through keepsakes. Days 70-83 are now written: the pair
+   tests whether anything survives a change they can reproduce, and Tetsuo and
+   Miharu's response makes the cost personal. Save the optional fortune page
+   payoff for the threshold so it is never required.
 2. **River talk.** Hikari remembers something she could only know as an author
    of this place. Let her show that first. She can tell him what she suspects
    and where she can take him, but she cannot promise she will be waiting on
@@ -101,7 +105,8 @@ the project fail to listen. Leave his ultimate physical fate unresolved.
 - Do we need an interrupted route at all? Keep it only if the scene makes
   losing the choice meaningfully different from refusing to leave.
 
-**Next playable slice:** follow up on Day 69's experiment. Use a few short
-hospital fragments across Act 3, then one clear hospital scene near the end
-of the act to show what the protagonist did not hear. Keep the river reveal
-and the ending choice in Days 84-90.
+**Next playable slice:** write the facility threshold as a scene, not as
+Hikari's account. The investigation already carries short lab interludes across
+Days 70-83 and one clear reveal near Day 82; the missing piece is the
+conversation where the player, not the protagonist, sees the two Hikaris and
+Tanaka argue over the final decision.

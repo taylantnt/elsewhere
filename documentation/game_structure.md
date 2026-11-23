@@ -35,15 +35,17 @@ is the revelation and the endings.
 |-----|-------|----------------|---------|
 | 1 | The Arrival | The plane, Narita terminal, the travel decision, the journey home, the house, the first dream | The end of the first dream, where `morning_call` begins Act 2 |
 | 2 | The Long Middle | The opening school days, the free-roam hub, the confidant stories, and the midterm | **Built** through Day 50, the firefly outing |
-| 3 | The Glitch | Incident (Days 51-53), slow burn (Days 54-63), then investigation (Days 64-83) | **Playable through Day 69** |
-| 4 | The End | Hikari's revelation at the river, the ending routes, and the coda (Days 84-90) | **Design draft only** |
+| 3 | The Glitch | Incident (Days 51-53), slow burn (Days 54-63), then investigation (Days 64-83) | **Playable through Day 83** |
+| 4 | The End | Hikari's revelation at the river, the ending routes, and the coda (Days 84-90) | **Playable**; Days 84-89 are a montage, Day 90 is played |
 
 Day 7 has a forced introduction; the free-roam hub first opens on Day 8.
 After the midterm arc, Day 21 hands off to `act2_day_router`. The hub is
 unavailable during Days 51-53, reopens for Days 54-63, and closes permanently
 on Wednesday, June 10 (Day 64). Day 64 sets `current_act` to 3 and replaces
-the free afternoon with a scripted river visit. See [the day map](act2_day_map.md)
-for the playable sequence.
+the free afternoon with a scripted river visit. Day 69 starts the written
+investigation (Days 70-83), and Day 82 hands off to `act4_bridge`, which sets
+`current_act = 4` for the Day 90 ending. See
+[the day map](act2_day_map.md) for the playable sequence.
 
 **Day file naming (Act 2 onward):** files in `game/days/` are named
 `special_day_NN_slug.rpy` for hand-written set pieces and `common_day_NN`
@@ -193,6 +195,14 @@ dream and the night it ends:** `morning_call` sets `current_act = 2`, and
 - Nothing in the dream is ever labelled as real. The doctor's and the assistant's
   lines are **blank narration** — no name box, no portrait — so the room has no
   face.
+
+**Dreams are not lab scenes.** Since Act 3, the player also sees short scenes
+outside the simulation in `act3_investigation.rpy`. Those scenes are marked with
+`centered "OUTSIDE THE SIMULATION"`, use third person, and give the Doctor and
+the older Hikari portraits. The protagonist never sees them and never refers to
+them. Dreams stay first person, inside the world, and faceless. Do not merge the
+two conventions: the marker is the player's only way to tell which layer they
+are in. See [act3_investigation.md](act3_investigation.md).
 
 ### 4.3 Morning (`label morning_call`, `label leaving_house`)
 - At breakfast, Hikari mentions students asking about his arrival. He can ask
@@ -792,10 +802,12 @@ what makes them textable.
 and one place to say which weekdays a destination is open.
 
 - **The anchor is fixed.** Day 1 is Wednesday, April 8; Day 2 is Thursday,
-  April 9; and the built story runs through Monday, June 15 (Day 69). Every day
-  label pins its absolute day at the top with `set_story_day()`, so a branch or
-  a rollback cannot leave the calendar a day behind. The full date table lives
-  in `documentation/calendar.md`.
+  April 9; and the built story runs through Monday, June 15 (Day 69). The
+  investigation then pins Days 70, 72, 74, 76, 78, 80, 82 and 83, and the Act 4
+  bridge pins Days 84, 87, 89 and 90, ending on Monday, July 6.
+  Every day label pins its absolute day at the top with `set_story_day()`, so a
+  branch or a rollback cannot leave the calendar a day behind. The full date
+  table lives in `documentation/calendar.md`.
 - **The player can see it.** `screen story_day_hud` is the top-left date chip,
   with the full weekday/date and `DAY N · WEEK N`. It rides the same switch as
   the attribute HUD (`show_attribute_hud`) and is hidden by standalone windows.
@@ -913,7 +925,8 @@ or nightmare — so the calendar move is never lost to a missing dream.
 | `library_errand_available` | day-two night seed, cleared in `reading_club_first` | The library errand is seeded Friday night and consumed by the Saturday scene |
 | `sunday_quiz_score` / `sunday_q1_correct`–`sunday_q3_correct` | `sunday_morning` practice quiz | Hikari's closing reaction branches on the score and names the actual missed question |
 | `monday_quiz_score` / `monday_q1_correct`–`monday_q3_correct` | `monday_lecture` quiz | The score drives the closing narration; the flags identify which question he missed |
-| `current_act` | `morning_call` (→ 2); future act breaks | Which act's caps are in force (`act_confidant_cap`) |
+| `current_act` | `morning_call` (→ 2), `special_day_64_the_rail` (→ 3), `act4_bridge` (→ 4) | Which act's caps are in force (`act_confidant_cap`) |
+| `act4_final` / `act4_maxed` / `act4_consolidation` | `act4_bridge`, set from save state | The Day 90 route, the completed arcs, and the readable consolidation number |
 | `story_day` | `set_story_day()` at the top of each day label (`airport_arrival` = 1, `morning_call` = 2, `second_morning` = 3, `saturday_off` = 4, `sunday_morning` = 5, `monday_morning` = 6) | The canonical date; the HUD, phone Calendar and weekly hours all read it |
 | `phone_calendar_selected` | the phone Calendar date grid | Which date the calendar's detail pane is showing; `None` means today (or the first of a browsed month) |
 | `phone_calendar_month_offset` | the phone Calendar arrows | How many months the grid is from the current story month |
@@ -958,11 +971,15 @@ These exist in `game_concept.md` and in the character files, but there is **no
 scene for them yet**. They are listed here so nobody goes looking for a label
 that does not exist.
 
-- **The rest of Act 3 proper.** The build lands on `end_of_build` after Day 69.
-  Later scenes are scripted days, not an extension of the hub loop.
-- **Act 4.** The revelation, the facility, the ending routes, and the coda
-  are not playable. See [the Act 4 skeleton](act4_skeleton.md) for the
-  proposed sequence and decisions still open.
+- **The full Act 4 runtime in one scene.** Days 70-83 are playable investigation
+  days in `act3_investigation.rpy`. The bridge compresses Days 84-89 into a
+  montage, then plays Day 90. Later scenes are scripted days, not an extension
+  of the hub loop.
+- **The facility threshold.** The investigation's lab interludes show the
+  older Hikari and Tanaka, but the threshold conversation itself is compressed
+  to Hikari's account. See [act3_investigation.md](act3_investigation.md),
+  [act4_bridge.md](act4_bridge.md), and
+  [the Act 4 skeleton](act4_skeleton.md) for what is built and what is open.
 - **The photography club's camera.** The first visit is built around arriving with
   nothing to shoot (§4.6). Circle hands over the camera at the end of that first
   session, in both the Day 2 route and the standalone `sim_visit_01`; the phone

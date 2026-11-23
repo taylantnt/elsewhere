@@ -792,7 +792,7 @@ through Day 69:
 |---|---|---|---|---|---|
 | **Act 3 Incident** | 51-53 | May 28 - May 30 | closed | none | Three hard days. The line, the same face, the fragment. The world cracks open and the player cannot visit confidants. |
 | **Act 3 Slow Burn (hybrid)** | 54-63 | May 31 - Jun 9 | open | levels 1-3 | Ten days that look like Act 2 on the surface: lecture, hub, dinner. But the house, the family, and the city are wrong in escalating ways. The hub stays open so players can still finish confidant arcs, but each visit sits inside an escalating corruption frame. |
-| **Act 3 Proper** | 64-83 | Jun 10 - Jun 29 | closed | level 3 at entry | The rail, ghost question, and keepsake revisits are playable through Day 69. Days 70-83 are unwritten. |
+| **Act 3 Proper** | 64-83 | Jun 10 - Jun 29 | closed | level 3 at entry | The rail, ghost question, and keepsake revisits are playable through Day 83. The Days 70-83 investigation and lab interludes are in `act3_investigation.rpy`. |
 | **Act 4** | 84-90 | Jun 30 - Jul 6 | closed | to be decided | Final week: the river revelation and the ending choice. Design draft only. |
 
 The slow burn is the bridge. It exists because the player may still have
@@ -882,9 +882,13 @@ talking about the whole world.
 
 ## Act 4: The End
 
-The material below is the earlier treatment, not implemented ending logic.
-See [the Act 4 skeleton](act4_skeleton.md) for the latest proposal and open
-decisions about consolidation, the facility, and how the player chooses.
+The material below is the earlier treatment. A first-pass bridge now plays the
+revelation, the three endings, and the coda from Day 83 through Day 90; Days
+84-89 are compressed into a montage. The investigation and its lab interludes
+are documented in [act3_investigation.md](act3_investigation.md). See
+[act4_bridge.md](act4_bridge.md) for the implemented ending and
+[the Act 4 skeleton](act4_skeleton.md) for the remaining open decisions about
+consolidation, the facility, and the threshold.
 
 Act 4 is short. It is the moment the coat comes off and the thriller underneath
 is visible. Everything the protagonist has built, everyone he has gotten close

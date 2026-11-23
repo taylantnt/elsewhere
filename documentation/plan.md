@@ -14,7 +14,7 @@ in `story_treatment.md` and the per-location interaction docs; this file is the
 | 1 | The Arrival | Airport → home → first dream → first night | **Built** |
 | 2 | The Long Middle | First day, second day, the hub, all confidant visits, the midterm week | **Built** — days 1–50 complete; all confidant visits 2–8 and the repeatable epilogues written |
 | 3 | The Glitch | The leaks turn structural, and the free afternoons end | **In progress**: Days 51-69 playable; investigation continues to Day 83 |
-| 4 | The End | The revelation, the ending routes, and the epilogue coda | [Design draft](act4_skeleton.md) for Days 84-90, not playable |
+| 4 | The End | The revelation, the ending routes, and the epilogue coda | **Playable**; Days 84-89 are a montage, Day 90 is played |
 
 Notes:
 
@@ -24,9 +24,9 @@ Notes:
 - Act 4 begins at the river talk where Hikari tells him what she is.
 - The **epilogue** is the short coda after an ending where the characters'
   thoughts play one last time — it is not a separate act.
-- `current_act` becomes 2 at `morning_call` and 3 on Day 64 at
-  `special_day_64_the_rail`. The story's Act 3 incident begins on Day 51.
-  The Act 4 runtime boundary is not wired yet.
+- `current_act` becomes 2 at `morning_call`, 3 on Day 64 at
+  `special_day_64_the_rail`, and 4 at `act4_bridge` after Day 69. The story's
+  Act 3 incident begins on Day 51.
 
 ## Confidant visit caps (act_confidant_cap)
 
@@ -307,9 +307,18 @@ which is the simulation removing people as the test measures his equilibrium.
       firefly silhouettes from Day 50 are identified.
 - [x] Days 65-69: the ghost question returns, the ramen shop closes and is
       later found destroyed, and keepsakes prompt optional one-off revisits.
-- [ ] Days 70-83: continue the investigation. Tetsuo and Hikari break through;
-      keep the folded page's payoff optional at the threshold.
-- [ ] Act 4 revelation + endings + epilogue.
+- [x] Days 70-83: written investigation in `act3_investigation.rpy`. One
+      place and one keepsake per day, a clue recorded whichever branch the
+      player picks, and a player-only lab interlude that shows the older Hikari
+      building a backdoor into the keepsakes. Tetsuo and Hikari break through.
+      Lint passes.
+- [x] 2026-11-23 — Act 4 bridge (`game/days/act4_day_90.rpy`): Days 84-89 are
+      a montage, then the Day 90 river revelation, three final routes (escape,
+      stay, cannot choose), and the epilogue coda. Save state (clues, completed
+      confidant arcs, story keys, the seventh run) adds texture but never gates
+      a route. Docs synced; lint passes.
+- [ ] Facility threshold as a played scene (the two Hikaris and Tanaka), and
+      the folded page's payoff kept optional at the threshold.
 - [x] Fortune teller encounters: built as three cards, not one per chapter.
       Day 13 first reading + one hub return that turns cards two and three.
       Harajuku and the night corner are named by the cards, not separate rows.

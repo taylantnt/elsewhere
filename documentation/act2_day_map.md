@@ -12,7 +12,10 @@ live in `game/days/`:
 
 `act2_day_router` in `common_days.rpy` is the single source of truth for day
 order. Every day ends by jumping to it; it reads `story_day` and jumps to the
-next day's label. Finishing Day 69 falls through to `end_of_build`.
+next day's label. Finishing Day 69 starts the written investigation,
+`special_day_70_the_table`, which runs through Day 83 in
+`act3_investigation.rpy`. Day 82 hands off to `act4_bridge`, which compresses
+only Days 84-89 and plays Day 90 before `end_of_build`.
 
 ## The pace
 
@@ -115,5 +118,10 @@ Days 46-63 are written. The split is:
 - **Days 65-69** use the inventory as a record of optional observations.
   The keepsakes are not consumed. No completion count is checked, and each
   day offers a main-story choice with no inventory requirement.
-- **Days 70-83** are unwritten Act 3. **Days 84-90** are the planned final
-  week and Act 4 (June 30 to July 6, 2026). See `act4_skeleton.md`.
+- **Days 70-83** are the written investigation in `act3_investigation.rpy`:
+  Day 70 the table, 72 the ramen lot, 74 the photo club, 76 Lupin's Den,
+  78 the cafe, 80 the library, 82 the house. Each ends with a player-only lab
+  interlude. See `act3_investigation.md`.
+- **Days 84-90** are the final week and Act 4 (June 30 to July 6, 2026):
+  Days 84-89 are a montage in `act4_bridge`, and Day 90 is played in
+  `act4_day_90.rpy`. See `act4_bridge.md` and `act4_skeleton.md`.

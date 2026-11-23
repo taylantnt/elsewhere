@@ -745,6 +745,8 @@ label act2_day_router:
         jump special_day_68_the_detail
     elif store.story_day == 68:
         jump special_day_69_the_copy
+    elif store.story_day == 69:
+        jump special_day_70_the_table
     else:
         jump end_of_build
 
